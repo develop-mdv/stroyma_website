@@ -8,6 +8,7 @@ __pycache__/
 
 # Виртуальное окружение
 .venv/
+.idea/
 venv/
 
 # Файлы Django
