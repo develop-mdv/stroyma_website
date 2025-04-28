@@ -3,21 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Каталог товаров</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const searchInput = $('#id_query');
+            const resultsContainer = $('#search-results');
+
+            // Отправляем AJAX-запрос при изменении поля поиска
+            searchInput.on('input', function () {
+                const query = $(this).val();
+                const priceMax = $('#id_price_max').val();
+
+                $.ajax({
+                    url: '{% url 'search_ajax' %}',
+                    method: 'GET',
+                    data: { query: query, price_max: priceMax },
+                    success: function (response) {
+                        resultsContainer.html(response.results);
+                    },
+                    error: function () {
+                        resultsContainer.html('<li>Произошла ошибка при поиске.</li>');
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'product_list' %}">Главная</a></li>
+            <li><a href="{% url 'contact' %}">Контакты</a></li>
+            <li><a href="{% url 'view_cart' %}">Корзина</a></li>
+        </ul>
+    </nav>
     <h1>Каталог товаров</h1>
-    <ul>
-        {% for product in products %}
-            <li>
-                <a href="{% url 'product_detail' pk=product.pk %}">{{ product.name }}</a>  <!-- Добавленная ссылка -->
-                <p>{{ product.description }}</p>
-                <p>Цена: {{ product.price }} руб.</p>
-                <p>На складе: {{ product.stock }} шт.</p>
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+
+    <!-- Форма поиска -->
+    <form id="search-form" method="get" action="{% url 'product_list' %}">
+        {{ search_form.as_p }}
+        <label for="price_max">Максимальная цена:</label>
+        <input type="number" name="price_max" id="price_max" step="0.01">
+        <button type="submit">Фильтровать</button>
+    </form>
+
+    <!-- Контейнер для результатов поиска -->
+    <div id="search-results">
+        <ul>
+            {% for product in products %}
+                <li>
+                    <a href="{% url 'product_detail' pk=product.pk %}">{{ product.name }}</a>
+                    <p>{{ product.description }}</p>
+                    <p>Цена: {{ product.price }} руб.</p>
+                    <p>На складе: {{ product.stock }} шт.</p>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>Товаров не найдено.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
