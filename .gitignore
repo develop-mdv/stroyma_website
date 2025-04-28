@@ -1,0 +1,15 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Временные файлы Python
+__pycache__/
+*.pyc
+
+# Виртуальное окружение
+.venv/
+venv/
+
+# Файлы Django
+db.sqlite3
+media/

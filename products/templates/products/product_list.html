@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог товаров</title>
+</head>
+<body>
+    <h1>Каталог товаров</h1>
+    <ul>
+        {% for product in products %}
+            <li>
+                <a href="{% url 'product_detail' pk=product.pk %}">{{ product.name }}</a>  <!-- Добавленная ссылка -->
+                <p>{{ product.description }}</p>
+                <p>Цена: {{ product.price }} руб.</p>
+                <p>На складе: {{ product.stock }} шт.</p>
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

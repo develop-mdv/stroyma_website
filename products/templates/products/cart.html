@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+<body>
+    <h1>Корзина</h1>
+    <ul>
+        {% for item in cart_items %}
+            <li>
+                <strong>{{ item.product.name }}</strong> - {{ item.quantity }} шт. ({{ item.total_price }} руб.)
+            </li>
+        {% empty %}
+            <li>Корзина пуста.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'product_list' %}">Продолжить покупки</a>
+</body>
+</html>
