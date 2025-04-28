@@ -47,3 +47,19 @@ def view_cart(request):
         'cart_items': cart_items,
     }
     return render(request, 'products/cart.html', context)
+
+
+def remove_from_cart(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    # Получаем корзину из сессии
+    cart = request.session.get('cart', {})
+
+    # Удаляем товар из корзины
+    if str(product.pk) in cart:
+        del cart[str(product.pk)]
+
+    # Сохраняем обновленную корзину в сессию
+    request.session['cart'] = cart
+
+    return redirect('view_cart')

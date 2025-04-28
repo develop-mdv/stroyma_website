@@ -10,6 +10,7 @@
         {% for item in cart_items %}
             <li>
                 <strong>{{ item.product.name }}</strong> - {{ item.quantity }} шт. ({{ item.total_price }} руб.)
+                <a href="{% url 'remove_from_cart' pk=item.product.pk %}">Удалить</a>  <!-- Добавленная ссылка -->
             </li>
         {% empty %}
             <li>Корзина пуста.</li>
