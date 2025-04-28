@@ -14,7 +14,6 @@ def product_list(request):
     if form.is_valid():
         query = form.cleaned_data['query']
         if query:
-            # query = query.lower()  # Преобразуем текст в нижний регистр
             products = products.filter(name__icontains=query)  # iexact также игнорирует регистр
 
     # Обработка фильтрации по цене
