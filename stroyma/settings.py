@@ -125,3 +125,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки для MEDIA (изображений)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Настройки для отправки email через Yandex SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True  # Используем SSL (рекомендуется для Yandex)
+
+EMAIL_HOST_USER = 'ivanverovitch@yandex.ru'  # Ваш email
+EMAIL_HOST_PASSWORD = 'gprblnmtkflvwfbh'  # Пароль или пароль приложения
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER

@@ -1,27 +1,103 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Order, OrderItem
-from .forms import OrderForm, SearchForm
+from .forms import OrderForm, SearchForm, ContactForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.db.models import Q
+from django.db.models import Q, Max, Min
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def product_list(request):
     form = SearchForm(request.GET)
     products = Product.objects.all()
 
+    # Получаем минимальную и максимальную цены товаров
+    min_price = products.aggregate(Min('price'))['price__min'] or 0  # Используем Min
+    max_price = products.aggregate(Max('price'))['price__max'] or 0  # Используем Max
+
     # Обработка поиска
     if form.is_valid():
         query = form.cleaned_data['query']
         if query:
-            products = products.filter(name__icontains=query)  # iexact также игнорирует регистр
+            products = products.filter(
+                Q(name__icontains=query) |  # Поиск по части названия товара (регистронезависимый)
+                Q(description__icontains=query)  # Поиск по описанию (регистронезависимый)
+            )
 
     # Обработка фильтрации по цене
-    price_max = request.GET.get('price_max')
-    if price_max:
+    price_min = str(request.GET.get('price_min', min_price))  # Используем значение из запроса или минимум
+    price_max = str(request.GET.get('price_max', max_price))  # Используем значение из запроса или максимум
+
+    if price_min and price_min.isdigit():  # Проверяем, что цена — число
+        products = products.filter(price__gte=price_min)
+    if price_max and price_max.isdigit():  # Проверяем, что цена — число
         products = products.filter(price__lte=price_max)
 
-    return render(request, 'products/product_list.html', {'products': products, 'search_form': form})
+    # Сортировка
+    sort_by = request.GET.get('sort_by', 'name')  # Сортировка по умолчанию
+    if sort_by == 'price_asc':
+        products = products.order_by('price')
+    elif sort_by == 'price_desc':
+        products = products.order_by('-price')
+
+    return render(
+        request,
+        'products/product_list.html',
+        {
+            'products': products,
+            'search_form': form,
+            'min_price': min_price,  # Передаем минимальную цену в контекст
+            'max_price': max_price,  # Передаем максимальную цену в контекст
+        }
+    )
+
+def search_ajax(request):
+    query = request.GET.get('query', '').lower()  # Преобразуем запрос в нижний регистр
+    price_min = request.GET.get('price_min', None)
+    price_max = request.GET.get('price_max', None)
+    sort_by = request.GET.get('sort_by', 'name')  # Сортировка по умолчанию
+    page_number = request.GET.get('page', 1)
+
+    products = Product.objects.all()
+
+    # Фильтрация по запросу
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) |  # Поиск по части названия товара
+            Q(description__icontains=query)  # Поиск по описанию
+        )
+
+    # Фильтрация по цене
+    if price_min and price_min.isdigit():
+        products = products.filter(price__gte=price_min)
+    if price_max and price_max.isdigit():
+        products = products.filter(price__lte=price_max)
+
+    # Применяем сортировку
+    if sort_by == 'price_asc':
+        products = products.order_by('price')
+    elif sort_by == 'price_desc':
+        products = products.order_by('-price')
+
+    # Пагинация
+    paginator = Paginator(products, 12)
+    page = paginator.get_page(page_number)
+
+    context = {
+        'products': page,
+        'sort_by': sort_by,  # Передаем текущий метод сортировки
+    }
+
+    results_html = render_to_string('products/search_results.html', context)
+    return JsonResponse({
+        'results': results_html,
+        'has_next': page.has_next(),
+    })
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -34,21 +110,23 @@ def add_to_cart(request, pk):
     # Получаем или создаем корзину из сессии
     cart = request.session.get('cart', {})
 
-    # Добавляем товар в корзину
+    # Обработка количества из формы
+    quantity = int(request.POST.get('quantity', 1))  # По умолчанию добавляем 1 товар
     if str(product.pk) in cart:
-        cart[str(product.pk)] += 1  # Увеличиваем количество товара
+        cart[str(product.pk)] += quantity  # Увеличиваем количество товара
     else:
-        cart[str(product.pk)] = 1  # Добавляем новый товар
+        cart[str(product.pk)] = quantity   # Добавляем новый товар
 
     # Сохраняем корзину в сессию
     request.session['cart'] = cart
 
-    return redirect('product_list')
+    return redirect('view_cart')
 
 
 def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
+    total_price = 0
 
     # Получаем все товары из корзины
     for product_id, quantity in cart.items():
@@ -58,9 +136,11 @@ def view_cart(request):
             'quantity': quantity,
             'total_price': product.price * quantity,
         })
+        total_price += product.price * quantity  # Рассчитываем общую сумму
 
     context = {
         'cart_items': cart_items,
+        'total_price': total_price,  # Передаем общую сумму в контекст
     }
     return render(request, 'products/cart.html', context)
 
@@ -94,13 +174,19 @@ def checkout(request):
 
             # Добавляем товары из корзины в заказ
             for product_id, quantity in cart.items():
-                product = Product.objects.get(pk=product_id)
+                product = get_object_or_404(Product, pk=product_id)
                 OrderItem.objects.create(order=order, product=product, quantity=quantity)
 
             # Очищаем корзину после оформления заказа
             request.session['cart'] = {}
 
+            # Отправляем сообщение об успехе
+            messages.success(request, 'Ваш заказ успешно оформлен!')
+
             return redirect('checkout_success')  # Перенаправляем на страницу успеха
+        else:
+            # Отправляем сообщение об ошибках
+            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = OrderForm()
 
@@ -114,28 +200,36 @@ def checkout_success(request):
     return render(request, 'products/checkout_success.html')
 
 def contact(request):
-    return render(request, 'products/contact.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Получаем данные из формы
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            if '@yandex.ru' not in email:
+                name += f'|{email}'
+                email = 'ivanverovitch@yandex.ru'
 
-def search_ajax(request):
-    query = request.GET.get('query', '').lower()  # Преобразуем запрос в нижний регистр
-    price_max = request.GET.get('price_max', None)
+            message = form.cleaned_data['message']
 
-    products = Product.objects.all()
-
-    if query:
-        # Явно преобразуем поле name в нижний регистр и сравниваем
-        products = products.filter(
-            Q(name__icontains=query) |  # Поиск по части слова (игнорирует регистр)
-            Q(description__icontains=query)  # Опционально: поиск по описанию
-        )
-
-    if price_max:
-        products = products.filter(price__lte=price_max)
+            # Отправляем email администратору
+            try:
+                send_mail(
+                    f'Новое сообщение от {name}',  # Тема письма
+                    message,                      # Тело письма
+                    email,                       # Отправитель
+                    ['ivanverovitch@yandex.ru'],  # Получатель (администратор)
+                    fail_silently=False          # Не игнорируем ошибки
+                )
+                messages.success(request, 'Ваше сообщение успешно отправлено!')
+            except Exception as e:
+                logger.error(f'Ошибка при отправке email: {str(e)}')
+                messages.error(request, f'Произошла ошибка при отправке сообщения: {str(e)}')
+            return redirect('contact')
+    else:
+        form = ContactForm()
 
     context = {
-        'products': products,
+        'form': form,
     }
-
-    # Возвращаем HTML-код с результатами поиска
-    results_html = render_to_string('products/search_results.html', context)
-    return JsonResponse({'results': results_html})
+    return render(request, 'products/contact.html', context)

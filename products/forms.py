@@ -9,3 +9,8 @@ class OrderForm(forms.Form):
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='Поиск', max_length=100, required=False)
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100, label="Имя")
+    email = forms.EmailField(label="Email")
+    message = forms.CharField(widget=forms.Textarea, label="Сообщение")

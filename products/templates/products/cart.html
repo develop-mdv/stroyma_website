@@ -1,25 +1,49 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Корзина</title>
-</head>
-<body>
-    <h1>Корзина</h1>
-    <ul>
-        {% for item in cart_items %}
-            <li>
-                <strong>{{ item.product.name }}</strong> - {{ item.quantity }} шт. ({{ item.total_price }} руб.)
-                <a href="{% url 'remove_from_cart' pk=item.product.pk %}">Удалить</a>
-            </li>
-        {% empty %}
-            <li>Корзина пуста.</li>
-        {% endfor %}
-    </ul>
+{% extends 'products/base.html' %}  <!-- Наследуем базовый шаблон -->
 
-    <!-- Добавляем ссылку "Оформить заказ" -->
-    <a href="{% url 'checkout' %}">Оформить заказ</a>
+{% block content %}
+<h1 class="mb-5">Корзина</h1>
 
-    <a href="{% url 'product_list' %}">Продолжить покупки</a>
-</body>
-</html>
+<!-- Список товаров в корзине -->
+{% if cart_items %}
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена за единицу</th>
+                <th>Общая цена</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }} шт.</td>
+                <td>{{ item.product.price }} руб.</td>
+                <td>{{ item.total_price }} руб.</td>
+                <td>
+                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Итоговая сумма -->
+<div class="mt-4">
+    <h4>Итого: {{ total_price }} руб.</h4>
+</div>
+
+<!-- Кнопка оформления заказа -->
+<a href="{% url 'checkout' %}" class="btn btn-success mt-3">Оформить заказ</a>
+
+{% else %}
+<div class="alert alert-info">Корзина пуста.</div>
+{% endif %}
+
+<!-- Ссылка для продолжения покупок -->
+<a href="{% url 'product_list' %}" class="btn btn-primary mt-3">Продолжить покупки</a>
+{% endblock %}

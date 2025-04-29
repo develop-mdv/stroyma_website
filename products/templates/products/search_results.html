@@ -1,15 +1,54 @@
-<ul>
+<!-- Результаты поиска -->
+<div class="row">
     {% for product in products %}
-        <li>
-            <a href="{% url 'product_detail' pk=product.pk %}">{{ product.name }}</a>
-            <p>{{ product.description }}</p>
-            <p>Цена: {{ product.price }} руб.</p>
-            <p>На складе: {{ product.stock }} шт.</p>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <!-- Изображение товара -->
             {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top img-fluid">
             {% endif %}
-        </li>
+
+            <!-- Содержимое карточки -->
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
+                <p class="card-text"><strong>На складе:</strong> {{ product.stock }} шт.</p>
+
+                <!-- Добавление рейтинга (опционально) -->
+                <p class="card-text"><strong>Рейтинг:</strong>
+                    {% for i in '⭐⭐⭐⭐⭐' %}
+                        {% if forloop.counter <= product.rating %}
+                            ⭐
+                        {% else %}
+                            ⬛
+                        {% endif %}
+                    {% endfor %}
+                </p>
+
+                <!-- Кнопки действий -->
+                <div class="d-flex justify-content-between mt-3">
+                    <!-- Кнопка "Подробнее" -->
+                    <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-primary">Подробнее</a>
+                    <!-- Кнопка "В корзину" -->
+                    <a href="{% url 'add_to_cart' pk=product.pk %}" class="btn btn-success btn-sm">В корзину</a>
+                </div>
+            </div>
+        </div>
+    </div>
     {% empty %}
-        <li>Товаров не найдено.</li>
+    <!-- Сообщение, если товаров не найдено -->
+    <div class="col-md-12">
+        <div class="alert alert-info text-center" role="alert">
+            Товаров не найдено.
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
+
+<!-- Блок пагинации -->
+<div class="mt-4">
+    {% if products.has_next %}
+        <button id="load-more" class="btn btn-primary">Загрузить еще</button>
+    {% endif %}
+</div>
