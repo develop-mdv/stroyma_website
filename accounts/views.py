@@ -4,7 +4,8 @@ from products.models import Order
 from .forms import RegisterForm, LoginForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .decorators import login_required
+from .decorators import login_required, custom_login_required
+from django.contrib.auth.forms import UserChangeForm
 
 from django.http import JsonResponse
 
@@ -51,3 +52,16 @@ def logout_view(request):
 def profile_view(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'accounts/profile.html', {'orders': orders})
+
+@custom_login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Данные профиля успешно обновлены!')
+            return redirect('profile')
+    else:
+        form = UserChangeForm(instance=request.user)
+
+    return render(request, 'accounts/edit_profile.html', {'form': form})

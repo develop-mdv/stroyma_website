@@ -21,3 +21,16 @@ def login_required(function=None, login_url='/login/'):
     if function:
         return _decorator(function)
     return _decorator
+
+def custom_login_required(function=None, login_url='/accounts/login/'):
+    def _decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if request.user.is_authenticated:
+                return view_func(request, *args, **kwargs)
+            else:
+                return redirect(login_url)
+        return _wrapped_view
+    if function:
+        return _decorator(function)
+    return _decorator

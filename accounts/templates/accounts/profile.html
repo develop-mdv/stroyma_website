@@ -1,30 +1,56 @@
-{% extends "products/base.html" %}
+{% extends 'products/base.html' %}
+{% load humanize %}
 
 {% block content %}
-<h2 class="mb-4">Профиль</h2>
+<div class="container py-5">
+    <h2 class="mb-4">Профиль пользователя</h2>
 
-<p><strong>Добро пожаловать, {{ request.user.username }}!</strong></p>
-
-<!-- История заказов -->
-<h4>История ваших заказов:</h4>
-<div class="row">
-    {% for order in orders %}
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Заказ №{{ order.id }}</h5>
-                <p>Дата: {{ order.created_at }}</p>
-                <ul>
-                    {% for item in order.items.all %}
-                    <li>{{ item.product.name }} - {{ item.quantity }} шт.</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>Общая сумма:</strong> {{ order.total_cost }} руб.</p>
-            </div>
+    <!-- Информация о пользователе -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Ваши данные</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Имя:</strong> {{ request.user.username }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <!-- Кнопка редактирования профиля -->
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary mt-2">Редактировать профиль</a>
         </div>
     </div>
-    {% empty %}
-    <div class="alert alert-info col-md-12">У вас пока нет заказов.</div>
-    {% endfor %}
+
+    <!-- История заказов -->
+    {% if orders %}
+        <h4>Ваши заказы</h4>
+        <div class="row">
+            {% for order in orders %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border border-success shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            Заказ №{{ order.id }}
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                            <ul class="list-group list-group-flush">
+                                {% for item in order.items.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ item.product.name }}</span>
+                                        <span class="badge bg-secondary">{{ item.quantity }} шт.</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            <p class="card-text mt-3"><strong>Общая сумма:</strong> {{ order.total_cost|intcomma }} руб.</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <small class="text-muted">Статус: Оплачен</small>
+                            <a href="#" class="btn btn-sm btn-info">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-4">У вас пока нет оформленных заказов</div>
+    {% endif %}
 </div>
 {% endblock %}
