@@ -3,6 +3,37 @@
 {% block content %}
 <h1 class="mb-5">Оформление заказа</h1>
 
+<!-- Отображение товаров из корзины -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h4>Товары в вашей корзине:</h4>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                    <th>Цена за ед.</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }} шт.</td>
+                    <td>{{ item.product.price }} руб.</td>
+                    <td>{{ item.total_price }} руб.</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                    <td><strong>{{ total_price }} руб.</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <!-- Форма оформления заказа -->
 <form method="post" class="row g-3">
     {% csrf_token %}

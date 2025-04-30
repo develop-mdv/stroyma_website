@@ -160,39 +160,59 @@ def remove_from_cart(request, pk):
 
     return redirect('view_cart')
 
+def merge_session_cart_to_user_cart(request):
+    """TODO: Сделать Можно также реализовать перенос корзины при входе."""
+    session_cart = request.session.get('cart', {})
+    for product_id, quantity in session_cart.items():
+        product = get_object_or_404(Product, pk=product_id)
+        OrderItem.objects.create(
+            order=Order.objects.filter(user=request.user).last(),  # или новая логика создания заказа
+            product=product,
+            quantity=quantity
+        )
+
 
 def checkout(request):
     cart = request.session.get('cart', {})
     if not cart:
-        return redirect('view_cart')  # Если корзина пуста, перенаправляем на страницу корзины
+        return redirect('view_cart')  # Если корзина пуста, перенаправляем пользователя
+
+    cart_items = []
+    total_price = 0
+
+    for product_id, quantity in cart.items():
+        product = get_object_or_404(Product, pk=product_id)
+        item_total = product.price * quantity
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'total_price': item_total,
+        })
+        total_price += item_total
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            # Создаем новый заказ
-            order = Order.objects.create()
+            order = Order.objects.create(user=request.user if request.user.is_authenticated else None)
 
-            # Добавляем товары из корзины в заказ
             for product_id, quantity in cart.items():
                 product = get_object_or_404(Product, pk=product_id)
                 OrderItem.objects.create(order=order, product=product, quantity=quantity)
 
-            # Очищаем корзину после оформления заказа
+            # Очищаем корзину после оформления
             request.session['cart'] = {}
 
-            # Отправляем сообщение об успехе
-            messages.success(request, 'Ваш заказ успешно оформлен!')
-
-            return redirect('checkout_success')  # Перенаправляем на страницу успеха
+            messages.success(request, "Ваш заказ успешно оформлен!")
+            return redirect('checkout_success')
         else:
-            # Отправляем сообщение об ошибках
-            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
+            messages.error(request, "Пожалуйста, исправьте ошибки в форме.")
     else:
         form = OrderForm()
 
     context = {
         'form': form,
-        'cart_items': cart,
+        'cart_items': cart_items,
+        'total_price': total_price,
     }
     return render(request, 'products/checkout.html', context)
 

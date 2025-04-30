@@ -1,0 +1,30 @@
+{% extends "products/base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Профиль</h2>
+
+<p><strong>Добро пожаловать, {{ request.user.username }}!</strong></p>
+
+<!-- История заказов -->
+<h4>История ваших заказов:</h4>
+<div class="row">
+    {% for order in orders %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Заказ №{{ order.id }}</h5>
+                <p>Дата: {{ order.created_at }}</p>
+                <ul>
+                    {% for item in order.items.all %}
+                    <li>{{ item.product.name }} - {{ item.quantity }} шт.</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Общая сумма:</strong> {{ order.total_cost }} руб.</p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info col-md-12">У вас пока нет заказов.</div>
+    {% endfor %}
+</div>
+{% endblock %}

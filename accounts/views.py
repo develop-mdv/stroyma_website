@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
+
+from products.models import Order
 from .forms import RegisterForm, LoginForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from .decorators import login_required
 
 from django.http import JsonResponse
 
@@ -43,3 +46,8 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Вы вышли из аккаунта.")
     return redirect("product_list")
+
+@login_required(login_url='/accounts/login/')  # Указываем наш маршрут
+def profile_view(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'accounts/profile.html', {'orders': orders})
