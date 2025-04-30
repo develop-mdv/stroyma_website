@@ -1,190 +1,190 @@
-{% extends 'products/base.html' %}  <!-- Наследуем базовый шаблон -->
-
+{% extends 'products/base.html' %}
 {% block content %}
+
 <h1 class="mb-5">Каталог товаров</h1>
 
 <!-- Форма поиска -->
 <form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-4">
     <div class="input-group">
+        <!-- Поле поиска -->
         {{ search_form.as_p }}
-        <!-- Выбор минимальной и максимальной цены -->
+
+        <!-- Минимальная цена -->
         <label for="price_min" class="form-label me-2">Минимальная цена:</label>
-        <input type="number" name="price_min" id="price_min" step="0.01" value="{{ request.GET.price_min|default:min_price }}" class="form-control">
+        <input type="number"
+               name="price_min"
+               id="price_min"
+               step="1"
+               value="{{ request.GET.price_min|default:min_price }}"
+               class="form-control me-2">
 
+        <!-- Максимальная цена -->
         <label for="price_max" class="form-label me-2">Максимальная цена:</label>
-        <input type="number" name="price_max" id="price_max" step="0.01" value="{{ request.GET.price_max|default:max_price }}" class="form-control">
+        <input type="number"
+               name="price_max"
+               id="price_max"
+               step="1"
+               value="{{ request.GET.price_max|default:max_price }}"
+               class="form-control me-2">
 
-        <!-- Выпадающее меню для сортировки -->
-        <select name="sort_by" id="sort-by" class="form-select">
+        <!-- Сортировка -->
+        <select name="sort_by" id="sort-by" class="form-select me-2">
             <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
             <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
             <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
         </select>
 
-        <!-- Кнопка "Фильтровать" -->
-        <button type="submit" class="btn btn-primary">Фильтровать</button>
+        <!-- Кнопка фильтрации -->
+        <button type="submit" class="btn btn-primary me-2">Фильтровать</button>
 
-        <!-- Кнопка "Сбросить фильтры" -->
-        <a href="{% url 'product_list' %}" class="btn btn-secondary ms-2">Сбросить фильтры</a>
+        <!-- Кнопка сброса фильтров -->
+        <a href="{% url 'product_list' %}" class="btn btn-secondary">Сбросить фильтры</a>
     </div>
 
-    <!-- Двухсторонний ползунок для выбора цены -->
+    <!-- Двухсторонний ползунок -->
     <div class="mt-3">
         <div id="price-slider"></div>
         <p>Цена: <span id="price-range">От {{ request.GET.price_min|default:min_price }} до {{ request.GET.price_max|default:max_price }}</span></p>
     </div>
 </form>
 
-<!-- Контейнер для результатов поиска -->
+<!-- Результаты поиска -->
 <div id="search-results">
     <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <!-- Изображение товара -->
-                {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top img-fluid">
-                {% endif %}
-
-                <!-- Содержимое карточки -->
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description|truncatewords:10 }}</p>
-                    <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
-                    <p class="card-text"><strong>На складе:</strong> {{ product.stock }} шт.</p>
-
-                    <!-- Добавление рейтинга (опционально) -->
-                    <p class="card-text"><strong>Рейтинг:</strong>
-                        {% for i in '⭐⭐⭐⭐⭐' %}
-                            {% if forloop.counter <= product.rating %}
-                                ⭐
-                            {% else %}
-                                ⬛
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-
-                    <!-- Кнопки действий -->
-                    <div class="d-flex justify-content-between mt-3">
-                        <!-- Кнопка "Подробнее" -->
-                        <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-primary">Подробнее</a>
-                        <!-- Кнопка "В корзину" -->
-                        <a href="{% url 'add_to_cart' pk=product.pk %}" class="btn btn-success btn-sm">В корзину</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <!-- Сообщение, если товаров не найдено -->
-        <div class="col-md-12">
-            <div class="alert alert-info text-center" role="alert">
-                Товаров не найдено.
-            </div>
-        </div>
-        {% endfor %}
+        {% include 'products/search_results.html' %}
     </div>
 </div>
+
 {% endblock %}
 
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" />
 
 <script>
-    $(document).ready(function () {
-        const searchInput = $('#id_query');  // Поле поиска
-        const priceMinInput = $('#price_min');  // Поле минимальной цены
-        const priceMaxInput = $('#price_max');  // Поле максимальной цены
-        const sortBySelect = $('#sort-by');  // Выпадающее меню для сортировки
-        const resultsContainer = $('#search-results');
-        let currentPage = 1;  // Текущая страница результатов
+$(document).ready(function () {
+    const searchInput = $('#id_query');           // Поле поиска
+    const priceMinInput = $('#price_min');         // Поле минимальной цены
+    const priceMaxInput = $('#price_max');         // Поле максимальной цены
+    const sortBySelect = $('#sort-by');            // Выпадающее меню сортировки
+    const resultsContainer = $('#search-results');
+    let currentPage = 1;                          // Текущая страница
 
-        // Функция для загрузки результатов
-        function loadResults() {
-            const query = searchInput.val();  // Получаем текст из поля поиска
-            const priceMin = priceMinInput.val();  // Получаем минимальную цену
-            const priceMax = priceMaxInput.val();  // Получаем максимальную цену
-            const sort_by = sortBySelect.val();  // Получаем выбранный вариант сортировки
+    function loadResults() {
+        const query = searchInput.val();           // Получаем текст из поля поиска
+        const priceMin = priceMinInput.val();      // Получаем min цену
+        const priceMax = priceMaxInput.val();      // Получаем max цену
+        const sort_by = sortBySelect.val();        // Получаем метод сортировки
 
-            $.ajax({
-                url: '{% url "search_ajax" %}',
-                method: 'GET',
-                data: { query: query, price_min: priceMin, price_max: priceMax, sort_by: sort_by, page: currentPage },
-                success: function (response) {
-                    resultsContainer.html(response.results);  // Обновляем контейнер с результатами
-                    if (response.has_next) {
-                        $('#load-more').show();  // Показываем кнопку "Загрузить еще"
-                    } else {
-                        $('#load-more').hide();  // Скрываем кнопку, если больше нет страниц
-                    }
-                },
-                error: function () {
-                    resultsContainer.html('<div class="alert alert-danger">Произошла ошибка при поиске.</div>');
+        $.ajax({
+            url: '{% url "search_ajax" %}',
+            method: 'get',
+            data: {
+                query,
+                price_min: priceMin,
+                price_max: priceMax,
+                sort_by,
+                page: currentPage
+            },
+            success: function (response) {
+                resultsContainer.html(response.results);
+                if (response.has_next) {
+                    $('#load-more').show();
+                } else {
+                    $('#load-more').hide();
                 }
-            });
-        }
-
-        // Отправляем AJAX-запрос при изменении поля поиска
-        searchInput.on('input', function () {
-            currentPage = 1;  // Сбрасываем страницу при новом поиске
-            loadResults();
-        });
-
-        // Отправляем AJAX-запрос при отправке формы (фильтрация цен)
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();  // Предотвращаем стандартное поведение формы
-            currentPage = 1;  // Сбрасываем страницу при фильтрации
-            loadResults();
-        });
-
-        // Отправляем AJAX-запрос при выборе сортировки
-        sortBySelect.on('change', function () {
-            currentPage = 1;  // Сбрасываем страницу при новой сортировке
-            loadResults();
-        });
-
-        // Настройка двухстороннего ползунка
-        const slider = document.getElementById('price-slider');
-        noUiSlider.create(slider, {
-            start: [{{ request.GET.price_min|default:min_price }}, {{ request.GET.price_max|default:max_price }}],
-            connect: true,
-            range: {
-                'min': {{ min_price }},
-                'max': {{ max_price }}
+            },
+            error: function () {
+                resultsContainer.html('<div class="alert alert-danger">Произошла ошибка при поиске.</div>');
             }
         });
+    }
 
-        // Обновление значений минимальной и максимальной цены при движении ползунка
-        slider.noUiSlider.on('update', function (values, handle) {
-            if (handle) {
-                priceMaxInput.val(values[handle]);
-            } else {
-                priceMinInput.val(values[handle]);
-            }
-            $('#price-range').text(`От ${values[0]} до ${values[1]}`);
-        });
+    // Логика обработки событий
 
-        // Обновление ползунка при ручном вводе цен
-        priceMinInput.on('input', function () {
-            const minValue = parseFloat($(this).val());
-            if (!isNaN(minValue)) {
-                slider.noUiSlider.set([minValue, null]);
-            }
-        });
-
-        priceMaxInput.on('input', function () {
-            const maxValue = parseFloat($(this).val());
-            if (!isNaN(maxValue)) {
-                slider.noUiSlider.set([null, maxValue]);
-            }
-        });
-
-        // Обработка клика на кнопку "Загрузить еще"
-        $(document).on('click', '#load-more', function () {
-            currentPage++;  // Увеличиваем номер страницы
-            loadResults();  // Загружаем следующие результаты
-        });
+    // Поиск при вводе текста
+    searchInput.on('input', function () {
+        currentPage = 1;
+        loadResults();
     });
+
+    // Фильтр по минимальной цене
+    priceMinInput.on('input', function () {
+        currentPage = 1;
+        loadResults();
+    });
+
+    // Фильтр по максимальной цене
+    priceMaxInput.on('input', function () {
+        currentPage = 1;
+        loadResults();
+    });
+
+    // Сортировка
+    sortBySelect.on('change', function () {
+        currentPage = 1;
+        loadResults();
+    });
+
+    // Обработка отправки формы
+    $('#search-form').on('submit', function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        loadResults();
+    });
+
+    // Пагинация — загрузка еще
+    $(document).on('click', '#load-more', function () {
+        currentPage++;
+        loadResults();
+    });
+
+    // Синхронизация ползунка с полями ввода
+    const slider = document.getElementById('price-slider');
+    noUiSlider.create(slider, {
+        start: [{{ request.GET.price_min|default:min_price }}, {{ request.GET.price_max|default:max_price }}],
+        connect: true,
+        range: {
+            'min': {{ min_price }},
+            'max': {{ max_price }}
+        },
+        tooltips: [true, true],  // Подсказки
+        format: {
+            to: value => Math.round(value),
+            from: value => Number(value),
+        }
+    });
+
+    // Обновляем поля "price_min" и "price_max", если пользователь двигает ползунок
+    slider.noUiSlider.on('update', function (values, handle) {
+        let val = values[handle];
+        if (handle === 0) {
+            priceMinInput.val(val);
+        } else {
+            priceMaxInput.val(val);
+        }
+        $('#price-range').text(`От ${values[0]} до ${values[1]}`);
+    });
+
+    // При изменении в полях ввода обновляем ползунок и сразу отправляем запрос
+    priceMinInput.on('input', function () {
+        const minValue = parseInt($(this).val());
+        if (!isNaN(minValue)) {
+            slider.noUiSlider.set([minValue, null]);
+            currentPage = 1;
+            loadResults();
+        }
+    });
+
+    priceMaxInput.on('input', function () {
+        const maxValue = parseInt($(this).val());
+        if (!isNaN(maxValue)) {
+            slider.noUiSlider.set([null, maxValue]);
+            currentPage = 1;
+            loadResults();
+        }
+    });
+});
 </script>
 {% endblock %}
