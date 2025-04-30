@@ -1,5 +1,4 @@
-{% extends 'products/base.html' %}  <!-- Наследуем базовый шаблон -->
-
+{% extends 'products/base.html' %}
 {% block content %}
 <h1 class="mb-5">Оформление заказа</h1>
 
@@ -7,7 +6,7 @@
 <div class="row mb-4">
     <div class="col-md-8">
         <h4>Товары в вашей корзине:</h4>
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
                     <th>Товар</th>
@@ -22,19 +21,19 @@
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }} шт.</td>
                     <td>{{ item.product.price }} руб.</td>
-                    <td>{{ item.total_price }} руб.</td>
+                    <td>{{ item.total_price|floatformat:2 }} руб.</td>
                 </tr>
                 {% endfor %}
-                <tr>
+                <tr class="table-success">
                     <td colspan="3" class="text-end"><strong>Итого:</strong></td>
-                    <td><strong>{{ total_price }} руб.</strong></td>
+                    <td><strong>{{ total_price|floatformat:2 }} руб.</strong></td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- Форма оформления заказа -->
+<!-- Форма оформления -->
 <form method="post" class="row g-3">
     {% csrf_token %}
 

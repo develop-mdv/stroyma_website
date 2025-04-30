@@ -48,7 +48,7 @@ def logout_view(request):
     messages.info(request, "Вы вышли из аккаунта.")
     return redirect("product_list")
 
-@login_required(login_url='/accounts/login/')  # Указываем наш маршрут
+@custom_login_required
 def profile_view(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'accounts/profile.html', {'orders': orders})

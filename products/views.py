@@ -175,7 +175,7 @@ def merge_session_cart_to_user_cart(request):
 def checkout(request):
     cart = request.session.get('cart', {})
     if not cart:
-        return redirect('view_cart')  # Если корзина пуста, перенаправляем пользователя
+        return redirect('view_cart')  # Если корзина пуста, перенаправляем на страницу корзины
 
     cart_items = []
     total_price = 0
@@ -193,19 +193,26 @@ def checkout(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = Order.objects.create(user=request.user if request.user.is_authenticated else None)
+            # Создаем новый заказ
+            order = Order.objects.create(
+                user=request.user if request.user.is_authenticated else None
+            )
 
             for product_id, quantity in cart.items():
                 product = get_object_or_404(Product, pk=product_id)
-                OrderItem.objects.create(order=order, product=product, quantity=quantity)
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=quantity
+                )
 
             # Очищаем корзину после оформления
             request.session['cart'] = {}
 
-            messages.success(request, "Ваш заказ успешно оформлен!")
+            messages.success(request, 'Ваш заказ успешно оформлен!')
             return redirect('checkout_success')
         else:
-            messages.error(request, "Пожалуйста, исправьте ошибки в форме.")
+            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = OrderForm()
 
@@ -214,6 +221,7 @@ def checkout(request):
         'cart_items': cart_items,
         'total_price': total_price,
     }
+
     return render(request, 'products/checkout.html', context)
 
 def checkout_success(request):

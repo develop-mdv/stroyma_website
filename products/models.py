@@ -12,9 +12,17 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+ORDER_STATUS_CHOICES = (
+    ('pending', 'В ожидании'),
+    ('processing', 'Обработка'),
+    ('shipped', 'Доставляется'),
+    ('completed', 'Завершен'),
+    ('canceled', 'Отменен'),
+)
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
