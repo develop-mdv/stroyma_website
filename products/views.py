@@ -18,45 +18,47 @@ def product_list(request):
     form = SearchForm(request.GET)
     products = Product.objects.all()
 
-    # Получаем минимальную и максимальную цены товаров
-    min_price = products.aggregate(Min('price'))['price__min'] or 0  # Используем Min
-    max_price = products.aggregate(Max('price'))['price__max'] or 0  # Используем Max
+    # Получаем минимальную и максимальную цены
+    min_price = products.aggregate(Min('price'))['price__min'] or 0
+    max_price = products.aggregate(Max('price'))['price__max'] or 0
 
-    # Обработка поиска
+    # Поиск
     if form.is_valid():
         query = form.cleaned_data['query']
         if query:
             products = products.filter(
-                Q(name__icontains=query) |  # Поиск по части названия товара (регистронезависимый)
-                Q(description__icontains=query)  # Поиск по описанию (регистронезависимый)
+                Q(name__icontains=query) |
+                Q(description__icontains=query)
             )
 
-    # Обработка фильтрации по цене
-    price_min = str(request.GET.get('price_min', min_price))  # Используем значение из запроса или минимум
-    price_max = str(request.GET.get('price_max', max_price))  # Используем значение из запроса или максимум
+    # Фильтрация по цене
+    price_min = request.GET.get('price_min', min_price)
+    price_max = request.GET.get('price_max', max_price)
 
-    if price_min and price_min.isdigit():  # Проверяем, что цена — число
-        products = products.filter(price__gte=price_min)
-    if price_max and price_max.isdigit():  # Проверяем, что цена — число
-        products = products.filter(price__lte=price_max)
+    if price_min and str(price_min).isdigit():
+        products = products.filter(price__gte=int(price_min))
+    if price_max and str(price_max).isdigit():
+        products = products.filter(price__lte=int(price_max))
 
     # Сортировка
-    sort_by = request.GET.get('sort_by', 'name')  # Сортировка по умолчанию
+    sort_by = request.GET.get('sort_by', 'name')
     if sort_by == 'price_asc':
         products = products.order_by('price')
     elif sort_by == 'price_desc':
         products = products.order_by('-price')
 
-    return render(
-        request,
-        'products/product_list.html',
-        {
-            'products': products,
-            'search_form': form,
-            'min_price': min_price,  # Передаем минимальную цену в контекст
-            'max_price': max_price,  # Передаем максимальную цену в контекст
-        }
-    )
+    # Пагинация
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'products/product_list.html', {
+        'page_obj': page_obj,
+        'search_form': form,
+        'min_price': min_price,
+        'max_price': max_price,
+        'sort_by': sort_by,
+    })
 
 def search_ajax(request):
     query = request.GET.get('query', '').lower()  # Преобразуем запрос в нижний регистр

@@ -50,9 +50,9 @@
         <div>
             <label for="sort_by" class="block text-sm font-medium text-gray-700">Сортировка:</label>
             <select name="sort_by" id="sort-by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
-                <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
-                <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
-                <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
             </select>
         </div>
     </div>
@@ -79,6 +79,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% include 'products/search_results.html' %}
     </div>
+    <div class="mt-8 text-center">
+        <button id="load-more" class="hidden bg-deep-green text-white px-6 py-2 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            Загрузить ещё
+        </button>
+    </div>
 </div>
 
 {% endblock %}
@@ -94,10 +99,20 @@ $(document).ready(function () {
     const priceMinInput = $('#price_min');
     const priceMaxInput = $('#price_max');
     const sortBySelect = $('#sort-by');
-    const resultsContainer = $('#search-results');
+    const resultsContainer = $('#search-results .grid');
+    const loadMoreBtn = $('#load-more');
     let currentPage = 1;
+    let isLoading = false;
 
-    function loadResults() {
+    function loadResults(reset = false) {
+        if (isLoading) return;
+        isLoading = true;
+
+        if (reset) {
+            currentPage = 1;
+            resultsContainer.empty();
+        }
+
         const query = searchInput.val();
         const priceMin = priceMinInput.val();
         const priceMax = priceMaxInput.val();
@@ -105,7 +120,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: '{% url "search_ajax" %}',
-            method: 'get',
+            method: 'GET',
             data: {
                 query,
                 price_min: priceMin,
@@ -114,40 +129,56 @@ $(document).ready(function () {
                 page: currentPage
             },
             success: function (response) {
-                resultsContainer.html(response.results);
-                if (response.has_next) {
-                    $('#load-more').show();
+                if (currentPage === 1) {
+                    resultsContainer.html($(response.results).find('> *'));
                 } else {
-                    $('#load-more').hide();
+                    resultsContainer.append($(response.results).find('> *'));
+                }
+
+                if (response.has_next) {
+                    loadMoreBtn.show();
+                } else {
+                    loadMoreBtn.hide();
                 }
             },
             error: function () {
-                resultsContainer.html('<div class="alert alert-danger">Произошла ошибка при поиске.</div>');
+                alert('Ошибка при загрузке товаров.');
+            },
+            complete: function () {
+                isLoading = false;
             }
         });
     }
 
+    // Автопоиск
     searchInput.on('input', function () {
-        currentPage = 1;
-        loadResults();
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            loadResults(true);
+        }, 500);
     });
 
-    sortBySelect.on('change', function () {
-        currentPage = 1;
-        loadResults();
-    });
-
+    // Изменение фильтров
     $('#search-form').on('submit', function (e) {
         e.preventDefault();
         currentPage = 1;
-        loadResults();
+        loadResults(true);
     });
 
-    $(document).on('click', '#load-more', function () {
+    // Смена сортировки
+    sortBySelect.on('change', function () {
+        currentPage = 1;
+        loadResults(true);
+    });
+
+    // Загрузка новых товаров
+    loadMoreBtn.on('click', function () {
         currentPage++;
         loadResults();
     });
 
+    // Обработка слайдера цен
     const slider = document.getElementById('price-slider');
     noUiSlider.create(slider, {
         start: [{{ request.GET.price_min|default:min_price }}, {{ request.GET.price_max|default:max_price }}],
@@ -172,7 +203,7 @@ $(document).ready(function () {
         }
         $('#price-range').text(`От ${values[0]} до ${values[1]}`);
         currentPage = 1;
-        loadResults();
+        loadResults(true);
     });
 
     priceMinInput.on('change', function () {
@@ -180,7 +211,7 @@ $(document).ready(function () {
         if (!isNaN(minValue)) {
             slider.noUiSlider.set([minValue, null]);
             currentPage = 1;
-            loadResults();
+            loadResults(true);
         }
     });
 
@@ -189,7 +220,7 @@ $(document).ready(function () {
         if (!isNaN(maxValue)) {
             slider.noUiSlider.set([null, maxValue]);
             currentPage = 1;
-            loadResults();
+            loadResults(true);
         }
     });
 });
