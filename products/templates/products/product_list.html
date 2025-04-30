@@ -165,6 +165,8 @@ $(document).ready(function () {
             priceMaxInput.val(val);
         }
         $('#price-range').text(`От ${values[0]} до ${values[1]}`);
+        currentPage = 1;
+        loadResults();
     });
 
     // При изменении в полях ввода обновляем ползунок и сразу отправляем запрос
