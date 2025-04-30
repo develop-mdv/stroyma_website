@@ -7,9 +7,11 @@ from django.db.models import Q, Max, Min
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
+from django.utils.html import strip_tags
 import logging
 
 logger = logging.getLogger(__name__)
+EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
 
 
 def product_list(request):
@@ -175,7 +177,7 @@ def merge_session_cart_to_user_cart(request):
 def checkout(request):
     cart = request.session.get('cart', {})
     if not cart:
-        return redirect('view_cart')  # Если корзина пуста, перенаправляем на страницу корзины
+        return redirect('view_cart')  # Если корзина пустая — уходим
 
     cart_items = []
     total_price = 0
@@ -193,24 +195,50 @@ def checkout(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            # Создаем новый заказ
+            user_name = form.cleaned_data['first_name']
+            user_lastname = form.cleaned_data['last_name']
+            user_email = form.cleaned_data['email']
+            user_phone = form.cleaned_data['phone']
+            delivery_address = form.cleaned_data['address']
+
+            # Создаем заказ в БД
             order = Order.objects.create(
-                user=request.user if request.user.is_authenticated else None
+                user=request.user if request.user.is_authenticated else None,
+                status='pending'
             )
 
+            # Сохраняем товары в заказ
             for product_id, quantity in cart.items():
                 product = get_object_or_404(Product, pk=product_id)
-                OrderItem.objects.create(
-                    order=order,
-                    product=product,
-                    quantity=quantity
+                OrderItem.objects.create(order=order, product=product, quantity=quantity)
+
+            # Формируем текст письма
+            html_order_summary = render_to_string('products/order_email_template.html', {
+                'items': cart_items,
+                'total_price': total_price,
+                'user_name': user_name,
+                'user_lastname': user_lastname,
+                'user_email': user_email,
+                'user_phone': user_phone,
+                'delivery_address': delivery_address,
+            })
+
+            plain_text = strip_tags(html_order_summary)
+            try:
+                send_mail(
+                    f'Новый заказ от {user_name} {user_lastname}',
+                    plain_text,
+                    EMAIL_TO_SEND,
+                    [EMAIL_TO_SEND],  # Email администратора / менеджера
+                    html_message=html_order_summary,
+                    fail_silently=False
                 )
-
-            # Очищаем корзину после оформления
-            request.session['cart'] = {}
-
-            messages.success(request, 'Ваш заказ успешно оформлен!')
-            return redirect('checkout_success')
+                request.session['cart'] = {}  # Очищаем корзину после оформления
+                messages.success(request, 'Спасибо! Заказ отправлен менеджеру. С вами свяжутся.')
+                return redirect('checkout_success')
+            except Exception as e:
+                logger.error(f'Ошибка при отправке email: {e}')
+                messages.error(request, f'Произошла ошибка при отправке заказа: {e}')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
@@ -236,7 +264,7 @@ def contact(request):
             email = form.cleaned_data['email']
             if '@yandex.ru' not in email:
                 name += f'|{email}'
-                email = 'ivanverovitch@yandex.ru'
+                email = EMAIL_TO_SEND
 
             message = form.cleaned_data['message']
 
@@ -246,7 +274,7 @@ def contact(request):
                     f'Новое сообщение от {name}',  # Тема письма
                     message,                      # Тело письма
                     email,                       # Отправитель
-                    ['ivanverovitch@yandex.ru'],  # Получатель (администратор)
+                    [EMAIL_TO_SEND],  # Получатель (администратор)
                     fail_silently=False          # Не игнорируем ошибки
                 )
                 messages.success(request, 'Ваше сообщение успешно отправлено!')

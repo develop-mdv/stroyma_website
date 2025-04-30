@@ -1,0 +1,18 @@
+<h2>Новый заказ от пользователя</h2>
+<p><strong>Имя:</strong> {{ user_name }} {{ user_lastname }}</p>
+<p><strong>Email:</strong> {{ user_email }}</p>
+<p><strong>Телефон:</strong> {{ user_phone }}</p>
+<p><strong>Адрес доставки:</strong> {{ delivery_address }}</p>
+
+<hr>
+
+<h4>Состав заказа:</h4>
+<ul>
+    {% for item in items %}
+    <li>
+        {{ item.product.name }} - {{ item.quantity }} шт. × {{ item.product.price }} руб. = {{ item.total_price }} руб.
+    </li>
+    {% endfor %}
+</ul>
+
+<h4><strong>Итого:</strong> {{ total_price|floatformat:2 }} руб.</h4>
