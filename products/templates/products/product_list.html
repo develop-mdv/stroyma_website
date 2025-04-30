@@ -109,17 +109,7 @@ $(document).ready(function () {
         loadResults();
     });
 
-    // Фильтр по минимальной цене
-    priceMinInput.on('input', function () {
-        currentPage = 1;
-        loadResults();
-    });
 
-    // Фильтр по максимальной цене
-    priceMaxInput.on('input', function () {
-        currentPage = 1;
-        loadResults();
-    });
 
     // Сортировка
     sortBySelect.on('change', function () {
@@ -170,7 +160,7 @@ $(document).ready(function () {
     });
 
     // При изменении в полях ввода обновляем ползунок и сразу отправляем запрос
-    priceMinInput.on('input', function () {
+    priceMinInput.on('change', function () {
         const minValue = parseInt($(this).val());
         if (!isNaN(minValue)) {
             slider.noUiSlider.set([minValue, null]);
@@ -179,7 +169,7 @@ $(document).ready(function () {
         }
     });
 
-    priceMaxInput.on('input', function () {
+    priceMaxInput.on('change', function () {
         const maxValue = parseInt($(this).val());
         if (!isNaN(maxValue)) {
             slider.noUiSlider.set([null, maxValue]);
