@@ -23,8 +23,8 @@ from products import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('products/', include('products.urls')),
-    path('cart/', views.view_cart, name='view_cart'),
+    path('', include('products.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:
