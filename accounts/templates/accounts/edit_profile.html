@@ -1,21 +1,29 @@
 {% extends 'products/base.html' %}
 {% block content %}
-<div class="container py-5">
-    <h2 class="mb-4">Редактирование профиль</h2>
+<div class="bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-2xl font-bold text-deep-green mb-6">Редактирование профиля</h2>
 
-    <form method="post" class="shadow-sm p-4 rounded bg-light">
+    <form method="post" class="space-y-6">
         {% csrf_token %}
         {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
+            <div>
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                <input type="{{ field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}"
+                       value="{{ field.value|default_if_none:'' }}"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
                 {% if field.errors %}
-                    <div class="text-danger mt-1">{{ field.errors }}</div>
+                    <div class="text-red-500 text-sm mt-1">{{ field.errors }}</div>
                 {% endif %}
             </div>
         {% endfor %}
-        <button type="submit" class="btn btn-success">Сохранить изменения</button>
-        <a href="{% url 'profile' %}" class="btn btn-outline-secondary ms-2">Отмена</a>
+        <div class="flex space-x-4">
+            <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+                Сохранить изменения
+            </button>
+            <a href="{% url 'profile' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+                Отмена
+            </a>
+        </div>
     </form>
 </div>
 {% endblock %}

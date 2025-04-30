@@ -1,92 +1,104 @@
 {% extends 'products/base.html' %}
 {% block content %}
 
-<h1 class="mb-5">Оформление заказа</h1>
+<h1 class="text-3xl font-bold text-deep-green mb-8">Оформление заказа</h1>
 
 <!-- Товары в корзине -->
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h4>Ваш заказ:</h4>
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Товар</th>
-                    <th>Количество</th>
-                    <th>Цена за ед.</th>
-                    <th>Сумма</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.quantity }} шт.</td>
-                    <td>{{ item.product.price }} руб.</td>
-                    <td>{{ item.total_price|floatformat:2 }} руб.</td>
-                </tr>
-                {% endfor %}
-                <tr class="table-success">
-                    <td colspan="3" class="text-end"><strong>Итого:</strong></td>
-                    <td><strong>{{ total_price|floatformat:2 }} руб.</strong></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <h4 class="text-xl font-semibold text-deep-green mb-4">Ваш заказ:</h4>
+    <div class="grid grid-cols-1 gap-4">
+        {% for item in cart_items %}
+        <div class="flex items-center border-b border-gray-200 py-4">
+            <!-- Изображение товара -->
+            <div class="w-16 h-16 flex-shrink-0">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                {% else %}
+                <img src="https://via.placeholder.com/64x64?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                {% endif %}
+            </div>
+            <!-- Информация о товаре -->
+            <div class="flex-1 ml-4">
+                <h5 class="text-md font-semibold text-deep-green">{{ item.product.name }}</h5>
+                <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
+                <p class="text-sm text-gray-600">Цена за ед.: {{ item.product.price }} руб.</p>
+                <p class="text-sm font-bold text-deep-green">Сумма: {{ item.total_price|floatformat:2 }} руб.</p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="border-t border-gray-200 pt-4 text-right">
+            <h4 class="text-xl font-bold text-deep-green">Итого: {{ total_price|floatformat:2 }} руб.</h4>
+        </div>
     </div>
 </div>
 
 <!-- Форма оформления заказа -->
-<form method="post" class="row g-3">
+<form method="post" class="bg-white rounded-lg shadow-lg p-6">
     {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Имя -->
+        <div>
+            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Имя</label>
+            <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
+                   value="{{ form.first_name.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.first_name.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
 
-    <!-- Имя -->
-    <div class="col-md-6">
-        <label for="{{ form.first_name.id_for_label }}" class="form-label">Имя</label>
-        {{ form.first_name }}
-        {% if form.first_name.errors %}
-            <div class="text-danger">{{ form.first_name.errors }}</div>
-        {% endif %}
+        <!-- Фамилия -->
+        <div>
+            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Фамилия</label>
+            <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
+                   value="{{ form.last_name.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.last_name.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                   value="{{ form.email.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.email.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Телефон -->
+        <div>
+            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">Телефон</label>
+            <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
+                   value="{{ form.phone.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.phone.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.phone.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Адрес доставки -->
+        <div class="col-span-1 md:col-span-2">
+            <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Адрес доставки</label>
+            <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">{{ form.address.value|default_if_none:'' }}</textarea>
+            {% if form.address.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.address.errors }}</div>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Фамилия -->
-    <div class="col-md-6">
-        <label for="{{ form.last_name.id_for_label }}" class="form-label">Фамилия</label>
-        {{ form.last_name }}
-        {% if form.last_name.errors %}
-            <div class="text-danger">{{ form.last_name.errors }}</div>
-        {% endif %}
-    </div>
-
-    <!-- Email -->
-    <div class="col-md-6">
-        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-            <div class="text-danger">{{ form.email.errors }}</div>
-        {% endif %}
-    </div>
-
-    <!-- Телефон -->
-    <div class="col-md-6">
-        <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон</label>
-        {{ form.phone }}
-        {% if form.phone.errors %}
-            <div class="text-danger">{{ form.phone.errors }}</div>
-        {% endif %}
-    </div>
-
-    <!-- Адрес доставки -->
-    <div class="col-md-12">
-        <label for="{{ form.address.id_for_label }}" class="form-label">Адрес доставки</label>
-        {{ form.address }}
-        {% if form.address.errors %}
-            <div class="text-danger">{{ form.address.errors }}</div>
-        {% endif %}
-    </div>
-
-    <!-- Кнопка подтверждения заказа -->
-    <div class="col-12 mt-4">
-        <button type="submit" class="btn btn-success">Подтвердить заказ</button>
-        <a href="{% url 'view_cart' %}" class="btn btn-primary ms-3">Вернуться к корзине</a>
+    <!-- Кнопки -->
+    <div class="mt-6 flex space-x-4">
+        <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            Подтвердить заказ
+        </button>
+        <a href="{% url 'view_cart' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+            Вернуться к корзине
+        </a>
     </div>
 </form>
 

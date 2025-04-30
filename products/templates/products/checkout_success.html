@@ -1,8 +1,10 @@
 {% extends 'products/base.html' %}
 {% block content %}
-<div class="container mt-5">
-    <h2>Спасибо за заказ!</h2>
-    <p>Мы получили ваш заказ. Менеджер свяжется с вами в ближайшее время.</p>
-    <a href="{% url 'product_list' %}" class="btn btn-primary">Продолжить покупки</a>
+<div class="bg-white rounded-lg shadow-lg p-6 text-center">
+    <h2 class="text-2xl font-bold text-deep-green mb-4">Спасибо за заказ!</h2>
+    <p class="text-gray-600 mb-6">Мы получили ваш заказ. Менеджер свяжется с вами в ближайшее время.</p>
+    <a href="{% url 'product_list' %}" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        Продолжить покупки
+    </a>
 </div>
 {% endblock %}

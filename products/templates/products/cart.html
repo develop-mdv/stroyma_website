@@ -1,49 +1,62 @@
-{% extends 'products/base.html' %}  <!-- Наследуем базовый шаблон -->
+{% extends 'products/base.html' %}
 
 {% block content %}
-<h1 class="mb-5">Корзина</h1>
+<h1 class="text-3xl font-bold text-deep-green mb-8">Корзина</h1>
 
 <!-- Список товаров в корзине -->
 {% if cart_items %}
-<div class="table-responsive">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Товар</th>
-                <th>Количество</th>
-                <th>Цена за единицу</th>
-                <th>Общая цена</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }} шт.</td>
-                <td>{{ item.product.price }} руб.</td>
-                <td>{{ item.total_price }} руб.</td>
-                <td>
-                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="btn btn-danger btn-sm">Удалить</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <div class="grid grid-cols-1 gap-6">
+        {% for item in cart_items %}
+        <div class="flex items-center border-b border-gray-200 py-4">
+            <!-- Изображение товара -->
+            <div class="w-24 h-24 flex-shrink-0">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                {% else %}
+                <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                {% endif %}
+            </div>
+            <!-- Информация о товаре -->
+            <div class="flex-1 ml-6">
+                <h5 class="text-lg font-semibold text-deep-green">{{ item.product.name }}</h5>
+                <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
+                <p class="text-sm text-gray-600">Цена за единицу: {{ item.product.price }} руб.</p>
+                <p class="text-md font-bold text-deep-green">Общая цена: {{ item.total_price }} руб.</p>
+            </div>
+            <!-- Действия -->
+            <div>
+                <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition shadow-hover">
+                    Удалить
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-<!-- Итоговая сумма -->
-<div class="mt-4">
-    <h4>Итого: {{ total_price }} руб.</h4>
-</div>
+    <!-- Итоговая сумма -->
+    <div class="mt-6 text-right">
+        <h4 class="text-xl font-bold text-deep-green">Итого: {{ total_price }} руб.</h4>
+    </div>
 
-<!-- Кнопка оформления заказа -->
-<a href="{% url 'checkout' %}" class="btn btn-success mt-3">Оформить заказ</a>
+    <!-- Кнопка оформления заказа -->
+    <div class="mt-6 text-right">
+        <a href="{% url 'checkout' %}" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            Оформить заказ
+        </a>
+    </div>
+</div>
 
 {% else %}
-<div class="alert alert-info">Корзина пуста.</div>
+<div class="bg-white p-6 rounded-lg shadow-lg text-center">
+    <p class="text-gray-600">Корзина пуста.</p>
+</div>
 {% endif %}
 
 <!-- Ссылка для продолжения покупок -->
-<a href="{% url 'product_list' %}" class="btn btn-primary mt-3">Продолжить покупки</a>
+<div class="mt-8">
+    <a href="{% url 'product_list' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+        Продолжить покупки
+    </a>
+</div>
 {% endblock %}

@@ -1,27 +1,35 @@
-{% extends 'products/base.html' %}  <!-- Наследуем базовый шаблон -->
+{% extends 'products/base.html' %}
 
 {% block content %}
-<h1 class="mb-5">Контакты</h1>
+<h1 class="text-3xl font-bold text-deep-green mb-8">Контакты</h1>
 
 <!-- Информация о контактах -->
-<div class="row">
-    <div class="col-md-6">
-        <p>Если у вас возникли вопросы или пожелания, свяжитесь с нами:</p>
-        <ul class="list-group">
-            <li class="list-group-item"><strong>Телефон:</strong> +7 (123) 456-78-90</li>
-            <li class="list-group-item"><strong>Email:</strong> info@stroymaterials.com</li>
-            <li class="list-group-item"><strong>Адрес:</strong> г. Москва, ул. Строителей, д. 123</li>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <p class="text-gray-600 mb-4">Если у вас возникли вопросы или пожелания, свяжитесь с нами:</p>
+        <ul class="space-y-2">
+            <li class="flex items-center">
+                <i class="fas fa-phone mr-2 text-deep-green"></i>
+                <span><strong>Телефон:</strong> +7 (123) 456-78-90</span>
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-envelope mr-2 text-deep-green"></i>
+                <span><strong>Email:</strong> info@stroymaterials.com</span>
+            </li>
+            <li class="flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-deep-green"></i>
+                <span><strong>Адрес:</strong> г. Москва, ул. Строителей, д. 123</span>
+            </li>
         </ul>
     </div>
 
-    <!-- Карта (Яндекс.Карты) -->
-    <div class="col-md-6">
-        <h3 class="mb-3">Наша локация</h3>
-        <div class="ratio ratio-16x9">
+    <!-- Карта -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-semibold text-deep-green mb-4">Наша локация</h3>
+        <div class="w-full h-64">
             <iframe src="https://yandex.ru/map-widget/v1/org/stroyma/121325759677/?ll=36.195552%2C51.745573&z=18"
-                    class="w-100"  <!-- Добавлен класс для адаптивности -->
-                    height="400"
-                    frameborder="0"  <!-- Изменено на 0 -->
+                    class="w-full h-full rounded-lg"
+                    frameborder="0"
                     allowfullscreen="true">
             </iframe>
         </div>
@@ -29,37 +37,48 @@
 </div>
 
 <!-- Форма обратной связи -->
-<h3 class="mt-5">Напишите нам</h3>
-<form method="post" class="row g-3">
+<h3 class="text-xl font-semibold text-deep-green mb-4">Напишите нам</h3>
+<form method="post" class="bg-white rounded-lg shadow-lg p-6">
     {% csrf_token %}
-    <div class="col-md-12">
-        <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
-        {{ form.name }}
-        {% if form.name.errors %}
-            <div class="text-danger">{{ form.name.errors }}</div>
-        {% endif %}
+    <div class="grid grid-cols-1 gap-6">
+        <div>
+            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Имя</label>
+            <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
+                   value="{{ form.name.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.name.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                   value="{{ form.email.value|default_if_none:'' }}"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            {% if form.email.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray-700">Сообщение</label>
+            <textarea name="{{ form.message.name }}" id="{{ form.message.id_for_label }}"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">{{ form.message.value|default_if_none:'' }}</textarea>
+            {% if form.message.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.message.errors }}</div>
+            {% endif %}
+        </div>
     </div>
-    <div class="col-md-12">
-        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-            <div class="text-danger">{{ form.email.errors }}</div>
-        {% endif %}
-    </div>
-    <div class="col-md-12">
-        <label for="{{ form.message.id_for_label }}" class="form-label">Сообщение</label>
-        {{ form.message }}
-        {% if form.message.errors %}
-            <div class="text-danger">{{ form.message.errors }}</div>
-        {% endif %}
-    </div>
-    <div class="col-12 mt-4">
-        <button type="submit" class="btn btn-success">Отправить</button>
+    <div class="mt-6">
+        <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            Отправить
+        </button>
     </div>
 </form>
 
 <!-- Кнопка возврата к каталогу -->
-<div class="mt-5">
-    <a href="{% url 'product_list' %}" class="btn btn-primary">Вернуться к каталогу товаров</a>
+<div class="mt-8">
+    <a href="{% url 'product_list' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+        Вернуться к каталогу товаров
+    </a>
 </div>
 {% endblock %}

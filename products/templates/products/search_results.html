@@ -1,54 +1,58 @@
-<!-- Результаты поиска -->
-<div class="row">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for product in products %}
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <!-- Изображение товара -->
-            {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top img-fluid">
-            {% endif %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover">
+        <!-- Изображение товара -->
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+        {% else %}
+        <img src="https://via.placeholder.com/300x200?text=Нет+изображения" alt="Нет изображения" class="w-full h-48 object-cover">
+        {% endif %}
 
-            <!-- Содержимое карточки -->
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description|truncatewords:10 }}</p>
-                <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
-                <p class="card-text"><strong>На складе:</strong> {{ product.stock }} шт.</p>
+        <!-- Содержимое карточки -->
+        <div class="p-4">
+            <h5 class="text-lg font-semibold text-deep-green">{{ product.name }}</h5>
+            <p class="text-sm text-gray-600">{{ product.description|truncatewords:10 }}</p>
+            <p class="text-md font-bold text-deep-green mt-2">{{ product.price }} руб.</p>
+            <p class="text-sm text-gray-600">На складе: {{ product.stock }} шт.</p>
 
-                <!-- Добавление рейтинга (опционально) -->
-                <p class="card-text"><strong>Рейтинг:</strong>
-                    {% for i in '⭐⭐⭐⭐⭐' %}
+            <!-- Рейтинг -->
+            <p class="text-sm text-gray-600">
+                <span class="text-yellow-400">
+                    {% for i in '12345' %}
                         {% if forloop.counter <= product.rating %}
-                            ⭐
+                            <i class="fas fa-star"></i>
                         {% else %}
-                            ⬛
+                            <i class="far fa-star"></i>
                         {% endif %}
                     {% endfor %}
-                </p>
+                </span>
+            </p>
 
-                <!-- Кнопки действий -->
-                <div class="d-flex justify-content-between mt-3">
-                    <!-- Кнопка "Подробнее" -->
-                    <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-primary">Подробнее</a>
-                    <!-- Кнопка "В корзину" -->
-                    <a href="{% url 'add_to_cart' pk=product.pk %}" class="btn btn-success btn-sm">В корзину</a>
-                </div>
+            <!-- Кнопки -->
+            <div class="mt-4 flex justify-between">
+                <a href="{% url 'product_detail' pk=product.pk %}" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition">
+                    Подробнее
+                </a>
+                <a href="{% url 'add_to_cart' pk=product.pk %}" class="bg-sandy text-deep-green px-4 py-2 rounded-full hover:bg-gray-300 transition">
+                    В корзину
+                </a>
             </div>
         </div>
     </div>
     {% empty %}
-    <!-- Сообщение, если товаров не найдено -->
-    <div class="col-md-12">
-        <div class="alert alert-info text-center" role="alert">
-            Товаров не найдено.
+    <div class="col-span-full">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p class="text-gray-600">Товаров не найдено.</p>
         </div>
     </div>
     {% endfor %}
 </div>
 
-<!-- Блок пагинации -->
-<div class="mt-4">
+<!-- Пагинация -->
+<div class="mt-8 text-center">
     {% if products.has_next %}
-        <button id="load-more" class="btn btn-primary">Загрузить еще</button>
+        <button id="load-more" class="bg-deep-green text-white px-6 py-2 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            Загрузить еще
+        </button>
     {% endif %}
 </div>
