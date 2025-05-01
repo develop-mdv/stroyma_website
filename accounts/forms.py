@@ -19,6 +19,12 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 class CustomUserChangeForm(UserChangeForm):
+    current_password = forms.CharField(
+        label="Текущий пароль",
+        widget=forms.PasswordInput,
+        required=False,
+        help_text="Введите текущий пароль, если хотите изменить пароль."
+    )
     new_password = forms.CharField(
         label="Новый пароль",
         widget=forms.PasswordInput,
@@ -29,7 +35,7 @@ class CustomUserChangeForm(UserChangeForm):
         label="Подтверждение пароля",
         widget=forms.PasswordInput,
         required=False,
-        help_text="Введите пароль еще раз для подтверждения."
+        help_text="Введите новый пароль еще раз для подтверждения."
     )
 
     class Meta:
@@ -52,11 +58,16 @@ class CustomUserChangeForm(UserChangeForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        current_password = cleaned_data.get('current_password')
         new_password = cleaned_data.get('new_password')
         new_password_confirm = cleaned_data.get('new_password_confirm')
 
-        if new_password and new_password != new_password_confirm:
-            self.add_error('new_password_confirm', "Пароли не совпадают.")
+        # Проверка текущего пароля только если меняется пароль
+        if new_password:
+            if not current_password or not self.instance.check_password(current_password):
+                self.add_error('current_password', "Неверный текущий пароль.")
+            if new_password != new_password_confirm:
+                self.add_error('new_password_confirm', "Пароли не совпадают.")
         if new_password_confirm and not new_password:
             self.add_error('new_password', "Введите новый пароль.")
         return cleaned_data
