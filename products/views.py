@@ -281,9 +281,7 @@ def contact(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
-            if '@yandex.ru' not in email:
-                name += f'|{email}'
-                email = EMAIL_TO_SEND
+            name += f'|email:{email}'
 
             message = form.cleaned_data['message']
 
@@ -291,7 +289,7 @@ def contact(request):
                 send_mail(
                     f'Новое сообщение от {name}',
                     message,
-                    email,
+                    EMAIL_TO_SEND,
                     [EMAIL_TO_SEND],
                     fail_silently=False
                 )
