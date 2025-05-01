@@ -20,9 +20,15 @@
             <!-- Информация о товаре -->
             <div class="flex-1 ml-6">
                 <h5 class="text-lg font-medium text-deep-green">{{ item.product.name }}</h5>
-                <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
+                <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="flex items-center mt-2 update-cart-form">
+                    {% csrf_token %}
+                    <label for="quantity-{{ item.product.pk }}" class="text-sm font-medium text-gray-600 mr-2">Количество:</label>
+                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
+                           class="w-16 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border update-cart-quantity"
+                           data-product-id="{{ item.product.pk }}">
+                </form>
                 <p class="text-sm text-gray-600">Цена за единицу: {{ item.product.price }} руб.</p>
-                <p class="text-md font-bold text-deep-green">Общая цена: {{ item.total_price }} руб.</p>
+                <p class="text-md font-bold text-deep-green" id="item-total-{{ item.product.pk }}">Общая цена: {{ item.total_price }} руб.</p>
             </div>
             <!-- Действия -->
             <div>
@@ -36,7 +42,7 @@
 
     <!-- Итоговая сумма -->
     <div class="mt-6 text-right">
-        <h4 class="text-xl font-bold text-deep-green">Итого: {{ total_price }} руб.</h4>
+        <h4 class="text-xl font-bold text-deep-green" id="total-price">Итого: {{ total_price }} руб.</h4>
     </div>
 
     <!-- Кнопка оформления заказа -->
@@ -59,4 +65,54 @@
         Продолжить покупки
     </a>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('.update-cart-quantity').on('change', function () {
+        var $input = $(this);
+        var productId = $input.data('product-id');
+        var quantity = parseInt($input.val());
+        var maxQuantity = parseInt($input.attr('max'));
+
+        // Проверка на допустимое количество
+        if (isNaN(quantity) || quantity < 1) {
+            alert('Пожалуйста, введите количество не менее 1.');
+            $input.val(1);
+            return;
+        }
+        if (quantity > maxQuantity) {
+            alert(`Доступно только ${maxQuantity} шт.`);
+            $input.val(maxQuantity);
+            return;
+        }
+
+        // Отправка AJAX-запроса
+        $.ajax({
+            url: `/cart/update/${productId}/`,
+            method: 'POST',
+            data: {
+                quantity: quantity,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Обновляем цену товара и итоговую сумму
+                    $('#item-total-' + productId).text('Общая цена: ' + response.item_total_price + ' руб.');
+                    $('#total-price').text('Итого: ' + response.total_price + ' руб.');
+                } else {
+                    alert(response.message);
+                    $input.val(response.current_quantity); // Восстанавливаем старое значение
+                }
+            },
+            error: function () {
+                alert('Произошла ошибка при обновлении корзины.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

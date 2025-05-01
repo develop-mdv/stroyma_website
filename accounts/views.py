@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
-
 from products.models import Order
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, CustomUserChangeForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .decorators import login_required, custom_login_required
-from django.contrib.auth.forms import UserChangeForm
-
 from django.http import JsonResponse
 
 def register_view(request):
@@ -56,12 +53,12 @@ def profile_view(request):
 @custom_login_required
 def edit_profile(request):
     if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Данные профиля успешно обновлены!')
             return redirect('profile')
     else:
-        form = UserChangeForm(instance=request.user)
+        form = CustomUserChangeForm(instance=request.user)
 
     return render(request, 'accounts/edit_profile.html', {'form': form})

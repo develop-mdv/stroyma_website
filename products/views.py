@@ -134,6 +134,52 @@ def add_to_cart(request, pk):
 
     return redirect('view_cart')
 
+def update_cart(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    cart = request.session.get('cart', {})
+
+    if request.method == 'POST':
+        try:
+            quantity = int(request.POST.get('quantity', 1))
+            if quantity <= 0:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Количество должно быть больше 0.',
+                    'current_quantity': cart.get(str(product.pk), 1)
+                })
+
+            if quantity > product.stock:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Доступно только {product.stock} шт.',
+                    'current_quantity': cart.get(str(product.pk), 1)
+                })
+
+            cart[str(product.pk)] = quantity
+            request.session['cart'] = cart
+            request.session.modified = True
+
+            # Рассчитываем новую цену товара и итоговую сумму
+            item_total_price = product.price * quantity
+            total_price = sum(
+                get_object_or_404(Product, pk=pid).price * qty
+                for pid, qty in cart.items()
+            )
+
+            return JsonResponse({
+                'success': True,
+                'item_total_price': item_total_price,
+                'total_price': total_price
+            })
+        except ValueError:
+            return JsonResponse({
+                'success': False,
+                'message': 'Недопустимое количество.',
+                'current_quantity': cart.get(str(product.pk), 1)
+            })
+
+    return redirect('view_cart')
+
 def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
@@ -213,7 +259,7 @@ def checkout(request):
         total_price += item_total
 
     if request.method == 'POST':
-        form = OrderForm(request.POST)
+        form = OrderForm(request.POST, user=request.user)
         if form.is_valid():
             user_name = form.cleaned_data['first_name']
             user_lastname = form.cleaned_data['last_name']
@@ -262,7 +308,7 @@ def checkout(request):
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
-        form = OrderForm()
+        form = OrderForm(user=request.user)
 
     context = {
         'form': form,

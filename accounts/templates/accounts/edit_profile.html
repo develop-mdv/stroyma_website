@@ -5,17 +5,48 @@
 
     <form method="post" class="space-y-6">
         {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray">{{ field.label }}</label>
-                <input type="{{ field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}"
-                       value="{{ field.value|default_if_none:'' }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
-                {% if field.errors %}
-                    <div class="error-message">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
+        <div>
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.username.label }}</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error-message">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="error-message">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.last_name.label }}</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="error-message">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.new_password.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.new_password.label }}</label>
+            {{ form.new_password }}
+            {% if form.new_password.errors %}
+                <div class="error-message">{{ form.new_password.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.new_password_confirm.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.new_password_confirm.label }}</label>
+            {{ form.new_password_confirm }}
+            {% if form.new_password_confirm.errors %}
+                <div class="error-message">{{ form.new_password_confirm.errors }}</div>
+            {% endif %}
+        </div>
         <div class="flex space-x-4">
             <button type="submit" class="button bg-deep-green text-white shadow-hover">
                 Сохранить изменения
