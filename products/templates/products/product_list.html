@@ -114,6 +114,7 @@ $(document).ready(function () {
     const suggestionsContainer = $('#autocomplete-suggestions');
     let currentPage = 1;
     let isLoading = false;
+    loadResults(true);
 
     // Функция загрузки результатов поиска
     function loadResults(reset = false) {
@@ -248,7 +249,7 @@ $(document).ready(function () {
         }
     });
 
-    slider.noUiSlider.on('update', function (values, handle) {
+    slider.noUiSlider.on('change', function (values, handle) {
         let val = values[handle];
         if (handle === 0) {
             priceMinInput.val(val);
