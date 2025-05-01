@@ -9,17 +9,23 @@
     <div class="grid grid-cols-1 gap-6">
         {% for item in cart_items %}
         <div class="flex items-center border-b border-gray-200 py-4">
-            <!-- Изображение товара -->
+            <!-- Изображение товара с ссылкой -->
             <div class="w-24 h-24 flex-shrink-0">
                 {% if item.product.image %}
-                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                <a href="{% url 'product_detail' pk=item.product.pk %}">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                </a>
                 {% else %}
-                <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                <a href="{% url 'product_detail' pk=item.product.pk %}">
+                    <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
+                </a>
                 {% endif %}
             </div>
             <!-- Информация о товаре -->
             <div class="flex-1 ml-6">
-                <h5 class="text-lg font-medium text-deep-green">{{ item.product.name }}</h5>
+                <a href="{% url 'product_detail' pk=item.product.pk %}" class="text-lg font-medium text-deep-green hover:underline">
+                    {{ item.product.name }}
+                </a>
                 <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="flex items-center mt-2 update-cart-form">
                     {% csrf_token %}
                     <label for="quantity-{{ item.product.pk }}" class="text-sm font-medium text-gray-600 mr-2">Количество:</label>
