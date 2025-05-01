@@ -6,12 +6,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .decorators import login_required, custom_login_required
 from django.http import JsonResponse
+from accounts.models import UserProfile
 
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Создаем профиль пользователя
+            UserProfile.objects.create(user=user)
             login(request, user)
             merge_session_cart_to_user_cart(request)
             messages.success(request, "Вы успешно зарегистрировались!")
