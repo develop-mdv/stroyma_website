@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('products.urls')),
     path('accounts/', include('accounts.urls')),
+    path('product/<int:pk>/quick-view/', views.quick_view, name='quick_view'),
 ]
 
 if settings.DEBUG:

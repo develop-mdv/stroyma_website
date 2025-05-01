@@ -1,15 +1,22 @@
 {% extends 'products/base.html' %}
 
 {% block content %}
-<h1 class="text-3xl font-bold text-deep-green mb-8">{{ product.name }}</h1>
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-600 mb-4">
+    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
+    <span class="mx-2">/</span>
+    <span>{{ product.name }}</span>
+</nav>
+
+<h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">{{ product.name }}</h1>
 
 <!-- Карточка товара -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-lg p-6">
+    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
         <!-- Изображение товара -->
         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-96 object-cover rounded-lg" loading="lazy">
     </div>
-    <div class="bg-white rounded-lg shadow-lg p-6">
+    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
         <!-- Описание товара -->
         <p class="text-gray-600 mb-2"><strong>Описание:</strong> {{ product.description }}</p>
         <p class="text-gray-600 mb-2"><strong>Цена:</strong> {{ product.price }} руб.</p>

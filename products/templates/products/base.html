@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             color: #333333;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .hover-scale {
             transition: transform 0.3s ease;
@@ -29,20 +30,53 @@
         .shadow-hover:hover {
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
+        /* Светлая тема */
+        [data-theme="light"] {
+            --bg-milky-white: #FFFDF7;
+            --bg-sandy: #F5E6D3;
+            --bg-deep-green: #2D5D4C;
+            --text-deep-green: #2D5D4C;
+            --bg-concrete-gray: #808080;
+            --text-gray: #333333;
+            --bg-white: #ffffff;
+            --text-gray-600: #666666;
+        }
+        /* Темная тема */
+        [data-theme="dark"] {
+            --bg-milky-white: #1a1a1a;
+            --bg-sandy: #3a2e1f;
+            --bg-deep-green: #1a3c34;
+            --text-deep-green: #4CAF50;
+            --bg-concrete-gray: #4a4a4a;
+            --text-gray: #e0e0e0;
+            --bg-white: #2a2a2a;
+            --text-gray-600: #b0b0b0;
+        }
+        /* Применение переменных */
+        body {
+            background-color: var(--bg-milky-white);
+            color: var(--text-gray);
+        }
         .bg-milky-white {
-            background-color: #FFFDF7;
+            background-color: var(--bg-milky-white);
         }
         .bg-sandy {
-            background-color: #F5E6D3;
+            background-color: var(--bg-sandy);
         }
         .bg-deep-green {
-            background-color: #2D5D4C;
+            background-color: var(--bg-deep-green);
         }
         .text-deep-green {
-            color: #2D5D4C;
+            color: var(--text-deep-green);
         }
         .bg-concrete-gray {
-            background-color: #808080;
+            background-color: var(--bg-concrete-gray);
+        }
+        .bg-white {
+            background-color: var(--bg-white);
+        }
+        .text-gray-600 {
+            color: var(--text-gray-600);
         }
         .texture-overlay {
             background-image: url('https://via.placeholder.com/1920x1080?text=Concrete+Texture');
@@ -54,26 +88,53 @@
             height: 100%;
             z-index: -1;
         }
+        /* Анимация появления */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        /* Стили для модального окна */
+        #quick-view-modal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #quick-view-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        #quick-view-modal.show #modal-content {
+            transform: scale(1);
+        }
     </style>
 </head>
-<body class="bg-milky-white relative">
+<body class="relative">
     <!-- Текстурный фон -->
     <div class="texture-overlay"></div>
 
     <!-- Шапка сайта -->
-    <header class="bg-sandy text-deep-green py-4 shadow-lg">
+    <header class="fixed top-0 left-0 w-full bg-sandy text-deep-green py-4 shadow-lg z-50">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <!-- Логотип -->
                 <div class="flex items-center space-x-3">
-                    <!-- Рекомендация: Сожмите логотип до 200x200 px для оптимизации загрузки -->
-                    <img src="{% static 'images/logo_new200.png' %}" alt="Логотип СтройМа" class=" object-contain" loading="lazy">
+                    <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-12 w-auto object-contain" loading="lazy">
                     <h1 class="text-2xl font-bold hidden md:block">СтройМа</h1>
                 </div>
 
-                <!-- кстати я заметил что в мобильной версии логотип и название сайта занимают слишком много места и закрывают кнопки навигации, давай это исправим -->
-                <div class="flex items-center space-x-3 md:hidden">
-                    <button id="menu-toggle" class="text-deep-green focus:outline-none">
+                <!-- Переключатель тем -->
+                <div class="flex items-center space-x-3">
+                    <button id="theme-toggle" class="text-deep-green focus:outline-none">
+                        <i class="fas fa-moon text-2xl"></i>
+                    </button>
+                    <button id="menu-toggle" class="md:hidden text-deep-green focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -154,7 +215,7 @@
     </header>
 
     <!-- Основное содержимое -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8 pt-24">
         {% block content %}
         <!-- Содержимое страницы будет здесь -->
         {% endblock %}
@@ -185,8 +246,43 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- JavaScript для кнопки "Наверх" и мобильного меню -->
+    <!-- Модальное окно для быстрого просмотра -->
+    <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div id="modal-content" class="bg-white rounded-xl p-6 max-w-lg w-full relative shadow-2xl">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <div id="quick-view-content" class="flex flex-col md:flex-row gap-6">
+                <!-- Контент будет загружен через AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
+        // Переключатель тем
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon text-2xl"></i>' : '<i class="fas fa-sun text-2xl"></i>';
+        });
+
+        // Загрузка сохраненной темы
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon text-2xl"></i>' : '<i class="fas fa-sun text-2xl"></i>';
+
+        // Мобильное меню
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Кнопка "Наверх"
         window.addEventListener('scroll', () => {
             const scrollTopButton = document.getElementById('scroll-top');
             if (window.scrollY > 300) {
@@ -196,13 +292,37 @@
             }
         });
 
-        // Мобильное меню
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const navMenu = document.getElementById('nav-menu');
+        // Функции для управления модальным окном
+        function openQuickView(productId) {
+            const modal = document.getElementById('quick-view-modal');
+            const content = document.getElementById('quick-view-content');
 
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            // Очищаем содержимое перед загрузкой нового
+            content.innerHTML = '';
+
+            fetch(`/product/${productId}/quick-view/`)
+                .then(response => response.text())
+                .then(data => {
+                    content.innerHTML = data;
+                    modal.classList.add('show');
+                })
+                .catch(error => console.error('Ошибка при загрузке:', error));
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.remove('show');
+            // Очищаем содержимое после закрытия
+            setTimeout(() => {
+                document.getElementById('quick-view-content').innerHTML = '';
+            }, 300); // Синхронизируем с длительностью анимации
+        }
+
+        // Закрытие модального окна при клике на фон
+        document.getElementById('quick-view-modal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeQuickView();
+            }
         });
     </script>
 

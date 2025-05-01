@@ -13,7 +13,6 @@ import logging
 logger = logging.getLogger(__name__)
 EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
 
-
 def product_list(request):
     form = SearchForm(request.GET)
     products = Product.objects.all()
@@ -66,6 +65,7 @@ def search_ajax(request):
     price_max = request.GET.get('price_max', None)
     sort_by = request.GET.get('sort_by', 'name')  # Сортировка по умолчанию
     page_number = request.GET.get('page', 1)
+    autocomplete = request.GET.get('autocomplete', False)
 
     products = Product.objects.all()
 
@@ -75,6 +75,11 @@ def search_ajax(request):
             Q(name__icontains=query) |  # Поиск по части названия товара
             Q(description__icontains=query)  # Поиск по описанию
         )
+
+    # Если это запрос автодополнения, возвращаем только названия товаров
+    if autocomplete:
+        products = products[:5]  # Ограничим 5 подсказками
+        return JsonResponse({'products': [{'name': product.name} for product in products]})
 
     # Фильтрация по цене
     if price_min and price_min.isdigit():
@@ -94,7 +99,7 @@ def search_ajax(request):
 
     context = {
         'products': page,
-        'sort_by': sort_by,  # Передаем текущий метод сортировки
+        'sort_by': sort_by,
     }
 
     results_html = render_to_string('products/search_results.html', context)
@@ -107,6 +112,9 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
 
+def quick_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'products/quick_view.html', {'product': product})
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -126,7 +134,6 @@ def add_to_cart(request, pk):
 
     return redirect('view_cart')
 
-
 def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
@@ -144,10 +151,9 @@ def view_cart(request):
 
     context = {
         'cart_items': cart_items,
-        'total_price': total_price,  # Передаем общую сумму в контекст
+        'total_price': total_price,
     }
     return render(request, 'products/cart.html', context)
-
 
 def remove_from_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -165,16 +171,28 @@ def remove_from_cart(request, pk):
     return redirect('view_cart')
 
 def merge_session_cart_to_user_cart(request):
-    """TODO: Сделать Можно также реализовать перенос корзины при входе."""
+    """Перенос корзины из сессии в заказ пользователя после входа."""
     session_cart = request.session.get('cart', {})
-    for product_id, quantity in session_cart.items():
-        product = get_object_or_404(Product, pk=product_id)
-        OrderItem.objects.create(
-            order=Order.objects.filter(user=request.user).last(),  # или новая логика создания заказа
-            product=product,
-            quantity=quantity
-        )
+    if request.user.is_authenticated and session_cart:
+        # Проверяем, есть ли незавершенный заказ у пользователя
+        order = Order.objects.filter(user=request.user, status='pending').last()
+        if not order:
+            order = Order.objects.create(user=request.user, status='pending')
 
+        for product_id, quantity in session_cart.items():
+            product = get_object_or_404(Product, pk=product_id)
+            # Проверяем, есть ли уже этот товар в заказе
+            order_item, created = OrderItem.objects.get_or_create(
+                order=order,
+                product=product,
+                defaults={'quantity': quantity}
+            )
+            if not created:
+                order_item.quantity += quantity
+                order_item.save()
+
+        # Очищаем корзину в сессии после переноса
+        request.session['cart'] = {}
 
 def checkout(request):
     cart = request.session.get('cart', {})
@@ -231,7 +249,7 @@ def checkout(request):
                     f'Новый заказ от {user_name} {user_lastname}',
                     plain_text,
                     EMAIL_TO_SEND,
-                    [EMAIL_TO_SEND],  # Email администратора / менеджера
+                    [EMAIL_TO_SEND],
                     html_message=html_order_summary,
                     fail_silently=False
                 )
@@ -261,7 +279,6 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            # Получаем данные из формы
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             if '@yandex.ru' not in email:
@@ -270,14 +287,13 @@ def contact(request):
 
             message = form.cleaned_data['message']
 
-            # Отправляем email администратору
             try:
                 send_mail(
-                    f'Новое сообщение от {name}',  # Тема письма
-                    message,                      # Тело письма
-                    email,                       # Отправитель
-                    [EMAIL_TO_SEND],  # Получатель (администратор)
-                    fail_silently=False          # Не игнорируем ошибки
+                    f'Новое сообщение от {name}',
+                    message,
+                    email,
+                    [EMAIL_TO_SEND],
+                    fail_silently=False
                 )
                 messages.success(request, 'Ваше сообщение успешно отправлено!')
             except Exception as e:

@@ -1,8 +1,15 @@
 {% extends 'products/base.html' %}
 {% block content %}
 
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-600 mb-4">
+    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
+    <span class="mx-2">/</span>
+    <span>Каталог товаров</span>
+</nav>
+
 <!-- Баннер -->
-<section class="relative bg-sandy py-12 mb-8 rounded-lg shadow-lg">
+<section class="relative bg-sandy py-12 mb-8 rounded-lg shadow-lg animate-fade-in">
     <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold text-deep-green mb-4">Лучшие строительные материалы</h2>
         <p class="text-lg text-gray-600 mb-6">Качество, надежность и экологичность для ваших проектов!</p>
@@ -13,15 +20,18 @@
     <div class="texture-overlay"></div>
 </section>
 
-<h1 class="text-3xl font-bold text-deep-green mb-8">Каталог товаров</h1>
+<h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">Каталог товаров</h1>
 
 <!-- Форма поиска -->
-<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-8 bg-white p-6 rounded-lg shadow-lg">
+<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-8 bg-white p-6 rounded-lg shadow-lg animate-fade-in">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <!-- Поле поиска -->
-        <div>
+        <!-- Поле поиска с автодополнением -->
+        <div class="relative">
             {{ search_form.query.label_tag }}
-            {{ search_form.query }}
+            <div class="relative">
+                {{ search_form.query }}
+                <div id="autocomplete-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden"></div>
+            </div>
         </div>
 
         <!-- Минимальная цена -->
@@ -77,7 +87,7 @@
 <!-- Результаты поиска -->
 <div id="search-results">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% include 'products/search_results.html' %}
+        {% include 'products/search_results.html' with products=page_obj %}
     </div>
     <div class="mt-8 text-center">
         <button id="load-more" class="hidden bg-deep-green text-white px-6 py-2 rounded-full hover:bg-concrete-gray transition shadow-hover">
@@ -101,9 +111,11 @@ $(document).ready(function () {
     const sortBySelect = $('#sort-by');
     const resultsContainer = $('#search-results .grid');
     const loadMoreBtn = $('#load-more');
+    const suggestionsContainer = $('#autocomplete-suggestions');
     let currentPage = 1;
     let isLoading = false;
 
+    // Функция загрузки результатов поиска
     function loadResults(reset = false) {
         if (isLoading) return;
         isLoading = true;
@@ -150,13 +162,55 @@ $(document).ready(function () {
         });
     }
 
-    // Автопоиск
+    // Автодополнение для поиска
     searchInput.on('input', function () {
+        const query = $(this).val();
         clearTimeout(window.searchTimeout);
         window.searchTimeout = setTimeout(() => {
+            if (query.length > 2) {
+                $.ajax({
+                    url: '{% url "search_ajax" %}',
+                    method: 'GET',
+                    data: { query: query, autocomplete: true },
+                    success: function (response) {
+                        suggestionsContainer.empty().removeClass('hidden');
+                        if (response.products && response.products.length > 0) {
+                            response.products.forEach(product => {
+                                suggestionsContainer.append(
+                                    `<div class="p-2 hover:bg-sandy cursor-pointer text-gray-600" data-value="${product.name}">${product.name}</div>`
+                                );
+                            });
+                        } else {
+                            suggestionsContainer.addClass('hidden');
+                        }
+                    },
+                    error: function () {
+                        suggestionsContainer.addClass('hidden');
+                    }
+                });
+            } else {
+                suggestionsContainer.addClass('hidden');
+            }
+
+            // Выполняем поиск
             currentPage = 1;
             loadResults(true);
         }, 500);
+    });
+
+    // Выбор подсказки автодополнения
+    suggestionsContainer.on('click', 'div', function () {
+        searchInput.val($(this).data('value'));
+        suggestionsContainer.addClass('hidden');
+        currentPage = 1;
+        loadResults(true);
+    });
+
+    // Закрытие подсказок при клике вне
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('#id_query, #autocomplete-suggestions').length) {
+            suggestionsContainer.addClass('hidden');
+        }
     });
 
     // Изменение фильтров

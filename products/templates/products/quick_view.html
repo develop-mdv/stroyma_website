@@ -1,0 +1,35 @@
+<div class="flex flex-col md:flex-row gap-4">
+    <!-- Изображение -->
+    <div class="w-full md:w-1/2">
+        <img src="{{ product.image.url|default:'https://via.placeholder.com/300x200?text=Нет+изображения' }}" alt="{{ product.name }}"
+             class="w-full h-48 object-cover rounded-lg shadow-md hover-scale" loading="lazy">
+    </div>
+
+    <!-- Информация о товаре -->
+    <div class="w-full md:w-1/2 flex flex-col justify-between">
+        <div>
+            <h5 class="text-xl font-semibold text-deep-green mb-2">{{ product.name }}</h5>
+            <p class="text-sm text-gray-600 mb-4">{{ product.description|truncatewords:20 }}</p>
+            <p class="text-lg font-bold text-deep-green mb-2">{{ product.price }} руб.</p>
+            <p class="text-sm text-gray-600 mb-4">На складе: {{ product.stock }} шт.</p>
+        </div>
+
+        <!-- Форма добавления в корзину -->
+        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-4">
+            {% csrf_token %}
+            <div class="flex items-center mb-4">
+                <label for="quantity-{{ product.pk }}" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
+                <input type="number" name="quantity" id="quantity-{{ product.pk }}" min="1" max="{{ product.stock }}" value="1"
+                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <button type="submit" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition shadow-md text-sm">
+                    Добавить в корзину
+                </button>
+                <a href="{% url 'product_detail' pk=product.pk %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 transition shadow-md text-sm">
+                    Подробнее
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

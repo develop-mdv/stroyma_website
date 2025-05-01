@@ -1,22 +1,26 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for product in products %}
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in">
         <!-- Изображение товара -->
-        {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
-        {% else %}
-        <img src="https://via.placeholder.com/300x200?text=Нет+изображения" alt="Нет изображения" class="w-full h-48 object-cover">
-        {% endif %}
+        <a href="{% url 'product_detail' pk=product.pk %}">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
+            {% else %}
+            <img src="https://via.placeholder.com/300x200?text=Нет+изображения" alt="Нет изображения" class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
+            {% endif %}
+        </a>
 
         <!-- Содержимое карточки -->
         <div class="p-4">
-            <h5 class="text-lg font-semibold text-deep-green">{{ product.name }}</h5>
-            <p class="text-sm text-gray-600">{{ product.description|truncatewords:10 }}</p>
-            <p class="text-md font-bold text-deep-green mt-2">{{ product.price }} руб.</p>
-            <p class="text-sm text-gray-600">На складе: {{ product.stock }} шт.</p>
+            <a href="{% url 'product_detail' pk=product.pk %}">
+                <h5 class="text-lg font-semibold text-deep-green hover:underline mb-2">{{ product.name }}</h5>
+            </a>
+            <p class="text-sm text-gray-600 mb-2">{{ product.description|truncatewords:10 }}</p>
+            <p class="text-md font-bold text-deep-green mb-2">{{ product.price }} руб.</p>
+            <p class="text-sm text-gray-600 mb-2">На складе: {{ product.stock }} шт.</p>
 
             <!-- Рейтинг -->
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600 mb-4">
                 <span class="text-yellow-400">
                     {% for i in '12345' %}
                         {% if forloop.counter <= product.rating %}
@@ -29,11 +33,11 @@
             </p>
 
             <!-- Кнопки -->
-            <div class="mt-4 flex justify-between">
-                <a href="{% url 'product_detail' pk=product.pk %}" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition">
-                    Подробнее
-                </a>
-                <a href="{% url 'add_to_cart' pk=product.pk %}" class="bg-sandy text-deep-green px-4 py-2 rounded-full hover:bg-gray-300 transition">
+            <div class="flex justify-between gap-3">
+                <button onclick="openQuickView({{ product.pk }})" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition shadow-md">
+                    Быстрый просмотр
+                </button>
+                <a href="{% url 'add_to_cart' pk=product.pk %}" class="bg-sandy text-deep-green px-4 py-2 rounded-full hover:bg-gray-300 transition shadow-md">
                     В корзину
                 </a>
             </div>
@@ -41,7 +45,7 @@
     </div>
     {% empty %}
     <div class="col-span-full">
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in">
             <p class="text-gray-600">Товаров не найдено.</p>
         </div>
     </div>
