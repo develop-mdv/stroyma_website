@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for product in products %}
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in border border-gray-200 dark:border-gray-600">
         <!-- Изображение товара -->
         <a href="{% url 'product_detail' pk=product.pk %}">
             {% if product.image %}
@@ -13,7 +13,7 @@
         <!-- Содержимое карточки -->
         <div class="p-4">
             <a href="{% url 'product_detail' pk=product.pk %}">
-                <h5 class="text-lg font-semibold text-deep-green hover:underline mb-2">{{ product.name }}</h5>
+                <h5 class="text-lg font-medium text-deep-green hover:underline mb-2">{{ product.name }}</h5>
             </a>
             <p class="text-sm text-gray-600 mb-2">{{ product.description|truncatewords:10 }}</p>
             <p class="text-md font-bold text-deep-green mb-2">{{ product.price }} руб.</p>
@@ -21,7 +21,7 @@
 
             <!-- Рейтинг -->
             <p class="text-sm text-gray-600 mb-4">
-                <span class="text-yellow-400">
+                <span class="text-yellow-400 dark:text-yellow-300">
                     {% for i in '12345' %}
                         {% if forloop.counter <= product.rating %}
                             <i class="fas fa-star"></i>
@@ -34,10 +34,10 @@
 
             <!-- Кнопки -->
             <div class="flex justify-between gap-3">
-                <button onclick="openQuickView({{ product.pk }})" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition shadow-md">
+                <button onclick="openQuickView({{ product.pk }})" class="button bg-deep-green text-white shadow-hover">
                     Быстрый просмотр
                 </button>
-                <a href="{% url 'add_to_cart' pk=product.pk %}" class="bg-sandy text-deep-green px-4 py-2 rounded-full hover:bg-gray-300 transition shadow-md">
+                <a href="{% url 'add_to_cart' pk=product.pk %}" class="button bg-sandy text-deep-green shadow-hover">
                     В корзину
                 </a>
             </div>
@@ -45,9 +45,10 @@
     </div>
     {% empty %}
     <div class="col-span-full">
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in border border-gray-200 dark:border-gray-600">
             <p class="text-gray-600">Товаров не найдено.</p>
         </div>
     </div>
+..\.venv\Scripts\Activate.ps1
     {% endfor %}
 </div>

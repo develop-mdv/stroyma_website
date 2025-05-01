@@ -9,11 +9,11 @@
 </nav>
 
 <!-- Баннер -->
-<section class="relative bg-sandy py-12 mb-8 rounded-lg shadow-lg animate-fade-in">
+<section class="relative bg-sandy py-12 mb-8 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
     <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold text-deep-green mb-4">Лучшие строительные материалы</h2>
         <p class="text-lg text-gray-600 mb-6">Качество, надежность и экологичность для ваших проектов!</p>
-        <a href="{% url 'product_list' %}" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        <a href="{% url 'product_list' %}" class="button bg-deep-green text-white shadow-hover">
             Посмотреть каталог
         </a>
     </div>
@@ -23,14 +23,14 @@
 <h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">Каталог товаров</h1>
 
 <!-- Форма поиска -->
-<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-8 bg-white p-6 rounded-lg shadow-lg animate-fade-in">
+<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-8 bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- Поле поиска с автодополнением -->
         <div class="relative">
             {{ search_form.query.label_tag }}
             <div class="relative">
                 {{ search_form.query }}
-                <div id="autocomplete-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden"></div>
+                <div id="autocomplete-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden dark:bg-input-bg dark:border-input-border"></div>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                    id="price_min"
                    step="1"
                    value="{{ request.GET.price_min|default:min_price }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
         </div>
 
         <!-- Максимальная цена -->
@@ -53,13 +53,13 @@
                    id="price_max"
                    step="1"
                    value="{{ request.GET.price_max|default:max_price }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
         </div>
 
         <!-- Сортировка -->
         <div>
             <label for="sort_by" class="block text-sm font-medium text-gray-700">Сортировка:</label>
-            <select name="sort_by" id="sort-by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+            <select name="sort_by" id="sort-by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
                 <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
                 <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
@@ -69,10 +69,10 @@
 
     <!-- Кнопки -->
     <div class="mt-6 flex space-x-4">
-        <button type="submit" class="bg-deep-green text-white px-6 py-2 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        <button type="submit" class="button bg-deep-green text-white shadow-hover">
             Фильтровать
         </button>
-        <a href="{% url 'product_list' %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition">
+        <a href="{% url 'product_list' %}" class="button bg-gray-200 text-gray-700 shadow-hover">
             Сбросить фильтры
         </a>
     </div>
@@ -90,7 +90,7 @@
         {% include 'products/search_results.html' with products=page_obj %}
     </div>
     <div class="mt-8 text-center">
-        <button id="load-more" class="hidden bg-deep-green text-white px-6 py-2 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        <button id="load-more" class="hidden button bg-deep-green text-white shadow-hover">
             Загрузить ещё
         </button>
     </div>
@@ -101,7 +101,6 @@
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" />
 
 <script>
 $(document).ready(function () {

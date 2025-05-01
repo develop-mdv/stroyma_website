@@ -8,7 +8,7 @@
     <!-- Информация о товаре -->
     <div class="w-full md:w-1/2 flex flex-col justify-between">
         <div>
-            <h5 class="text-xl font-semibold text-deep-green mb-2">{{ product.name }}</h5>
+            <h5 class="text-xl font-medium text-deep-green mb-2">{{ product.name }}</h5>
             <p class="text-sm text-gray-600 mb-4">{{ product.description|truncatewords:20 }}</p>
             <p class="text-lg font-bold text-deep-green mb-2">{{ product.price }} руб.</p>
             <p class="text-sm text-gray-600 mb-4">На складе: {{ product.stock }} шт.</p>
@@ -20,13 +20,13 @@
             <div class="flex items-center mb-4">
                 <label for="quantity-{{ product.pk }}" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
                 <input type="number" name="quantity" id="quantity-{{ product.pk }}" min="1" max="{{ product.stock }}" value="1"
-                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             </div>
             <div class="flex gap-2 flex-wrap">
-                <button type="submit" class="bg-deep-green text-white px-4 py-2 rounded-full hover:bg-concrete-gray transition shadow-md text-sm">
+                <button type="submit" class="button bg-deep-green text-white shadow-hover text-sm">
                     Добавить в корзину
                 </button>
-                <a href="{% url 'product_detail' pk=product.pk %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 transition shadow-md text-sm">
+                <a href="{% url 'product_detail' pk=product.pk %}" class="button bg-gray-200 text-gray-700 shadow-hover text-sm">
                     Подробнее
                 </a>
             </div>

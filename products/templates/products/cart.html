@@ -5,7 +5,7 @@
 
 <!-- Список товаров в корзине -->
 {% if cart_items %}
-<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-600">
     <div class="grid grid-cols-1 gap-6">
         {% for item in cart_items %}
         <div class="flex items-center border-b border-gray-200 py-4">
@@ -19,14 +19,14 @@
             </div>
             <!-- Информация о товаре -->
             <div class="flex-1 ml-6">
-                <h5 class="text-lg font-semibold text-deep-green">{{ item.product.name }}</h5>
+                <h5 class="text-lg font-medium text-deep-green">{{ item.product.name }}</h5>
                 <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
                 <p class="text-sm text-gray-600">Цена за единицу: {{ item.product.price }} руб.</p>
                 <p class="text-md font-bold text-deep-green">Общая цена: {{ item.total_price }} руб.</p>
             </div>
             <!-- Действия -->
             <div>
-                <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition shadow-hover">
+                <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="button bg-red-500 text-white hover:bg-red-600 shadow-hover">
                     Удалить
                 </a>
             </div>
@@ -41,21 +41,21 @@
 
     <!-- Кнопка оформления заказа -->
     <div class="mt-6 text-right">
-        <a href="{% url 'checkout' %}" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        <a href="{% url 'checkout' %}" class="button bg-deep-green text-white shadow-hover">
             Оформить заказ
         </a>
     </div>
 </div>
 
 {% else %}
-<div class="bg-white p-6 rounded-lg shadow-lg text-center">
+<div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-600">
     <p class="text-gray-600">Корзина пуста.</p>
 </div>
 {% endif %}
 
 <!-- Ссылка для продолжения покупок -->
 <div class="mt-8">
-    <a href="{% url 'product_list' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover">
         Продолжить покупки
     </a>
 </div>

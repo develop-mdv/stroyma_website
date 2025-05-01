@@ -1,21 +1,21 @@
-<h2 style="color: #2D5D4C; font-family: 'Poppins', sans-serif;">Новый заказ от пользователя</h2>
-<p style="font-family: 'Poppins', sans-serif; color: #333333;">
-    <strong>Имя:</strong> {{ user_name }} {{ user_lastname }}
+<h2 style="color: var(--text-deep-green); font-family: 'Manrope', sans-serif;">Новый заказ от пользователя</h2>
+<p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
+    <strong class="font-medium">Имя:</strong> {{ user_name }} {{ user_lastname }}
 </p>
-<p style="font-family: 'Poppins', sans-serif; color: #333333;">
-    <strong>Email:</strong> {{ user_email }}
+<p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
+    <strong class="font-medium">Email:</strong> {{ user_email }}
 </p>
-<p style="font-family: 'Poppins', sans-serif; color: #333333;">
-    <strong>Телефон:</strong> {{ user_phone }}
+<p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
+    <strong class="font-medium">Телефон:</strong> {{ user_phone }}
 </p>
-<p style="font-family: 'Poppins', sans-serif; color: #333333;">
-    <strong>Адрес доставки:</strong> {{ delivery_address }}
+<p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
+    <strong class="font-medium">Адрес доставки:</strong> {{ delivery_address }}
 </p>
 
-<hr style="border-color: #F5E6D3;">
+<hr style="border-color: var(--bg-sandy);">
 
-<h4 style="color: #2D5D4C; font-family: 'Poppins', sans-serif;">Состав заказа:</h4>
-<ul style="font-family: 'Poppins', sans-serif; color: #333333;">
+<h4 style="color: var(--text-deep-green); font-family: 'Manrope', sans-serif;">Состав заказа:</h4>
+<ul style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
     {% for item in items %}
     <li>
         {{ item.product.name }} - {{ item.quantity }} шт. × {{ item.product.price }} руб. = {{ item.total_price }} руб.
@@ -23,6 +23,6 @@
     {% endfor %}
 </ul>
 
-<h4 style="color: #2D5D4C; font-family: 'Poppins', sans-serif;">
-    <strong>Итого:</strong> {{ total_price|floatformat:2 }} руб.
+<h4 style="color: var(--text-deep-green); font-family: 'Manrope', sans-serif;">
+    <strong class="font-medium">Итого:</strong> {{ total_price|floatformat:2 }} руб.
 </h4>

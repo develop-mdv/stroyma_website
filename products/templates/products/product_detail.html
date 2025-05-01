@@ -12,17 +12,17 @@
 
 <!-- Карточка товара -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
+    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in border border-gray-200 dark:border-gray-600">
         <!-- Изображение товара -->
         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-96 object-cover rounded-lg" loading="lazy">
     </div>
-    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
+    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in border border-gray-200 dark:border-gray-600">
         <!-- Описание товара -->
-        <p class="text-gray-600 mb-2"><strong>Описание:</strong> {{ product.description }}</p>
-        <p class="text-gray-600 mb-2"><strong>Цена:</strong> {{ product.price }} руб.</p>
-        <p class="text-gray-600 mb-2"><strong>На складе:</strong> {{ product.stock }} шт.</p>
-        <p class="text-gray-600 mb-2"><strong>Рейтинг:</strong>
-            <span class="text-yellow-400">
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Описание:</strong> {{ product.description }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Цена:</strong> {{ product.price }} руб.</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">На складе:</strong> {{ product.stock }} шт.</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Рейтинг:</strong>
+            <span class="text-yellow-400 dark:text-yellow-300">
                 {% for i in '12345' %}
                     {% if forloop.counter <= product.rating %}
                         <i class="fas fa-star"></i>
@@ -39,13 +39,13 @@
             <div class="flex items-center mb-4">
                 <label for="quantity" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
                 <input type="number" name="quantity" id="quantity" min="1" max="{{ product.stock }}" value="1"
-                       class="w-20 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                       class="w-20 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             </div>
             <div class="flex space-x-4">
-                <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+                <button type="submit" class="button bg-deep-green text-white shadow-hover">
                     Добавить в корзину
                 </button>
-                <a href="{% url 'product_list' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+                <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover">
                     Вернуться к каталогу
                 </a>
             </div>

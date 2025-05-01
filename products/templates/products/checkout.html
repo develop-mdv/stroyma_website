@@ -4,7 +4,7 @@
 <h1 class="text-3xl font-bold text-deep-green mb-8">Оформление заказа</h1>
 
 <!-- Товары в корзине -->
-<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-600">
     <h4 class="text-xl font-semibold text-deep-green mb-4">Ваш заказ:</h4>
     <div class="grid grid-cols-1 gap-4">
         {% for item in cart_items %}
@@ -19,7 +19,7 @@
             </div>
             <!-- Информация о товаре -->
             <div class="flex-1 ml-4">
-                <h5 class="text-md font-semibold text-deep-green">{{ item.product.name }}</h5>
+                <h5 class="text-md font-medium text-deep-green">{{ item.product.name }}</h5>
                 <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
                 <p class="text-sm text-gray-600">Цена за ед.: {{ item.product.price }} руб.</p>
                 <p class="text-sm font-bold text-deep-green">Сумма: {{ item.total_price|floatformat:2 }} руб.</p>
@@ -33,7 +33,7 @@
 </div>
 
 <!-- Форма оформления заказа -->
-<form method="post" class="bg-white rounded-lg shadow-lg p-6">
+<form method="post" class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
     {% csrf_token %}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Имя -->
@@ -41,9 +41,9 @@
             <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Имя</label>
             <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
                    value="{{ form.first_name.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             {% if form.first_name.errors %}
-                <div class="text-red-500 text-sm mt-1">{{ form.first_name.errors }}</div>
+                <div class="error-message">{{ form.first_name.errors }}</div>
             {% endif %}
         </div>
 
@@ -52,9 +52,9 @@
             <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Фамилия</label>
             <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
                    value="{{ form.last_name.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             {% if form.last_name.errors %}
-                <div class="text-red-500 text-sm mt-1">{{ form.last_name.errors }}</div>
+                <div class="error-message">{{ form.last_name.errors }}</div>
             {% endif %}
         </div>
 
@@ -63,9 +63,9 @@
             <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
             <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
                    value="{{ form.email.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             {% if form.email.errors %}
-                <div class="text-red-500 text-sm mt-1">{{ form.email.errors }}</div>
+                <div class="error-message">{{ form.email.errors }}</div>
             {% endif %}
         </div>
 
@@ -74,9 +74,9 @@
             <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">Телефон</label>
             <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
                    value="{{ form.phone.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             {% if form.phone.errors %}
-                <div class="text-red-500 text-sm mt-1">{{ form.phone.errors }}</div>
+                <div class="error-message">{{ form.phone.errors }}</div>
             {% endif %}
         </div>
 
@@ -84,19 +84,19 @@
         <div class="col-span-1 md:col-span-2">
             <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Адрес доставки</label>
             <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">{{ form.address.value|default_if_none:'' }}</textarea>
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">{{ form.address.value|default_if_none:'' }}</textarea>
             {% if form.address.errors %}
-                <div class="text-red-500 text-sm mt-1">{{ form.address.errors }}</div>
+                <div class="error-message">{{ form.address.errors }}</div>
             {% endif %}
         </div>
     </div>
 
     <!-- Кнопки -->
     <div class="mt-6 flex space-x-4">
-        <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+        <button type="submit" class="button bg-deep-green text-white shadow-hover">
             Подтвердить заказ
         </button>
-        <a href="{% url 'view_cart' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+        <a href="{% url 'view_cart' %}" class="button bg-sandy text-deep-green shadow-hover">
             Вернуться к корзине
         </a>
     </div>

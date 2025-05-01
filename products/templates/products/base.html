@@ -8,16 +8,150 @@
 
     <!-- Tailwind CSS через CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Manrope (поддержка кириллицы) -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- noUiSlider CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
     <style>
+        /* Базовые стили */
         body {
-            font-family: 'Poppins', sans-serif;
-            color: #333333;
+            font-family: 'Manrope', sans-serif;
+            color: var(--text-gray);
+            background-color: var(--bg-milky-white);
             transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
         }
+
+        /* Переменные для тем */
+        [data-theme="light"] {
+            --bg-milky-white: #F9FAFB; /* Мягкий белый */
+            --bg-sandy: #F5E6D3; /* Теплый песочный */
+            --bg-deep-green: #2D5D4C; /* Насыщенный зеленый */
+            --text-deep-green: #2D5D4C;
+            --bg-concrete-gray: #6B7280; /* Нейтральный серый */
+            --text-gray: #1F2937; /* Темно-серый для текста */
+            --bg-white: #FFFFFF;
+            --text-gray-600: #4B5563;
+            --input-bg: #FFFFFF;
+            --input-border: #D1D5DB;
+            --input-focus: #2D5D4C;
+            --button-hover: #4B6B5D;
+            --error-color: #DC2626;
+        }
+
+        [data-theme="dark"] {
+            --bg-milky-white: #1F2937; /* Темно-серый */
+            --bg-sandy: #4B3F2F; /* Темный песочный */
+            --bg-deep-green: #2D5D4C; /* Тот же зеленый для консистентности */
+            --text-deep-green: #6EE7B7; /* Светло-зеленый для контраста */
+            --bg-concrete-gray: #4B5563; /* Темный серый */
+            --text-gray: #E5E7EB; /* Светло-серый для текста */
+            --bg-white: #374151; /* Темный фон панелей */
+            --text-gray-600: #9CA3AF;
+            --input-bg: #374151;
+            --input-border: #6B7280;
+            --input-focus: #6EE7B7;
+            --button-hover: #4B6B5D;
+            --error-color: #F87171;
+        }
+
+        /* Применение переменных */
+        .bg-milky-white { background-color: var(--bg-milky-white); }
+        .bg-sandy { background-color: var(--bg-sandy); }
+        .bg-deep-green { background-color: var(--bg-deep-green); }
+        .text-deep-green { color: var(--text-deep-green); }
+        .bg-concrete-gray { background-color: var(--bg-concrete-gray); }
+        .bg-white { background-color: var(--bg-white); }
+        .text-gray-600 { color: var(--text-gray-600); }
+
+        /* Типографика */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            color: var(--text-deep-green);
+        }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.875rem; }
+        h3 { font-size: 1.5rem; }
+        p, li, a, span { font-size: 1rem; font-weight: 400; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+
+        /* Стили для форм и полей ввода */
+        input, textarea, select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-gray);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(45, 93, 76, 0.2);
+        }
+        input::placeholder, textarea::placeholder {
+            color: var(--text-gray-600);
+            opacity: 0.7;
+        }
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Кнопки */
+        button, a.button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover, a.button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Ползунок (noUiSlider) */
+        .noUi-target {
+            background: var(--bg-concrete-gray);
+            border: none;
+            box-shadow: none;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .noUi-connect {
+            background: var(--bg-deep-green);
+        }
+        .noUi-handle {
+            background: var(--bg-white);
+            border: 2px solid var(--bg-deep-green);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            width: 20px;
+            height: 20px;
+            top: -7px;
+        }
+        .noUi-tooltip {
+            background: var(--bg-deep-green);
+            color: var(--bg-white);
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* Эффекты наведения и переходы */
         .hover-scale {
             transition: transform 0.3s ease;
         }
@@ -25,70 +159,27 @@
             transform: scale(1.05);
         }
         .shadow-hover {
-            transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
         }
         .shadow-hover:hover {
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
-        /* Светлая тема */
-        [data-theme="light"] {
-            --bg-milky-white: #FFFDF7;
-            --bg-sandy: #F5E6D3;
-            --bg-deep-green: #2D5D4C;
-            --text-deep-green: #2D5D4C;
-            --bg-concrete-gray: #808080;
-            --text-gray: #333333;
-            --bg-white: #ffffff;
-            --text-gray-600: #666666;
-        }
-        /* Темная тема */
-        [data-theme="dark"] {
-            --bg-milky-white: #1a1a1a;
-            --bg-sandy: #3a2e1f;
-            --bg-deep-green: #1a3c34;
-            --text-deep-green: #4CAF50;
-            --bg-concrete-gray: #4a4a4a;
-            --text-gray: #e0e0e0;
-            --bg-white: #2a2a2a;
-            --text-gray-600: #b0b0b0;
-        }
-        /* Применение переменных */
-        body {
-            background-color: var(--bg-milky-white);
-            color: var(--text-gray);
-        }
-        .bg-milky-white {
-            background-color: var(--bg-milky-white);
-        }
-        .bg-sandy {
-            background-color: var(--bg-sandy);
-        }
-        .bg-deep-green {
-            background-color: var(--bg-deep-green);
-        }
-        .text-deep-green {
-            color: var(--text-deep-green);
-        }
-        .bg-concrete-gray {
-            background-color: var(--bg-concrete-gray);
-        }
-        .bg-white {
-            background-color: var(--bg-white);
-        }
-        .text-gray-600 {
-            color: var(--text-gray-600);
-        }
+
+        /* Текстурный фон */
         .texture-overlay {
             background-image: url('https://via.placeholder.com/1920x1080?text=Concrete+Texture');
-            opacity: 0.1;
+            opacity: 0.05;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+            mix-blend-mode: multiply;
         }
-        /* Анимация появления */
+
+        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -96,7 +187,8 @@
         .animate-fade-in {
             animation: fadeIn 0.5s ease forwards;
         }
-        /* Стили для модального окна */
+
+        /* Модальное окно */
         #quick-view-modal {
             opacity: 0;
             pointer-events: none;
@@ -109,9 +201,20 @@
         #modal-content {
             transform: scale(0.95);
             transition: transform 0.3s ease;
+            background-color: var(--bg-white);
+            border-radius: 1rem;
         }
         #quick-view-modal.show #modal-content {
             transform: scale(1);
+        }
+
+        /* Доступность */
+        button:focus, a:focus {
+            outline: 2px solid var(--input-focus);
+            outline-offset: 2px;
+        }
+        [aria-label] {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -129,17 +232,17 @@
                     <h1 class="text-2xl font-bold hidden md:block">СтройМа</h1>
                 </div>
 
-                <!-- Переключатель тем -->
+                <!-- Переключатель тем и меню -->
                 <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" class="text-deep-green focus:outline-none">
+                    <button id="theme-toggle" class="text-deep-green focus:outline-none" aria-label="Переключить тему">
                         <i class="fas fa-moon text-2xl"></i>
                     </button>
-                    <button id="menu-toggle" class="md:hidden text-deep-green focus:outline-none">
+                    <button id="menu-toggle" class="md:hidden text-deep-green focus:outline-none" aria-label="Открыть меню">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
 
-                <!-- Навигационная панель -->
+                <!-- Навигация -->
                 <nav id="nav-menu" class="hidden md:flex items-center space-x-6">
                     <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fas fa-home mr-1"></i> Главная
@@ -217,7 +320,7 @@
     <!-- Основное содержимое -->
     <main class="container mx-auto px-4 py-8 pt-24">
         {% block content %}
-        <!-- Содержимое страницы будет здесь -->
+        <!-- Содержимое страницы -->
         {% endblock %}
     </main>
 
@@ -242,18 +345,18 @@
     <!-- Кнопка "Наверх" -->
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
             class="fixed bottom-6 right-6 bg-deep-green text-white p-3 rounded-full shadow-lg hover:bg-concrete-gray transition hidden"
-            id="scroll-top">
+            id="scroll-top" aria-label="Прокрутить наверх">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- Модальное окно для быстрого просмотра -->
     <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div id="modal-content" class="bg-white rounded-xl p-6 max-w-lg w-full relative shadow-2xl">
-            <button onclick="closeQuickView()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800" aria-label="Закрыть модальное окно">
                 <i class="fas fa-times text-2xl"></i>
             </button>
             <div id="quick-view-content" class="flex flex-col md:flex-row gap-6">
-                <!-- Контент будет загружен через AJAX -->
+                <!-- Контент загружается через AJAX -->
             </div>
         </div>
     </div>
@@ -292,12 +395,11 @@
             }
         });
 
-        // Функции для управления модальным окном
+        // Функции для модального окна
         function openQuickView(productId) {
             const modal = document.getElementById('quick-view-modal');
             const content = document.getElementById('quick-view-content');
 
-            // Очищаем содержимое перед загрузкой нового
             content.innerHTML = '';
 
             fetch(`/product/${productId}/quick-view/`)
@@ -312,13 +414,11 @@
         function closeQuickView() {
             const modal = document.getElementById('quick-view-modal');
             modal.classList.remove('show');
-            // Очищаем содержимое после закрытия
             setTimeout(() => {
                 document.getElementById('quick-view-content').innerHTML = '';
-            }, 300); // Синхронизируем с длительностью анимации
+            }, 300);
         }
 
-        // Закрытие модального окна при клике на фон
         document.getElementById('quick-view-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeQuickView();

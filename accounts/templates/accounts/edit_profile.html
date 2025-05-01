@@ -1,6 +1,6 @@
 {% extends 'products/base.html' %}
 {% block content %}
-<div class="bg-white rounded-lg shadow-lg p-6">
+<div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
     <h2 class="text-2xl font-bold text-deep-green mb-6">Редактирование профиля</h2>
 
     <form method="post" class="space-y-6">
@@ -10,17 +10,17 @@
                 <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
                 <input type="{{ field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}"
                        value="{{ field.value|default_if_none:'' }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
                 {% if field.errors %}
-                    <div class="text-red-500 text-sm mt-1">{{ field.errors }}</div>
+                    <div class="error-message">{{ field.errors }}</div>
                 {% endif %}
             </div>
         {% endfor %}
         <div class="flex space-x-4">
-            <button type="submit" class="bg-deep-green text-white px-6 py-3 rounded-full hover:bg-concrete-gray transition shadow-hover">
+            <button type="submit" class="button bg-deep-green text-white shadow-hover">
                 Сохранить изменения
             </button>
-            <a href="{% url 'profile' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+            <a href="{% url 'profile' %}" class="button bg-sandy text-deep-green shadow-hover">
                 Отмена
             </a>
         </div>

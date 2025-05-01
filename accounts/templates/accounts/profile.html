@@ -6,23 +6,23 @@
     <h2 class="text-3xl font-bold text-deep-green">Профиль пользователя</h2>
 
     <!-- Информация о пользователе -->
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <h4 class="text-xl font-semibold text-deep-green mb-4">Ваши данные</h4>
-        <p class="text-gray-600 mb-2"><strong>Имя:</strong> {{ request.user.username }}</p>
-        <p class="text-gray-600 mb-4"><strong>Email:</strong> {{ request.user.email }}</p>
-        <a href="{% url 'edit_profile' %}" class="bg-sandy text-deep-green px-6 py-3 rounded-full hover:bg-gray-300 transition shadow-hover">
+    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
+        <h4 class="text-xl font-medium text-deep-green mb-4">Ваши данные</h4>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Имя:</strong> {{ request.user.username }}</p>
+        <p class="text-gray-600 mb-4"><strong class="font-medium">Email:</strong> {{ request.user.email }}</p>
+        <a href="{% url 'edit_profile' %}" class="button bg-sandy text-deep-green shadow-hover">
             Редактировать профиль
         </a>
     </div>
 
     <!-- История заказов -->
-    <h4 class="text-xl font-semibold text-deep-green">История ваших заказов</h4>
+    <h4 class="text-xl font-medium text-deep-green">История ваших заказов</h4>
     {% if orders %}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% for order in orders %}
-                <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
                     <div class="flex justify-between items-center mb-4">
-                        <h5 class="text-lg font-semibold text-deep-green">Заказ №{{ order.id }}</h5>
+                        <h5 class="text-lg font-medium text-deep-green">Заказ №{{ order.id }}</h5>
                         <span class="bg-deep-green text-white px-3 py-1 rounded-full text-sm">{{ order.get_status_display }}</span>
                     </div>
                     <ul class="space-y-2">
@@ -33,12 +33,12 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    <hr class="my-4 border-gray-200">
-                    <p class="text-gray-600"><strong>Сумма:</strong> {{ order.total_cost|intcomma }} руб.</p>
-                    <p class="text-sm text-gray-500 mt-2">Дата: {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                    <hr class="my-4 border-gray-200 dark:border-gray-600">
+                    <p class="text-gray-600"><strong class="font-medium">Сумма:</strong> {{ order.total_cost|intcomma }} руб.</p>
+                    <p class="text-sm text-gray-600 mt-2">Дата: {{ order.created_at|date:"d.m.Y H:i" }}</p>
                     <div class="mt-4 flex justify-between items-center">
                         <span class="text-sm text-gray-600">Статус: {{ order.get_status_display }}</span>
-                        <a href="#" class="bg-sandy text-deep-green px-4 py-2 rounded-full hover:bg-gray-300 transition shadow-hover">
+                        <a href="#" class="button bg-sandy text-deep-green shadow-hover">
                             Подробнее
                         </a>
                     </div>
@@ -46,7 +46,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-600">
             <p class="text-gray-600">У вас пока нет заказов.</p>
         </div>
     {% endif %}
