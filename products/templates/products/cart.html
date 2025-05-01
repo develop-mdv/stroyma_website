@@ -78,7 +78,6 @@ $(document).ready(function () {
         var quantity = parseInt($input.val());
         var maxQuantity = parseInt($input.attr('max'));
 
-        // Проверка на допустимое количество
         if (isNaN(quantity) || quantity < 1) {
             alert('Пожалуйста, введите количество не менее 1.');
             $input.val(1);
@@ -90,7 +89,6 @@ $(document).ready(function () {
             return;
         }
 
-        // Отправка AJAX-запроса
         $.ajax({
             url: `/cart/update/${productId}/`,
             method: 'POST',
@@ -100,12 +98,11 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.success) {
-                    // Обновляем цену товара и итоговую сумму
                     $('#item-total-' + productId).text('Общая цена: ' + response.item_total_price + ' руб.');
                     $('#total-price').text('Итого: ' + response.total_price + ' руб.');
                 } else {
                     alert(response.message);
-                    $input.val(response.current_quantity); // Восстанавливаем старое значение
+                    $input.val(response.current_quantity);
                 }
             },
             error: function () {

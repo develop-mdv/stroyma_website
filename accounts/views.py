@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from products.models import Order
+from products.views import merge_session_cart_to_user_cart
 from .forms import RegisterForm, LoginForm, CustomUserChangeForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -12,6 +13,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            merge_session_cart_to_user_cart(request)
             messages.success(request, "Вы успешно зарегистрировались!")
             return JsonResponse({'success': True})
         else:
@@ -30,6 +32,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                merge_session_cart_to_user_cart(request)
                 messages.info(request, f"Вы вошли как {username}.")
                 return redirect("product_list")
             else:
@@ -41,6 +44,7 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 def logout_view(request):
+    merge_session_cart_to_user_cart(request)  # Сохраняем корзину перед выходом
     logout(request)
     messages.info(request, "Вы вышли из аккаунта.")
     return redirect("product_list")
