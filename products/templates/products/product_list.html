@@ -36,7 +36,7 @@
 
         <!-- Минимальная цена -->
         <div>
-            <label for="price_min" class="block text-sm font-medium text-gray-700">Минимальная цена:</label>
+            <label for="price_min" class="block text-sm font-medium text-gray">Минимальная цена:</label>
             <input type="number"
                    name="price_min"
                    id="price_min"
@@ -47,7 +47,7 @@
 
         <!-- Максимальная цена -->
         <div>
-            <label for="price_max" class="block text-sm font-medium text-gray-700">Максимальная цена:</label>
+            <label for="price_max" class="block text-sm font-medium text-gray">Максимальная цена:</label>
             <input type="number"
                    name="price_max"
                    id="price_max"
@@ -58,7 +58,7 @@
 
         <!-- Сортировка -->
         <div>
-            <label for="sort_by" class="block text-sm font-medium text-gray-700">Сортировка:</label>
+            <label for="sort_by" class="block text-sm font-medium text-gray">Сортировка:</label>
             <select name="sort_by" id="sort-by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
                 <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
@@ -80,7 +80,7 @@
     <!-- Двухсторонний ползунок -->
     <div class="mt-6">
         <div id="price-slider"></div>
-        <p class="text-sm text-gray-600 mt-2">Цена: <span id="price-range">От {{ request.GET.price_min|default:min_price }} до {{ request.GET.price_max|default:max_price }}</span></p>
+        <p class="text-sm text-gray-100 mt-2">Цена: <span id="price-range">От {{ request.GET.price_min|default:min_price }} до {{ request.GET.price_max|default:max_price }}</span></p>
     </div>
 </form>
 
