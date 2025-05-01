@@ -13,7 +13,6 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Создаем профиль пользователя
             UserProfile.objects.create(user=user)
             login(request, user)
             merge_session_cart_to_user_cart(request)
@@ -27,6 +26,9 @@ def register_view(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def login_view(request):
+    if request.user.is_authenticated:
+        messages.info(request, "Вы уже авторизованы.")
+        return redirect('profile')
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
@@ -46,8 +48,9 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
 
+@custom_login_required
 def logout_view(request):
-    merge_session_cart_to_user_cart(request)  # Сохраняем корзину перед выходом
+    merge_session_cart_to_user_cart(request)
     logout(request)
     messages.info(request, "Вы вышли из аккаунта.")
     return redirect("product_list")
@@ -67,5 +70,4 @@ def edit_profile(request):
             return redirect('profile')
     else:
         form = CustomUserChangeForm(instance=request.user)
-
     return render(request, 'accounts/edit_profile.html', {'form': form})
