@@ -8,8 +8,12 @@
     <!-- Информация о пользователе -->
     <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
         <h4 class="text-xl font-medium text-deep-green mb-4">Ваши данные</h4>
-        <p class="text-gray-600 mb-2"><strong class="font-medium">Имя:</strong> {{ request.user.username }}</p>
-        <p class="text-gray-600 mb-4"><strong class="font-medium">Email:</strong> {{ request.user.email }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Имя пользователя:</strong> {{ request.user.username }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Имя:</strong> {{ request.user.first_name }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Фамилия:</strong> {{ request.user.last_name }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Email:</strong> {{ request.user.email }}</p>
+        <p class="text-gray-600 mb-2"><strong class="font-medium">Телефон:</strong> {{ request.user.profile.phone|default:"Не указан" }}</p>
+        <p class="text-gray-600 mb-4"><strong class="font-medium">Адрес доставки:</strong> {{ request.user.profile.delivery_address|default:"Не указан" }}</p>
         <a href="{% url 'edit_profile' %}" class="button bg-sandy text-deep-green shadow-hover">
             Редактировать профиль
         </a>

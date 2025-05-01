@@ -15,8 +15,9 @@ class OrderForm(forms.Form):
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
-            # Поле phone и address не заполняем, так как они не хранятся в модели User
-            # Можно добавить кастомные поля в модель User, если нужно
+            if hasattr(user, 'profile'):
+                self.fields['phone'].initial = user.profile.phone
+                self.fields['address'].initial = user.profile.delivery_address
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='Поиск', max_length=100, required=False)

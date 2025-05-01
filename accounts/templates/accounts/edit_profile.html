@@ -13,14 +13,14 @@
             {% endif %}
         </div>
         <div>
-            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.first_name.label }}</label>
+            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray">Имя</label>
             {{ form.first_name }}
             {% if form.first_name.errors %}
                 <div class="error-message">{{ form.first_name.errors }}</div>
             {% endif %}
         </div>
         <div>
-            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.last_name.label }}</label>
+            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray">Фамилия</label>
             {{ form.last_name }}
             {% if form.last_name.errors %}
                 <div class="error-message">{{ form.last_name.errors }}</div>
@@ -31,6 +31,20 @@
             {{ form.email }}
             {% if form.email.errors %}
                 <div class="error-message">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.phone.label }}</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}
+                <div class="error-message">{{ form.phone.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.delivery_address.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.delivery_address.label }}</label>
+            {{ form.delivery_address }}
+            {% if form.delivery_address.errors %}
+                <div class="error-message">{{ form.delivery_address.errors }}</div>
             {% endif %}
         </div>
         <div class="relative">
