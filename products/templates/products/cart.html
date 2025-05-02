@@ -34,7 +34,9 @@
                            data-product-id="{{ item.product.pk }}">
                 </form>
                 <p class="text-sm text-gray-600">Цена за единицу: {{ item.product.price }} руб.</p>
-                <p class="text-md font-bold text-deep-green" id="item-total-{{ item.product.pk }}">Общая цена: {{ item.total_price }} руб.</p>
+                <p class="text-md font-bold text-deep-green" id="item-total-{{ item.product.pk }}">
+                    Общая цена: {{ item.total_price|floatformat:2 }} руб.
+                </p>
             </div>
             <!-- Действия -->
             <div>
@@ -48,7 +50,7 @@
 
     <!-- Итоговая сумма -->
     <div class="mt-6 text-right">
-        <h4 class="text-xl font-bold text-deep-green" id="total-price">Итого: {{ total_price }} руб.</h4>
+        <h4 class="text-xl font-bold text-deep-green" id="total-price">Итого: {{ total_price|floatformat:2 }} руб.</h4>
     </div>
 
     <!-- Кнопка оформления заказа -->
@@ -104,8 +106,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.success) {
-                    $('#item-total-' + productId).text('Общая цена: ' + response.item_total_price + ' руб.');
-                    $('#total-price').text('Итого: ' + response.total_price + ' руб.');
+                    $('#item-total-' + productId).text('Общая цена: ' + response.item_total_price.toFixed(2) + ' руб.');
+                    $('#total-price').text('Итого: ' + response.total_price.toFixed(2) + ' руб.');
                 } else {
                     alert(response.message);
                     $input.val(response.current_quantity);

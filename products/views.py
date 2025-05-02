@@ -167,8 +167,8 @@ def update_cart(request, pk):
 
             return JsonResponse({
                 'success': True,
-                'item_total_price': item_total_price,
-                'total_price': total_price
+                'item_total_price': float(item_total_price),
+                'total_price': float(total_price)
             })
         except ValueError:
             return JsonResponse({
@@ -180,26 +180,28 @@ def update_cart(request, pk):
     return redirect('view_cart')
 
 def view_cart(request):
+    cart_items = []
+    total_price = 0
+
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         cart_items = CartItem.objects.filter(cart=cart) if cart else []
-        total_price = sum(item.product.price * item.quantity for item in cart_items)
+        total_price = sum(item.total_price for item in cart_items)
     else:
         cart = request.session.get('cart', {})
-        cart_items = []
-        total_price = 0
         for product_id, quantity in cart.items():
             product = get_object_or_404(Product, pk=product_id)
+            total_item_price = product.price * quantity
             cart_items.append({
                 'product': product,
                 'quantity': quantity,
-                'total_price': product.price * quantity,
+                'total_price': total_item_price,
             })
-            total_price += product.price * quantity
+            total_price += total_item_price
 
     context = {
         'cart_items': cart_items,
-        'total_price': total_price,
+        'total_price': float(total_price),
     }
     return render(request, 'products/cart.html', context)
 
@@ -241,9 +243,9 @@ def checkout(request):
             cart_items.append({
                 'product': item.product,
                 'quantity': item.quantity,
-                'total_price': item.product.price * item.quantity,
+                'total_price': item.total_price,
             })
-            total_price += item.product.price * item.quantity
+            total_price += item.total_price
     else:
         for product_id, quantity in cart.items():
             product = get_object_or_404(Product, pk=product_id)
