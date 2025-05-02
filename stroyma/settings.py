@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'stroyma.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stroyma_db',
+        'USER': 'stroyma_user',  # или 'postgres', если используете дефолтного пользователя
+        'PASSWORD': 'your_secure_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
