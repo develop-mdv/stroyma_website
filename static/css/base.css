@@ -1,0 +1,203 @@
+/* Базовые стили */
+body {
+    font-family: 'Manrope', sans-serif;
+    color: var(--text-gray);
+    background-color: var(--bg-milky-white);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.6;
+}
+
+/* Переменные для тем */
+[data-theme="light"] {
+    --bg-milky-white: #F9FAFB; /* Мягкий белый */
+    --bg-sandy: #F5E6D3; /* Теплый песочный */
+    --bg-deep-green: #2D5D4C; /* Насыщенный зеленый */
+    --text-deep-green: #2D5D4C;
+    --bg-concrete-gray: #6B7280; /* Нейтральный серый */
+    --text-gray: #1F2937; /* Темно-серый для текста */
+    --bg-white: #FFFFFF;
+    --text-gray-600: #4B5563;
+    --input-bg: #FFFFFF;
+    --input-border: #D1D5DB;
+    --input-focus: #2D5D4C;
+    --button-hover: #4B6B5D;
+    --error-color: #DC2626;
+}
+
+[data-theme="dark"] {
+    --bg-milky-white: #1F2937; /* Темно-серый */
+    --bg-sandy: #4B3F2F; /* Темный песочный */
+    --bg-deep-green: #2D5D4C; /* Тот же зеленый для консистентности */
+    --text-deep-green: #6EE7B7; /* Светло-зеленый для контраста */
+    --bg-concrete-gray: #4B5563; /* Темный серый */
+    --text-gray: #E5E7EB; /* Светло-серый для текста */
+    --bg-white: #374151; /* Темный фон панелей */
+    --text-gray-600: #9CA3AF;
+    --input-bg: #374151;
+    --input-border: #6B7280;
+    --input-focus: #6EE7B7;
+    --button-hover: #4B6B5D;
+    --error-color: #F87171;
+}
+
+/* Применение переменных */
+.bg-milky-white { background-color: var(--bg-milky-white); }
+.bg-sandy { background-color: var(--bg-sandy); }
+.bg-deep-green { background-color: var(--bg-deep-green); }
+.text-deep-green { color: var(--text-deep-green); }
+.bg-concrete-gray { background-color: var(--bg-concrete-gray); }
+.bg-white { background-color: var(--bg-white); }
+.text-gray-600 { color: var(--text-gray-600); }
+
+/* Типографика */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-deep-green);
+}
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.875rem; }
+h3 { font-size: 1.5rem; }
+p, li, a, span { font-size: 1rem; font-weight: 400; }
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+
+/* Стили для форм и полей ввода */
+input, textarea, select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--text-gray);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(45, 93, 76, 0.2);
+}
+input::placeholder, textarea::placeholder {
+    color: var(--text-gray-600);
+    opacity: 0.7;
+}
+label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.error-message {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Кнопки */
+button, a.button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover, a.button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+/* Ползунок (noUiSlider) */
+.noUi-target {
+    background: var(--bg-concrete-gray);
+    border: none;
+    box-shadow: none;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+.noUi-connect {
+    background: var(--bg-deep-green);
+}
+.noUi-handle {
+    background: var(--bg-white);
+    border: 2px solid var(--bg-deep-green);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 20px;
+    height: 20px;
+    top: -7px;
+}
+.noUi-tooltip {
+    background: var(--bg-deep-green);
+    color: var(--bg-white);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Эффекты наведения и переходы */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+.shadow-hover {
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.shadow-hover:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Текстурный фон */
+.texture-overlay {
+    background-image: url('/static/images/concrete_texture.jpg'); /* Укажи путь к локальному изображению */
+    /* Если изображения нет, можно закомментировать строку выше и убрать текстуру: */
+    /* background-image: none; */
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    mix-blend-mode: multiply;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Модальное окно */
+#quick-view-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+#quick-view-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+#modal-content {
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    background-color: var(--bg-white);
+    border-radius: 1rem;
+}
+#quick-view-modal.show #modal-content {
+    transform: scale(1);
+}
+
+/* Доступность */
+button:focus, a:focus {
+    outline: 2px solid var(--input-focus);
+    outline-offset: 2px;
+}
+[aria-label] {
+    cursor: pointer;
+}
