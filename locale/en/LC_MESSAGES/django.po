@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-03 11:18+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\products\templates\products\base.html:8
+msgid "СтройМа - Строительные материалы"
+msgstr ""
+
+#: .\products\templates\products\base.html:31
+msgid "Логотип СтройМа"
+msgstr "Logo СтройМа"
+
+#: .\products\templates\products\base.html:32
+msgid "СтройМа"
+msgstr "СтройМа"
+
+#: .\products\templates\products\base.html:37
+msgid "Переключить тему"
+msgstr "Change the subject"
+
+#: .\products\templates\products\base.html:40
+msgid "Открыть меню"
+msgstr "Open menu"
+
+#: .\products\templates\products\base.html:48
+#: .\products\templates\products\base.html:85
+msgid "Главная"
+msgstr "Home"
+
+#: .\products\templates\products\base.html:51
+#: .\products\templates\products\base.html:88
+msgid "Корзина"
+msgstr "Shopping cart"
+
+#: .\products\templates\products\base.html:54
+#: .\products\templates\products\base.html:91
+msgid "Контакты"
+msgstr "Contacts"
+
+#: .\products\templates\products\base.html:60
+#: .\products\templates\products\base.html:97
+msgid "Профиль"
+msgstr "Profile"
+
+#: .\products\templates\products\base.html:65
+#: .\products\templates\products\base.html:102
+msgid "Выход"
+msgstr "Exit"
+
+#: .\products\templates\products\base.html:73
+#: .\products\templates\products\base.html:110
+msgid "Вход"
+msgstr "Logging in"
+
+#: .\products\templates\products\base.html:76
+#: .\products\templates\products\base.html:113
+msgid "Регистрация"
+msgstr "Registration"
+
+#: .\products\templates\products\base.html:130
+msgid ""
+"© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены."
+msgstr ""
+"© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены."
+
+#: .\products\templates\products\base.html:133
+msgid "Связаться с нами"
+msgstr "Contact us"
+
+#: .\products\templates\products\base.html:148
+msgid "Прокрутить наверх"
+msgstr "Scroll up"
+
+#: .\products\templates\products\base.html:155
+msgid "Закрыть модальное окно"
+msgstr "Close the modal window"
