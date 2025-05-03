@@ -39,11 +39,11 @@ def product_list(request):
         if query:
             products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
-    price_min = request.GET.get('price_min', min_price)
-    price_max = request.GET.get('price_max', max_price)
-    if price_min and str(price_min).isdigit():
+    price_min = str(request.GET.get('price_min', min_price))
+    price_max = str(request.GET.get('price_max', max_price))
+    if price_min and price_min.isdigit():
         products = products.filter(price__gte=int(price_min))
-    if price_max and str(price_max).isdigit():
+    if price_max and price_max.isdigit():
         products = products.filter(price__lte=int(price_max))
 
     sort_by = request.GET.get('sort_by', 'name')
@@ -59,8 +59,8 @@ def product_list(request):
     return render(request, 'products/product_list.html', {
         'page_obj': page_obj,
         'search_form': form,
-        'min_price': min_price,
-        'max_price': max_price,
+        'min_price': int(min_price),
+        'max_price': int(max_price),
         'sort_by': sort_by,
     })
 
