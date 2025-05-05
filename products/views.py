@@ -157,13 +157,14 @@ def update_cart(request, pk):
                 cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
                 cart_item.quantity = quantity
                 cart_item.save()
+                total_price = sum(item.product.price * item.quantity for item in CartItem.objects.filter(cart=cart))
             else:
                 cart = request.session.get('cart', {})
                 cart[str(product.pk)] = quantity
                 request.session['cart'] = cart
+                total_price = sum(get_object_or_404(Product, pk=pid).price * qty for pid, qty in cart.items())
 
             item_total_price = product.price * quantity
-            total_price = sum(item.product.price * item.quantity for item in CartItem.objects.filter(cart=cart)) if cart else sum(get_object_or_404(Product, pk=pid).price * qty for pid, qty in request.session.get('cart', {}).items())
 
             return JsonResponse({
                 'success': True,
