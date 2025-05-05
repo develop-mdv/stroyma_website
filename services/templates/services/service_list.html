@@ -1,0 +1,28 @@
+{% extends 'products/base.html' %}
+{% block content %}
+<h1 class="text-3xl font-bold text-deep-green mb-8">Услуги</h1>
+<div class="flex flex-col gap-6">
+  {% for service in services %}
+    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center border border-gray-200 dark:border-gray-600 hover:shadow-xl transition-shadow">
+      <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center mr-6">
+        {% if service.image %}
+          <a href="{% url 'service_detail' service.slug %}">
+            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
+          </a>
+        {% else %}
+          <a href="{% url 'service_detail' service.slug %}">
+            <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
+          </a>
+        {% endif %}
+      </div>
+      <div class="flex-1">
+        <a href="{% url 'service_detail' service.slug %}" class="text-xl font-semibold text-deep-green hover:underline">{{ service.title }}</a>
+        <p class="text-gray-700 mt-2">{{ service.short_description }}</p>
+      </div>
+      <div class="ml-6">
+        <a href="{% url 'service_detail' service.slug %}" class="button bg-beige text-deep-green hover:bg-beige-dark shadow-hover">Подробнее</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %} 
