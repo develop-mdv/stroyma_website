@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture
+from .models import Product, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture, Category
 from .forms import OrderForm, SearchForm, ContactForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -9,6 +9,8 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
 import logging
+from django.views.generic import ListView, DetailView
+from .filters import ProductFilter
 
 logger = logging.getLogger(__name__)
 EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
@@ -34,10 +36,39 @@ def product_list(request):
     min_price = products.aggregate(Min('price'))['price__min'] or 0
     max_price = products.aggregate(Max('price'))['price__max'] or 0
 
+    # Получаем корневые категории и их потомков
+    root_categories = Category.objects.filter(parent=None)
+    categories_tree = []
+    for category in root_categories:
+        categories_tree.append({
+            'category': category,
+            'children': category.get_children()
+        })
+
     if form.is_valid():
         query = form.cleaned_data['query']
         if query:
             products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+    # Фильтрация по категориям
+    selected_categories = request.GET.getlist('category')
+    if selected_categories:
+        # Получаем только выбранные категории
+        categories_to_filter = []
+        for category_id in selected_categories:
+            try:
+                category = Category.objects.get(id=category_id)
+                categories_to_filter.append(category)
+            except Category.DoesNotExist:
+                continue
+        
+        # Создаем Q-объект для каждой категории
+        category_filters = Q()
+        for category in categories_to_filter:
+            category_filters |= Q(categories=category)
+        
+        # Применяем фильтр с использованием OR
+        products = products.filter(category_filters).distinct()
 
     price_min = str(request.GET.get('price_min', min_price))
     price_max = str(request.GET.get('price_max', max_price))
@@ -62,6 +93,8 @@ def product_list(request):
         'min_price': int(min_price),
         'max_price': int(max_price),
         'sort_by': sort_by,
+        'categories_tree': categories_tree,
+        'selected_categories': selected_categories,
     })
 
 def search_ajax(request):
@@ -71,20 +104,48 @@ def search_ajax(request):
     sort_by = request.GET.get('sort_by', 'name')
     page_number = request.GET.get('page', 1)
     autocomplete = request.GET.get('autocomplete', False)
+    
+    # Получаем все параметры category из запроса
+    selected_categories = request.GET.getlist('category')
+    print(f"Request GET: {request.GET}")  # Отладочная информация
+    print(f"Selected categories: {selected_categories}")  # Отладочная информация
 
     products = Product.objects.all()
 
     if query:
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
+    if selected_categories:
+        # Получаем только выбранные категории
+        categories_to_filter = []
+        for category_id in selected_categories:
+            try:
+                category = Category.objects.get(id=category_id)
+                categories_to_filter.append(category)
+            except Category.DoesNotExist:
+                print(f"Category not found: {category_id}")  # Отладочная информация
+                continue
+        
+        print(f"Categories to filter: {[cat.id for cat in categories_to_filter]}")  # Отладочная информация
+        
+        # Создаем Q-объект для каждой категории
+        category_filters = Q()
+        for category in categories_to_filter:
+            category_filters |= Q(categories=category)
+        
+        # Применяем фильтр с использованием OR
+        products = products.filter(category_filters).distinct()
+        print(f"SQL Query: {products.query}")  # Отладочная информация
+        print(f"Filtered products count: {products.count()}")  # Отладочная информация
+
     if autocomplete:
         products = products[:5]
         return JsonResponse({'products': [{'name': product.name} for product in products]})
 
     if price_min and price_min.isdigit():
-        products = products.filter(price__gte=price_min)
+        products = products.filter(price__gte=int(price_min))
     if price_max and price_max.isdigit():
-        products = products.filter(price__lte=price_max)
+        products = products.filter(price__lte=int(price_max))
 
     if sort_by == 'price_asc':
         products = products.order_by('price')
@@ -361,3 +422,46 @@ def color_selection(request):
         'facade_colors': facade_colors,
         'base_textures': base_textures,
     })
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        self.filterset = ProductFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['filter'] = self.filterset
+        return context
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'products/category_detail.html'
+    context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.get_object()
+        products = Product.objects.filter(
+            Q(categories=category) | 
+            Q(categories__in=category.get_descendants())
+        ).distinct()
+        
+        self.filterset = ProductFilter(self.request.GET, queryset=products)
+        context['products'] = self.filterset.qs
+        context['filter'] = self.filterset
+        return context
+
+def get_subcategories(request):
+    category_id = request.GET.get('category_id')
+    if category_id:
+        subcategories = Category.objects.filter(parent_id=category_id)
+        data = [{'id': cat.id, 'name': cat.name} for cat in subcategories]
+        return JsonResponse({'subcategories': data})
+    return JsonResponse({'subcategories': []})

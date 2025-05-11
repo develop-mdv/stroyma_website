@@ -1,16 +1,30 @@
 from django.contrib import admin
-from .models import Product, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture, ProductImage
+from mptt.admin import MPTTModelAdmin
+from .models import Product, Category, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture, ProductImage
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
 
+@admin.register(Category)
+class CategoryAdmin(MPTTModelAdmin):
+    list_display = ('name', 'parent', 'slug', 'get_products_count')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
+    list_filter = ('parent',)
+    mptt_level_indent = 20
+    expand_tree_by_default = True
+
+    def get_products_count(self, obj):
+        return obj.products.count()
+    get_products_count.short_description = 'Количество товаров'
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'stock', 'rating')
+    list_filter = ('categories', 'rating')
     search_fields = ('name', 'description')
-    list_filter = ('stock',)
-    ordering = ['name']
+    filter_horizontal = ('categories',)
     inlines = [ProductImageInline]
 
 @admin.register(Order)

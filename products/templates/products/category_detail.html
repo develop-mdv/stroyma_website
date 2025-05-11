@@ -1,0 +1,109 @@
+{% extends 'products/base.html' %}
+{% load mptt_tags %}
+
+{% block content %}
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-600 mb-4">
+    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
+    <span class="mx-2">/</span>
+    {% for ancestor in category.get_ancestors %}
+        <a href="{{ ancestor.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition">{{ ancestor.name }}</a>
+        <span class="mx-2">/</span>
+    {% endfor %}
+    <span>{{ category.name }}</span>
+</nav>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Фильтры -->
+    <div class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
+        <h3 class="text-xl font-bold text-deep-green mb-4">Фильтры</h3>
+        <form method="get" id="filter-form">
+            <!-- Категории -->
+            <div class="mb-4">
+                <h4 class="font-medium text-gray-700 mb-2">Категории</h4>
+                <div class="space-y-2">
+                    {% recursetree category.get_ancestors %}
+                        <div class="ml-{{ node.level|add:"-1" }}0">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="category" value="{{ node.id }}" 
+                                       class="form-checkbox text-deep-green" 
+                                       {% if node.id|stringformat:"i" in request.GET.getlist('category') %}checked{% endif %}>
+                                <span class="ml-2">{{ node.name }}</span>
+                            </label>
+                            {% if not node.is_leaf_node %}
+                                {{ children }}
+                            {% endif %}
+                        </div>
+                    {% endrecursetree %}
+                </div>
+            </div>
+
+            <!-- Цена -->
+            <div class="mb-4">
+                <h4 class="font-medium text-gray-700 mb-2">Цена</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" name="price_min" placeholder="От" 
+                           value="{{ request.GET.price_min }}" 
+                           class="form-input rounded-md border-gray-300">
+                    <input type="number" name="price_max" placeholder="До" 
+                           value="{{ request.GET.price_max }}" 
+                           class="form-input rounded-md border-gray-300">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full button bg-deep-green text-white shadow-hover">
+                Применить фильтры
+            </button>
+        </form>
+    </div>
+
+    <!-- Товары -->
+    <div class="md:col-span-3">
+        <h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">{{ category.name }}</h1>
+        
+        {% if category.get_children %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {% for subcategory in category.get_children %}
+                    <a href="{{ subcategory.get_absolute_url }}" 
+                       class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-600">
+                        <h3 class="text-lg font-medium text-deep-green">{{ subcategory.name }}</h3>
+                        <p class="text-sm text-gray-600 mt-2">
+                            {{ subcategory.products.count }} товаров
+                        </p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% include 'products/search_results.html' with products=products %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    const productsGrid = document.getElementById('products-grid');
+
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(filterForm);
+        const queryString = new URLSearchParams(formData).toString();
+        
+        fetch(`?${queryString}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            productsGrid.innerHTML = html;
+        });
+    });
+});
+</script>
+{% endblock %} 

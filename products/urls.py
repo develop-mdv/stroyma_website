@@ -14,4 +14,6 @@ urlpatterns = [
     path('search-ajax/', views.search_ajax, name='search_ajax'),
     path('quick-view/<int:pk>/', views.quick_view, name='quick_view'),
     path('color-selection/', views.color_selection, name='color_selection'),
+    path('category/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
+    path('get-subcategories/', views.get_subcategories, name='get_subcategories'),
 ]

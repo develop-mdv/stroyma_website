@@ -82,6 +82,60 @@
         <div id="price-slider"></div>
         <p class="text-sm text-gray mt-2">Цена: <span id="price-range">От {{ request.GET.price_min|default:min_price }} до {{ request.GET.price_max|default:max_price }}</span></p>
     </div>
+    
+    <!-- Категории -->
+        <div class="col-span-1 md:col-span-4">
+            <label class="block text-sm font-medium text-gray mb-2">Категории:</label>
+            <div class="bg-white rounded-lg border border-gray-200 dark:border-gray-600">
+                <div class="max-h-48 overflow-y-auto p-4">
+                    {% for item in categories_tree %}
+                        <div class="mb-4">
+                            <!-- Родительская категория -->
+                            <div class="flex items-center space-x-2 mb-2">
+                                <input type="checkbox"
+                                       name="category"
+                                       value="{{ item.category.id }}"
+                                       id="category-{{ item.category.id }}"
+                                       {% if item.category.id|stringformat:"i" in selected_categories %}checked{% endif %}
+                                       class="form-checkbox text-deep-green">
+                                <label for="category-{{ item.category.id }}" class="text-sm font-medium text-deep-green cursor-pointer flex-grow">
+                                    {{ item.category.name }}
+                                </label>
+                                {% if item.children %}
+                                    <button type="button"
+                                            class="accordion-toggle text-gray-500 hover:text-deep-green transition-transform duration-200"
+                                            data-target="children-{{ item.category.id }}">
+                                        <svg class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <!-- Дочерние категории -->
+                            {% if item.children %}
+                                <div id="children-{{ item.category.id }}" class="ml-6 space-y-2 hidden">
+                                    {% for child in item.children %}
+                                        <div class="flex items-center space-x-2">
+                                            <input type="checkbox"
+                                                   name="category"
+                                                   value="{{ child.id }}"
+                                                   id="category-{{ child.id }}"
+                                                   {% if child.id|stringformat:"i" in selected_categories %}checked{% endif %}
+                                                   class="form-checkbox text-deep-green">
+                                            <label for="category-{{ child.id }}" class="text-sm text-gray-600 cursor-pointer">
+                                                {{ child.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
 </form>
 
 <!-- Результаты поиска -->
@@ -96,6 +150,13 @@
     </div>
 </div>
 
+<!-- Добавляем стили -->
+<style>
+.accordion-toggle.active svg {
+    transform: rotate(180deg);
+}
+</style>
+
 {% endblock %}
 
 {% block scripts %}
@@ -108,12 +169,82 @@ $(document).ready(function () {
     const priceMinInput = $('#price_min');
     const priceMaxInput = $('#price_max');
     const sortBySelect = $('#sort-by');
+    const categoryCheckboxes = $('input[name="category"]');
     const resultsContainer = $('#search-results .grid');
     const loadMoreBtn = $('#load-more');
     const suggestionsContainer = $('#autocomplete-suggestions');
     let currentPage = 1;
     let isLoading = false;
     loadResults(true);
+
+    // Обработка аккордеона
+    $('.accordion-toggle').on('click', function() {
+        const $button = $(this);
+        const $icon = $button.find('svg');
+        const $content = $('#' + $button.data('target'));
+        
+        $button.toggleClass('active');
+        $content.slideToggle(200);
+    });
+
+    // Показываем дочерние категории, если родительская выбрана
+    $('input[name="category"]').each(function() {
+        const $checkbox = $(this);
+        const $parent = $checkbox.closest('.mb-4');
+        const $children = $parent.find('.ml-6');
+        const $toggle = $parent.find('.accordion-toggle');
+        
+        if ($checkbox.is(':checked') && $children.length) {
+            $children.show();
+            $toggle.addClass('active');
+        }
+    });
+
+    // Обработка выбора категорий
+    categoryCheckboxes.on('change', function() {
+        const $checkbox = $(this);
+        const $parent = $checkbox.closest('.mb-4');
+        const $parentCheckbox = $parent.find('input[name="category"]').first();
+        const $children = $parent.find('input[name="category"]').not($parentCheckbox);
+        const $childrenContainer = $parent.find('.ml-6');
+        const $toggle = $parent.find('.accordion-toggle');
+
+        // Если выбрана родительская категория
+        if ($checkbox.is($parentCheckbox)) {
+            // Выбираем/снимаем выбор со всех дочерних категорий
+            $children.prop('checked', this.checked);
+            // Показываем/скрываем список дочерних категорий
+            if (this.checked) {
+                $childrenContainer.show();
+                $toggle.addClass('active');
+            } else {
+                $childrenContainer.hide();
+                $toggle.removeClass('active');
+            }
+        } else {
+            // Если выбрана дочерняя категория
+            if (this.checked) {
+                // Выбираем родительскую категорию
+                $parentCheckbox.prop('checked', true);
+                // Показываем список дочерних категорий
+                $childrenContainer.show();
+                $toggle.addClass('active');
+            } else {
+                // Проверяем, остались ли выбранные дочерние категории
+                const anyChildChecked = $children.filter(':checked').length > 0;
+                $parentCheckbox.prop('checked', anyChildChecked);
+                
+                // Если нет выбранных дочерних, скрываем список
+                if (!anyChildChecked) {
+                    $childrenContainer.hide();
+                    $toggle.removeClass('active');
+                }
+            }
+        }
+
+        currentPage = 1;
+        loadResults(true);
+    });
 
     // Функция загрузки результатов поиска
     function loadResults(reset = false) {
@@ -129,17 +260,27 @@ $(document).ready(function () {
         const priceMin = priceMinInput.val();
         const priceMax = priceMaxInput.val();
         const sort_by = sortBySelect.val();
+        const selectedCategories = categoryCheckboxes.filter(':checked').map(function() {
+            return this.value;
+        }).get();
+
+        // Формируем данные для запроса
+        const params = new URLSearchParams();
+        params.append('query', query);
+        params.append('price_min', priceMin);
+        params.append('price_max', priceMax);
+        params.append('sort_by', sort_by);
+        params.append('page', currentPage);
+
+        // Добавляем каждую выбранную категорию
+        selectedCategories.forEach(function(categoryId) {
+            params.append('category', categoryId);
+        });
 
         $.ajax({
             url: '{% url "search_ajax" %}',
             method: 'GET',
-            data: {
-                query,
-                price_min: priceMin,
-                price_max: priceMax,
-                sort_by,
-                page: currentPage
-            },
+            data: params.toString(),
             success: function (response) {
                 if (currentPage === 1) {
                     resultsContainer.html($(response.results).find('> *'));
@@ -162,72 +303,32 @@ $(document).ready(function () {
         });
     }
 
-    // Автодополнение для поиска
-    searchInput.on('input', function () {
-        const query = $(this).val();
+    // Обработчики событий для фильтров
+    searchInput.on('input', function() {
         clearTimeout(window.searchTimeout);
         window.searchTimeout = setTimeout(() => {
-            if (query.length > 2) {
-                $.ajax({
-                    url: '{% url "search_ajax" %}',
-                    method: 'GET',
-                    data: { query: query, autocomplete: true },
-                    success: function (response) {
-                        suggestionsContainer.empty().removeClass('hidden');
-                        if (response.products && response.products.length > 0) {
-                            response.products.forEach(product => {
-                                suggestionsContainer.append(
-                                    `<div class="p-2 hover:bg-sandy cursor-pointer text-gray-600" data-value="${product.name}">${product.name}</div>`
-                                );
-                            });
-                        } else {
-                            suggestionsContainer.addClass('hidden');
-                        }
-                    },
-                    error: function () {
-                        suggestionsContainer.addClass('hidden');
-                    }
-                });
-            } else {
-                suggestionsContainer.addClass('hidden');
-            }
-
-            // Выполняем поиск
             currentPage = 1;
             loadResults(true);
         }, 500);
     });
 
-    // Выбор подсказки автодополнения
-    suggestionsContainer.on('click', 'div', function () {
-        searchInput.val($(this).data('value'));
-        suggestionsContainer.addClass('hidden');
+    priceMinInput.on('change', function() {
         currentPage = 1;
         loadResults(true);
     });
 
-    // Закрытие подсказок при клике вне
-    $(document).on('click', function (e) {
-        if (!$(e.target).closest('#id_query, #autocomplete-suggestions').length) {
-            suggestionsContainer.addClass('hidden');
-        }
-    });
-
-    // Изменение фильтров
-    $('#search-form').on('submit', function (e) {
-        e.preventDefault();
+    priceMaxInput.on('change', function() {
         currentPage = 1;
         loadResults(true);
     });
 
-    // Смена сортировки
-    sortBySelect.on('change', function () {
+    sortBySelect.on('change', function() {
         currentPage = 1;
         loadResults(true);
     });
 
     // Загрузка новых товаров
-    loadMoreBtn.on('click', function () {
+    loadMoreBtn.on('click', function() {
         currentPage++;
         loadResults();
     });
@@ -258,24 +359,6 @@ $(document).ready(function () {
         $('#price-range').text(`От ${values[0]} до ${values[1]}`);
         currentPage = 1;
         loadResults(true);
-    });
-
-    priceMinInput.on('change', function () {
-        const minValue = parseInt($(this).val());
-        if (!isNaN(minValue)) {
-            slider.noUiSlider.set([minValue, null]);
-            currentPage = 1;
-            loadResults(true);
-        }
-    });
-
-    priceMaxInput.on('change', function () {
-        const maxValue = parseInt($(this).val());
-        if (!isNaN(maxValue)) {
-            slider.noUiSlider.set([null, maxValue]);
-            currentPage = 1;
-            loadResults(true);
-        }
     });
 });
 </script>

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'mptt',  # Добавлено для поддержки иерархических категорий
+    'django_filters',  # Добавлено для фильтрации
     'accounts',
     'products',
     'services',

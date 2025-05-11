@@ -1,5 +1,31 @@
 from django.db import models
 from django.contrib.auth.models import User
+from mptt.models import MPTTModel, TreeForeignKey
+from django.utils.text import slugify
+from django.urls import reverse
+from django.utils.timezone import now
+
+class Category(MPTTModel):
+    name = models.CharField(max_length=100, verbose_name='Название категории')
+    slug = models.SlugField(max_length=100, unique=True, verbose_name='URL-имя')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, 
+                           related_name='children', verbose_name='Родительская категория')
+    
+    class MPTTMeta:
+        order_insertion_by = ['name']
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
+
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -8,6 +34,17 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/')
     stock = models.PositiveIntegerField(default=0)
     rating = models.PositiveIntegerField(default=5)
+    categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категории')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['price']),
+            models.Index(fields=['created_at']),
+        ]
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.name
