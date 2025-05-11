@@ -32,6 +32,23 @@
         display: block;
         z-index: 10; /* Изображение поверх наложений */
     }
+    .scrollable-container {
+        max-height: 240px; /* Высота для 3 строк элементов */
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-bottom: 1rem;
+    }
+    .scrollable-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .scrollable-container::-webkit-scrollbar-track {
+        background: var(--bg-milky-white);
+        border-radius: 3px;
+    }
+    .scrollable-container::-webkit-scrollbar-thumb {
+        background: var(--deep-green);
+        border-radius: 3px;
+    }
 </style>
 {% endblock %}
 
@@ -53,30 +70,34 @@
         </div>
         <div class="md:w-1/2">
             <h2 class="text-xl font-semibold text-deep-green mb-4">Выберите цвет фасада</h2>
-            <div class="flex flex-wrap gap-2 mt-2">
-                {% for color in facade_colors %}
-                    <div class="color-swatch w-12 h-12 relative cursor-pointer" data-target="facade" data-color="{{ color.hex_code }}" title="{{ color.name }}" style="background-color: {{ color.hex_code }};" role="button" aria-label="Выбрать цвет {{ color.name }} для фасада">
-                        <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ color.name }}</span>
-                    </div>
-                {% empty %}
-                    <p class="text-gray-500">Нет доступных цветов. Добавьте цвета в админ-панели.</p>
-                {% endfor %}
+            <div class="scrollable-container">
+                <div class="flex flex-wrap gap-2 mt-2">
+                    {% for color in facade_colors %}
+                        <div class="color-swatch w-12 h-12 relative cursor-pointer" data-target="facade" data-color="{{ color.hex_code }}" title="{{ color.name }}" style="background-color: {{ color.hex_code }};" role="button" aria-label="Выбрать цвет {{ color.name }} для фасада">
+                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ color.name }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-500">Нет доступных цветов. Добавьте цвета в админ-панели.</p>
+                    {% endfor %}
+                </div>
             </div>
             <h2 class="text-xl font-semibold text-deep-green mb-4 mt-6">Выберите текстуру цоколя</h2>
-            <div class="flex flex-wrap gap-2 mt-2">
-                {% for texture in base_textures %}
-                    <div class="texture-swatch w-12 h-12 relative cursor-pointer"
-                         data-target="base"
-                         data-image="{{ texture.image.url }}"
-                         title="{{ texture.name }}"
-                         style="background-image: url('{{ texture.image.url }}')"
-                         role="button"
-                         aria-label="Выбрать текстуру {{ texture.name }} для цоколя">
-                        <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ texture.name }}</span>
-                    </div>
-                {% empty %}
-                    <p class="text-gray-500">Нет доступных текстур. Добавьте текстуры в админ-панели.</p>
-                {% endfor %}
+            <div class="scrollable-container">
+                <div class="flex flex-wrap gap-2 mt-2">
+                    {% for texture in base_textures %}
+                        <div class="texture-swatch w-12 h-12 relative cursor-pointer"
+                             data-target="base"
+                             data-image="{{ texture.image.url }}"
+                             title="{{ texture.name }}"
+                             style="background-image: url('{{ texture.image.url }}')"
+                             role="button"
+                             aria-label="Выбрать текстуру {{ texture.name }} для цоколя">
+                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ texture.name }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-500">Нет доступных текстур. Добавьте текстуры в админ-панели.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
