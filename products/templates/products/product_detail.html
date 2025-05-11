@@ -1,55 +1,105 @@
 {% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | Stroyma{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.css" />
+{% endblock %}
 
 {% block content %}
-<!-- Хлебные крошки -->
-<nav class="text-sm text-gray-600 mb-4">
-    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
-    <span class="mx-2">/</span>
-    <span>{{ product.name }}</span>
-</nav>
+<div class="bg-[#F8F5EF] min-h-screen py-10 px-4">
+    <div class="max-w-5xl mx-auto">
+        <!-- Хлебные крошки -->
+        <nav class="text-sm text-gray-600 mb-4">
+            <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
+            <span class="mx-2">/</span>
+            <span>{{ product.name }}</span>
+        </nav>
 
-<h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">{{ product.name }}</h1>
+        <!-- Верхний блок с основной информацией -->
+        <div class="flex flex-col md:flex-row mb-12 items-start gap-8">
+            <div class="w-full md:w-1/2">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="rounded-xl shadow-md w-full object-cover h-auto max-h-[400px]">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x300?text=Нет+изображения" class="rounded-xl shadow-md w-full object-cover">
+                {% endif %}
+            </div>
+            <div class="flex-1">
+                <h1 class="text-4xl font-serif text-deep-green mb-4">{{ product.name }}</h1>
+                <p class="text-lg text-gray-800 mb-6 leading-relaxed">{{ product.description|linebreaks }}</p>
 
-<!-- Карточка товара -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in border border-gray-200 dark:border-gray-600">
-        <!-- Изображение товара -->
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-96 object-cover rounded-lg" loading="lazy">
-    </div>
-    <div class="bg-white rounded-lg shadow-lg p-6 animate-fade-in border border-gray-200 dark:border-gray-600">
-        <!-- Описание товара -->
-        <p class="text-gray-600 mb-2"><strong class="font-medium">Описание:</strong> {{ product.description }}</p>
-        <p class="text-gray-600 mb-2"><strong class="font-medium">Цена:</strong> {{ product.price }} руб.</p>
-        <p class="text-gray-600 mb-2"><strong class="font-medium">На складе:</strong> {{ product.stock }} шт.</p>
-        <p class="text-gray-600 mb-2"><strong class="font-medium">Рейтинг:</strong>
-            <span class="text-yellow-400 dark:text-yellow-300">
-                {% for i in '12345' %}
-                    {% if forloop.counter <= product.rating %}
-                        <i class="fas fa-star"></i>
-                    {% else %}
-                        <i class="far fa-star"></i>
-                    {% endif %}
+                <div class="space-y-4 mb-6">
+                    <p class="text-xl font-semibold text-deep-green">Цена: {{ product.price }} руб.</p>
+                    <p class="text-gray-700">На складе: {{ product.stock }} шт.</p>
+                    <p class="text-gray-700">Рейтинг:
+                        <span class="text-yellow-400 dark:text-yellow-300">
+                            {% for i in '12345' %}
+                                {% if forloop.counter <= product.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Форма выбора количества -->
+                <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-4">
+                    {% csrf_token %}
+                    <div class="flex items-center mb-4">
+                        <label for="quantity" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
+                        <input type="number" name="quantity" id="quantity" min="1" max="{{ product.stock }}" value="1"
+                               class="w-20 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="submit" class="button bg-deep-green text-white shadow-hover">
+                            Добавить в корзину
+                        </button>
+                        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover">
+                            Вернуться к каталогу
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Галерея изображений -->
+        {% if product.images.exists %}
+        <div class="mb-12">
+            <h2 class="text-3xl font-serif font-bold text-deep-green mb-6">Галерея изображений</h2>
+            <div id="product-gallery" class="f-carousel" data-carousel="static">
+                {% for image in product.images.all %}
+                    <div class="f-carousel__slide">
+                        <a href="{{ image.image.url }}" data-fancybox="gallery">
+                            <img src="{{ image.image.url }}" alt="{{ image.title|default:product.name }}" class="w-full h-96 object-cover rounded-lg" />
+                        </a>
+                    </div>
                 {% endfor %}
-            </span>
-        </p>
-
-        <!-- Форма выбора количества -->
-        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-4">
-            {% csrf_token %}
-            <div class="flex items-center mb-4">
-                <label for="quantity" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
-                <input type="number" name="quantity" id="quantity" min="1" max="{{ product.stock }}" value="1"
-                       class="w-20 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
             </div>
-            <div class="flex space-x-4">
-                <button type="submit" class="button bg-deep-green text-white shadow-hover">
-                    Добавить в корзину
-                </button>
-                <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover">
-                    Вернуться к каталогу
-                </a>
-            </div>
-        </form>
+        </div>
+        {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.umd.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.Carousel) {
+        new Carousel(document.getElementById("product-gallery"), {
+            Dots: true,
+        });
+    }
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        Thumbs: false,
+    });
+});
+</script>
 {% endblock %}
