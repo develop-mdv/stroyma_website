@@ -1,16 +1,22 @@
 from django.contrib import admin
-from .models import Service, ServiceExample
+from .models import Service, ServicePhoto, ServiceVideo
 
-class ServiceExampleInline(admin.TabularInline):
-    model = ServiceExample
+class ServicePhotoInline(admin.TabularInline):
+    model = ServicePhoto
     extra = 1
+    fields = ('image', 'title', 'description', 'order')
+
+class ServiceVideoInline(admin.TabularInline):
+    model = ServiceVideo
+    extra = 1
+    fields = ('video', 'title', 'description', 'order')
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug')
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ('title', 'short_description')
-    inlines = [ServiceExampleInline]
+    inlines = [ServicePhotoInline, ServiceVideoInline]
     fieldsets = (
         (None, {
             'fields': ('title', 'slug', 'short_description', 'description', 'image')
@@ -20,6 +26,16 @@ class ServiceAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(ServiceExample)
-class ServiceExampleAdmin(admin.ModelAdmin):
-    list_display = ('service', 'image', 'video')
+@admin.register(ServicePhoto)
+class ServicePhotoAdmin(admin.ModelAdmin):
+    list_display = ('service', 'title', 'order')
+    list_filter = ('service',)
+    search_fields = ('title', 'description')
+    ordering = ('service', 'order', 'id')
+
+@admin.register(ServiceVideo)
+class ServiceVideoAdmin(admin.ModelAdmin):
+    list_display = ('service', 'title', 'order')
+    list_filter = ('service',)
+    search_fields = ('title', 'description')
+    ordering = ('service', 'order', 'id')

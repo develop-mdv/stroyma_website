@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
     <!-- Подключение кастомных стилей -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body class="relative">
     <!-- Текстурный фон -->
@@ -169,5 +170,7 @@
     <!-- Подключение JavaScript -->
     <script src="{% static 'js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
+    {% block extra_js %}{{ block.super }}{% endblock %}
+
 </body>
 </html>

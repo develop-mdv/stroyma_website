@@ -19,10 +19,32 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
-class ServiceExample(models.Model):
-    service = models.ForeignKey(Service, related_name='examples', on_delete=models.CASCADE, verbose_name='Услуга')
-    image = models.ImageField(upload_to='service_examples/', verbose_name='Фото примера работы')
-    video = models.FileField(upload_to='service_examples/videos/', blank=True, null=True, verbose_name='Видео примера работы')
+class ServicePhoto(models.Model):
+    service = models.ForeignKey(Service, related_name='photos', on_delete=models.CASCADE, verbose_name='Услуга')
+    image = models.ImageField(upload_to='service_photos/', verbose_name='Фото примера работы')
+    title = models.CharField(max_length=255, blank=True, verbose_name='Название фото')
+    description = models.TextField(blank=True, verbose_name='Описание фото')
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Фото услуги'
+        verbose_name_plural = 'Фото услуг'
 
     def __str__(self):
-        return f"Пример для {self.service.title}"
+        return f"Фото для {self.service.title} - {self.title or 'Без названия'}"
+
+class ServiceVideo(models.Model):
+    service = models.ForeignKey(Service, related_name='videos', on_delete=models.CASCADE, verbose_name='Услуга')
+    video = models.FileField(upload_to='service_videos/', verbose_name='Видео примера работы')
+    title = models.CharField(max_length=255, blank=True, verbose_name='Название видео')
+    description = models.TextField(blank=True, verbose_name='Описание видео')
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Видео услуги'
+        verbose_name_plural = 'Видео услуг'
+
+    def __str__(self):
+        return f"Видео для {self.service.title} - {self.title or 'Без названия'}"
