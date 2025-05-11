@@ -1,0 +1,1038 @@
+{
+    "colors": [
+        {
+            "name": "Sahara 1",
+            "color": "rgb(243, 242, 222)"
+        },
+        {
+            "name": "Sahara 2",
+            "color": "rgb(230, 226, 202)"
+        },
+        {
+            "name": "Sahara 3",
+            "color": "rgb(240, 236, 194)"
+        },
+        {
+            "name": "Sahara 4",
+            "color": "rgb(223, 220, 193)"
+        },
+        {
+            "name": "Sahara 5",
+            "color": "rgb(219, 220, 215)"
+        },
+        {
+            "name": "Sahara 6",
+            "color": "rgb(164, 165, 157)"
+        },
+        {
+            "name": "Savanne 1",
+            "color": "rgb(238, 233, 214)"
+        },
+        {
+            "name": "Savanne 2",
+            "color": "rgb(241, 220, 183)"
+        },
+        {
+            "name": "Savanne 3",
+            "color": "rgb(243, 206, 158)"
+        },
+        {
+            "name": "Savanne 4",
+            "color": "rgb(216, 199, 167)"
+        },
+        {
+            "name": "Savanne 5",
+            "color": "rgb(213, 209, 195)"
+        },
+        {
+            "name": "Savanne 6",
+            "color": "rgb(159, 156, 144)"
+        },
+        {
+            "name": "California 1",
+            "color": "rgb(237, 235, 194)"
+        },
+        {
+            "name": "California 2",
+            "color": "rgb(240, 236, 180)"
+        },
+        {
+            "name": "California 3",
+            "color": "rgb(241, 233, 156)"
+        },
+        {
+            "name": "California 4",
+            "color": "rgb(242, 230, 135)"
+        },
+        {
+            "name": "California 5",
+            "color": "rgb(245, 225, 135)"
+        },
+        {
+            "name": "California 6",
+            "color": "rgb(250, 220, 106)"
+        },
+        {
+            "name": "Gobi 1",
+            "color": "rgb(240, 237, 227)"
+        },
+        {
+            "name": "Gobi 2",
+            "color": "rgb(244, 236, 212)"
+        },
+        {
+            "name": "Gobi 3",
+            "color": "rgb(249, 228, 177)"
+        },
+        {
+            "name": "Gobi 4",
+            "color": "rgb(255, 216, 151)"
+        },
+        {
+            "name": "Gobi 5",
+            "color": "rgb(255, 212, 132)"
+        },
+        {
+            "name": "Gobi 6",
+            "color": "rgb(255, 205, 110)"
+        },
+        {
+            "name": "Dakota 1",
+            "color": "rgb(245, 232, 163)"
+        },
+        {
+            "name": "Dakota 2",
+            "color": "rgb(247, 223, 156)"
+        },
+        {
+            "name": "Dakota 3",
+            "color": "rgb(243, 228, 163)"
+        },
+        {
+            "name": "Dakota 4",
+            "color": "rgb(243, 212, 138)"
+        },
+        {
+            "name": "Dakota 5",
+            "color": "rgb(233, 192, 130)"
+        },
+        {
+            "name": "Dakota 6",
+            "color": "rgb(226, 179, 134)"
+        },
+        {
+            "name": "Florida 1",
+            "color": "rgb(242, 226, 186)"
+        },
+        {
+            "name": "Florida 2",
+            "color": "rgb(243, 226, 196)"
+        },
+        {
+            "name": "Florida 3",
+            "color": "rgb(246, 219, 181)"
+        },
+        {
+            "name": "Florida 4",
+            "color": "rgb(248, 212, 156)"
+        },
+        {
+            "name": "Florida 5",
+            "color": "rgb(250, 202, 137)"
+        },
+        {
+            "name": "Florida 6",
+            "color": "rgb(254, 187, 112)"
+        },
+        {
+            "name": "Barbados 1",
+            "color": "rgb(235, 218, 201)"
+        },
+        {
+            "name": "Barbados 2",
+            "color": "rgb(235, 218, 201)"
+        },
+        {
+            "name": "Barbados 3",
+            "color": "rgb(236, 187, 152)"
+        },
+        {
+            "name": "Barbados 4",
+            "color": "rgb(238, 176, 134)"
+        },
+        {
+            "name": "Barbados 5",
+            "color": "rgb(239, 169, 122)"
+        },
+        {
+            "name": "Barbados 6",
+            "color": "rgb(238, 157, 113)"
+        },
+        {
+            "name": "Kalahari 1",
+            "color": "rgb(246, 235, 214)"
+        },
+        {
+            "name": "Kalahari 2",
+            "color": "rgb(251, 224, 184)"
+        },
+        {
+            "name": "Kalahari 3",
+            "color": "rgb(254, 219, 169)"
+        },
+        {
+            "name": "Kalahari 4",
+            "color": "rgb(244, 196, 140)"
+        },
+        {
+            "name": "Kalahari 5",
+            "color": "rgb(239, 175, 99)"
+        },
+        {
+            "name": "Kalahari 6",
+            "color": "rgb(214, 135, 69)"
+        },
+        {
+            "name": "Andalusia 1",
+            "color": "rgb(236, 227, 212)"
+        },
+        {
+            "name": "Andalusia 2",
+            "color": "rgb(236, 219, 198)"
+        },
+        {
+            "name": "Andalusia 3",
+            "color": "rgb(226, 199, 162)"
+        },
+        {
+            "name": "Andalusia 4",
+            "color": "rgb(236, 204, 160)"
+        },
+        {
+            "name": "Andalusia 5",
+            "color": "rgb(215, 172, 122)"
+        },
+        {
+            "name": "Andalusia 6",
+            "color": "rgb(191, 155, 107)"
+        },
+        {
+            "name": "Colorado 1",
+            "color": "rgb(228, 211, 187)"
+        },
+        {
+            "name": "Colorado 2",
+            "color": "rgb(206, 178, 150)"
+        },
+        {
+            "name": "Colorado 3",
+            "color": "rgb(198, 169, 143)"
+        },
+        {
+            "name": "Colorado 4",
+            "color": "rgb(200, 182, 157)"
+        },
+        {
+            "name": "Colorado 5",
+            "color": "rgb(216, 207, 190)"
+        },
+        {
+            "name": "Colorado 6",
+            "color": "rgb(160, 156, 144)"
+        },
+        {
+            "name": "Texas 1",
+            "color": "rgb(238, 233, 220)"
+        },
+        {
+            "name": "Texas 2",
+            "color": "rgb(240, 222, 195)"
+        },
+        {
+            "name": "Texas 3",
+            "color": "rgb(231, 205, 173)"
+        },
+        {
+            "name": "Texas 4",
+            "color": "rgb(219, 187, 160)"
+        },
+        {
+            "name": "Texas 5",
+            "color": "rgb(183, 144, 125)"
+        },
+        {
+            "name": "Texas 6",
+            "color": "rgb(165, 124, 111)"
+        },
+        {
+            "name": "Africa 1",
+            "color": "rgb(237, 233, 225)"
+        },
+        {
+            "name": "Africa 2",
+            "color": "rgb(234, 225, 211)"
+        },
+        {
+            "name": "Africa 3",
+            "color": "rgb(218, 192, 167)"
+        },
+        {
+            "name": "Africa 4",
+            "color": "rgb(223, 189, 156)"
+        },
+        {
+            "name": "Africa 5",
+            "color": "rgb(189, 153, 134)"
+        },
+        {
+            "name": "Africa 6",
+            "color": "rgb(164, 125, 108)"
+        },
+        {
+            "name": "Nevada 1",
+            "color": "rgb(237, 222, 208)"
+        },
+        {
+            "name": "Nevada 2",
+            "color": "rgb(239, 212, 187)"
+        },
+        {
+            "name": "Nevada 3",
+            "color": "rgb(247, 204, 172)"
+        },
+        {
+            "name": "Nevada 4",
+            "color": "rgb(232, 180, 149)"
+        },
+        {
+            "name": "Nevada 5",
+            "color": "rgb(211, 162, 144)"
+        },
+        {
+            "name": "Nevada 6",
+            "color": "rgb(146, 111, 104)"
+        },
+        {
+            "name": "Madeira 1",
+            "color": "rgb(234, 225, 216)"
+        },
+        {
+            "name": "Madeira 2",
+            "color": "rgb(226, 216, 207)"
+        },
+        {
+            "name": "Madeira 3",
+            "color": "rgb(198, 184, 174)"
+        },
+        {
+            "name": "Madeira 4",
+            "color": "rgb(198, 186, 179)"
+        },
+        {
+            "name": "Madeira 5",
+            "color": "rgb(177, 163, 156)"
+        },
+        {
+            "name": "Madeira 6",
+            "color": "rgb(153, 131, 122)"
+        },
+        {
+            "name": "Columbia 1",
+            "color": "rgb(235, 226, 219)"
+        },
+        {
+            "name": "Columbia 2",
+            "color": "rgb(217, 206, 199)"
+        },
+        {
+            "name": "Columbia 3",
+            "color": "rgb(186, 162, 152)"
+        },
+        {
+            "name": "Columbia 4",
+            "color": "rgb(167, 142, 133)"
+        },
+        {
+            "name": "Columbia 5",
+            "color": "rgb(134, 113, 100)"
+        },
+        {
+            "name": "Columbia 6",
+            "color": "rgb(126, 105, 95)"
+        },
+        {
+            "name": "Arizona 1",
+            "color": "rgb(237, 220, 208)"
+        },
+        {
+            "name": "Arizona 2",
+            "color": "rgb(222, 191, 180)"
+        },
+        {
+            "name": "Arizona 3",
+            "color": "rgb(212, 177, 161)"
+        },
+        {
+            "name": "Arizona 4",
+            "color": "rgb(198, 169, 159)"
+        },
+        {
+            "name": "Arizona 5",
+            "color": "rgb(217, 202, 193)"
+        },
+        {
+            "name": "Arizona 6",
+            "color": "rgb(161, 151, 149)"
+        },
+        {
+            "name": "Tenerife 1",
+            "color": "rgb(219, 209, 205)"
+        },
+        {
+            "name": "Tenerife 2",
+            "color": "rgb(210, 194, 193)"
+        },
+        {
+            "name": "Tenerife 3",
+            "color": "rgb(196, 178, 179)"
+        },
+        {
+            "name": "Tenerife 4",
+            "color": "rgb(186, 165, 167)"
+        },
+        {
+            "name": "Tenerife 5",
+            "color": "rgb(178, 155, 158)"
+        },
+        {
+            "name": "Tenerife 6",
+            "color": "rgb(162, 138, 140)"
+        },
+        {
+            "name": "Fuji 1",
+            "color": "rgb(229, 227, 223)"
+        },
+        {
+            "name": "Fuji 2",
+            "color": "rgb(239, 227, 222)"
+        },
+        {
+            "name": "Fuji 3",
+            "color": "rgb(239, 211, 201)"
+        },
+        {
+            "name": "Fuji 4",
+            "color": "rgb(245, 213, 198)"
+        },
+        {
+            "name": "Fuji 5",
+            "color": "rgb(236, 190, 177)"
+        },
+        {
+            "name": "Fuji 6",
+            "color": "rgb(235, 185, 171)"
+        },
+        {
+            "name": "Indiana 1",
+            "color": "rgb(244, 230, 223)"
+        },
+        {
+            "name": "Indiana 2",
+            "color": "rgb(238, 191, 174)"
+        },
+        {
+            "name": "Indiana 3",
+            "color": "rgb(238, 175, 151)"
+        },
+        {
+            "name": "Indiana 4",
+            "color": "rgb(236, 155, 132)"
+        },
+        {
+            "name": "Indiana 5",
+            "color": "rgb(238, 140, 113)"
+        },
+        {
+            "name": "Indiana 6",
+            "color": "rgb(208, 118, 96)"
+        },
+        {
+            "name": "Atacama 1",
+            "color": "rgb(228, 207, 200)"
+        },
+        {
+            "name": "Atacama 2",
+            "color": "rgb(216, 170, 163)"
+        },
+        {
+            "name": "Atacama 3",
+            "color": "rgb(211, 152, 142)"
+        },
+        {
+            "name": "Atacama 4",
+            "color": "rgb(197, 129, 118)"
+        },
+        {
+            "name": "Atacama 5",
+            "color": "rgb(182, 109, 98)"
+        },
+        {
+            "name": "Atacama 6",
+            "color": "rgb(173, 97, 86)"
+        },
+        {
+            "name": "Alaska 1",
+            "color": "rgb(211, 223, 227)"
+        },
+        {
+            "name": "Alaska 2",
+            "color": "rgb(188, 206, 216)"
+        },
+        {
+            "name": "Alaska 3",
+            "color": "rgb(149, 174, 189)"
+        },
+        {
+            "name": "Alaska 4",
+            "color": "rgb(164, 178, 187)"
+        },
+        {
+            "name": "Alaska 5",
+            "color": "rgb(193, 201, 203)"
+        },
+        {
+            "name": "Alaska 6",
+            "color": "rgb(153, 163, 170)"
+        },
+        {
+            "name": "Adriatic 1",
+            "color": "rgb(202, 217, 217)"
+        },
+        {
+            "name": "Adriatic 2",
+            "color": "rgb(188, 213, 218)"
+        },
+        {
+            "name": "Adriatic 3",
+            "color": "rgb(166, 205, 214)"
+        },
+        {
+            "name": "Adriatic 4",
+            "color": "rgb(149, 197, 208)"
+        },
+        {
+            "name": "Adriatic 5",
+            "color": "rgb(133, 187, 196)"
+        },
+        {
+            "name": "Adriatic 6",
+            "color": "rgb(113, 177, 188)"
+        },
+        {
+            "name": "Oceania 1",
+            "color": "rgb(204, 219, 218)"
+        },
+        {
+            "name": "Oceania 2",
+            "color": "rgb(177, 210, 221)"
+        },
+        {
+            "name": "Oceania 3",
+            "color": "rgb(155, 200, 213)"
+        },
+        {
+            "name": "Oceania 4",
+            "color": "rgb(140, 197, 216)"
+        },
+        {
+            "name": "Oceania 5",
+            "color": "rgb(127, 191, 212)"
+        },
+        {
+            "name": "Oceania 6",
+            "color": "rgb(106, 179, 201)"
+        },
+        {
+            "name": "Pacific 1",
+            "color": "rgb(219, 225, 227)"
+        },
+        {
+            "name": "Pacific 2",
+            "color": "rgb(213, 223, 228)"
+        },
+        {
+            "name": "Pacific 3",
+            "color": "rgb(198, 214, 230)"
+        },
+        {
+            "name": "Pacific 4",
+            "color": "rgb(169, 199, 228)"
+        },
+        {
+            "name": "Pacific 5",
+            "color": "rgb(131, 173, 208)"
+        },
+        {
+            "name": "Pacific 6",
+            "color": "rgb(95, 152, 203)"
+        },
+        {
+            "name": "Nebraska 1",
+            "color": "rgb(224, 224, 221)"
+        },
+        {
+            "name": "Nebraska 2",
+            "color": "rgb(200, 199, 196)"
+        },
+        {
+            "name": "Nebraska 3",
+            "color": "rgb(179, 179, 177)"
+        },
+        {
+            "name": "Nebraska 4",
+            "color": "rgb(148, 147, 146)"
+        },
+        {
+            "name": "Nebraska 5",
+            "color": "rgb(121, 120, 119)"
+        },
+        {
+            "name": "Nebraska 6",
+            "color": "rgb(102, 101, 101)"
+        },
+        {
+            "name": "Atlantic 1",
+            "color": "rgb(227, 227, 224)"
+        },
+        {
+            "name": "Atlantic 2",
+            "color": "rgb(211, 215, 215)"
+        },
+        {
+            "name": "Atlantic 3",
+            "color": "rgb(200, 201, 201)"
+        },
+        {
+            "name": "Atlantic 4",
+            "color": "rgb(178, 186, 193)"
+        },
+        {
+            "name": "Atlantic 5",
+            "color": "rgb(161, 172, 181)"
+        },
+        {
+            "name": "Atlantic 6",
+            "color": "rgb(152, 158, 165)"
+        },
+        {
+            "name": "Arctic 1",
+            "color": "rgb(207, 210, 211)"
+        },
+        {
+            "name": "Arctic 2",
+            "color": "rgb(203, 208, 214)"
+        },
+        {
+            "name": "Arctic 3",
+            "color": "rgb(187, 195, 206)"
+        },
+        {
+            "name": "Arctic 4",
+            "color": "rgb(182, 189, 202)"
+        },
+        {
+            "name": "Arctic 5",
+            "color": "rgb(161, 170, 183)"
+        },
+        {
+            "name": "Arctic 6",
+            "color": "rgb(137, 147, 160)"
+        },
+        {
+            "name": "Toskana 1",
+            "color": "rgb(226, 229, 213)"
+        },
+        {
+            "name": "Toskana 2",
+            "color": "rgb(211, 217, 190)"
+        },
+        {
+            "name": "Toskana 3",
+            "color": "rgb(181, 182, 155)"
+        },
+        {
+            "name": "Toskana 4",
+            "color": "rgb(180, 181, 155)"
+        },
+        {
+            "name": "Toskana 5",
+            "color": "rgb(201, 203, 194)"
+        },
+        {
+            "name": "Toskana 6",
+            "color": "rgb(171, 173, 165)"
+        },
+        {
+            "name": "Tundra 1",
+            "color": "rgb(228, 229, 216)"
+        },
+        {
+            "name": "Tundra 2",
+            "color": "rgb(214, 214, 195)"
+        },
+        {
+            "name": "Tundra 3",
+            "color": "rgb(194, 193, 165)"
+        },
+        {
+            "name": "Tundra 4",
+            "color": "rgb(170, 173, 148)"
+        },
+        {
+            "name": "Tundra 5",
+            "color": "rgb(176, 172, 153)"
+        },
+        {
+            "name": "Tundra 6",
+            "color": "rgb(161, 157, 138)"
+        },
+        {
+            "name": "Siberia 1",
+            "color": "rgb(221, 219, 214)"
+        },
+        {
+            "name": "Siberia 2",
+            "color": "rgb(210, 209, 203)"
+        },
+        {
+            "name": "Siberia 3",
+            "color": "rgb(195, 194, 186)"
+        },
+        {
+            "name": "Siberia 4",
+            "color": "rgb(176, 175, 159)"
+        },
+        {
+            "name": "Siberia 5",
+            "color": "rgb(157, 158, 150)"
+        },
+        {
+            "name": "Siberia 6",
+            "color": "rgb(140, 143, 138)"
+        },
+        {
+            "name": "Etna 1",
+            "color": "rgb(220, 217, 210)"
+        },
+        {
+            "name": "Etna 2",
+            "color": "rgb(201, 195, 187)"
+        },
+        {
+            "name": "Etna 3",
+            "color": "rgb(186, 180, 171)"
+        },
+        {
+            "name": "Etna 4",
+            "color": "rgb(165, 156, 149)"
+        },
+        {
+            "name": "Etna 5",
+            "color": "rgb(142, 140, 140)"
+        },
+        {
+            "name": "Etna 6",
+            "color": "rgb(119, 114, 112)"
+        },
+        {
+            "name": "Ceylon 1",
+            "color": "rgb(233, 229, 213)"
+        },
+        {
+            "name": "Ceylon 2",
+            "color": "rgb(234, 233, 196)"
+        },
+        {
+            "name": "Ceylon 3",
+            "color": "rgb(223, 215, 164)"
+        },
+        {
+            "name": "Ceylon 4",
+            "color": "rgb(192, 186, 127)"
+        },
+        {
+            "name": "Ceylon 5",
+            "color": "rgb(184, 180, 107)"
+        },
+        {
+            "name": "Ceylon 6",
+            "color": "rgb(147, 148, 75)"
+        },
+        {
+            "name": "Borneo 1",
+            "color": "rgb(215, 217, 159)"
+        },
+        {
+            "name": "Borneo 2",
+            "color": "rgb(211, 220, 142)"
+        },
+        {
+            "name": "Borneo 3",
+            "color": "rgb(202, 215, 151)"
+        },
+        {
+            "name": "Borneo 4",
+            "color": "rgb(176, 197, 133)"
+        },
+        {
+            "name": "Borneo 5",
+            "color": "rgb(151, 188, 138)"
+        },
+        {
+            "name": "Borneo 6",
+            "color": "rgb(142, 178, 144)"
+        },
+        {
+            "name": "Oregon 1",
+            "color": "rgb(209, 226, 216)"
+        },
+        {
+            "name": "Oregon 2",
+            "color": "rgb(172, 209, 187)"
+        },
+        {
+            "name": "Oregon 3",
+            "color": "rgb(153, 198, 174)"
+        },
+        {
+            "name": "Oregon 4",
+            "color": "rgb(135, 187, 160)"
+        },
+        {
+            "name": "Oregon 5",
+            "color": "rgb(122, 178, 148)"
+        },
+        {
+            "name": "Oregon 6",
+            "color": "rgb(107, 166, 134)"
+        },
+        {
+            "name": "Montana 1",
+            "color": "rgb(230, 232, 223)"
+        },
+        {
+            "name": "Montana 2",
+            "color": "rgb(225, 229, 217)"
+        },
+        {
+            "name": "Montana 3",
+            "color": "rgb(194, 212, 193)"
+        },
+        {
+            "name": "Montana 4",
+            "color": "rgb(184, 205, 192)"
+        },
+        {
+            "name": "Montana 5",
+            "color": "rgb(162, 190, 179)"
+        },
+        {
+            "name": "Montana 6",
+            "color": "rgb(141, 161, 142)"
+        }
+    ],
+    "textures": [
+        {
+            "name": "Tibet 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-5.jpg"
+        },
+        {
+            "name": "Chile 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-1.jpg"
+        },
+        {
+            "name": "Granada 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-1.jpg"
+        },
+        {
+            "name": "Sierra 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-1.jpg"
+        },
+        {
+            "name": "Laos 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-6.jpg"
+        },
+        {
+            "name": "Persia 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-3.jpg"
+        },
+        {
+            "name": "Chile 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-2.jpg"
+        },
+        {
+            "name": "Chile 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-3.jpg"
+        },
+        {
+            "name": "Chile 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-4.jpg"
+        },
+        {
+            "name": "Chile 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-5.jpg"
+        },
+        {
+            "name": "Chile 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/chile-6.jpg"
+        },
+        {
+            "name": "Granada 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-2.jpg"
+        },
+        {
+            "name": "Granada 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-3.jpg"
+        },
+        {
+            "name": "Granada 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-4.jpg"
+        },
+        {
+            "name": "Granada 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-5.jpg"
+        },
+        {
+            "name": "Granada 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/granada-6.jpg"
+        },
+        {
+            "name": "Laos 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-1.jpg"
+        },
+        {
+            "name": "Laos 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-2.jpg"
+        },
+        {
+            "name": "Laos 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-3.jpg"
+        },
+        {
+            "name": "Laos 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-4.jpg"
+        },
+        {
+            "name": "Laos 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/laos-5.jpg"
+        },
+        {
+            "name": "Morocco 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-1.jpg"
+        },
+        {
+            "name": "Morocco 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-2.jpg"
+        },
+        {
+            "name": "Morocco 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-3.jpg"
+        },
+        {
+            "name": "Morocco 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-4.jpg"
+        },
+        {
+            "name": "Morocco 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-5.jpg"
+        },
+        {
+            "name": "Morocco 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/morocco-6.jpg"
+        },
+        {
+            "name": "Persia 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-1.jpg"
+        },
+        {
+            "name": "Persia 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-2.jpg"
+        },
+        {
+            "name": "Persia 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-4.jpg"
+        },
+        {
+            "name": "Persia 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-5.jpg"
+        },
+        {
+            "name": "Persia 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/persia-6.jpg"
+        },
+        {
+            "name": "Peru 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-1.jpg"
+        },
+        {
+            "name": "Peru 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-2.jpg"
+        },
+        {
+            "name": "Peru 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-3.jpg"
+        },
+        {
+            "name": "Peru 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-4.jpg"
+        },
+        {
+            "name": "Peru 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-5.jpg"
+        },
+        {
+            "name": "Peru 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/peru-6.jpg"
+        },
+        {
+            "name": "Sierra 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-2.jpg"
+        },
+        {
+            "name": "Sierra 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-3.jpg"
+        },
+        {
+            "name": "Sierra 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-4.jpg"
+        },
+        {
+            "name": "Sierra 5",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-5.jpg"
+        },
+        {
+            "name": "Sierra 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/sierra-6.jpg"
+        },
+        {
+            "name": "Tibet 1",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-1.jpg"
+        },
+        {
+            "name": "Tibet 2",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-2.jpg"
+        },
+        {
+            "name": "Tibet 3",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-3.jpg"
+        },
+        {
+            "name": "Tibet 4",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-4.jpg"
+        },
+        {
+            "name": "Tibet 6",
+            "image_url": "https://ceresitshop-msk.ru/assets/images/resources/16/palitra_300/tibet-6.jpg"
+        }
+    ]
+}
