@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Order, OrderItem, Cart, CartItem
+from .models import Product, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture
 from .forms import OrderForm, SearchForm, ContactForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -353,3 +353,11 @@ def contact(request):
         'form': form,
     }
     return render(request, 'products/contact.html', context)
+
+def color_selection(request):
+    facade_colors = FacadeColor.objects.all()
+    base_textures = BaseTexture.objects.all()
+    return render(request, 'products/color_selection.html', {
+        'facade_colors': facade_colors,
+        'base_textures': base_textures,
+    })

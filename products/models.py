@@ -59,3 +59,17 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity} шт.)"
+
+class FacadeColor(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название цвета')
+    hex_code = models.CharField(max_length=7, verbose_name='Код цвета (HEX)')
+
+    def __str__(self):
+        return self.name
+
+class BaseTexture(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название текстуры')
+    image = models.ImageField(upload_to='base_textures/', verbose_name='Изображение текстуры')
+
+    def __str__(self):
+        return self.name
