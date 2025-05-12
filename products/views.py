@@ -465,3 +465,9 @@ def get_subcategories(request):
         data = [{'id': cat.id, 'name': cat.name} for cat in subcategories]
         return JsonResponse({'subcategories': data})
     return JsonResponse({'subcategories': []})
+
+def about(request):
+    """
+    Отображает страницу "О компании"
+    """
+    return render(request, 'products/about.html')

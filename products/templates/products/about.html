@@ -1,0 +1,224 @@
+{% extends 'products/base.html' %}
+{% block content %}
+
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-600 mb-4">
+    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
+    <span class="mx-2">/</span>
+    <span>О компании</span>
+</nav>
+
+<!-- Заголовок страницы -->
+<h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">О компании ООО "СтройМА" - Ваш партнер в Курске</h1>
+
+<!-- Вступительный текст -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <p class="text-lg text-gray-600 mb-4">
+«СТРОЙМА» компания является официальным дистрибьютором торговых марок : CERESIT, UNIS, BOLARS, ВОЛМА, ИЗОМИН, ТЕХНОНИКОЛЬ и декоративных покрытий: SPRAYPLAST, AURA, ITALICA, Mascarade, от ведущего российского производителя.
+Линейки продукции выполнена из высококачественных и экологичных компонентов как российского, так и зарубежного производства.
+К вашим услугам высококвалифицированный персонал, способный оказать консультативную помощь и техническое сопровождение вашего проекта.
+Мы искренне надеемся на длительное, взаимовыгодное сотрудничество.    </p>
+</section>
+
+<!-- История компании -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Наша история</h2>
+    <p class="text-gray-600 mb-4">
+        Компания "СтройМА" была основана в 2011 году в Курске. За годы работы мы прошли путь от небольшого предприятия до надежного партнера для бизнеса и государственных учреждений.
+    </p>
+    <ul class="space-y-3 mb-4">
+        <li class="flex items-start">
+            <span class="text-deep-green mr-2 mt-1"><i class="fas fa-check-circle"></i></span>
+            <div>
+                <span class="font-medium">2011:</span> Основание компании, начало оптовой торговли машинами.
+            </div>
+        </li>
+        <li class="flex items-start">
+            <span class="text-deep-green mr-2 mt-1"><i class="fas fa-check-circle"></i></span>
+            <div>
+                <span class="font-medium">2016:</span> Назначение Евгения Аляева генеральным директором, расширение ассортимента.
+            </div>
+        </li>
+        <li class="flex items-start">
+            <span class="text-deep-green mr-2 mt-1"><i class="fas fa-check-circle"></i></span>
+            <div>
+                <span class="font-medium">2023:</span> Победа в тендере для Курского государственного медицинского университета.
+            </div>
+        </li>
+        <li class="flex items-start">
+            <span class="text-deep-green mr-2 mt-1"><i class="fas fa-check-circle"></i></span>
+            <div>
+                <span class="font-medium">2024:</span> Рост выручки на 68%, укрепление позиций на рынке.
+            </div>
+        </li>
+    </ul>
+</section>
+
+<!-- Миссия и ценности -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Миссия и ценности</h2>
+    <p class="text-gray-600 mb-4">
+        Наша миссия — способствовать развитию строительной и промышленной отраслей Курска и России, предоставляя современное оборудование и качественные материалы. Мы стремимся к устойчивому развитию, создавая продукцию, которая отвечает самым высоким стандартам.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div class="bg-sandy p-4 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-deep-green mb-2">Качество</h3>
+            <p class="text-gray-600">Мы предлагаем только проверенное оборудование и материалы, соответствующие стандартам.</p>
+        </div>
+        <div class="bg-sandy p-4 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-deep-green mb-2">Надежность</h3>
+            <p class="text-gray-600">Своевременные поставки и долгосрочные партнерские отношения — наш приоритет.</p>
+        </div>
+        <div class="bg-sandy p-4 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-deep-green mb-2">Клиентоориентированность</h3>
+            <p class="text-gray-600">Мы учитываем потребности каждого клиента, предлагая индивидуальные решения.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Наши преимущества -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Почему выбирают СтройМА?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-box-open"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Широкий ассортимент</h3>
+                <p class="text-gray-600">У нас есть всё для вашего проекта.</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-map-marker-alt"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Локальная экспертиза</h3>
+                <p class="text-gray-600">Мы знаем рынок Курска и предлагаем решения, подходящие для региона.</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-certificate"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Опыт и репутация</h3>
+                <p class="text-gray-600">Более 13 лет на рынке и успешное выполнение государственных контрактов.</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-lightbulb"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Инновации</h3>
+                <p class="text-gray-600">Мы следим за трендами и предлагаем современное решения для каждой вашей задачи.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Наша команда -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Наша команда</h2>
+    <p class="text-gray-600 mb-6">
+        В центре успеха "СтройМА" — наша команда профессионалов, объединенных общей целью. Под руководством генерального директора Евгения Аляева мы работаем для достижения ваших целей.
+    </p>
+    <div class="flex flex-col md:flex-row items-center justify-center">
+        <div class="bg-sandy p-4 rounded-lg shadow max-w-sm">
+            <div class="flex items-center space-x-4">
+                <span class="text-deep-green text-4xl"><i class="fas fa-user-tie"></i></span>
+                <div>
+                    <h3 class="text-xl font-semibold text-deep-green">Евгений Аляев</h3>
+                    <p class="text-gray-600">Генеральный директор с 2016 года, обладающий глубоким опытом в управлении и развитии бизнеса.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Наши достижения -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Наши достижения</h2>
+    <p class="text-gray-600 mb-4">
+        Мы гордимся нашими результатами и вкладом в развитие региона:
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <div class="bg-sandy p-4 rounded-lg shadow text-center">
+            <span class="text-deep-green text-3xl block mb-2"><i class="fas fa-chart-line"></i></span>
+            <p class="text-2xl font-bold text-deep-green">49 млн ₽</p>
+            <p class="text-gray-600">Выручка 2024 года<br>(рост на 68%)</p>
+        </div>
+        <div class="bg-sandy p-4 rounded-lg shadow text-center">
+            <span class="text-deep-green text-3xl block mb-2"><i class="fas fa-award"></i></span>
+            <p class="text-2xl font-bold text-deep-green">Тендер</p>
+            <p class="text-gray-600">Успешно выполнен для КГМУ</p>
+        </div>
+        <div class="bg-sandy p-4 rounded-lg shadow text-center">
+            <span class="text-deep-green text-3xl block mb-2"><i class="fas fa-calendar-alt"></i></span>
+            <p class="text-2xl font-bold text-deep-green">13+ лет</p>
+            <p class="text-gray-600">Стабильной работы<br>на рынке</p>
+        </div>
+        <div class="bg-sandy p-4 rounded-lg shadow text-center">
+            <span class="text-deep-green text-3xl block mb-2"><i class="fas fa-box"></i></span>
+            <p class="text-2xl font-bold text-deep-green">500+</p>
+            <p class="text-gray-600">Наименований<br>продукции</p>
+        </div>
+    </div>
+</section>
+
+<!-- Контакты и CTA -->
+<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
+    <h2 class="text-2xl font-semibold text-deep-green mb-4">Свяжитесь с нами</h2>
+    <p class="text-gray-600 mb-6">
+        Готовы обсудить ваш проект? Свяжитесь с нами для консультации или заказа!
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-map-marker-alt"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Адрес</h3>
+                <p class="text-gray-600">305004, Курск, ул. Ленина, д. 90/2, офис 215 в</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-phone"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Телефон</h3>
+                <p class="text-gray-600">+7 (910) 211-40-41</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <span class="text-deep-green mr-4 text-3xl"><i class="fas fa-envelope"></i></span>
+            <div>
+                <h3 class="text-xl font-semibold text-deep-green mb-2">Email</h3>
+                <p class="text-gray-600">info@stroyma-kursk.ru</p>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <a href="{% url 'contact' %}" class="button bg-deep-green text-white shadow-hover inline-block">
+            Связаться с нами
+        </a>
+    </div>
+</section>
+
+<!-- Schema.org разметка для SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "ООО СтройМА",
+  "description": "Поставщик строительного оборудования и материалов в Курске.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ул. Ленина, д. 90/2, офис 215 в",
+    "addressLocality": "Курск",
+    "postalCode": "305004",
+    "addressCountry": "RU"
+  },
+  "telephone": "+7 (910) 211-40-41",
+  "url": "https://stroyma-kursk.ru/about/",
+  "openingHours": "Mo-Fr 09:00-18:00"
+}
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<meta name="description" content="ООО СтройМА - надежный поставщик строительного оборудования и материалов  в Курске. Узнайте о нашей истории, миссии и достижениях.">
+<meta name="keywords" content="СтройМА Курск, строительное оборудование Курск, оптовая торговля строительными материалами">
+{% endblock %} 
