@@ -28,8 +28,10 @@
             <div class="flex items-center justify-between">
                 <!-- Логотип -->
                 <div class="flex items-center space-x-3">
-                    <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-12 w-auto object-contain" loading="lazy">
-                    <h1 class="text-2xl font-bold hidden md:block">СтройМа</h1>
+                    <a href="{% url 'product_list' %}">
+                        <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-12 w-auto object-contain" loading="lazy">
+                    </a>
+                    <a href="{% url 'product_list' %}" class="text-2xl font-bold hidden md:block">СтройМа</a>
                 </div>
 
                 <!-- Переключатель тем и меню -->
