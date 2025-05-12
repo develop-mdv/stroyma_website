@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',  # Улучшенный интерфейс админки
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'mptt',  # Добавлено для поддержки иерархических категорий
     'django_filters',  # Добавлено для фильтрации
+    'rangefilter',  # Добавлено для фильтрации по диапазону дат
+    'import_export',  # Добавлено для экспорта данных
     'accounts',
     'products',
     'services',
@@ -60,7 +63,7 @@ ROOT_URLCONF = 'stroyma.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,3 +159,117 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+# Настройки Jazzmin (для улучшения интерфейса админ-панели)
+JAZZMIN_SETTINGS = {
+    # Название в заголовке админки
+    "site_title": "Stroyma",
+    # Название в шапке админки
+    "site_header": "Система управления Stroyma",
+    # Название в главном меню
+    "site_brand": "Stroyma",
+    # Путь к логотипу
+    "site_logo": None,
+    # Текст-приветствие
+    "welcome_sign": "Добро пожаловать в панель управления",
+    # Авто-копирайт внизу страницы
+    "copyright": "Stroyma ООО",
+    # Путь к логотипу на странице входа
+    "login_logo": None,
+    # Текст на странице логина
+    "login_logo_dark": None,
+    # Фон на странице логина
+    "login_background": None,
+    # Настройки меню
+    "show_ui_builder": True,
+    
+    # Упрощаем интерфейс для непрограммистов
+    "show_app_references": False,  # Скрывает документацию и ссылки
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "brand_small_text": False,
+    
+    # Делаем интерфейс более читаемым
+    "related_modal_active": True,  # Включаем модальные окна для связанных объектов
+    
+    # Настраиваем боковое меню
+    "navigation_expanded": True,  # Меню будет развернуто
+    
+    # Добавляем пункт "Аналитика" в меню
+    "custom_links": {
+        "products": [
+            {
+                "name": "Отчет по продажам",
+                "url": "admin:sales_report",
+                "icon": "fas fa-chart-line",
+            }
+        ],
+    },
+    
+    # Группируем приложения в меню
+    "order_with_respect_to": ["auth", "products", "services", "accounts"],
+    
+    # Добавляем раздел "Аналитика" в меню
+    "menu": [
+        {
+            "name": "Аналитика",
+            "icon": "fas fa-chart-bar",
+            "models": [
+                {
+                    "name": "Отчет по продажам",
+                    "url": "admin:sales_report",
+                    "icon": "fas fa-chart-line",
+                },
+            ],
+        },
+    ],
+    
+    # Иконки (для наглядности)
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "products.Product": "fas fa-box",
+        "products.Category": "fas fa-folder",
+        "products.Order": "fas fa-shopping-cart",
+        "products.OrderItem": "fas fa-list",
+        "products.Cart": "fas fa-shopping-basket",
+        "products.CartItem": "fas fa-shopping-bag",
+        "products.FacadeColor": "fas fa-palette",
+        "products.BaseTexture": "fas fa-brush",
+        "services.Service": "fas fa-tools",
+        "accounts.UserProfile": "fas fa-user-circle",
+    },
+}
+
+# Дополнительные настройки Jazzmin для меню
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-success",
+    "accent": "accent-teal",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "cosmo",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}

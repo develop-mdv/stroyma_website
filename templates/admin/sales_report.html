@@ -1,0 +1,180 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Определяем URL-адреса для JavaScript -->
+<script>
+    // URL для получения данных графиков
+    const SALES_CHART_DATA_URL = "{% url 'admin:sales_chart_data' %}";
+    const POPULAR_PRODUCTS_URL = "{% url 'admin:popular_products' %}";
+</script>
+<!-- Подключаем наш скрипт с графиками -->
+<script src="{% static 'js/admin_charts.js' %}"></script>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 18px;
+    }
+    .metric {
+        font-size: 32px;
+        font-weight: bold;
+        color: #447e9b;
+        margin: 10px 0;
+    }
+    table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table.data-table th, table.data-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    table.data-table th {
+        background-color: #f2f2f2;
+    }
+    .chart-container {
+        height: 300px;
+        margin-bottom: 30px;
+    }
+    .period-filters {
+        margin-bottom: 20px;
+        text-align: right;
+    }
+    .period-btn {
+        padding: 5px 15px;
+        margin-left: 5px;
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .period-btn.active {
+        background-color: #447e9b;
+        color: white;
+        border-color: #447e9b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="module" id="sales-report">
+    <h1>{% trans "Отчет по продажам" %}</h1>
+    
+    <div class="dashboard">
+        <div class="card">
+            <h3>{% trans "Заказы" %}</h3>
+            <div class="metric">{{ total_orders }}</div>
+            <div class="description">{% trans "за последние 30 дней" %}</div>
+        </div>
+        <div class="card">
+            <h3>{% trans "Продажи" %}</h3>
+            <div class="metric">{{ total_sales|floatformat:2 }} ₽</div>
+            <div class="description">{% trans "за последние 30 дней" %}</div>
+        </div>
+        <div class="card">
+            <h3>{% trans "Средний чек" %}</h3>
+            <div class="metric">{{ avg_order_value|floatformat:2 }} ₽</div>
+            <div class="description">{% trans "за последние 30 дней" %}</div>
+        </div>
+    </div>
+    
+    <!-- Период для графиков -->
+    <div class="period-filters">
+        <span>{% trans "Период:" %}</span>
+        <button class="period-btn active" data-days="30">{% trans "30 дней" %}</button>
+        <button class="period-btn" data-days="90">{% trans "3 месяца" %}</button>
+        <button class="period-btn" data-days="180">{% trans "6 месяцев" %}</button>
+        <button class="period-btn" data-days="365">{% trans "1 год" %}</button>
+    </div>
+    
+    <!-- График продаж -->
+    <div class="card">
+        <h3>{% trans "Динамика продаж" %}</h3>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- График популярных товаров -->
+    <div class="card">
+        <h3>{% trans "Популярные товары" %}</h3>
+        <div class="chart-container">
+            <canvas id="productsChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- График статусов заказов -->
+    <div class="card">
+        <h3>{% trans "Заказы по статусам" %}</h3>
+        <div class="chart-container">
+            <canvas id="statusChart"></canvas>
+        </div>
+        {% for status, count in status_data %}
+        <div class="status-data" data-status="{{ status }}" data-count="{{ count }}" style="display: none;"></div>
+        {% endfor %}
+    </div>
+    
+    <div class="card">
+        <h3>{% trans "Заказы по статусам (таблица)" %}</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Статус" %}</th>
+                    <th>{% trans "Количество" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status, count in status_data %}
+                <tr>
+                    <td>{{ status }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="card">
+        <h3>{% trans "Топ товаров по продажам" %}</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Товар" %}</th>
+                    <th>{% trans "Количество" %}</th>
+                    <th>{% trans "Сумма продаж" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in top_products %}
+                <tr>
+                    <td>{{ product.product__name }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.total_sales|floatformat:2 }} ₽</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

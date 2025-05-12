@@ -1,0 +1,15 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<!-- Подключаем скрипт для DateRangeFilter -->
+<script src="{% static 'js/admin_datepicker.js' %}"></script>
+{% endblock %}
+
+{% block object-tools-items %}
+  {{ block.super }}
+  <li>
+    <a href="{% url 'admin:sales_report' %}" class="grp-state-focus">{% trans "Отчет по продажам" %}</a>
+  </li>
+{% endblock %} 
