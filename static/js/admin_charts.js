@@ -44,26 +44,32 @@ function loadSalesChartData(days) {
             return response.json();
         })
         .then(data => {
-            // Проверяем, есть ли ошибка в ответе
-            if (data.error) {
-                console.error('Ошибка в данных графика продаж:', data.error, data.details);
-                // Если есть пустые данные, все равно обновляем график
-                if (data.labels && data.labels.length === 0) {
-                    updateSalesChart({
-                        labels: [],
-                        sales: [],
-                        counts: []
-                    });
-                }
+            // Проверяем, есть ли ошибка в ответе или отсутствуют нужные данные
+            if (data.error || (!data.dates && !data.labels) || !data.sales) {
+                console.error('Ошибка в данных графика продаж:', data.error || 'Отсутствуют необходимые данные', data.details || '');
+                console.log('Полученные данные:', data);
+                
+                // Обновляем график с пустыми данными
+                updateSalesChart({
+                    dates: [],
+                    sales: [],
+                    counts: []
+                });
                 return;
             }
-            updateSalesChart(data);
+            
+            // Обновляем данные графика
+            updateSalesChart({
+                dates: data.dates || data.labels,
+                sales: data.sales,
+                counts: data.counts || []
+            });
         })
         .catch(error => {
             console.error('Ошибка при загрузке данных графика продаж:', error);
             // В случае ошибки отображаем пустой график
             updateSalesChart({
-                labels: [],
+                dates: [],
                 sales: [],
                 counts: []
             });
@@ -85,20 +91,29 @@ function loadPopularProductsData(days) {
             return response.json();
         })
         .then(data => {
-            // Проверяем, есть ли ошибка в ответе
-            if (data.error) {
-                console.error('Ошибка в данных о популярных товарах:', data.error, data.details);
-                // Если есть пустые данные, все равно обновляем график
-                if (data.labels && data.labels.length === 0) {
-                    updateProductsChart({
-                        labels: [],
-                        quantities: [],
-                        sales: []
-                    });
-                }
+            // Проверяем, есть ли ошибка в ответе или отсутствуют нужные данные
+            if (data.error || !data.labels || !data.quantities) {
+                console.error('Ошибка в данных о популярных товарах:', data.error || 'Отсутствуют необходимые данные', data.details || '');
+                console.log('Полученные данные:', data);
+                
+                // Обновляем график с пустыми данными
+                updateProductsChart({
+                    labels: [],
+                    quantities: [],
+                    sales: []
+                });
                 return;
             }
-            updateProductsChart(data);
+            
+            // Выводим полученные данные в консоль для отладки
+            console.log('Данные популярных товаров:', data);
+            
+            // Обновляем данные графика
+            updateProductsChart({
+                labels: data.labels,
+                quantities: data.quantities,
+                sales: data.sales || []
+            });
         })
         .catch(error => {
             console.error('Ошибка при загрузке данных о популярных товарах:', error);
@@ -120,8 +135,12 @@ function updateSalesChart(data) {
         salesChart.destroy();
     }
     
+    // Проверка на пустые данные
+    const hasData = (data.dates && data.dates.length > 0) || (data.labels && data.labels.length > 0);
+    const chartLabels = data.dates || data.labels || ['Нет данных'];
+    
     // Если данных нет, показываем сообщение
-    if (!data.labels || data.labels.length === 0) {
+    if (!hasData) {
         // Создаем график с информационным сообщением
         salesChart = new Chart(ctx, {
             type: 'line',
@@ -164,7 +183,7 @@ function updateSalesChart(data) {
     salesChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.labels,
+            labels: chartLabels,
             datasets: [
                 {
                     label: 'Продажи (₽)',
@@ -277,8 +296,12 @@ function updateProductsChart(data) {
         productsChart.destroy();
     }
     
+    // Проверка на пустые данные
+    const chartLabels = data.labels || [];
+    const chartData = data.quantities || [];
+    
     // Если данных нет, показываем сообщение
-    if (!data.labels || data.labels.length === 0) {
+    if (!chartLabels.length || !chartData.length) {
         // Создаем график с информационным сообщением
         productsChart = new Chart(ctx, {
             type: 'bar',
@@ -326,17 +349,17 @@ function updateProductsChart(data) {
         'rgba(232, 65, 24, 0.8)'
     ];
     
-    const backgroundColors = data.labels.map((_, i) => colors[i % colors.length]);
+    const backgroundColors = chartLabels.map((_, i) => colors[i % colors.length]);
     const borderColors = backgroundColors.map(color => color.replace('0.8', '1'));
     
     productsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data.labels,
+            labels: chartLabels,
             datasets: [
                 {
                     label: 'Количество продаж',
-                    data: data.quantities,
+                    data: chartData,
                     backgroundColor: backgroundColors,
                     borderColor: borderColors,
                     borderWidth: 2,
