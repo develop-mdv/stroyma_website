@@ -85,8 +85,18 @@ WSGI_APPLICATION = 'stroyma.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config(default='postgresql://stroyma:nNU7pW4KFQUy9iVqeMJJPYqgg8hCJuJL@dpg-d0hj90buibrs739q52d0-a.oregon-postgres.render.com/stroyma')
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'stroyma',
+#         'USER': 'stroyma',
+#         'PASSWORD': 'nNU7pW4KFQUy9iVqeMJJPYqgg8hCJuJL',
+#         'HOST': 'dpg-d0hj90buibrs739q52d0-a',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
