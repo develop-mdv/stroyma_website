@@ -25,22 +25,29 @@ from django.conf import settings
 
 # Ресурсы для импорта/экспорта
 class ProductResource(resources.ModelResource):
+    """Ресурс для импорта/экспорта товаров через админку"""
     class Meta:
         model = Product
         fields = ('id', 'name', 'price', 'stock', 'rating', 'created_at')
 
 class OrderResource(resources.ModelResource):
+    """Ресурс для импорта/экспорта заказов через админку"""
     class Meta:
         model = Order
         fields = ('id', 'user__username', 'status', 'created_at')
 
 class ProductImageInline(admin.TabularInline):
+    """
+    Встроенный редактор изображений товара, позволяющий добавлять/редактировать
+    несколько изображений прямо на странице редактирования товара
+    """
     model = ProductImage
     extra = 1
     fields = ('image', 'title', 'order')
     readonly_fields = ('image_preview',)
 
     def image_preview(self, obj):
+        """Отображает миниатюру изображения в админке"""
         if obj.image:
             return format_html('<img src="{}" width="100" />', obj.image.url)
         return "-"
@@ -48,6 +55,10 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(DraggableMPTTAdmin):
+    """
+    Административный интерфейс для категорий с поддержкой MPTT.
+    Позволяет перетаскивать категории для изменения их иерархии.
+    """
     list_display = ('tree_actions', 'indented_title', 'get_products_count')
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
@@ -65,10 +76,15 @@ class CategoryAdmin(DraggableMPTTAdmin):
     )
 
     def get_products_count(self, obj):
+        """Возвращает количество товаров в категории"""
         return obj.products.count()
     get_products_count.short_description = 'Количество товаров'
 
 class CategoryFilter(admin.SimpleListFilter):
+    """
+    Фильтр для товаров по категориям.
+    Показывает все категории с указанием их иерархии.
+    """
     title = 'Категория'
     parameter_name = 'category'
 
@@ -83,6 +99,10 @@ class CategoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin):
+    """
+    Административный интерфейс для товаров с поддержкой импорта/экспорта.
+    Включает в себя расширенный функционал для управления товарами.
+    """
     resource_classes = [ProductResource]
     list_display = ('image_preview', 'name', 'price', 'stock', 'rating', 'created_at')
     list_filter = (CategoryFilter, 'rating', 'created_at')
@@ -119,13 +139,22 @@ class ProductAdmin(ImportExportModelAdmin):
     )
 
     def image_preview(self, obj):
+        """Отображает миниатюру изображения товара в админке"""
         if obj.image:
             return format_html('<img src="{}" width="50" height="50" style="object-fit: cover;" />', obj.image.url)
         return "-"
     image_preview.short_description = 'Изображение'
     
     def product_popularity(self, obj):
-        """Показывает популярность товара на основе заказов"""
+        """
+        Показывает популярность товара на основе заказов.
+        Использует кеширование для оптимизации производительности.
+        
+        Отображает:
+        - Общее количество заказов с товаром
+        - Общее количество единиц товара в заказах
+        - Заказы за последний месяц
+        """
         # Используем кеширование для уменьшения нагрузки на БД
         cache_key = f'product_popularity_{obj.id}'
         popularity_data = cache.get(cache_key)
@@ -172,20 +201,33 @@ class ProductAdmin(ImportExportModelAdmin):
     product_popularity.short_description = 'Популярность товара'
 
 class OrderItemInline(admin.TabularInline):
+    """
+    Встроенный редактор элементов заказа.
+    Отображает товары в заказе, их количество и стоимость.
+    """
     model = OrderItem
     extra = 0
     readonly_fields = ('product', 'quantity', 'get_price', 'get_total')
 
     def get_price(self, obj):
+        """Возвращает цену единицы товара"""
         return obj.product.price
     get_price.short_description = 'Цена'
 
     def get_total(self, obj):
+        """Рассчитывает общую стоимость позиции заказа (цена × количество)"""
         return obj.product.price * obj.quantity
     get_total.short_description = 'Сумма'
 
 @admin.register(Order)
 class OrderAdmin(ImportExportModelAdmin):
+    """
+    Административный интерфейс для заказов с расширенным функционалом:
+    - Импорт/экспорт заказов
+    - Детальная информация о заказе и клиенте
+    - Статистика и отчеты по продажам
+    - Экспорт в различные форматы
+    """
     resource_classes = [OrderResource]
     list_display = ('id', 'user', 'get_user_info', 'status', 'created_at', 'get_total_cost', 'get_items_count')
     list_filter = ('status', 'created_at')
@@ -282,7 +324,19 @@ class OrderAdmin(ImportExportModelAdmin):
     get_items_count.short_description = 'Товаров'
 
     def sales_report_view(self, request):
-        """Представление для отчета по продажам"""
+        """
+        Представление для генерации и отображения отчета по продажам.
+        
+        Функция собирает и анализирует данные о продажах за выбранный период:
+        - Общее количество заказов
+        - Общая сумма продаж
+        - Средний чек
+        - Статистика по статусам заказов
+        - Статистика заказов по дням недели
+        - Топ самых продаваемых товаров
+        
+        Для оптимизации производительности используется кеширование результатов.
+        """
         # Получение периода из GET-параметра или установка значения по умолчанию
         days = int(request.GET.get('days', 30))
         period_start = timezone.now() - timedelta(days=days)
@@ -386,7 +440,16 @@ class OrderAdmin(ImportExportModelAdmin):
         return TemplateResponse(request, "admin/products/order/sales_report.html", context)
     
     def sales_chart_data(self, request):
-        """API для получения данных графика продаж"""
+        """
+        API для получения данных графика продаж.
+        
+        Возвращает данные для построения графиков в формате JSON:
+        - При периоде до 31 дня - данные по дням
+        - При периоде до 90 дней - данные по неделям
+        - При периоде более 90 дней - данные по месяцам
+        
+        Для оптимизации используется кеширование результатов.
+        """
         try:
             days = int(request.GET.get('days', 30))
             

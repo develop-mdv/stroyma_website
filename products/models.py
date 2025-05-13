@@ -7,6 +7,11 @@ from django.utils.timezone import now
 from django.core.cache import cache
 
 class Category(MPTTModel):
+    """
+    Модель для категорий товаров с поддержкой иерархии (вложенных категорий).
+    Использует MPTT (Modified Preorder Tree Traversal) для эффективной работы 
+    с древовидной структурой категорий.
+    """
     name = models.CharField(max_length=100, verbose_name='Название категории')
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL-имя')
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, 
@@ -21,6 +26,11 @@ class Category(MPTTModel):
         verbose_name_plural = 'Категории'
 
     def clean(self):
+        """
+        Валидация данных перед сохранением:
+        - Автоматическое создание slug из названия, если он не предоставлен
+        - Проверка на уникальность slug
+        """
         from django.core.exceptions import ValidationError
         if not self.slug:
             self.slug = slugify(self.name)
@@ -33,6 +43,10 @@ class Category(MPTTModel):
         super().clean()
 
     def save(self, *args, **kwargs):
+        """
+        Переопределение метода save для автоматического создания уникального slug.
+        Если slug уже существует, добавляет числовой суффикс.
+        """
         if not self.slug:
             self.slug = slugify(self.name)
             
@@ -52,6 +66,10 @@ class Category(MPTTModel):
         return self.name
 
 class Product(models.Model):
+    """
+    Модель товара с полной информацией о продукте, 
+    включая SEO-параметры и связи с категориями.
+    """
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField()
@@ -78,6 +96,11 @@ class Product(models.Model):
         verbose_name_plural = "Товары"
 
     def clean(self):
+        """
+        Валидация данных перед сохранением:
+        - Автоматическое создание slug из названия, если он не предоставлен
+        - Проверка на уникальность slug
+        """
         from django.core.exceptions import ValidationError
         if not self.slug:
             self.slug = slugify(self.name)
@@ -90,6 +113,10 @@ class Product(models.Model):
         super().clean()
 
     def save(self, *args, **kwargs):
+        """
+        Переопределение метода save для автоматического создания уникального slug.
+        Если slug уже существует, добавляет числовой суффикс.
+        """
         if not self.slug:
             self.slug = slugify(self.name)
             
@@ -110,7 +137,17 @@ class Product(models.Model):
 
     @classmethod
     def get_popular_products(cls, count=5):
-        """Получение популярных товаров с использованием кеширования"""
+        """
+        Получение популярных товаров с использованием кеширования для 
+        оптимизации производительности. Популярность определяется по 
+        количеству заказов и рейтингу.
+        
+        Args:
+            count: Количество популярных товаров для возврата
+            
+        Returns:
+            QuerySet с популярными товарами
+        """
         cache_key = f'popular_products_{count}'
         popular_products = cache.get(cache_key)
         
@@ -134,6 +171,10 @@ ORDER_STATUS_CHOICES = (
 )
 
 class Order(models.Model):
+    """
+    Модель заказа, связывающая пользователя с заказанными товарами.
+    Имеет систему отслеживания статусов с ведением истории изменений.
+    """
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -148,9 +189,17 @@ class Order(models.Model):
 
     @property
     def total_cost(self):
+        """
+        Вычисляет общую стоимость заказа, суммируя цены всех входящих товаров
+        с учетом их количества.
+        """
         return sum(item.product.price * item.quantity for item in self.items.all())
         
     def save(self, *args, **kwargs):
+        """
+        Переопределение метода save для автоматического создания записи 
+        в истории статусов при создании заказа или изменении его статуса.
+        """
         # Проверяем, существует ли экземпляр в базе данных
         is_new = self.pk is None
         
@@ -171,9 +220,14 @@ class Order(models.Model):
             
     @property
     def total_items_count(self):
+        """Вычисляет общее количество товаров в заказе"""
         return sum(item.quantity for item in self.items.all())
 
 class OrderItem(models.Model):
+    """
+    Модель элемента заказа, связывает заказ с конкретным товаром
+    и указывает его количество.
+    """
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
@@ -182,6 +236,10 @@ class OrderItem(models.Model):
         return f"{self.product.name} ({self.quantity} шт.)"
 
 class OrderStatusHistory(models.Model):
+    """
+    Модель для хранения истории изменений статусов заказа,
+    позволяет отслеживать все изменения с временными метками.
+    """
     order = models.ForeignKey(Order, related_name='status_history', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -196,6 +254,10 @@ class OrderStatusHistory(models.Model):
         return f"Статус '{self.get_status_display()}' для заказа #{self.order.id}"
 
 class Cart(models.Model):
+    """
+    Модель корзины покупок, может быть привязана к пользователю
+    или использоваться для анонимных покупателей.
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -203,18 +265,27 @@ class Cart(models.Model):
         return f"Корзина для {self.user.username if self.user else 'Гостя'}"
 
 class CartItem(models.Model):
+    """
+    Модель элемента корзины, связывает корзину с конкретным товаром
+    и указывает его количество.
+    """
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     @property
     def total_price(self):
+        """Вычисляет общую стоимость элемента корзины с учетом количества"""
         return self.quantity * self.product.price
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity} шт.)"
 
 class FacadeColor(models.Model):
+    """
+    Модель для хранения цветов фасадов, используемых для фильтрации
+    и выбора при создании/редактировании товаров.
+    """
     name = models.CharField(max_length=100, verbose_name='Название цвета')
     hex_code = models.CharField(max_length=7, verbose_name='Код цвета (HEX)')
 
@@ -222,6 +293,10 @@ class FacadeColor(models.Model):
         return self.name
 
 class BaseTexture(models.Model):
+    """
+    Модель для хранения базовых текстур, используемых для фильтрации
+    и выбора при создании/редактировании товаров.
+    """
     name = models.CharField(max_length=100, verbose_name='Название текстуры')
     image = models.ImageField(upload_to='base_textures/', verbose_name='Изображение текстуры')
 
@@ -229,6 +304,10 @@ class BaseTexture(models.Model):
         return self.name
 
 class ProductImage(models.Model):
+    """
+    Модель для хранения дополнительных изображений товара,
+    позволяет создавать галерею изображений для каждого товара.
+    """
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/gallery/')
     title = models.CharField(max_length=255, blank=True)
