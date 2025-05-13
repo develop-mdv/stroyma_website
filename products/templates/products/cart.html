@@ -5,10 +5,10 @@
 
 <!-- Список товаров в корзине -->
 {% if cart_items %}
-<div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-6 md:mb-8 border border-gray-200 dark:border-gray-600">
+<div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-6 md:mb-8 border border-gray-200 dark:border-gray-700">
     <div class="grid grid-cols-1 gap-4 md:gap-6">
         {% for item in cart_items %}
-        <div class="flex flex-col md:flex-row md:items-center border-b border-gray-200 py-4">
+        <div class="flex flex-col md:flex-row md:items-center border-b border-gray-200 dark:border-gray-600 py-4">
             <!-- Изображение товара с ссылкой -->
             <div class="w-full md:w-24 h-48 md:h-24 flex-shrink-0 mb-3 md:mb-0">
                 {% if item.product.image %}
@@ -27,20 +27,20 @@
                     {{ item.product.name }}
                 </a>
                 <div class="flex flex-wrap items-center justify-between mb-2">
-                    <p class="text-sm text-gray-600 mr-4 mb-2 md:mb-0">Цена за единицу: {{ item.product.price }} руб.</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mr-4 mb-2 md:mb-0">Цена за единицу: {{ item.product.price }} руб.</p>
                     <p class="text-md font-bold text-deep-green" id="item-total-{{ item.product.pk }}">
                         Общая цена: {{ item.total_price|floatformat:2 }} руб.
                     </p>
                 </div>
                 <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="flex items-center mt-2 update-cart-form">
                     {% csrf_token %}
-                    <label for="quantity-{{ item.product.pk }}" class="text-sm font-medium text-gray-600 mr-2">Количество:</label>
-                    <div class="flex border border-gray-300 rounded-md">
-                        <button type="button" class="decrease-quantity px-3 py-1 bg-gray-100 rounded-l-md" data-product-id="{{ item.product.pk }}">-</button>
+                    <label for="quantity-{{ item.product.pk }}" class="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">Количество:</label>
+                    <div class="flex border border-gray-300 dark:border-gray-600 rounded-md">
+                        <button type="button" class="decrease-quantity px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-l-md" data-product-id="{{ item.product.pk }}">-</button>
                         <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
-                               class="w-12 md:w-16 text-center border-none focus:ring-0 focus:outline-none update-cart-quantity"
+                               class="w-12 md:w-16 text-center border-none focus:ring-0 focus:outline-none update-cart-quantity dark:bg-gray-700 dark:text-white"
                                data-product-id="{{ item.product.pk }}">
-                        <button type="button" class="increase-quantity px-3 py-1 bg-gray-100 rounded-r-md" data-product-id="{{ item.product.pk }}">+</button>
+                        <button type="button" class="increase-quantity px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-r-md" data-product-id="{{ item.product.pk }}">+</button>
                     </div>
                 </form>
             </div>
@@ -61,7 +61,7 @@
 
     <!-- Кнопка оформления заказа -->
     <div class="mt-6 flex flex-col md:flex-row md:justify-end gap-3 md:gap-4">
-        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover text-center">
+        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover text-center">
             <i class="fas fa-arrow-left mr-1"></i> Продолжить покупки
         </a>
         <a href="{% url 'checkout' %}" class="button bg-deep-green text-white shadow-hover text-center">
@@ -71,9 +71,9 @@
 </div>
 
 {% else %}
-<div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-600">
-    <p class="text-gray-600 mb-4">Корзина пуста.</p>
-    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover inline-block">
+<div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-700">
+    <p class="text-gray-600 dark:text-gray-300 mb-4">Корзина пуста.</p>
+    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover inline-block">
         <i class="fas fa-arrow-left mr-1"></i> Перейти к покупкам
     </a>
 </div>

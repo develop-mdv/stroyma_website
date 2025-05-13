@@ -32,11 +32,11 @@ body {
     --bg-concrete-gray: #4B5563; /* Темный серый */
     --text-gray: #E5E7EB; /* Светло-серый для текста */
     --bg-white: #374151; /* Темный фон панелей */
-    --text-gray-600: #9CA3AF;
+    --text-gray-600: #D1D5DB; /* Усиленный контраст для текста */
     --input-bg: #374151;
     --input-border: #6B7280;
     --input-focus: #6EE7B7;
-    --button-hover: #4B6B5D;
+    --button-hover: #3E8A6A; /* Более светлый зеленый для лучшей заметности */
     --error-color: #F87171;
 }
 
@@ -391,4 +391,39 @@ button:focus, a:focus {
         height: 28px;
         top: -11px;
     }
+}
+
+/* Улучшенные стили для темной темы */
+[data-theme="dark"] .bg-white {
+    background-color: var(--bg-white);
+}
+
+[data-theme="dark"] .text-gray-600 {
+    color: var(--text-gray-600);
+}
+
+[data-theme="dark"] .border-gray-200 {
+    border-color: #4B5563;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: #374151;
+}
+
+[data-theme="dark"] .text-gray-800, 
+[data-theme="dark"] .text-gray-700 {
+    color: #E5E7EB;
+}
+
+/* Улучшение контраста кнопок в темной теме */
+[data-theme="dark"] .button.bg-sandy {
+    background-color: #6D5B44; /* Более светлый песочный для темной темы */
+    color: #FFFFFF; /* Белый текст для лучшего контраста */
+}
+
+/* Стили для фокуса элементов в темной теме */
+[data-theme="dark"] a:focus,
+[data-theme="dark"] button:focus {
+    outline: 2px solid var(--input-focus);
+    outline-offset: 2px;
 }

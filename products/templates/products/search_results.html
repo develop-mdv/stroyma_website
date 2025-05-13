@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for product in products %}
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in border border-gray-200 dark:border-gray-600">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in border border-gray-200 dark:border-gray-700">
         <!-- Изображение товара -->
         <a href="{% url 'product_detail' slug=product.slug %}">
             {% if product.image %}
@@ -37,7 +37,7 @@
                 <button onclick="openQuickView({{ product.pk }})" class="button bg-deep-green text-white shadow-hover text-xs md:text-sm py-2">
                     <i class="fas fa-eye mr-1"></i> Быстрый просмотр
                 </button>
-                <a href="{% url 'add_to_cart' pk=product.pk %}" class="button bg-sandy text-deep-green shadow-hover text-xs md:text-sm py-2 text-center">
+                <a href="{% url 'add_to_cart' pk=product.pk %}" class="button bg-sandy text-deep-green shadow-hover text-xs md:text-sm py-2 text-center dark:text-white">
                     <i class="fas fa-shopping-cart mr-1"></i> В корзину
                 </a>
             </div>
@@ -45,7 +45,7 @@
     </div>
     {% empty %}
     <div class="col-span-full">
-        <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg text-center animate-fade-in border border-gray-200 dark:border-gray-600">
+        <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg text-center animate-fade-in border border-gray-200 dark:border-gray-700">
             <p class="text-gray-600">Товаров не найдено.</p>
             <a href="{% url 'product_list' %}" class="button bg-deep-green text-white shadow-hover mt-4 inline-block">
                 <i class="fas fa-home mr-1"></i> На главную

@@ -3,7 +3,7 @@
 <h1 class="text-3xl font-bold text-deep-green mb-8">Услуги</h1>
 <div class="flex flex-col gap-6">
   {% for service in services %}
-    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center border border-gray-200 dark:border-gray-600 hover:shadow-xl transition-shadow">
+    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
       <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center mr-6">
         {% if service.image %}
           <a href="{% url 'service_detail' service.slug %}">
@@ -17,10 +17,10 @@
       </div>
       <div class="flex-1">
         <a href="{% url 'service_detail' service.slug %}" class="text-xl font-semibold text-deep-green hover:underline">{{ service.title }}</a>
-        <p class="text-gray-700 mt-2">{{ service.short_description }}</p>
+        <p class="text-gray dark:text-gray-300 mt-2">{{ service.short_description }}</p>
       </div>
       <div class="ml-6">
-        <a href="{% url 'service_detail' service.slug %}" class="button bg-beige text-deep-green hover:bg-beige-dark shadow-hover">Подробнее</a>
+        <a href="{% url 'service_detail' service.slug %}" class="button bg-beige text-deep-green dark:text-white hover:bg-beige-dark shadow-hover">Подробнее</a>
       </div>
     </div>
   {% endfor %}
