@@ -15,6 +15,17 @@ from uuid import UUID
 from django.views.decorators.http import require_POST
 from django.urls import reverse
 
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+
+def create_admin(request):
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+        return HttpResponse("Админ создан: admin / password")
+    else:
+        return HttpResponse("Админ уже существует")
+
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

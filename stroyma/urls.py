@@ -23,6 +23,7 @@ from .sitemaps import sitemaps
 from django.views.generic.base import TemplateView
 
 from products import views
+from accounts.views import create_admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('services/', include('services.urls')),
     path('product/<int:pk>/quick-view/', views.quick_view, name='quick_view'),
+    path('create-admin/', create_admin),
     
     # SEO URLs
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
