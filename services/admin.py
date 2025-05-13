@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Service, ServicePhoto, ServiceVideo
+from django import forms
 
 class ServicePhotoInline(admin.TabularInline):
     model = ServicePhoto
@@ -24,6 +25,14 @@ class ServiceAdmin(admin.ModelAdmin):
         ('Преимущества и SEO', {
             'fields': ('advantages', 'meta_title', 'meta_description')
         }),
+    )
+    
+    form = forms.modelform_factory(
+        Service,
+        fields='__all__',
+        widgets={
+            'slug': forms.TextInput(attrs={'class': 'slug-field'}),
+        }
     )
 
 @admin.register(ServicePhoto)

@@ -3,8 +3,9 @@
 
 {% block extrahead %}
 {{ block.super }}
-<!-- Подключаем скрипт для обработки DateRangeFilter -->
+<!-- Скрипты подключаются после того, как block.super загрузит jQuery -->
 <script src="{% static 'js/admin_datepicker.js' %}"></script>
+<script src="{% static 'js/fix_rangefilter.js' %}"></script>
 {% endblock %}
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}

@@ -26,7 +26,7 @@
                 <button type="submit" class="button bg-deep-green text-white shadow-hover text-sm">
                     Добавить в корзину
                 </button>
-                <a href="{% url 'product_detail' pk=product.pk %}" class="button bg-gray-200 text-gray-700 shadow-hover text-sm">
+                <a href="{% url 'product_detail' slug=product.slug %}" class="button bg-gray-200 text-gray-700 shadow-hover text-sm">
                     Подробнее
                 </a>
             </div>

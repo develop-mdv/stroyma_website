@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 
 class Service(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название услуги')
@@ -11,9 +12,28 @@ class Service(models.Model):
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO Title')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO Description')
 
+    def clean(self):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            
+        # Проверяем, существует ли уже услуга с таким slug
+        if Service.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+            raise ValidationError({
+                'slug': f'Услуга с URL "{self.slug}" уже существует. Пожалуйста, измените URL-имя.'
+            })
+        super().clean()
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+            
+        # Добавляем суффикс, если slug уже существует
+        original_slug = self.slug
+        counter = 1
+        while Service.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+            
         super().save(*args, **kwargs)
 
     def __str__(self):

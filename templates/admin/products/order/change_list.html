@@ -1,15 +1,15 @@
 {% extends "admin/change_list.html" %}
-{% load i18n admin_urls %}
+{% load i18n admin_urls static %}
 
 {% block object-tools-items %}
+  <li>
+    <a href="{% url 'admin:sales_report' %}" class="historylink">{% trans "Отчет по продажам" %}</a>
+  </li>
   {{ block.super }}
   <li>
-    <a href="{% url 'admin:sales_report' %}" class="grp-state-focus">{% trans "Отчет по продажам" %}</a>
+    <a href="{% url 'admin:order_export_csv' %}" class="historylink">{% trans "Экспорт CSV" %}</a>
   </li>
   <li>
-    <a href="{% url 'admin:order_export_csv' %}" class="grp-state-focus">{% trans "Экспорт CSV" %}</a>
-  </li>
-  <li>
-    <a href="{% url 'admin:order_export_pdf' %}" class="grp-state-focus">{% trans "Экспорт PDF" %}</a>
+    <a href="{% url 'admin:order_export_pdf' %}" class="historylink">{% trans "Экспорт PDF" %}</a>
   </li>
 {% endblock %} 

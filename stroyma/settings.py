@@ -274,3 +274,21 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
+# Настройки для кеширования
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 минут по умолчанию
+        'OPTIONS': {
+            'MAX_ENTRIES': 300,  # Максимальное количество объектов в кеше
+            'CULL_FREQUENCY': 3,  # Частота очистки кеша при превышении лимита 
+        }
+    }
+}
+
+# Настройки API агрегации данных для кеша
+DATA_CACHE_TIMEOUT = 60 * 30  # 30 минут для данных отчетов
+PRODUCT_CACHE_TIMEOUT = 60 * 60  # 1 час для данных о товарах
+POPULAR_PRODUCTS_TIMEOUT = 60 * 60 * 3  # 3 часа для популярных товаров

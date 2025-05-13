@@ -2,7 +2,7 @@
     {% for product in products %}
     <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-scale shadow-hover animate-fade-in border border-gray-200 dark:border-gray-600">
         <!-- Изображение товара -->
-        <a href="{% url 'product_detail' pk=product.pk %}">
+        <a href="{% url 'product_detail' slug=product.slug %}">
             {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
             {% else %}
@@ -12,7 +12,7 @@
 
         <!-- Содержимое карточки -->
         <div class="p-4">
-            <a href="{% url 'product_detail' pk=product.pk %}">
+            <a href="{% url 'product_detail' slug=product.slug %}">
                 <h5 class="text-lg font-medium text-deep-green hover:underline mb-2">{{ product.name }}</h5>
             </a>
             <p class="text-sm text-gray-600 mb-2">{{ product.description|truncatewords:10 }}</p>
