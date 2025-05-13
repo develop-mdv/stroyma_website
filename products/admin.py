@@ -85,7 +85,7 @@ class CategoryFilter(admin.SimpleListFilter):
 class ProductAdmin(ImportExportModelAdmin):
     resource_classes = [ProductResource]
     list_display = ('image_preview', 'name', 'price', 'stock', 'rating', 'created_at')
-    list_filter = (CategoryFilter, 'rating', ('created_at', DateRangeFilter))
+    list_filter = (CategoryFilter, 'rating', 'created_at')
     search_fields = ('name', 'description')
     filter_horizontal = ('categories',)
     inlines = [ProductImageInline]
@@ -188,7 +188,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(ImportExportModelAdmin):
     resource_classes = [OrderResource]
     list_display = ('id', 'user', 'get_user_info', 'status', 'created_at', 'get_total_cost', 'get_items_count')
-    list_filter = ('status', ('created_at', DateRangeFilter))
+    list_filter = ('status', 'created_at')
     search_fields = ('user__username', 'id', 'user__profile__phone', 'user__email')
     ordering = ['-created_at']
     readonly_fields = ['created_at', 'updated_at', 'get_total_cost', 'get_user_info']
