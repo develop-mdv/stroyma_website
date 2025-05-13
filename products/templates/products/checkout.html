@@ -91,6 +91,18 @@
         </div>
     </div>
 
+    <!-- Согласие с политикой конфиденциальности -->
+    <div class="mt-6 flex items-start">
+        <div class="flex items-center h-5">
+            <input id="privacy_policy" name="privacy_policy" type="checkbox" required
+                   class="h-4 w-4 text-deep-green focus:ring-deep-green border-gray-300 rounded">
+        </div>
+        <div class="ml-3 text-sm">
+            <label for="privacy_policy" class="font-medium text-gray-700">Я согласен с <a href="{% url 'policy' %}" class="text-deep-green hover:underline" target="_blank">политикой конфиденциальности</a></label>
+            <p class="text-gray-500">Нажимая кнопку «Подтвердить заказ», вы даете согласие на обработку персональных данных для оформления и доставки заказа</p>
+        </div>
+    </div>
+
     <!-- Кнопки -->
     <div class="mt-6 flex space-x-4">
         <button type="submit" class="button bg-deep-green text-white shadow-hover">

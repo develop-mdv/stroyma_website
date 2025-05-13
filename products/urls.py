@@ -13,6 +13,7 @@ urlpatterns = [
     path('checkout/success/', views.checkout_success, name='checkout_success'),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
+    path('policy/', views.policy, name='policy'),
     path('search-ajax/', views.search_ajax, name='search_ajax'),
     path('quick-view/<int:pk>/', views.quick_view, name='quick_view'),
     path('color-selection/', views.color_selection, name='color_selection'),
