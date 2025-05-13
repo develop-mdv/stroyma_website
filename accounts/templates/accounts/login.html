@@ -25,8 +25,9 @@
             Войти
         </button>
     </form>
-    <div class="mt-4 text-center">
+    <div class="mt-4 text-center flex flex-col space-y-2">
         <a href="{% url 'register' %}" class="text-deep-green hover:text-gray-600 transition">Регистрация</a>
+        <a href="{% url 'password_reset' %}" class="text-deep-green hover:text-gray-600 transition">Забыли пароль?</a>
     </div>
 </div>
 {% endblock %}

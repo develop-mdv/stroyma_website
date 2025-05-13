@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
 
@@ -109,3 +109,20 @@ class CustomUserChangeForm(UserChangeForm):
             profile.save()
 
         return user
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label="Email",
+        max_length=254,
+        widget=forms.EmailInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'})
+    )
+
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label="Новый пароль",
+        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'}),
+    )
+    new_password2 = forms.CharField(
+        label="Подтверждение пароля",
+        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'}),
+    )

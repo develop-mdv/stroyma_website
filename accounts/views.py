@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Order
 from products.views import merge_session_cart_to_user_cart
 from .forms import RegisterForm, LoginForm, CustomUserChangeForm
@@ -7,16 +7,35 @@ from django.contrib import messages
 from .decorators import login_required, custom_login_required
 from django.http import JsonResponse
 from accounts.models import UserProfile
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from uuid import UUID
 
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            UserProfile.objects.create(user=user)
+            profile = UserProfile.objects.create(user=user)
+            
+            # Отправка письма с подтверждением email
+            current_site = get_current_site(request)
+            mail_subject = 'Подтверждение регистрации на сайте Stroyma'
+            message = render_to_string('accounts/email/email_confirmation.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'protocol': 'https' if request.is_secure() else 'http',
+                'token': profile.confirmation_token,
+            })
+            
+            to_email = form.cleaned_data.get('email')
+            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+            
             login(request, user)
             merge_session_cart_to_user_cart(request)
-            messages.success(request, "Вы успешно зарегистрировались!")
+            messages.success(request, "Вы успешно зарегистрировались! На вашу почту отправлено письмо с подтверждением.")
             return JsonResponse({'success': True})
         else:
             errors = form.errors.as_json()
@@ -24,6 +43,19 @@ def register_view(request):
     else:
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+def confirm_email_view(request, token):
+    try:
+        profile = get_object_or_404(UserProfile, confirmation_token=UUID(token))
+        profile.email_confirmed = True
+        profile.save()
+        success = True
+        messages.success(request, "Ваш email успешно подтвержден!")
+    except (ValueError, UserProfile.DoesNotExist):
+        success = False
+        messages.error(request, "Ссылка для подтверждения email недействительна!")
+    
+    return render(request, 'accounts/email_confirmation.html', {'success': success})
 
 def login_view(request):
     if request.user.is_authenticated:

@@ -1,0 +1,17 @@
+{% extends 'products/base.html' %}
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto border border-gray-200 dark:border-gray-600">
+    <h2 class="text-2xl font-bold text-deep-green mb-6">Подтверждение email</h2>
+    {% if success %}
+        <p class="mb-4 text-gray">Ваш email был успешно подтвержден! Теперь вы можете использовать все возможности сайта.</p>
+        <div class="mt-4 text-center">
+            <a href="{% url 'profile' %}" class="button bg-deep-green text-white shadow-hover w-full block">Перейти в профиль</a>
+        </div>
+    {% else %}
+        <p class="mb-4 text-gray">Произошла ошибка при подтверждении email. Возможно, ссылка недействительна или срок её действия истек.</p>
+        <div class="mt-4 text-center">
+            <a href="{% url 'profile' %}" class="text-deep-green hover:text-gray-600 transition">Перейти в профиль</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
