@@ -12,6 +12,10 @@ class Service(models.Model):
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO Title')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO Description')
 
+    class Meta:
+        verbose_name = "Услуги"
+        verbose_name_plural = "Услуги"
+
     def clean(self):
         if not self.slug:
             self.slug = slugify(self.title)

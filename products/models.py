@@ -74,6 +74,8 @@ class Product(models.Model):
             models.Index(fields=['slug']),
         ]
         ordering = ['-created_at']
+        verbose_name = "Товары"
+        verbose_name_plural = "Товары"
 
     def clean(self):
         from django.core.exceptions import ValidationError
@@ -136,6 +138,10 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Заказы"
+        verbose_name_plural = "Заказы"
 
     def __str__(self):
         return f"Заказ #{self.id}"
