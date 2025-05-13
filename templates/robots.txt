@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию админки
+Disallow: /admin/
+Disallow: /accounts/login/
+Disallow: /accounts/register/
+Disallow: /accounts/profile/
+Disallow: /checkout/
+Disallow: /cart/
+
+# Разрешаем индексацию основных разделов
+Allow: /products/
+Allow: /services/
+Allow: /about/
+Allow: /contact/
+
+# Указываем расположение карты сайта
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml 

@@ -1,66 +1,132 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
-{% block title %}{{ service.title }} | Stroyma{% endblock %}
+{% block title %}{{ service.meta_title|default:service.title }} | СтройМа{% endblock %}
+{% block meta_description %}{{ service.meta_description|default:service.short_description|truncatechars:160 }}{% endblock %}
+{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{% url 'service_detail' service.slug %}{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.css" />
-{% endblock %}
+{% block og_title %}{{ service.meta_title|default:service.title }}{% endblock %}
+{% block og_description %}{{ service.meta_description|default:service.short_description|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{% if service.image %}{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endif %}{% endblock %}
 
 {% block content %}
+<!-- Микроразметка schema.org для услуги -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "{{ service.title }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "СтройМа",
+    "url": "{{ request.scheme }}://{{ request.get_host }}"
+  },
+  "description": "{{ service.description|striptags|truncatechars:1000 }}",
+  "image": "{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}"
+}
+</script>
+
 <div class="bg-[#F8F5EF] min-h-screen py-10 px-4">
     <div class="max-w-5xl mx-auto">
-        <!-- Верхний блок с изображением -->
-        <div class="flex flex-col md:flex-row mb-12 items-start gap-8">
-            <div class="w-full md:w-1/3">
-                {% if service.image %}
-                    <img src="{{ service.image.url }}" alt="{{ service.title }}" class="rounded-xl shadow-md w-full object-cover h-auto max-h-[400px]">
-                {% else %}
-                    <img src="https://via.placeholder.com/300x300?text=Нет+изображения" class="rounded-xl shadow-md w-full object-cover">
-                {% endif %}
-            </div>
-            <div class="flex-1">
-                <h1 class="text-4xl font-serif text-deep-green mb-4">{{ service.title }}</h1>
-                <p class="text-lg text-gray-800 mb-6 leading-relaxed">{{ service.description|linebreaks }}</p>
+        <!-- Хлебные крошки с микроразметкой schema.org -->
+        <nav class="text-sm text-gray-600 mb-4" aria-label="breadcrumb">
+            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                        <span itemprop="name">Главная</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                    <span class="mx-2">/</span>
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                        <span itemprop="name">Услуги</span>
+                    </a>
+                    <meta itemprop="position" content="2" />
+                    <span class="mx-2">/</span>
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <span itemprop="name">{{ service.title }}</span>
+                    <meta itemprop="position" content="3" />
+                </li>
+            </ol>
+        </nav>
 
-                <h3 class="text-xl font-semibold text-deep-green mb-2">Преимущества</h3>
-                <ul class="list-disc list-inside text-gray-700 space-y-1 mb-6">
-                    {% for adv in service.advantages.splitlines %}
-                        <li>{{ adv }}</li>
+        <!-- Основной контент -->
+        <div class="bg-white p-8 rounded-xl shadow-lg">
+            <h1 class="text-4xl font-serif text-deep-green mb-6">{{ service.title }}</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2">
+                    <div class="prose max-w-none mb-8">
+                        {{ service.description|linebreaks }}
+                    </div>
+                    
+                    {% if service.advantages %}
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-serif text-deep-green mb-4">Преимущества</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            {% for advantage in service.advantages.splitlines %}
+                                {% if advantage %}
+                                <li>{{ advantage }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <img src="{{ service.image.url }}" alt="{{ service.title }}" 
+                         class="w-full h-auto rounded-lg shadow-md mb-6" loading="lazy">
+                    
+                    <div class="bg-sandy p-4 rounded-lg">
+                        <h3 class="text-xl font-medium text-deep-green mb-3">Заинтересовала услуга?</h3>
+                        <p class="text-gray-700 mb-4">Свяжитесь с нами для получения консультации и оформления заказа.</p>
+                        <a href="{% url 'contact' %}" class="button bg-deep-green text-white w-full text-center block">
+                            Связаться
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Галерея работ -->
+            {% if service.photos.exists %}
+            <div class="mt-12">
+                <h2 class="text-3xl font-serif text-deep-green mb-6">Примеры наших работ</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for photo in service.photos.all %}
+                    <a href="{{ photo.image.url }}" data-fancybox="gallery" class="block">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title|default:service.title }}" 
+                             class="w-full h-64 object-cover rounded-lg shadow-md hover:opacity-90 transition" 
+                             loading="lazy">
+                    </a>
                     {% endfor %}
-                </ul>
-
-                <a href="{% url 'contact' %}" class="inline-block bg-beige hover:bg-beige-dark text-deep-green font-medium py-2 px-6 rounded-lg shadow transition">Заказать услугу</a>
+                </div>
             </div>
-        </div>
-
-        <!-- Карусель -->
-        <div>
-            <h2 class="text-3xl font-serif font-bold text-deep-green mb-6">Примеры работ</h2>
-
-            <div id="media-carousel" class="f-carousel" data-carousel="static">
-                {% for photo in service.photos.all %}
-                    <div class="f-carousel__slide">
-                        <a href="{{ photo.image.url }}" data-fancybox="gallery">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="w-full h-96 object-cover rounded-lg" />
-                        </a>
+            {% endif %}
+            
+            <!-- Видео -->
+            {% if service.videos.exists %}
+            <div class="mt-12">
+                <h2 class="text-3xl font-serif text-deep-green mb-6">Видео</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for video in service.videos.all %}
+                    <div>
+                        <video controls class="w-full h-auto rounded-lg shadow-md" preload="none" poster="{{ service.image.url }}">
+                            <source src="{{ video.video.url }}" type="video/mp4">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                        {% if video.title %}
+                        <p class="mt-2 text-gray-700">{{ video.title }}</p>
+                        {% endif %}
                     </div>
-                {% endfor %}
-                {% for video in service.videos.all %}
-                    <div class="f-carousel__slide">
-                        <a href="{{ video.video.url }}" data-fancybox="gallery">
-                            <video controls class="w-full h-96 object-cover rounded-lg">
-                                <source src="{{ video.video.url }}" type="video/mp4">
-                                Ваш браузер не поддерживает видео.
-                            </video>
-                        </a>
-                    </div>
-                {% endfor %}
-                {% if not service.photos.all and not service.videos.all %}
-                    <p class="text-gray-500">Нет медиафайлов</p>
-                {% endif %}
+                    {% endfor %}
+                </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -68,17 +134,12 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.umd.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    if (window.Carousel) {
-        new Carousel(document.getElementById("media-carousel"), {
-            Dots: true,
-        });
-    }
-
+document.addEventListener('DOMContentLoaded', function() {
     Fancybox.bind('[data-fancybox="gallery"]', {
-        Thumbs: false,
+        Thumbs: {
+            autoStart: true
+        }
     });
 });
 </script>

@@ -10,6 +10,9 @@ class Category(MPTTModel):
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL-имя')
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, 
                            related_name='children', verbose_name='Родительская категория')
+    description = models.TextField(blank=True, verbose_name='Описание категории')
+    meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO заголовок')
+    meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO описание')
     
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -29,6 +32,7 @@ class Category(MPTTModel):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='products/')
@@ -37,14 +41,26 @@ class Product(models.Model):
     categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категории')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-
+    meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO заголовок')
+    meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO описание')
+    keywords = models.CharField(max_length=255, blank=True, verbose_name='Ключевые слова')
+    
     class Meta:
         indexes = [
             models.Index(fields=['name']),
             models.Index(fields=['price']),
             models.Index(fields=['created_at']),
+            models.Index(fields=['slug']),
         ]
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.name

@@ -166,9 +166,21 @@ def search_ajax(request):
         'has_next': page.has_next(),
     })
 
-def product_detail(request, pk):
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    # Передаем метаданные в контекст
+    context = {
+        'product': product,
+        'meta_title': product.meta_title,
+        'meta_description': product.meta_description,
+        'keywords': product.keywords,
+    }
+    return render(request, 'products/product_detail.html', context)
+
+def product_detail_legacy(request, pk):
+    """Обработчик для поддержки старых URL с использованием pk"""
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'products/product_detail.html', {'product': product})
+    return redirect(product.get_absolute_url(), permanent=True)
 
 def quick_view(request, pk):
     product = get_object_or_404(Product, pk=pk)

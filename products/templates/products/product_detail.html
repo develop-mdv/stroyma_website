@@ -1,7 +1,15 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
-{% block title %}{{ product.name }} | Stroyma{% endblock %}
+{% block title %}{{ product.meta_title|default:product.name }} | СтройМа{% endblock %}
+{% block meta_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
+{% block meta_keywords %}{{ product.keywords|default:"строительные материалы, стройматериалы" }}{% endblock %}
+{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}{% endblock %}
+
+{% block og_title %}{{ product.meta_title|default:product.name }}{% endblock %}
+{% block og_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
@@ -9,13 +17,72 @@
 {% endblock %}
 
 {% block content %}
+<!-- Микроразметка schema.org для продукта -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  "image": [
+    "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"
+    {% for image in product.images.all %}
+    ,"{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"
+    {% endfor %}
+  ],
+  "description": "{{ product.description|striptags|truncatechars:1000 }}",
+  "sku": "{{ product.id }}",
+  "mpn": "{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "СтройМа"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "RUB",
+    "price": "{{ product.price }}",
+    "priceValidUntil": "{% now 'Y' %}-12-31",
+    "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "itemCondition": "https://schema.org/NewCondition"
+  }
+  {% if product.rating %}
+  ,"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ product.rating }}",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "1"
+  }
+  {% endif %}
+}
+</script>
+
 <div class="bg-[#F8F5EF] min-h-screen py-10 px-4">
     <div class="max-w-5xl mx-auto">
-        <!-- Хлебные крошки -->
-        <nav class="text-sm text-gray-600 mb-4">
-            <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
-            <span class="mx-2">/</span>
-            <span>{{ product.name }}</span>
+        <!-- Хлебные крошки с микроразметкой schema.org -->
+        <nav class="text-sm text-gray-600 mb-4" aria-label="breadcrumb">
+            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                        <span itemprop="name">Главная</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                    <span class="mx-2">/</span>
+                </li>
+                {% for category in product.categories.all|slice:":1" %}
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <a href="{{ category.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                        <span itemprop="name">{{ category.name }}</span>
+                    </a>
+                    <meta itemprop="position" content="2" />
+                    <span class="mx-2">/</span>
+                </li>
+                {% endfor %}
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                    <span itemprop="name">{{ product.name }}</span>
+                    <meta itemprop="position" content="3" />
+                </li>
+            </ol>
         </nav>
 
         <!-- Верхний блок с основной информацией -->

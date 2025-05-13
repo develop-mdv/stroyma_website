@@ -4,7 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>СтройМа - Строительные материалы</title>
+    
+    <!-- Динамические мета-теги -->
+    <title>{% block title %}{{ meta_title|default:"СтройМа - Строительные материалы" }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России. Выгодные цены и высокое качество.' }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{{ keywords|default:'строительные материалы, стройматериалы, ремонт, строительство, отделочные материалы' }}{% endblock %}">
+    
+    <!-- Канонический URL -->
+    <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
+    
+    <!-- Open Graph мета-теги для социальных сетей -->
+    <meta property="og:title" content="{% block og_title %}{{ meta_title|default:'СтройМа - Строительные материалы' }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России.' }}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endblock %}">
+    <meta property="og:site_name" content="СтройМа">
+    
+    <!-- Twitter карточка -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ meta_title|default:'СтройМа - Строительные материалы' }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства.' }}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endblock %}">
 
     <!-- Tailwind CSS через CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -19,6 +40,33 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="relative">
+    <!-- Микроразметка Schema.org - Организация -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "СтройМа",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+        "description": "Компания СтройМа - ваш надежный партнер в сфере строительных материалов.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Москва",
+            "addressRegion": "Москва",
+            "postalCode": "127000",
+            "addressCountry": "RU"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+7-910-211-40-41",
+            "contactType": "customer service"
+        },
+        "sameAs": [
+            "https://vk.com/club179330232"
+        ]
+    }
+    </script>
+
     <!-- Текстурный фон -->
     <div class="texture-overlay"></div>
 

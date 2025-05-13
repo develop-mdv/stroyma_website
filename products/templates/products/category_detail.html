@@ -1,16 +1,73 @@
 {% extends 'products/base.html' %}
 {% load mptt_tags %}
 
+{% block title %}{{ category.meta_title|default:category.name }} | СтройМа{% endblock %}
+{% block meta_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа. Широкий выбор, доступные цены, быстрая доставка.'|truncatechars:160 }}{% endblock %}
+{% block meta_keywords %}{{ category.name }}, строительные материалы, купить {{ category.name }}{% endblock %}
+{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ category.get_absolute_url }}{% endblock %}
+
+{% block og_title %}{{ category.meta_title|default:category.name }}{% endblock %}
+{% block og_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа.'|truncatechars:160 }}{% endblock %}
+
 {% block content %}
-<!-- Хлебные крошки -->
-<nav class="text-sm text-gray-600 mb-4">
-    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
-    <span class="mx-2">/</span>
-    {% for ancestor in category.get_ancestors %}
-        <a href="{{ ancestor.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition">{{ ancestor.name }}</a>
-        <span class="mx-2">/</span>
-    {% endfor %}
-    <span>{{ category.name }}</span>
+<!-- Микроразметка schema.org для категории -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "{{ category.name }}",
+  "description": "{{ category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа.' }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for product in products %}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.counter }},
+        "item": {
+          "@type": "Product",
+          "name": "{{ product.name }}",
+          "url": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}",
+          "image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}",
+          "offers": {
+            "@type": "Offer",
+            "price": "{{ product.price }}",
+            "priceCurrency": "RUB",
+            "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+          }
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }
+}
+</script>
+
+<!-- Хлебные крошки с микроразметкой schema.org -->
+<nav class="text-sm text-gray-600 mb-4" aria-label="breadcrumb">
+    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+            <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                <span itemprop="name">Главная</span>
+            </a>
+            <meta itemprop="position" content="1" />
+            <span class="mx-2">/</span>
+        </li>
+        {% for ancestor in category.get_ancestors %}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+            <a href="{{ ancestor.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
+                <span itemprop="name">{{ ancestor.name }}</span>
+            </a>
+            <meta itemprop="position" content="{{ forloop.counter|add:"1" }}" />
+            <span class="mx-2">/</span>
+        </li>
+        {% endfor %}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+            <span itemprop="name">{{ category.name }}</span>
+            <meta itemprop="position" content="{{ category.get_ancestors.count|add:"2" }}" />
+        </li>
+    </ol>
 </nav>
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -60,6 +117,14 @@
     <!-- Товары -->
     <div class="md:col-span-3">
         <h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">{{ category.name }}</h1>
+        
+        {% if category.description %}
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8 animate-fade-in border border-gray-200 dark:border-gray-600">
+            <div class="prose max-w-none">
+                {{ category.description|linebreaks }}
+            </div>
+        </div>
+        {% endif %}
         
         {% if category.get_children %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
