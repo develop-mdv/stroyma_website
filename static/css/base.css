@@ -201,3 +201,194 @@ button:focus, a:focus {
 [aria-label] {
     cursor: pointer;
 }
+
+/* Медиа-запросы для мобильной адаптивности */
+@media (max-width: 768px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    /* Изменения размеров кнопок на мобильных */
+    button, a.button {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.815rem;
+    }
+    
+    /* Отступы в формах */
+    input, textarea, select {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.815rem;
+    }
+    
+    /* Увеличиваем размер элементов управления для лучшего тапа */
+    .noUi-handle {
+        width: 24px;
+        height: 24px;
+        top: -9px;
+    }
+    
+    /* Минимальная высота тап-областей для мобильного меню */
+    #mobile-menu a, 
+    #mobile-menu button {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Улучшенный скроллинг для мобильных */
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--bg-milky-white);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--bg-deep-green);
+        border-radius: 4px;
+    }
+}
+
+/* Крайне маленькие экраны */
+@media (max-width: 380px) {
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+    
+    /* Увеличиваем размер кнопок для лучшего тапа */
+    button, a.button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    .noUi-handle {
+        width: 28px;
+        height: 28px;
+        top: -11px;
+    }
+}
+
+/* Мобильное меню */
+#mobile-menu {
+    opacity: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#mobile-menu-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+
+/* Улучшенные переходы для мобильного меню */
+#mobile-menu a, #mobile-menu button {
+    position: relative;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#mobile-menu a:after, #mobile-menu button:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--text-deep-green);
+    transition: width 0.3s ease;
+}
+
+#mobile-menu a:hover:after, #mobile-menu button:hover:after,
+#mobile-menu a.bg-gray-50:after {
+    width: 4px;
+}
+
+/* Активное состояние пункта меню */
+.menu-active {
+    background-color: rgba(45, 93, 76, 0.1);
+    font-weight: 500;
+}
+
+/* Анимации для мобильного меню */
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Улучшенные стили для тап-областей на мобильных */
+@media (max-width: 768px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    /* Изменения размеров кнопок на мобильных */
+    button, a.button {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.815rem;
+    }
+    
+    /* Отступы в формах */
+    input, textarea, select {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.815rem;
+    }
+    
+    /* Увеличиваем размер элементов управления для лучшего тапа */
+    .noUi-handle {
+        width: 24px;
+        height: 24px;
+        top: -9px;
+    }
+    
+    /* Минимальная высота тап-областей для мобильного меню */
+    #mobile-menu a, 
+    #mobile-menu button {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Улучшенный скроллинг для мобильных */
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--bg-milky-white);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--bg-deep-green);
+        border-radius: 4px;
+    }
+}
+
+/* Крайне маленькие экраны */
+@media (max-width: 380px) {
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+    
+    /* Увеличиваем размер кнопок для лучшего тапа */
+    button, a.button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    .noUi-handle {
+        width: 28px;
+        height: 28px;
+        top: -11px;
+    }
+}

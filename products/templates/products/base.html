@@ -3,7 +3,7 @@
 <html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- Динамические мета-теги -->
     <title>{% block title %}{{ meta_title|default:"СтройМа - Строительные материалы" }}{% endblock %}</title>
@@ -71,24 +71,34 @@
     <div class="texture-overlay"></div>
 
     <!-- Шапка сайта -->
-    <header class="fixed top-0 left-0 w-full bg-sandy text-deep-green py-4 shadow-lg z-50">
+    <header class="fixed top-0 left-0 w-full bg-sandy text-deep-green py-2 md:py-4 shadow-lg z-50">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <!-- Логотип -->
                 <div class="flex items-center space-x-3">
                     <a href="{% url 'product_list' %}">
-                        <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-12 w-auto object-contain" loading="lazy">
+                        <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 md:h-12 w-auto object-contain" loading="lazy">
                     </a>
-                    <a href="{% url 'product_list' %}" class="text-2xl font-bold hidden md:block">СтройМа</a>
+                    <a href="{% url 'product_list' %}" class="text-xl md:text-2xl font-bold hidden sm:block">СтройМа</a>
+                </div>
+
+                <!-- Корзина для мобильных экранов -->
+                <div class="flex items-center space-x-4 sm:hidden">
+                    <a href="{% url 'view_cart' %}" class="relative">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="mobile-cart-count" class="absolute -top-2 -right-2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ cart_item_count|default:0 }}
+                        </span>
+                    </a>
                 </div>
 
                 <!-- Переключатель тем и меню -->
                 <div class="flex items-center space-x-3">
                     <button id="theme-toggle" class="text-deep-green focus:outline-none" aria-label="Переключить тему">
-                        <i class="fas fa-moon text-2xl"></i>
+                        <i class="fas fa-moon text-xl md:text-2xl"></i>
                     </button>
                     <button id="menu-toggle" class="md:hidden text-deep-green focus:outline-none" aria-label="Открыть меню">
-                        <i class="fas fa-bars text-2xl"></i>
+                        <i class="fas fa-bars text-xl md:text-2xl"></i>
                     </button>
                 </div>
 
@@ -103,8 +113,11 @@
                     <a href="{% url 'color_selection' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fa-solid fa-paint-roller"></i> Онлайн выкрас фасада
                     </a>
-                    <a href="{% url 'view_cart' %}" class="text-deep-green hover:text-gray-600 transition">
+                    <a href="{% url 'view_cart' %}" class="text-deep-green hover:text-gray-600 transition relative">
                         <i class="fas fa-shopping-cart mr-1"></i> Корзина
+                        <span id="desktop-cart-count" class="absolute -top-2 -right-2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center {% if cart_item_count and cart_item_count > 0 %}visible{% else %}hidden{% endif %}">
+                            {{ cart_item_count|default:0 }}
+                        </span>
                     </a>
                     <a href="{% url 'about' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fas fa-building mr-1"></i> О компании
@@ -139,77 +152,118 @@
             </div>
 
             <!-- Мобильное меню -->
-            <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 mt-4">
-                <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">
-                    <i class="fas fa-home mr-1"></i> Главная
-                </a>
-                <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition">
-                    <i class="fas fa-hammer mr-1"></i> Услуги
-                </a>
-                <a href="{% url 'view_cart' %}" class="text-deep-green hover:text-gray-600 transition">
-                    <i class="fas fa-shopping-cart mr-1"></i> Корзина
-                </a>
-                <a href="{% url 'about' %}" class="text-deep-green hover:text-gray-600 transition">
-                    <i class="fas fa-building mr-1"></i> О компании
-                </a>
-                <a href="{% url 'contact' %}" class="text-deep-green hover:text-gray-600 transition">
-                    <i class="fas fa-envelope mr-1"></i> Контакты
-                </a>
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden md:hidden" style="transition: opacity 0.3s ease;"></div>
+            <div id="mobile-menu" class="md:hidden fixed top-0 right-0 w-4/5 max-w-xs h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+                <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 mr-3">
+                            <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 w-auto">
+                        </div>
+                        <div class="text-deep-green font-bold text-lg">
+                            СтройМа
+                        </div>
+                    </div>
+                    <button id="close-menu-btn" class="text-gray-500 hover:text-deep-green p-2">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Навигационные блоки с иконками -->
+                <div class="flex-1 overflow-y-auto py-2">
+                    <div class="border-b border-gray-100 pb-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Навигация</div>
+                        <a href="{% url 'product_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-home mr-3 w-5 text-center"></i> Главная
+                        </a>
+                        <a href="{% url 'service_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-hammer mr-3 w-5 text-center"></i> Услуги
+                        </a>
+                        <a href="{% url 'color_selection' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'color_selection' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fa-solid fa-paint-roller mr-3 w-5 text-center"></i> Онлайн выкрас фасада
+                        </a>
+                    </div>
+                    
+                    <div class="border-b border-gray-100 py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Покупки</div>
+                        <a href="{% url 'view_cart' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition relative {% if request.resolver_match.url_name == 'view_cart' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i> Корзина
+                            <span class="absolute right-4 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ cart_item_count|default:0 }}
+                            </span>
+                        </a>
+                    </div>
+                    
+                    <div class="border-b border-gray-100 py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">О нас</div>
+                        <a href="{% url 'about' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'about' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-building mr-3 w-5 text-center"></i> О компании
+                        </a>
+                        <a href="{% url 'contact' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'contact' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-envelope mr-3 w-5 text-center"></i> Контакты
+                        </a>
+                    </div>
 
-                <!-- Состояние пользователя -->
-                {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-user mr-1"></i> Профиль
-                    </a>
-                    <a href="{% url 'logout' %}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                       class="text-deep-green hover:text-gray-600 transition">
-                       <i class="fas fa-sign-out-alt mr-1"></i> Выход
-                    </a>
-                    <form id="logout-form" method="POST" action="{% url 'logout' %}" class="hidden">
-                        {% csrf_token %}
-                        <input type="hidden">
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-sign-in-alt mr-1"></i> Вход
-                    </a>
-                    <a href="{% url 'register' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-user-plus mr-1"></i> Регистрация
-                    </a>
-                {% endif %}
+                    <!-- Состояние пользователя -->
+                    <div class="py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Аккаунт</div>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profile' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'profile' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-user mr-3 w-5 text-center"></i> Профиль
+                            </a>
+                            <a href="{% url 'logout' %}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                               class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition">
+                               <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Выход
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'login' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-sign-in-alt mr-3 w-5 text-center"></i> Вход
+                            </a>
+                            <a href="{% url 'register' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'register' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-user-plus mr-3 w-5 text-center"></i> Регистрация
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Темная/светлая тема в мобильном меню -->
+                <div class="mt-auto border-t border-gray-200 p-4">
+                    <button id="mobile-theme-toggle" class="flex items-center text-deep-green hover:bg-gray-50 py-3 px-4 w-full rounded transition">
+                        <i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Основное содержимое -->
-    <main class="container mx-auto px-4 py-8 pt-24">
+    <main class="container mx-auto px-4 py-4 md:py-8 pt-16 md:pt-24">
         {% block content %}
         <!-- Содержимое страницы -->
         {% endblock %}
     </main>
 
     <!-- Подвал -->
-    <footer class="bg-deep-green text-white text-center py-6 mt-12">
+    <footer class="bg-deep-green text-white text-center py-6 mt-8 md:mt-12">
         <div class="container mx-auto px-4">
             <p class="text-sm">© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены.</p>
-            <div class="mt-4 flex justify-center space-x-6">
-                <a href="{% url 'contact' %}" class="text-gray-200 hover:text-white transition">
+            <div class="mt-4 flex flex-wrap justify-center gap-3 md:gap-6">
+                <a href="{% url 'contact' %}" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fas fa-envelope mr-1"></i> Связаться с нами
                 </a>
-                <a href="{% url 'about' %}#company-info" class="text-gray-200 hover:text-white transition">
+                <a href="{% url 'about' %}#company-info" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fas fa-info-circle mr-1"></i> Юридическая информация
                 </a>
-                <a href="{% url 'policy' %}" class="text-gray-200 hover:text-white transition">
+                <a href="{% url 'policy' %}" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fas fa-shield-alt mr-1"></i> Политика конфиденциальности
                 </a>
-                <a href="{% url 'cookies_policy' %}" class="text-gray-200 hover:text-white transition">
+                <a href="{% url 'cookies_policy' %}" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fas fa-cookie-bite mr-1"></i> Политика cookie
                 </a>
-                <a href="#" class="text-gray-200 hover:text-white transition">
+                <a href="#" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fab fa-telegram mr-1"></i> Telegram
                 </a>
-                <a href="https://vk.com/club179330232" target="_blank" class="text-gray-200 hover:text-white transition">
+                <a href="https://vk.com/club179330232" target="_blank" class="text-gray-200 hover:text-white transition text-sm">
                     <i class="fab fa-vk mr-1"></i> ВКонтакте
                 </a>
             </div>
@@ -218,18 +272,18 @@
 
     <!-- Кнопка "Наверх" -->
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            class="fixed bottom-6 right-6 bg-deep-green text-white p-3 rounded-full shadow-lg hover:bg-concrete-gray transition hidden"
+            class="fixed bottom-6 right-6 bg-deep-green text-white p-2 md:p-3 rounded-full shadow-lg hover:bg-concrete-gray transition hidden"
             id="scroll-top" aria-label="Прокрутить наверх">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- Модальное окно для быстрого просмотра -->
     <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div id="modal-content" class="bg-white rounded-xl p-6 max-w-lg w-full relative shadow-2xl">
-            <button onclick="closeQuickView()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800" aria-label="Закрыть модальное окно">
-                <i class="fas fa-times text-2xl"></i>
+        <div id="modal-content" class="bg-white rounded-xl p-4 md:p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl mx-4">
+            <button onclick="closeQuickView()" class="absolute top-2 right-2 md:top-4 md:right-4 text-gray-600 hover:text-gray-800 p-2" aria-label="Закрыть модальное окно">
+                <i class="fas fa-times text-xl md:text-2xl"></i>
             </button>
-            <div id="quick-view-content" class="flex flex-col md:flex-row gap-6">
+            <div id="quick-view-content" class="flex flex-col md:flex-row gap-4 md:gap-6">
                 <!-- Контент загружается через AJAX -->
             </div>
         </div>
@@ -248,40 +302,184 @@
                     Принять
                 </button>
                 <button id="cookie-settings" class="px-4 py-2 bg-sandy text-deep-green rounded-md hover:bg-gray-200 transition">
-                    Настройки
+                    Настроить
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Подключение JavaScript -->
-    <script src="{% static 'js/base.js' %}"></script>
-    {% block scripts %}{% endblock %}
-    {% block extra_js %}{{ block.super }}{% endblock %}
-
-    <!-- JS для управления уведомлением о файлах cookie -->
+    <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Скрипты для работы сайта -->
     <script>
+        // Переключение темы
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun text-xl md:text-2xl"></i>';
+                if (document.getElementById('mobile-theme-toggle')) {
+                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-sun mr-3 w-5 text-center"></i> Сменить тему';
+                }
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon text-xl md:text-2xl"></i>';
+                if (document.getElementById('mobile-theme-toggle')) {
+                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему';
+                }
+            }
+        }
+        
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        
+        // Проверка сохраненной темы
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun text-xl md:text-2xl"></i>';
+                if (document.getElementById('mobile-theme-toggle')) {
+                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-sun mr-3 w-5 text-center"></i> Сменить тему';
+                }
+            }
+        }
+        
+        // Инициализация мобильного меню и всех связанных функций
         document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем, есть ли в локальном хранилище запись о согласии с cookie
-            if (!localStorage.getItem('cookie_accepted')) {
-                // Если нет, показываем уведомление
+            // Инициализация элементов мобильного меню
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+            
+            // Функция для открытия меню
+            function openMobileMenu() {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenuOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                // Изменить иконку меню на крестик
+                menuToggle.innerHTML = '<i class="fas fa-times text-xl md:text-2xl"></i>';
+                
+                // Плавное появление оверлея
+                setTimeout(() => {
+                    mobileMenuOverlay.style.opacity = '1';
+                }, 10);
+            }
+            
+            // Функция для закрытия меню
+            function closeMobileMenu() {
+                mobileMenu.classList.add('translate-x-full');
+                mobileMenuOverlay.style.opacity = '0';
+                document.body.style.overflow = '';
+                
+                // Вернуть иконку меню
+                menuToggle.innerHTML = '<i class="fas fa-bars text-xl md:text-2xl"></i>';
+                
+                // Скрытие оверлея после анимации
+                setTimeout(() => {
+                    mobileMenuOverlay.classList.add('hidden');
+                }, 300);
+            }
+            
+            // Обработчики событий для мобильного меню
+            if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
+            if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+            if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
+            
+            // Обработка клавиши Escape для закрытия меню
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !mobileMenu.classList.contains('translate-x-full')) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Подсветка активного пункта меню
+            highlightActiveMenuItem();
+            
+            // Закрытие меню при нажатии на пункт меню (опционально)
+            const menuLinks = document.querySelectorAll('#mobile-menu a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    setTimeout(closeMobileMenu, 150); // Небольшая задержка для анимации нажатия
+                });
+            });
+        });
+        
+        // Функция для подсветки активного пункта меню
+        function highlightActiveMenuItem() {
+            // Получаем текущий путь
+            const currentPath = window.location.pathname;
+            
+            // Находим все ссылки в мобильном меню
+            const menuLinks = document.querySelectorAll('#mobile-menu a');
+            
+            // Проходим по всем ссылкам и отмечаем активную
+            menuLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (linkPath) {
+                    // Проверка на точное соответствие и на принадлежность к разделу
+                    if (currentPath === linkPath || 
+                        (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+                        link.classList.add('bg-gray-50', 'font-medium');
+                    }
+                }
+            });
+        }
+        
+        // Показать/скрыть кнопку "Наверх"
+        window.addEventListener('scroll', function() {
+            const scrollTopBtn = document.getElementById('scroll-top');
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('hidden');
+                scrollTopBtn.classList.add('flex');
+            } else {
+                scrollTopBtn.classList.add('hidden');
+                scrollTopBtn.classList.remove('flex');
+            }
+        });
+        
+        // Закрытие модального окна быстрого просмотра
+        function closeQuickView() {
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Обработка нажатия клавиши Escape для закрытия модального окна
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeQuickView();
+            }
+        });
+        
+        // Показ уведомления о файлах cookie
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieConsent = localStorage.getItem('cookieConsent');
+            if (!cookieConsent) {
                 document.getElementById('cookie-notification').classList.remove('hidden');
             }
             
-            // Обработчик клика на кнопку "Принять"
+            // Принятие файлов cookie
             document.getElementById('cookie-accept').addEventListener('click', function() {
-                // Сохраняем в локальное хранилище информацию о согласии
-                localStorage.setItem('cookie_accepted', 'true');
-                // Скрываем уведомление
+                localStorage.setItem('cookieConsent', 'accepted');
                 document.getElementById('cookie-notification').classList.add('hidden');
             });
             
-            // Обработчик клика на кнопку "Настройки"
+            // Настройка файлов cookie (перенаправление на страницу настроек)
             document.getElementById('cookie-settings').addEventListener('click', function() {
-                // Перенаправляем на страницу с политикой cookie
-                window.location.href = "{% url 'cookies_policy' %}";
+                window.location.href = '{% url "cookies_policy" %}';
             });
         });
     </script>
+    
+    {% block scripts %}{% endblock %}
 </body>
 </html>

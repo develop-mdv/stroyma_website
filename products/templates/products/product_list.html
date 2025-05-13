@@ -2,17 +2,17 @@
 {% block content %}
 
 <!-- Хлебные крошки -->
-<nav class="text-sm text-gray-600 mb-4">
+<nav class="text-sm text-gray-600 mb-3 md:mb-4">
     <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
     <span class="mx-2">/</span>
     <span>Каталог товаров</span>
 </nav>
 
 <!-- Баннер -->
-<section class="relative bg-sandy py-12 mb-8 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold text-deep-green mb-4">Лучшие строительные материалы</h2>
-        <p class="text-lg text-gray-600 mb-6">Качество, надежность и экологичность для ваших проектов!</p>
+<section class="relative bg-sandy py-8 md:py-12 mb-4 md:mb-8 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
+    <div class="container mx-auto px-2 md:px-4 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold text-deep-green mb-3 md:mb-4">Лучшие строительные материалы</h2>
+        <p class="text-base md:text-lg text-gray-600 mb-4 md:mb-6">Качество, надежность и экологичность для ваших проектов!</p>
         <a href="#catalog-title" id="scroll-to-catalog" class="button bg-deep-green text-white shadow-hover">
             Посмотреть каталог
         </a>
@@ -20,10 +20,17 @@
     <div class="texture-overlay"></div>
 </section>
 
-<h1 id="catalog-title" class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">Каталог товаров</h1>
+<h1 id="catalog-title" class="text-2xl md:text-3xl font-bold text-deep-green mb-4 md:mb-8 animate-fade-in">Каталог товаров</h1>
+
+<!-- Кнопка переключения фильтров на мобильных устройствах -->
+<div class="block md:hidden mb-4">
+    <button id="toggle-filter" class="w-full py-2 bg-sandy text-deep-green rounded-md shadow transition-colors hover:bg-gray-200">
+        <i class="fas fa-filter mr-2"></i> Фильтры и поиск
+    </button>
+</div>
 
 <!-- Форма поиска -->
-<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-8 bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600">
+<form id="search-form" method="get" action="{% url 'product_list' %}" class="mb-6 md:mb-8 bg-white p-4 md:p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 md:block">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- Поле поиска с автодополнением -->
         <div class="relative">
@@ -68,11 +75,11 @@
     </div>
 
     <!-- Кнопки -->
-    <div class="mt-6 flex space-x-4">
+    <div class="mt-4 md:mt-6 flex flex-col md:flex-row md:space-x-4 gap-2 md:gap-0">
         <button type="submit" class="button bg-deep-green text-white shadow-hover">
             Фильтровать
         </button>
-        <a href="{% url 'product_list' %}" class="button bg-gray-200 text-gray-700 shadow-hover">
+        <a href="{% url 'product_list' %}" class="button bg-gray-200 text-gray-700 shadow-hover text-center">
             Сбросить фильтры
         </a>
     </div>
@@ -84,66 +91,65 @@
     </div>
     
     <!-- Категории -->
-        <div class="col-span-1 md:col-span-4">
-            <label class="block text-sm font-medium text-gray mb-2">Категории:</label>
-            <div class="bg-white rounded-lg border border-gray-200 dark:border-gray-600">
-                <div class="max-h-48 overflow-y-auto p-4">
-                    {% for item in categories_tree %}
-                        <div class="mb-4">
-                            <!-- Родительская категория -->
-                            <div class="flex items-center space-x-2 mb-2">
-                                <input type="checkbox"
-                                       name="category"
-                                       value="{{ item.category.id }}"
-                                       id="category-{{ item.category.id }}"
-                                       {% if item.category.id|stringformat:"i" in selected_categories %}checked{% endif %}
-                                       class="form-checkbox text-deep-green">
-                                <label for="category-{{ item.category.id }}" class="text-sm font-medium text-deep-green cursor-pointer flex-grow">
-                                    {{ item.category.name }}
-                                </label>
-                                {% if item.children %}
-                                    <button type="button"
-                                            class="accordion-toggle text-gray-500 hover:text-deep-green transition-transform duration-200"
-                                            data-target="children-{{ item.category.id }}">
-                                        <svg class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
-                                {% endif %}
-                            </div>
-
-                            <!-- Дочерние категории -->
+    <div class="col-span-1 md:col-span-4 mt-4">
+        <label class="block text-sm font-medium text-gray mb-2">Категории:</label>
+        <div class="bg-white rounded-lg border border-gray-200 dark:border-gray-600">
+            <div class="max-h-48 overflow-y-auto p-3 md:p-4">
+                {% for item in categories_tree %}
+                    <div class="mb-3 md:mb-4">
+                        <!-- Родительская категория -->
+                        <div class="flex items-center space-x-2 mb-2">
+                            <input type="checkbox"
+                                   name="category"
+                                   value="{{ item.category.id }}"
+                                   id="category-{{ item.category.id }}"
+                                   {% if item.category.id|stringformat:"i" in selected_categories %}checked{% endif %}
+                                   class="form-checkbox text-deep-green h-4 w-4">
+                            <label for="category-{{ item.category.id }}" class="text-sm font-medium text-deep-green cursor-pointer flex-grow">
+                                {{ item.category.name }}
+                            </label>
                             {% if item.children %}
-                                <div id="children-{{ item.category.id }}" class="ml-6 space-y-2 hidden">
-                                    {% for child in item.children %}
-                                        <div class="flex items-center space-x-2">
-                                            <input type="checkbox"
-                                                   name="category"
-                                                   value="{{ child.id }}"
-                                                   id="category-{{ child.id }}"
-                                                   {% if child.id|stringformat:"i" in selected_categories %}checked{% endif %}
-                                                   class="form-checkbox text-deep-green">
-                                            <label for="category-{{ child.id }}" class="text-sm text-gray-600 cursor-pointer">
-                                                {{ child.name }}
-                                            </label>
-                                        </div>
-                                    {% endfor %}
-                                </div>
+                                <button type="button"
+                                        class="accordion-toggle text-gray-500 hover:text-deep-green transition-transform duration-200 p-1"
+                                        data-target="children-{{ item.category.id }}">
+                                    <svg class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
                             {% endif %}
                         </div>
-                    {% endfor %}
-                </div>
+
+                        <!-- Дочерние категории -->
+                        {% if item.children %}
+                            <div id="children-{{ item.category.id }}" class="ml-5 md:ml-6 space-y-2 hidden">
+                                {% for child in item.children %}
+                                    <div class="flex items-center space-x-2">
+                                        <input type="checkbox"
+                                               name="category"
+                                               value="{{ child.id }}"
+                                               id="category-{{ child.id }}"
+                                               {% if child.id|stringformat:"i" in selected_categories %}checked{% endif %}
+                                               class="form-checkbox text-deep-green h-4 w-4">
+                                        <label for="category-{{ child.id }}" class="text-sm text-gray-600 cursor-pointer">
+                                            {{ child.name }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
         </div>
-
+    </div>
 </form>
 
 <!-- Результаты поиска -->
 <div id="search-results">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {% include 'products/search_results.html' with products=page_obj %}
     </div>
-    <div class="mt-8 text-center">
+    <div class="mt-6 md:mt-8 text-center">
         <button id="load-more" class="hidden button bg-deep-green text-white shadow-hover">
             Загрузить ещё
         </button>
@@ -154,6 +160,16 @@
 <style>
 .accordion-toggle.active svg {
     transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+    #search-form {
+        display: none;
+    }
+    
+    #search-form.mobile-filter-visible {
+        display: block;
+    }
 }
 </style>
 
@@ -176,6 +192,19 @@ $(document).ready(function () {
     let currentPage = 1;
     let isLoading = false;
     loadResults(true);
+    
+    // Переключение видимости фильтров на мобильных
+    $('#toggle-filter').on('click', function() {
+        $('#search-form').toggleClass('mobile-filter-visible');
+        
+        // Изменяем текст кнопки
+        const $button = $(this);
+        if ($('#search-form').hasClass('mobile-filter-visible')) {
+            $button.html('<i class="fas fa-times mr-2"></i> Скрыть фильтры');
+        } else {
+            $button.html('<i class="fas fa-filter mr-2"></i> Фильтры и поиск');
+        }
+    });
 
     // Обработка аккордеона
     $('.accordion-toggle').on('click', function() {
@@ -190,8 +219,8 @@ $(document).ready(function () {
     // Показываем дочерние категории, если родительская выбрана
     $('input[name="category"]').each(function() {
         const $checkbox = $(this);
-        const $parent = $checkbox.closest('.mb-4');
-        const $children = $parent.find('.ml-6');
+        const $parent = $checkbox.closest('.mb-3, .mb-4');
+        const $children = $parent.find('.ml-5, .ml-6');
         const $toggle = $parent.find('.accordion-toggle');
         
         if ($checkbox.is(':checked') && $children.length) {
@@ -203,10 +232,10 @@ $(document).ready(function () {
     // Обработка выбора категорий
     categoryCheckboxes.on('change', function() {
         const $checkbox = $(this);
-        const $parent = $checkbox.closest('.mb-4');
+        const $parent = $checkbox.closest('.mb-3, .mb-4');
         const $parentCheckbox = $parent.find('input[name="category"]').first();
         const $children = $parent.find('input[name="category"]').not($parentCheckbox);
-        const $childrenContainer = $parent.find('.ml-6');
+        const $childrenContainer = $parent.find('.ml-5, .ml-6');
         const $toggle = $parent.find('.accordion-toggle');
 
         // Если выбрана родительская категория

@@ -1,44 +1,44 @@
 {% extends 'products/base.html' %}
 
 {% block content %}
-<h1 class="text-3xl font-bold text-deep-green mb-8">Контакты</h1>
+<h1 class="text-2xl md:text-3xl font-bold text-deep-green mb-4 md:mb-8">Контакты</h1>
 
 <!-- Информация о контактах -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-        <p class="text-gray-600 mb-4">Если у вас возникли вопросы или пожелания, свяжитесь с нами:</p>
-        <ul class="space-y-2">
-            <li class="flex items-center">
-                <i class="fas fa-phone mr-2 text-deep-green"></i>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+        <p class="text-sm md:text-base text-gray-600 mb-3 md:mb-4">Если у вас возникли вопросы или пожелания, свяжитесь с нами:</p>
+        <ul class="space-y-2 text-sm md:text-base">
+            <li class="flex items-start md:items-center">
+                <i class="fas fa-phone mr-2 text-deep-green mt-1 md:mt-0"></i>
                 <span><strong class="font-medium">Телефон:</strong> <a href="tel:+79102114041" class="hover:text-deep-green transition-colors">+7 (910) 211-40-41</a></span>
             </li>
-            <li class="flex items-center">
-                <i class="fas fa-envelope mr-2 text-deep-green"></i>
-                <span><strong class="font-medium">Email:</strong> <a href="mailto:info@stroymaterials.com" class="hover:text-deep-green transition-colors">info@stroymaterials.com</a></span>
+            <li class="flex items-start md:items-center">
+                <i class="fas fa-envelope mr-2 text-deep-green mt-1 md:mt-0"></i>
+                <span><strong class="font-medium">Email:</strong> <a href="mailto:info@stroymaterials.com" class="hover:text-deep-green transition-colors break-all">info@stroymaterials.com</a></span>
             </li>
-            <li class="flex items-center">
-                <i class="fas fa-brands fa-vk mr-2 text-deep-green"></i>
+            <li class="flex items-start md:items-center">
+                <i class="fab fa-vk mr-2 text-deep-green mt-1 md:mt-0"></i>
                 <span><strong class="font-medium">ВКонтакте:</strong> <a href="https://vk.com/club179330232" target="_blank" class="hover:text-deep-green transition-colors">@stroymaterials</a></span>
             </li>
-            <li class="flex items-center">
-                <i class="fas fa-brands fa-whatsapp mr-2 text-deep-green"></i>
-                <span><strong class="font-medium">Whatsapp:</strong> <a href="https://wa.me/79102114041" target="_blank" class="hover:text-deep-green transition-colors">info@stroymaterials.com</a></span>
+            <li class="flex items-start md:items-center">
+                <i class="fab fa-whatsapp mr-2 text-deep-green mt-1 md:mt-0"></i>
+                <span><strong class="font-medium">Whatsapp:</strong> <a href="https://wa.me/79102114041" target="_blank" class="hover:text-deep-green transition-colors">+7 (910) 211-40-41</a></span>
             </li>
-            <li class="flex items-center">
-                <i class="fas fa-map-marker-alt mr-2 text-deep-green"></i>
+            <li class="flex items-start md:items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-deep-green mt-1 md:mt-0"></i>
                 <span><strong class="font-medium">Адрес:</strong> г. Курск, ул. Ленина, д. 90/2</span>
             </li>
-            <li class="flex items-center">
-                <i class="fas fa-map-marker-alt mr-2 text-deep-green"></i>
+            <li class="flex items-start md:items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-deep-green mt-1 md:mt-0"></i>
                 <span><strong class="font-medium">Адрес склада:</strong> г. Курск, проспект Кулакова, д. 109В</span>
             </li>
         </ul>
     </div>
 
     <!-- Карта -->
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-        <h3 class="text-xl font-semibold text-deep-green mb-4">Наша локация</h3>
-        <div class="w-full h-64">
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+        <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Наша локация</h3>
+        <div class="w-full h-48 md:h-64">
             <iframe src="https://yandex.ru/map-widget/v1/org/stroyma/121325759677/?ll=36.195552%2C51.745573&z=18"
                     class="w-full h-full rounded-lg dark:bg-input-bg"
                     frameborder="0"
@@ -46,11 +46,12 @@
             </iframe>
         </div>
     </div>
+    
     <!-- Форма обратной связи -->
-    <form method="post" class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-        <h3 class="text-xl font-semibold text-deep-green mb-4">Напишите нам</h3>
+    <form method="post" class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+        <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Напишите нам</h3>
         {% csrf_token %}
-        <div class="grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 gap-4 md:gap-6">
             <div>
                 <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray">Имя</label>
                 <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
@@ -71,22 +72,23 @@
             </div>
             <div>
                 <label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray">Сообщение</label>
-                <textarea name="{{ form.message.name }}" id="{{ form.message.id_for_label }}"
+                <textarea name="{{ form.message.name }}" id="{{ form.message.id_for_label }}" rows="4"
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">{{ form.message.value|default_if_none:'' }}</textarea>
                 {% if form.message.errors %}
                     <div class="error-message">{{ form.message.errors }}</div>
                 {% endif %}
             </div>
         </div>
-        <div class="mt-6">
-            <button type="submit" class="button bg-deep-green text-white shadow-hover">
-                Отправить
+        <div class="mt-4 md:mt-6">
+            <button type="submit" class="button bg-deep-green text-white shadow-hover w-full md:w-auto">
+                <i class="fas fa-paper-plane mr-1"></i> Отправить
             </button>
         </div>
     </form>
-        <!-- Карта до склада -->
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-        <h3 class="text-xl font-semibold text-deep-green mb-4">Локация нашего склада</h3>
+    
+    <!-- Карта до склада -->
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+        <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Локация нашего склада</h3>
         <div class="w-full" style="position:relative;overflow:hidden;">
             <a href="https://yandex.ru/maps/org/stroyma/33371896751/?utm_medium=mapframe&utm_source=maps"
                style="color:#eee;font-size:12px;position:absolute;top:0px;">
@@ -98,7 +100,8 @@
             </a>
             <iframe src="https://yandex.ru/map-widget/v1/org/stroyma/33371896751/?ll=36.127826%2C51.654815&z=16.33"
                     width="100%"
-                    height="400"
+                    height="250"
+                    class="md:h-[400px]"
                     frameborder="1"
                     allowfullscreen="true"
                     style="position:relative;">
@@ -108,9 +111,9 @@
 </div>
 
 <!-- Кнопка возврата к каталогу -->
-<div class="mt-8">
-    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover">
-        Вернуться к каталогу товаров
+<div class="mt-4 md:mt-8 text-center md:text-left">
+    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover inline-block w-full md:w-auto">
+        <i class="fas fa-arrow-left mr-1"></i> Вернуться к каталогу товаров
     </a>
 </div>
 {% endblock %}
