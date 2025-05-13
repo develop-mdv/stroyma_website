@@ -12,6 +12,7 @@ urlpatterns = [
     
     # URLs для подтверждения email
     path('confirm-email/<str:token>/', views.confirm_email_view, name='confirm_email'),
+    path('resend-confirmation/', views.resend_confirmation, name='resend_confirmation'),
     
     # URLs для восстановления пароля
     path('password-reset/', 

@@ -35,7 +35,7 @@ def register_view(request):
             
             login(request, user)
             merge_session_cart_to_user_cart(request)
-            messages.success(request, "Вы успешно зарегистрировались! На вашу почту отправлено письмо с подтверждением.")
+            messages.success(request, "Регистрация прошла успешно! Пожалуйста, проверьте вашу почту и подтвердите email-адрес для активации всех функций аккаунта.")
             return JsonResponse({'success': True})
         else:
             errors = form.errors.as_json()
@@ -49,6 +49,12 @@ def confirm_email_view(request, token):
         profile = get_object_or_404(UserProfile, confirmation_token=UUID(token))
         profile.email_confirmed = True
         profile.save()
+        
+        # Авторизуем пользователя, если он еще не авторизован
+        if not request.user.is_authenticated:
+            login(request, profile.user)
+            merge_session_cart_to_user_cart(request)
+            
         success = True
         messages.success(request, "Ваш email успешно подтвержден!")
     except (ValueError, UserProfile.DoesNotExist):
@@ -103,3 +109,25 @@ def edit_profile(request):
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'accounts/edit_profile.html', {'form': form})
+
+@custom_login_required
+def resend_confirmation(request):
+    if request.user.profile.email_confirmed:
+        messages.info(request, "Ваш email уже подтвержден!")
+        return redirect('profile')
+        
+    # Отправка письма с подтверждением email
+    current_site = get_current_site(request)
+    mail_subject = 'Подтверждение регистрации на сайте Stroyma'
+    message = render_to_string('accounts/email/email_confirmation.html', {
+        'user': request.user,
+        'domain': current_site.domain,
+        'protocol': 'https' if request.is_secure() else 'http',
+        'token': request.user.profile.confirmation_token,
+    })
+    
+    to_email = request.user.email
+    send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+    
+    messages.success(request, "Письмо с подтверждением отправлено повторно. Пожалуйста, проверьте вашу почту.")
+    return redirect('profile')

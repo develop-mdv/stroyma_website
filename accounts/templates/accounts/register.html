@@ -43,6 +43,13 @@
         </button>
     </form>
 
+    <!-- Сообщение о подтверждении email -->
+    <div id="email-confirmation-message" class="mt-4 bg-sandy p-4 rounded-lg text-deep-green border border-gray-200 dark:border-gray-600 hidden">
+        <p class="text-center font-medium">На ваш email отправлено письмо для подтверждения аккаунта.</p>
+        <p class="text-center mt-2">Пожалуйста, проверьте вашу почту и следуйте инструкциям в письме.</p>
+        <p class="text-center mt-2 text-sm">Если письмо не пришло, проверьте папку "Спам".</p>
+    </div>
+
     <!-- Ссылка на вход -->
     <div class="mt-4 text-center">
         <a href="{% url 'login' %}" class="text-deep-green hover:text-gray-600 transition">Уже есть аккаунт? Войдите</a>
@@ -74,7 +81,14 @@
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = "{% url 'product_list' %}";
+                        // Показываем сообщение о подтверждении email
+                        $('#register-form').hide();
+                        $('#email-confirmation-message').removeClass('hidden');
+                        
+                        // Перенаправляем через 5 секунд
+                        setTimeout(function() {
+                            window.location.href = "{% url 'product_list' %}";
+                        }, 5000);
                     } else {
                         alert(response.message);
                     }

@@ -6,7 +6,16 @@
     <h2 class="text-3xl font-bold text-deep-green">Профиль пользователя</h2>
 
     <!-- Информация о пользователе -->
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
+    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600 mb-6">
+        <h2 class="text-2xl font-bold text-deep-green mb-6">Личный кабинет</h2>
+        
+        {% if not user.profile.email_confirmed %}
+        <div class="bg-sandy p-4 rounded-lg text-deep-green border border-gray-200 dark:border-gray-600 mb-4">
+            <p class="font-medium">Ваш email ещё не подтвержден!</p>
+            <p class="mt-2">Для полного доступа к функциям сайта, пожалуйста, подтвердите ваш email. Проверьте почту или <a href="#" id="resend-confirmation" class="underline">отправить письмо повторно</a>.</p>
+        </div>
+        {% endif %}
+        
         <h4 class="text-xl font-medium text-deep-green mb-4">Ваши данные</h4>
         <p class="text-gray-600 mb-2"><strong class="font-medium">Имя пользователя:</strong> {{ request.user.username }}</p>
         <p class="text-gray-600 mb-2"><strong class="font-medium">Имя:</strong> {{ request.user.first_name }}</p>
@@ -55,4 +64,17 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Обработка нажатия на ссылку повторной отправки подтверждения
+        $('#resend-confirmation').on('click', function (e) {
+            e.preventDefault();
+            window.location.href = "{% url 'resend_confirmation' %}";
+        });
+    });
+</script>
 {% endblock %}
