@@ -9,6 +9,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('order/<int:order_id>/reorder/', views.reorder_view, name='reorder'),
     
     # URLs для подтверждения email
     path('confirm-email/<str:token>/', views.confirm_email_view, name='confirm_email'),

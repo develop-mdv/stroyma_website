@@ -143,6 +143,29 @@ class Order(models.Model):
     @property
     def total_cost(self):
         return sum(item.product.price * item.quantity for item in self.items.all())
+        
+    def save(self, *args, **kwargs):
+        # Проверяем, существует ли экземпляр в базе данных
+        is_new = self.pk is None
+        
+        # Если не новый объект, сохраняем старый статус
+        old_status = None
+        if not is_new:
+            old_status = Order.objects.get(pk=self.pk).status
+            
+        # Сохраняем объект
+        super().save(*args, **kwargs)
+        
+        # Если это новый заказ или статус изменился, записываем в историю
+        if is_new or old_status != self.status:
+            OrderStatusHistory.objects.create(
+                order=self,
+                status=self.status
+            )
+            
+    @property
+    def total_items_count(self):
+        return sum(item.quantity for item in self.items.all())
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
@@ -151,6 +174,20 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity} шт.)"
+
+class OrderStatusHistory(models.Model):
+    order = models.ForeignKey(Order, related_name='status_history', on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'История статуса заказа'
+        verbose_name_plural = 'История статусов заказов'
+
+    def __str__(self):
+        return f"Статус '{self.get_status_display()}' для заказа #{self.order.id}"
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)

@@ -51,7 +51,7 @@
                     <p class="text-sm text-gray-600 mt-2">Дата: {{ order.created_at|date:"d.m.Y H:i" }}</p>
                     <div class="mt-4 flex justify-between items-center">
                         <span class="text-sm text-gray-600">Статус: {{ order.get_status_display }}</span>
-                        <a href="#" class="button bg-sandy text-deep-green shadow-hover">
+                        <a href="{% url 'order_detail' order.id %}" class="button bg-sandy text-deep-green shadow-hover">
                             Подробнее
                         </a>
                     </div>

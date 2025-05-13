@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from products.models import Order
+from products.models import Order, OrderItem, Cart, CartItem
 from products.views import merge_session_cart_to_user_cart
 from .forms import RegisterForm, LoginForm, CustomUserChangeForm
 from django.contrib.auth import login, authenticate, logout
@@ -12,6 +12,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from uuid import UUID
+from django.views.decorators.http import require_POST
+from django.urls import reverse
 
 def register_view(request):
     if request.method == 'POST':
@@ -99,6 +101,17 @@ def profile_view(request):
     return render(request, 'accounts/profile.html', {'orders': orders})
 
 @custom_login_required
+def order_detail_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    context = {
+        'order': order,
+        'items': order.items.all(),
+        'status_history': order.status_history.all(),
+        'total_items': order.total_items_count,
+    }
+    return render(request, 'accounts/order_detail.html', context)
+
+@custom_login_required
 def edit_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
@@ -131,3 +144,39 @@ def resend_confirmation(request):
     
     messages.success(request, "Письмо с подтверждением отправлено повторно. Пожалуйста, проверьте вашу почту.")
     return redirect('profile')
+
+@custom_login_required
+@require_POST
+def reorder_view(request, order_id):
+    """Создает новый заказ на основе существующего"""
+    try:
+        # Получаем исходный заказ
+        original_order = get_object_or_404(Order, id=order_id, user=request.user)
+        
+        # Создаем или получаем корзину пользователя
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        
+        # Очищаем текущую корзину
+        cart.items.all().delete()
+        
+        # Добавляем товары из оригинального заказа в корзину
+        for item in original_order.items.all():
+            # Если товар еще доступен
+            if item.product.stock > 0:
+                CartItem.objects.create(
+                    cart=cart,
+                    product=item.product,
+                    quantity=min(item.quantity, item.product.stock)  # Учитываем доступный остаток
+                )
+        
+        # Перенаправляем пользователя на страницу корзины
+        return JsonResponse({
+            'success': True,
+            'redirect_url': reverse('view_cart')
+        })
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=400)
