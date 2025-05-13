@@ -203,6 +203,9 @@
                 <a href="{% url 'policy' %}" class="text-gray-200 hover:text-white transition">
                     <i class="fas fa-shield-alt mr-1"></i> Политика конфиденциальности
                 </a>
+                <a href="{% url 'cookies_policy' %}" class="text-gray-200 hover:text-white transition">
+                    <i class="fas fa-cookie-bite mr-1"></i> Политика cookie
+                </a>
                 <a href="#" class="text-gray-200 hover:text-white transition">
                     <i class="fab fa-telegram mr-1"></i> Telegram
                 </a>
@@ -232,10 +235,53 @@
         </div>
     </div>
 
+    <!-- Уведомление о файлах cookie -->
+    <div id="cookie-notification" class="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 p-4 z-40 hidden">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="flex-1 text-sm text-gray-600 mb-4 md:mb-0 md:mr-4">
+                <p>Мы используем файлы cookie для улучшения работы сайта, анализа трафика и персонализации контента. 
+                Продолжая использовать наш сайт, вы соглашаетесь с нашей 
+                <a href="{% url 'cookies_policy' %}" class="text-deep-green hover:underline">политикой использования файлов cookie</a>.</p>
+            </div>
+            <div class="flex space-x-4">
+                <button id="cookie-accept" class="px-4 py-2 bg-deep-green text-white rounded-md hover:bg-green-700 transition">
+                    Принять
+                </button>
+                <button id="cookie-settings" class="px-4 py-2 bg-sandy text-deep-green rounded-md hover:bg-gray-200 transition">
+                    Настройки
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Подключение JavaScript -->
     <script src="{% static 'js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
     {% block extra_js %}{{ block.super }}{% endblock %}
 
+    <!-- JS для управления уведомлением о файлах cookie -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, есть ли в локальном хранилище запись о согласии с cookie
+            if (!localStorage.getItem('cookie_accepted')) {
+                // Если нет, показываем уведомление
+                document.getElementById('cookie-notification').classList.remove('hidden');
+            }
+            
+            // Обработчик клика на кнопку "Принять"
+            document.getElementById('cookie-accept').addEventListener('click', function() {
+                // Сохраняем в локальное хранилище информацию о согласии
+                localStorage.setItem('cookie_accepted', 'true');
+                // Скрываем уведомление
+                document.getElementById('cookie-notification').classList.add('hidden');
+            });
+            
+            // Обработчик клика на кнопку "Настройки"
+            document.getElementById('cookie-settings').addEventListener('click', function() {
+                // Перенаправляем на страницу с политикой cookie
+                window.location.href = "{% url 'cookies_policy' %}";
+            });
+        });
+    </script>
 </body>
 </html>
