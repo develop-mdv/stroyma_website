@@ -152,62 +152,83 @@
             </div>
 
             <!-- Мобильное меню -->
-            <div id="mobile-menu" class="md:hidden hidden flex-col space-y-0 mt-4 bg-white rounded-lg p-4 shadow-lg overflow-hidden animate-fade-in">
-                <div class="mb-3 border-b border-gray-200 pb-3 flex items-center">
-                    <div class="flex-shrink-0 mr-3">
-                        <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 w-auto">
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden md:hidden" style="transition: opacity 0.3s ease;"></div>
+            <div id="mobile-menu" class="md:hidden fixed top-0 right-0 w-4/5 max-w-xs h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+                <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 mr-3">
+                            <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 w-auto">
+                        </div>
+                        <div class="text-deep-green font-bold text-lg">
+                            СтройМа
+                        </div>
                     </div>
-                    <div class="text-deep-green font-bold text-lg">
-                        СтройМа
-                    </div>
+                    <button id="close-menu-btn" class="text-gray-500 hover:text-deep-green p-2">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
                 
-                <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                    <i class="fas fa-home mr-3 w-5 text-center"></i> Главная
-                </a>
-                <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                    <i class="fas fa-hammer mr-3 w-5 text-center"></i> Услуги
-                </a>
-                <a href="{% url 'color_selection' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                    <i class="fa-solid fa-paint-roller mr-3 w-5 text-center"></i> Онлайн выкрас фасада
-                </a>
-                <a href="{% url 'view_cart' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center relative">
-                    <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i> Корзина
-                    <span class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {{ cart_item_count|default:0 }}
-                    </span>
-                </a>
-                <a href="{% url 'about' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                    <i class="fas fa-building mr-3 w-5 text-center"></i> О компании
-                </a>
-                <a href="{% url 'contact' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                    <i class="fas fa-envelope mr-3 w-5 text-center"></i> Контакты
-                </a>
+                <!-- Навигационные блоки с иконками -->
+                <div class="flex-1 overflow-y-auto py-2">
+                    <div class="border-b border-gray-100 pb-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Навигация</div>
+                        <a href="{% url 'product_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-home mr-3 w-5 text-center"></i> Главная
+                        </a>
+                        <a href="{% url 'service_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-hammer mr-3 w-5 text-center"></i> Услуги
+                        </a>
+                        <a href="{% url 'color_selection' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'color_selection' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fa-solid fa-paint-roller mr-3 w-5 text-center"></i> Онлайн выкрас фасада
+                        </a>
+                    </div>
+                    
+                    <div class="border-b border-gray-100 py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Покупки</div>
+                        <a href="{% url 'view_cart' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition relative {% if request.resolver_match.url_name == 'view_cart' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i> Корзина
+                            <span class="absolute right-4 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ cart_item_count|default:0 }}
+                            </span>
+                        </a>
+                    </div>
+                    
+                    <div class="border-b border-gray-100 py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">О нас</div>
+                        <a href="{% url 'about' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'about' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-building mr-3 w-5 text-center"></i> О компании
+                        </a>
+                        <a href="{% url 'contact' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'contact' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-envelope mr-3 w-5 text-center"></i> Контакты
+                        </a>
+                    </div>
 
-                <!-- Состояние пользователя -->
-                <div class="mt-3 pt-3 border-t border-gray-200">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                            <i class="fas fa-user mr-3 w-5 text-center"></i> Профиль
-                        </a>
-                        <a href="{% url 'logout' %}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                           class="text-deep-green hover:text-gray-600 transition py-3 flex items-center">
-                           <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Выход
-                        </a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="text-deep-green hover:text-gray-600 transition py-3 border-b border-gray-100 flex items-center">
-                            <i class="fas fa-sign-in-alt mr-3 w-5 text-center"></i> Вход
-                        </a>
-                        <a href="{% url 'register' %}" class="text-deep-green hover:text-gray-600 transition py-3 flex items-center">
-                            <i class="fas fa-user-plus mr-3 w-5 text-center"></i> Регистрация
-                        </a>
-                    {% endif %}
+                    <!-- Состояние пользователя -->
+                    <div class="py-3">
+                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Аккаунт</div>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profile' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'profile' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-user mr-3 w-5 text-center"></i> Профиль
+                            </a>
+                            <a href="{% url 'logout' %}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                               class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition">
+                               <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Выход
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'login' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-sign-in-alt mr-3 w-5 text-center"></i> Вход
+                            </a>
+                            <a href="{% url 'register' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'register' %}bg-gray-50 font-medium{% endif %}">
+                                <i class="fas fa-user-plus mr-3 w-5 text-center"></i> Регистрация
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
                 
                 <!-- Темная/светлая тема в мобильном меню -->
-                <div class="mt-4 pt-3 border-t border-gray-200">
-                    <button id="mobile-theme-toggle" class="flex items-center text-deep-green hover:text-gray-600 transition py-2 w-full">
+                <div class="mt-auto border-t border-gray-200 p-4">
+                    <button id="mobile-theme-toggle" class="flex items-center text-deep-green hover:bg-gray-50 py-3 px-4 w-full rounded transition">
                         <i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему
                     </button>
                 </div>
@@ -326,43 +347,90 @@
             }
         }
         
-        // Настройка мобильного переключателя темы
+        // Инициализация мобильного меню и всех связанных функций
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-            if (mobileThemeToggle) {
-                mobileThemeToggle.addEventListener('click', toggleTheme);
-            }
-        });
-        
-        // Переключение мобильного меню
-        document.getElementById('menu-toggle').addEventListener('click', function() {
+            // Инициализация элементов мобильного меню
+            const menuToggle = document.getElementById('menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenu.classList.contains('hidden')) {
-                // Показ меню
-                mobileMenu.classList.remove('hidden');
-                this.innerHTML = '<i class="fas fa-times text-xl md:text-2xl"></i>';
-                
-                // Предотвращение прокрутки фона
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+            
+            // Функция для открытия меню
+            function openMobileMenu() {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenuOverlay.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 
-                // Плавное появление
-                setTimeout(() => {
-                    mobileMenu.style.opacity = '1';
-                }, 10);
-            } else {
-                // Плавное исчезновение
-                mobileMenu.style.opacity = '0';
+                // Изменить иконку меню на крестик
+                menuToggle.innerHTML = '<i class="fas fa-times text-xl md:text-2xl"></i>';
                 
-                // Разрешение прокрутки фона
+                // Плавное появление оверлея
+                setTimeout(() => {
+                    mobileMenuOverlay.style.opacity = '1';
+                }, 10);
+            }
+            
+            // Функция для закрытия меню
+            function closeMobileMenu() {
+                mobileMenu.classList.add('translate-x-full');
+                mobileMenuOverlay.style.opacity = '0';
                 document.body.style.overflow = '';
                 
-                // Скрытие меню после анимации
+                // Вернуть иконку меню
+                menuToggle.innerHTML = '<i class="fas fa-bars text-xl md:text-2xl"></i>';
+                
+                // Скрытие оверлея после анимации
                 setTimeout(() => {
-                    mobileMenu.classList.add('hidden');
-                    this.innerHTML = '<i class="fas fa-bars text-xl md:text-2xl"></i>';
+                    mobileMenuOverlay.classList.add('hidden');
                 }, 300);
             }
+            
+            // Обработчики событий для мобильного меню
+            if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
+            if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+            if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
+            
+            // Обработка клавиши Escape для закрытия меню
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !mobileMenu.classList.contains('translate-x-full')) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Подсветка активного пункта меню
+            highlightActiveMenuItem();
+            
+            // Закрытие меню при нажатии на пункт меню (опционально)
+            const menuLinks = document.querySelectorAll('#mobile-menu a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    setTimeout(closeMobileMenu, 150); // Небольшая задержка для анимации нажатия
+                });
+            });
         });
+        
+        // Функция для подсветки активного пункта меню
+        function highlightActiveMenuItem() {
+            // Получаем текущий путь
+            const currentPath = window.location.pathname;
+            
+            // Находим все ссылки в мобильном меню
+            const menuLinks = document.querySelectorAll('#mobile-menu a');
+            
+            // Проходим по всем ссылкам и отмечаем активную
+            menuLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (linkPath) {
+                    // Проверка на точное соответствие и на принадлежность к разделу
+                    if (currentPath === linkPath || 
+                        (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+                        link.classList.add('bg-gray-50', 'font-medium');
+                    }
+                }
+            });
+        }
         
         // Показать/скрыть кнопку "Наверх"
         window.addEventListener('scroll', function() {
