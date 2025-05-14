@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'stroyma.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgresql://stroyma:nNU7pW4KFQUy9iVqeMJJPYqgg8hCJuJL@dpg-d0hj90buibrs739q52d0-a.oregon-postgres.render.com/stroyma')
+    'default': dj_database_url.config(default='postgresql://stroyma_user:T6DTFyiBWYpeR9jEH53tL7Sk9PNNDLJk@dpg-d0i6dpruibrs73a0a5r0-a.oregon-postgres.render.com/stroyma_db')
 }
 # DATABASES = {
 #     'default': {
