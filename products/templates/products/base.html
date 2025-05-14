@@ -310,6 +310,7 @@
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/base.js' %}"></script>
     
     <!-- Скрипты для работы сайта -->
     <script>
@@ -481,5 +482,6 @@
     </script>
     
     {% block scripts %}{% endblock %}
+    {% block extra_js %}{{ block.super }}{% endblock %}
 </body>
 </html>
