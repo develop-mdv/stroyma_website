@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.product_list, name='product_list'),
+    path('catalog/', views.CatalogView.as_view(), name='catalog'),  # Новый маршрут для каталога
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
     path('product/<int:pk>/', views.product_detail_legacy, name='product_detail_legacy'),  # Legacy URL для поддержки старых ссылок
     path('add/<int:pk>/', views.add_to_cart, name='add_to_cart'),

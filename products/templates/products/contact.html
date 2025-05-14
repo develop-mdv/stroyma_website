@@ -5,7 +5,7 @@
 
 <!-- Информация о контактах -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
-    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
         <p class="text-sm md:text-base text-gray-600 mb-3 md:mb-4">Если у вас возникли вопросы или пожелания, свяжитесь с нами:</p>
         <ul class="space-y-2 text-sm md:text-base">
             <li class="flex items-start md:items-center">
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Карта -->
-    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Наша локация</h3>
         <div class="w-full h-48 md:h-64">
             <iframe src="https://yandex.ru/map-widget/v1/org/stroyma/121325759677/?ll=36.195552%2C51.745573&z=18"
@@ -48,7 +48,7 @@
     </div>
     
     <!-- Форма обратной связи -->
-    <form method="post" class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+    <form method="post" class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Напишите нам</h3>
         {% csrf_token %}
         <div class="grid grid-cols-1 gap-4 md:gap-6">
@@ -87,7 +87,7 @@
     </form>
     
     <!-- Карта до склада -->
-    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-600">
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg md:text-xl font-semibold text-deep-green mb-3 md:mb-4">Локация нашего склада</h3>
         <div class="w-full" style="position:relative;overflow:hidden;">
             <a href="https://yandex.ru/maps/org/stroyma/33371896751/?utm_medium=mapframe&utm_source=maps"
@@ -112,7 +112,7 @@
 
 <!-- Кнопка возврата к каталогу -->
 <div class="mt-4 md:mt-8 text-center md:text-left">
-    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover inline-block w-full md:w-auto">
+    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover inline-block w-full md:w-auto dark:text-white">
         <i class="fas fa-arrow-left mr-1"></i> Вернуться к каталогу товаров
     </a>
 </div>

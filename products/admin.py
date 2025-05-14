@@ -59,12 +59,25 @@ class CategoryAdmin(DraggableMPTTAdmin):
     Административный интерфейс для категорий с поддержкой MPTT.
     Позволяет перетаскивать категории для изменения их иерархии.
     """
-    list_display = ('tree_actions', 'indented_title', 'get_products_count')
+    list_display = ('tree_actions', 'indented_title', 'get_products_count', 'image_preview')
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
     list_filter = ('parent',)
     mptt_level_indent = 20
     expand_tree_by_default = True
+    readonly_fields = ('image_preview',)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug', 'parent', 'description')
+        }),
+        ('Изображение', {
+            'fields': ('image', 'alt_text', 'image_preview')
+        }),
+        ('SEO', {
+            'fields': ('meta_title', 'meta_description'),
+            'classes': ('collapse',)
+        }),
+    )
 
     # Проверка формы для валидации слага
     form = forms.modelform_factory(
@@ -79,6 +92,13 @@ class CategoryAdmin(DraggableMPTTAdmin):
         """Возвращает количество товаров в категории"""
         return obj.products.count()
     get_products_count.short_description = 'Количество товаров'
+    
+    def image_preview(self, obj):
+        """Отображает миниатюру изображения категории в админке"""
+        if obj.image:
+            return format_html('<img src="{}" width="100" height="100" style="object-fit: cover;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Изображение'
 
 class CategoryFilter(admin.SimpleListFilter):
     """
@@ -144,6 +164,19 @@ class ProductAdmin(ImportExportModelAdmin):
             return format_html('<img src="{}" width="50" height="50" style="object-fit: cover;" />', obj.image.url)
         return "-"
     image_preview.short_description = 'Изображение'
+    
+    def save_model(self, request, obj, form, change):
+        """
+        Переопределение метода сохранения для автоматического добавления
+        родительских категорий при сохранении товара.
+        """
+        super().save_model(request, obj, form, change)
+        
+        # Получаем выбранные категории из формы
+        if 'categories' in form.cleaned_data:
+            selected_categories = form.cleaned_data['categories']
+            # Добавляем категории и их родителей
+            obj.add_categories_with_parents(selected_categories)
     
     def product_popularity(self, obj):
         """

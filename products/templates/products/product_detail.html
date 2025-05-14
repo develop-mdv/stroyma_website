@@ -70,17 +70,17 @@
 }
 </script>
 
-<div class="bg-[#F8F5EF] min-h-screen py-6 md:py-10 px-3 md:px-4">
+<div class="bg-[#F8F5EF] dark:bg-gray-800 min-h-screen py-6 md:py-10 px-3 md:px-4">
     <div class="max-w-5xl mx-auto">
         <!-- Хлебные крошки с микроразметкой schema.org -->
-        <nav class="text-sm text-gray-600 mb-3 md:mb-4 overflow-x-auto whitespace-nowrap pb-2" aria-label="breadcrumb">
+        <nav class="text-sm text-gray-600 dark:text-gray-300 mb-3 md:mb-4 overflow-x-auto whitespace-nowrap pb-2" aria-label="breadcrumb">
             <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
                     <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
                         <span itemprop="name">Главная</span>
                     </a>
                     <meta itemprop="position" content="1" />
-                    <span class="mx-2">/</span>
+                    <span class="mx-2 dark:text-gray-300">/</span>
                 </li>
                 {% for category in product.categories.all|slice:":1" %}
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
@@ -88,11 +88,11 @@
                         <span itemprop="name">{{ category.name }}</span>
                     </a>
                     <meta itemprop="position" content="2" />
-                    <span class="mx-2">/</span>
+                    <span class="mx-2 dark:text-gray-300">/</span>
                 </li>
                 {% endfor %}
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <span itemprop="name" class="truncate">{{ product.name }}</span>
+                    <span itemprop="name" class="truncate dark:text-gray-300">{{ product.name }}</span>
                     <meta itemprop="position" content="3" />
                 </li>
             </ol>
@@ -109,12 +109,12 @@
             </div>
             <div class="flex-1">
                 <h1 class="text-2xl md:text-4xl font-serif text-deep-green mb-3 md:mb-4">{{ product.name }}</h1>
-                <p class="text-base md:text-lg text-gray-800 mb-4 md:mb-6 leading-relaxed">{{ product.description|linebreaks }}</p>
+                <p class="text-base md:text-lg text-gray-800 dark:text-gray-200 mb-4 md:mb-6 leading-relaxed">{{ product.description|linebreaks }}</p>
 
                 <div class="space-y-3 md:space-y-4 mb-4 md:mb-6">
                     <p class="text-xl font-semibold text-deep-green">Цена: {{ product.price }} руб.</p>
-                    <p class="text-gray-700">На складе: {{ product.stock }} шт.</p>
-                    <p class="text-gray-700">Рейтинг:
+                    <p class="text-gray-700 dark:text-gray-300">На складе: {{ product.stock }} шт.</p>
+                    <p class="text-gray-700 dark:text-gray-300">Рейтинг:
                         <span class="text-yellow-400 dark:text-yellow-300">
                             {% for i in '12345' %}
                                 {% if forloop.counter <= product.rating %}
@@ -131,19 +131,19 @@
                 <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-3 md:mt-4">
                     {% csrf_token %}
                     <div class="flex items-center mb-4">
-                        <label for="quantity" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
-                        <div class="flex border border-gray-300 rounded-md">
-                            <button type="button" id="decrease-quantity" class="px-3 py-1 bg-gray-100 rounded-l-md">-</button>
+                        <label for="quantity" class="text-sm font-medium text-gray-700 dark:text-gray-300 mr-4">Количество:</label>
+                        <div class="flex border border-gray-300 dark:border-gray-600 rounded-md">
+                            <button type="button" id="decrease-quantity" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-l-md">-</button>
                             <input type="number" name="quantity" id="quantity" min="1" max="{{ product.stock }}" value="1"
-                                class="w-12 md:w-20 text-center border-none focus:ring-0 focus:outline-none">
-                            <button type="button" id="increase-quantity" class="px-3 py-1 bg-gray-100 rounded-r-md">+</button>
+                                class="w-12 md:w-20 text-center border-none focus:ring-0 focus:outline-none dark:bg-gray-700 dark:text-white">
+                            <button type="button" id="increase-quantity" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-r-md">+</button>
                         </div>
                     </div>
                     <div class="flex flex-col md:flex-row gap-2 md:space-x-4">
                         <button type="submit" class="button bg-deep-green text-white shadow-hover">
                             <i class="fas fa-shopping-cart mr-2"></i> Добавить в корзину
                         </button>
-                        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green shadow-hover text-center">
+                        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover text-center">
                             <i class="fas fa-arrow-left mr-2"></i> Вернуться к каталогу
                         </a>
                     </div>
@@ -203,16 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentValue = parseInt(quantityInput.value);
             if (currentValue < maxStock) {
                 quantityInput.value = currentValue + 1;
-            }
-        });
-        
-        // Предотвращение ввода некорректных значений
-        quantityInput.addEventListener('change', function() {
-            let value = parseInt(this.value);
-            if (isNaN(value) || value < 1) {
-                this.value = 1;
-            } else if (value > maxStock) {
-                this.value = maxStock;
             }
         });
     }

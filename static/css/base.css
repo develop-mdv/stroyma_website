@@ -32,11 +32,11 @@ body {
     --bg-concrete-gray: #4B5563; /* Темный серый */
     --text-gray: #E5E7EB; /* Светло-серый для текста */
     --bg-white: #374151; /* Темный фон панелей */
-    --text-gray-600: #9CA3AF;
+    --text-gray-600: #D1D5DB; /* Усиленный контраст для текста */
     --input-bg: #374151;
     --input-border: #6B7280;
     --input-focus: #6EE7B7;
-    --button-hover: #4B6B5D;
+    --button-hover: #3E8A6A; /* Более светлый зеленый для лучшей заметности */
     --error-color: #F87171;
 }
 
@@ -202,25 +202,25 @@ button:focus, a:focus {
     cursor: pointer;
 }
 
-/* Медиа-запросы для мобильной адаптивности */
-@media (max-width: 768px) {
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
-    h3 { font-size: 1.25rem; }
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1024px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.4rem; }
     
-    /* Изменения размеров кнопок на мобильных */
+    /* Изменения размеров кнопок */
     button, a.button {
-        padding: 0.625rem 1.25rem;
-        font-size: 0.815rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
     }
     
     /* Отступы в формах */
     input, textarea, select {
-        padding: 0.625rem 0.875rem;
-        font-size: 0.815rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
     }
     
-    /* Увеличиваем размер элементов управления для лучшего тапа */
+    /* Увеличиваем размер элементов управления */
     .noUi-handle {
         width: 24px;
         height: 24px;
@@ -235,9 +235,9 @@ button:focus, a:focus {
         align-items: center;
     }
     
-    /* Улучшенный скроллинг для мобильных */
+    /* Улучшенный скроллинг */
     ::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
     }
     
     ::-webkit-scrollbar-track {
@@ -248,28 +248,88 @@ button:focus, a:focus {
         background: var(--bg-deep-green);
         border-radius: 4px;
     }
+
+    /* Адаптивные отступы для контейнера */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Адаптивные размеры для мобильного меню */
+    #mobile-menu {
+        width: 85%;
+        max-width: 400px;
+    }
 }
 
-/* Крайне маленькие экраны */
-@media (max-width: 380px) {
+/* Планшеты и маленькие ноутбуки */
+@media (max-width: 768px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    /* Изменения размеров кнопок */
+    button, a.button {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Отступы в формах */
+    input, textarea, select {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Увеличиваем размер элементов управления */
+    .noUi-handle {
+        width: 26px;
+        height: 26px;
+        top: -10px;
+    }
+}
+
+/* Мобильные устройства */
+@media (max-width: 480px) {
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.25rem; }
+    h3 { font-size: 1.125rem; }
     
-    /* Увеличиваем размер кнопок для лучшего тапа */
+    /* Изменения размеров кнопок */
     button, a.button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
         width: 100%;
         margin-bottom: 0.5rem;
         text-align: center;
     }
     
+    /* Отступы в формах */
+    input, textarea, select {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Увеличиваем размер элементов управления */
     .noUi-handle {
         width: 28px;
         height: 28px;
         top: -11px;
     }
+
+    /* Адаптивные отступы для контейнера */
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    /* Адаптивные размеры для мобильного меню */
+    #mobile-menu {
+        width: 100%;
+        max-width: none;
+    }
 }
 
-/* Мобильное меню */
+/* Улучшенные стили для мобильного меню */
 #mobile-menu {
     opacity: 1;
     overflow-y: auto;
@@ -326,69 +386,37 @@ button:focus, a:focus {
     animation: fadeIn 0.5s ease forwards;
 }
 
-/* Улучшенные стили для тап-областей на мобильных */
-@media (max-width: 768px) {
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
-    h3 { font-size: 1.25rem; }
-    
-    /* Изменения размеров кнопок на мобильных */
-    button, a.button {
-        padding: 0.625rem 1.25rem;
-        font-size: 0.815rem;
-    }
-    
-    /* Отступы в формах */
-    input, textarea, select {
-        padding: 0.625rem 0.875rem;
-        font-size: 0.815rem;
-    }
-    
-    /* Увеличиваем размер элементов управления для лучшего тапа */
-    .noUi-handle {
-        width: 24px;
-        height: 24px;
-        top: -9px;
-    }
-    
-    /* Минимальная высота тап-областей для мобильного меню */
-    #mobile-menu a, 
-    #mobile-menu button {
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-    }
-    
-    /* Улучшенный скроллинг для мобильных */
-    ::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: var(--bg-milky-white);
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: var(--bg-deep-green);
-        border-radius: 4px;
-    }
+/* Улучшенные стили для темной темы */
+[data-theme="dark"] .bg-white {
+    background-color: var(--bg-white);
 }
 
-/* Крайне маленькие экраны */
-@media (max-width: 380px) {
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.25rem; }
-    
-    /* Увеличиваем размер кнопок для лучшего тапа */
-    button, a.button {
-        width: 100%;
-        margin-bottom: 0.5rem;
-        text-align: center;
-    }
-    
-    .noUi-handle {
-        width: 28px;
-        height: 28px;
-        top: -11px;
-    }
+[data-theme="dark"] .text-gray-600 {
+    color: var(--text-gray-600);
+}
+
+[data-theme="dark"] .border-gray-200 {
+    border-color: #4B5563;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: #374151;
+}
+
+[data-theme="dark"] .text-gray-800, 
+[data-theme="dark"] .text-gray-700 {
+    color: #E5E7EB;
+}
+
+/* Улучшение контраста кнопок в темной теме */
+[data-theme="dark"] .button.bg-sandy {
+    background-color: #6D5B44; /* Более светлый песочный для темной темы */
+    color: #FFFFFF; /* Белый текст для лучшего контраста */
+}
+
+/* Стили для фокуса элементов в темной теме */
+[data-theme="dark"] a:focus,
+[data-theme="dark"] button:focus {
+    outline: 2px solid var(--input-focus);
+    outline-offset: 2px;
 }

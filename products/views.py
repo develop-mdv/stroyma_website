@@ -9,8 +9,11 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
 import logging
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from .filters import ProductFilter
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
@@ -456,19 +459,62 @@ class CategoryDetailView(DetailView):
     model = Category
     template_name = 'products/category_detail.html'
     context_object_name = 'category'
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         category = self.get_object()
+        
+        # Получаем все товары из текущей категории и её подкатегорий
         products = Product.objects.filter(
             Q(categories=category) | 
             Q(categories__in=category.get_descendants())
         ).distinct()
         
+        # Применяем фильтры
         self.filterset = ProductFilter(self.request.GET, queryset=products)
-        context['products'] = self.filterset.qs
-        context['filter'] = self.filterset
+        products = self.filterset.qs
+        
+        # Добавляем пагинацию
+        paginator = Paginator(products, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        # Получаем выбранные категории
+        selected_categories = self.request.GET.getlist('category')
+        
+        # Добавляем метаданные для SEO
+        context.update({
+            'products': page_obj,
+            'filter': self.filterset,
+            'meta_title': f'{category.name} - Каталог товаров',
+            'meta_description': category.description or f'Товары категории {category.name}',
+            'og_description': f'Просмотрите товары категории {category.name}. {category.description or ""}',
+            'subcategories': category.get_children(),
+            'breadcrumbs': self.get_breadcrumbs(category),
+            'selected_categories': selected_categories,
+        })
         return context
+    
+    def get_breadcrumbs(self, category):
+        """Формирует хлебные крошки для категории"""
+        breadcrumbs = []
+        current = category
+        
+        while current:
+            breadcrumbs.insert(0, {
+                'name': current.name,
+                'url': current.get_absolute_url()
+            })
+            current = current.parent
+            
+        # Добавляем ссылку на главную
+        breadcrumbs.insert(0, {
+            'name': 'Главная',
+            'url': reverse('product_list')
+        })
+        
+        return breadcrumbs
 
 def get_subcategories(request):
     category_id = request.GET.get('category_id')
@@ -499,3 +545,25 @@ def cookies_policy(request):
         'meta_description': 'Политика использования файлов cookie ООО "СТРОЙМА". Узнайте, какие файлы cookie мы используем и как они помогают улучшить работу нашего сайта.',
         'keywords': 'cookies, файлы cookie, политика cookie, куки, СтройМА, конфиденциальность',
     })
+
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Кеширование на 15 минут
+class CatalogView(TemplateView):
+    """
+    Представление для отображения каталога категорий.
+    Использует MPTT для построения дерева категорий.
+    """
+    template_name = 'products/catalog.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем только корневые категории
+        categories = Category.objects.filter(parent=None).order_by('tree_id', 'lft')
+        
+        # Добавляем метаданные для SEO
+        context.update({
+            'categories': categories,
+            'meta_title': 'Каталог товаров - Строительные материалы',
+            'meta_description': 'Полный каталог строительных материалов с удобной навигацией по категориям',
+            'og_description': 'Изучите наш каталог строительных материалов. Удобная навигация по категориям с визуальным представлением.',
+        })
+        return context
