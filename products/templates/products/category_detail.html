@@ -92,7 +92,7 @@
                             <label class="flex items-center">
                                 <input type="checkbox" name="category" value="{{ node.id }}" 
                                        class="form-checkbox text-deep-green h-4 w-4" 
-                                       {% if node.id|stringformat:"i" in request.GET.getlist('category') %}checked{% endif %}>
+                                       {% if node.id|stringformat:"i" in selected_categories %}checked{% endif %}>
                                 <span class="ml-2 text-sm">{{ node.name }}</span>
                             </label>
                             {% if not node.is_leaf_node %}
@@ -147,17 +147,30 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
                 {% for subcategory in category.get_children %}
                     <a href="{{ subcategory.get_absolute_url }}" 
-                       class="bg-white p-3 md:p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-600">
-                        <h3 class="text-base md:text-lg font-medium text-deep-green">{{ subcategory.name }}</h3>
-                        <p class="text-xs md:text-sm text-gray-600 mt-1 md:mt-2">
-                            {{ subcategory.products.count }} товаров
-                        </p>
+                       class="bg-white p-3 md:p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-600 flex items-center">
+                        {% if subcategory.image %}
+                            <div class="w-16 h-16 flex-shrink-0 mr-3">
+                                <img src="{{ subcategory.image.url }}" 
+                                     alt="{{ subcategory.alt_text|default:subcategory.name }}" 
+                                     class="w-full h-full object-cover rounded-md">
+                            </div>
+                        {% else %}
+                            <div class="w-16 h-16 flex-shrink-0 mr-3 bg-gray-100 rounded-md flex items-center justify-center">
+                                <i class="fas fa-folder text-gray-400 text-2xl"></i>
+                            </div>
+                        {% endif %}
+                        <div class="flex-grow">
+                            <h3 class="text-base md:text-lg font-medium text-deep-green">{{ subcategory.name }}</h3>
+                            <p class="text-xs md:text-sm text-gray-600 mt-1">
+                                {{ subcategory.products.count }} товаров
+                            </p>
+                        </div>
                     </a>
                 {% endfor %}
             </div>
         {% endif %}
 
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <div id="products-grid" class="">
             {% include 'products/search_results.html' with products=products %}
         </div>
         

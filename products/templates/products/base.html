@@ -107,6 +107,9 @@
                     <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fas fa-home mr-1"></i> Главная
                     </a>
+                    <a href="{% url 'catalog' %}" class="text-deep-green hover:text-gray-600 transition">
+                        <i class="fas fa-list mr-1"></i> Каталог
+                    </a>
                     <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fas fa-hammer mr-1"></i> Услуги
                     </a>
@@ -174,6 +177,9 @@
                         <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Навигация</div>
                         <a href="{% url 'product_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 font-medium{% endif %}">
                             <i class="fas fa-home mr-3 w-5 text-center"></i> Главная
+                        </a>
+                        <a href="{% url 'catalog' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'catalog' %}bg-gray-50 font-medium{% endif %}">
+                            <i class="fas fa-list mr-3 w-5 text-center"></i> Каталог
                         </a>
                         <a href="{% url 'service_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 font-medium{% endif %}">
                             <i class="fas fa-hammer mr-3 w-5 text-center"></i> Услуги

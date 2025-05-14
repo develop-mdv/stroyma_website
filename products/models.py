@@ -19,6 +19,8 @@ class Category(MPTTModel):
     description = models.TextField(blank=True, verbose_name='Описание категории')
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO заголовок')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO описание')
+    image = models.ImageField(upload_to='category_images/', blank=True, null=True, verbose_name='Изображение категории')
+    alt_text = models.CharField(max_length=255, blank=True, verbose_name='Альтернативный текст изображения')
     
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -134,6 +136,27 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def add_categories_with_parents(self, categories):
+        """
+        Добавляет категории и их родительские категории к товару.
+        
+        Args:
+            categories: QuerySet или список категорий для добавления
+        """
+        all_categories = set()
+        
+        # Собираем все категории и их родителей
+        for category in categories:
+            all_categories.add(category)
+            # Добавляем всех родителей категории
+            parent = category.parent
+            while parent:
+                all_categories.add(parent)
+                parent = parent.parent
+        
+        # Добавляем все собранные категории к товару
+        self.categories.add(*all_categories)
 
     @classmethod
     def get_popular_products(cls, count=5):
