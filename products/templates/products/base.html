@@ -83,7 +83,7 @@
                 </div>
 
                 <!-- Корзина для мобильных экранов -->
-                <div class="flex items-center space-x-4 sm:hidden">
+                <div class="flex items-center space-x-4 lg:hidden">
                     <a href="{% url 'view_cart' %}" class="relative">
                         <i class="fas fa-shopping-cart text-2xl"></i>
                         <span id="mobile-cart-count" class="absolute -top-2 -right-2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -97,13 +97,13 @@
                     <button id="theme-toggle" class="text-deep-green focus:outline-none" aria-label="Переключить тему">
                         <i class="fas fa-moon text-xl md:text-2xl"></i>
                     </button>
-                    <button id="menu-toggle" class="md:hidden text-deep-green focus:outline-none" aria-label="Открыть меню">
+                    <button id="menu-toggle" class="lg:hidden text-deep-green focus:outline-none" aria-label="Открыть меню">
                         <i class="fas fa-bars text-xl md:text-2xl"></i>
                     </button>
                 </div>
 
                 <!-- Навигация -->
-                <nav id="nav-menu" class="hidden md:flex items-center space-x-6">
+                <nav id="nav-menu" class="hidden lg:flex items-center space-x-6">
                     <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">
                         <i class="fas fa-home mr-1"></i> Главная
                     </a>
@@ -155,8 +155,8 @@
             </div>
 
             <!-- Мобильное меню -->
-            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden md:hidden" style="transition: opacity 0.3s ease;"></div>
-            <div id="mobile-menu" class="md:hidden fixed top-0 right-0 w-4/5 max-w-xs h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden lg:hidden" style="transition: opacity 0.3s ease;"></div>
+            <div id="mobile-menu" class="lg:hidden fixed top-0 right-0 w-4/5 max-w-xs h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
                 <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 mr-3">
@@ -317,175 +317,6 @@
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/base.js' %}"></script>
-    
-    <!-- Скрипты для работы сайта -->
-    <script>
-        // Переключение темы
-        function toggleTheme() {
-            const html = document.documentElement;
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun text-xl md:text-2xl"></i>';
-                if (document.getElementById('mobile-theme-toggle')) {
-                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-sun mr-3 w-5 text-center"></i> Сменить тему';
-                }
-            } else {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon text-xl md:text-2xl"></i>';
-                if (document.getElementById('mobile-theme-toggle')) {
-                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему';
-                }
-            }
-        }
-        
-        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-        
-        // Проверка сохраненной темы
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            if (savedTheme === 'dark') {
-                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun text-xl md:text-2xl"></i>';
-                if (document.getElementById('mobile-theme-toggle')) {
-                    document.getElementById('mobile-theme-toggle').innerHTML = '<i class="fas fa-sun mr-3 w-5 text-center"></i> Сменить тему';
-                }
-            }
-        }
-        
-        // Инициализация мобильного меню и всех связанных функций
-        document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация элементов мобильного меню
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-            const closeMenuBtn = document.getElementById('close-menu-btn');
-            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-            
-            // Функция для открытия меню
-            function openMobileMenu() {
-                mobileMenu.classList.remove('translate-x-full');
-                mobileMenuOverlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                
-                // Изменить иконку меню на крестик
-                menuToggle.innerHTML = '<i class="fas fa-times text-xl md:text-2xl"></i>';
-                
-                // Плавное появление оверлея
-                setTimeout(() => {
-                    mobileMenuOverlay.style.opacity = '1';
-                }, 10);
-            }
-            
-            // Функция для закрытия меню
-            function closeMobileMenu() {
-                mobileMenu.classList.add('translate-x-full');
-                mobileMenuOverlay.style.opacity = '0';
-                document.body.style.overflow = '';
-                
-                // Вернуть иконку меню
-                menuToggle.innerHTML = '<i class="fas fa-bars text-xl md:text-2xl"></i>';
-                
-                // Скрытие оверлея после анимации
-                setTimeout(() => {
-                    mobileMenuOverlay.classList.add('hidden');
-                }, 300);
-            }
-            
-            // Обработчики событий для мобильного меню
-            if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
-            if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
-            if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
-            
-            // Обработка клавиши Escape для закрытия меню
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && !mobileMenu.classList.contains('translate-x-full')) {
-                    closeMobileMenu();
-                }
-            });
-            
-            // Подсветка активного пункта меню
-            highlightActiveMenuItem();
-            
-            // Закрытие меню при нажатии на пункт меню (опционально)
-            const menuLinks = document.querySelectorAll('#mobile-menu a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    setTimeout(closeMobileMenu, 150); // Небольшая задержка для анимации нажатия
-                });
-            });
-        });
-        
-        // Функция для подсветки активного пункта меню
-        function highlightActiveMenuItem() {
-            // Получаем текущий путь
-            const currentPath = window.location.pathname;
-            
-            // Находим все ссылки в мобильном меню
-            const menuLinks = document.querySelectorAll('#mobile-menu a');
-            
-            // Проходим по всем ссылкам и отмечаем активную
-            menuLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (linkPath) {
-                    // Проверка на точное соответствие и на принадлежность к разделу
-                    if (currentPath === linkPath || 
-                        (linkPath !== '/' && currentPath.startsWith(linkPath))) {
-                        link.classList.add('bg-gray-50', 'font-medium');
-                    }
-                }
-            });
-        }
-        
-        // Показать/скрыть кнопку "Наверх"
-        window.addEventListener('scroll', function() {
-            const scrollTopBtn = document.getElementById('scroll-top');
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.remove('hidden');
-                scrollTopBtn.classList.add('flex');
-            } else {
-                scrollTopBtn.classList.add('hidden');
-                scrollTopBtn.classList.remove('flex');
-            }
-        });
-        
-        // Закрытие модального окна быстрого просмотра
-        function closeQuickView() {
-            const modal = document.getElementById('quick-view-modal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-        
-        // Обработка нажатия клавиши Escape для закрытия модального окна
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeQuickView();
-            }
-        });
-        
-        // Показ уведомления о файлах cookie
-        document.addEventListener('DOMContentLoaded', function() {
-            const cookieConsent = localStorage.getItem('cookieConsent');
-            if (!cookieConsent) {
-                document.getElementById('cookie-notification').classList.remove('hidden');
-            }
-            
-            // Принятие файлов cookie
-            document.getElementById('cookie-accept').addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                document.getElementById('cookie-notification').classList.add('hidden');
-            });
-            
-            // Настройка файлов cookie (перенаправление на страницу настроек)
-            document.getElementById('cookie-settings').addEventListener('click', function() {
-                window.location.href = '{% url "cookies_policy" %}';
-            });
-        });
-    </script>
     
     {% block scripts %}{% endblock %}
     {% block extra_js %}{{ block.super }}{% endblock %}
