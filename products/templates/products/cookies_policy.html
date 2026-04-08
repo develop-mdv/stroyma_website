@@ -2,128 +2,311 @@
 {% block content %}
 
 <!-- Хлебные крошки -->
-<nav class="text-sm text-gray-600 mb-4">
-    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">Главная</a>
-    <span class="mx-2">/</span>
-    <span>Политика использования файлов cookie</span>
+<nav class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-8 md:mb-12 flex items-center gap-2">
+    <a href="{% url 'product_list' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors">Главная</a>
+    <span class="text-gray-300">/</span>
+    <span class="text-gray-900 dark:text-white">Политика файлов cookie</span>
 </nav>
 
-<!-- Заголовок страницы -->
-<h1 class="text-3xl font-bold text-deep-green mb-8 animate-fade-in">Политика использования файлов cookie</h1>
-
-<!-- Основной контент -->
-<section class="bg-white p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 mb-8">
-    <p class="text-gray-600 mb-4">
-        Данная политика описывает, как ООО «СТРОЙМА» использует файлы cookie на веб-сайте stroyma-kursk.ru.
+<!-- Header -->
+<div class="mb-12 md:mb-20 animate-fade-in fade-in-up">
+    <h1 class="text-4xl md:text-5xl lg:text-7xl font-black font-display text-gray-900 dark:text-white leading-[1.1] tracking-tighter uppercase mb-6">
+        Политика файлов <span class="text-transparent bg-clip-text bg-gradient-to-r from-deep-green to-emerald-400">cookie</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-500 font-light max-w-4xl leading-relaxed">
+        Данная политика описывает, как ООО «СТРОЙМА» использует файлы cookie на веб-сайте stroyma-kursk.ru, для чего они нужны и как вы можете ими управлять.
     </p>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">1. Что такое файлы cookie?</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-4">
-        <p>
-            Файлы cookie — это небольшие текстовые файлы, которые сохраняются на вашем устройстве (компьютере, планшете, мобильном телефоне) при посещении веб-сайтов. Они широко используются для обеспечения эффективной работы веб-сайтов, а также для предоставления определенной информации владельцам сайтов.
-        </p>
-    </div>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">2. Какие файлы cookie мы используем</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-6">
-        <p>Наш сайт использует следующие типы файлов cookie:</p>
-        
-        <h3 class="text-xl font-semibold text-deep-green mt-4 mb-2">2.1. Необходимые файлы cookie</h3>
-        <p>Эти файлы cookie необходимы для функционирования нашего сайта. Они включают, например, файлы cookie, которые позволяют вам входить в защищенные разделы нашего сайта, использовать корзину для покупок или использовать электронные платежные системы.</p>
-        
-        <h3 class="text-xl font-semibold text-deep-green mt-4 mb-2">2.2. Аналитические/эксплуатационные файлы cookie</h3>
-        <p>Эти файлы cookie собирают информацию о том, как посетители используют наш сайт. Они помогают нам улучшать работу сайта, отслеживать наиболее и наименее популярные страницы и анализировать эффективность нашей рекламы.</p>
-        
-        <h3 class="text-xl font-semibold text-deep-green mt-4 mb-2">2.3. Функциональные файлы cookie</h3>
-        <p>Эти файлы cookie позволяют сайту запоминать выбранные вами настройки (например, язык или регион) и предоставлять расширенные, персонализированные функции.</p>
-        
-        <h3 class="text-xl font-semibold text-deep-green mt-4 mb-2">2.4. Целевые файлы cookie</h3>
-        <p>Эти файлы cookie используются для того, чтобы делать нашу рекламу более актуальной для вас. Они запоминают, что вы посещали наш сайт, и могут передавать эту информацию другим организациям, таким как рекламодатели.</p>
-    </div>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">3. Список используемых файлов cookie</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-4">
-        <p>На нашем сайте используются следующие файлы cookie:</p>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200 mt-2">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b border-gray-200 bg-sandy text-left text-sm font-semibold text-deep-green">Название</th>
-                        <th class="py-2 px-4 border-b border-gray-200 bg-sandy text-left text-sm font-semibold text-deep-green">Цель</th>
-                        <th class="py-2 px-4 border-b border-gray-200 bg-sandy text-left text-sm font-semibold text-deep-green">Срок хранения</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">sessionid</td>
-                        <td class="py-2 px-4 border-b border-gray-200">Хранение сессии пользователя для аутентификации</td>
-                        <td class="py-2 px-4 border-b border-gray-200">До закрытия браузера</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">csrftoken</td>
-                        <td class="py-2 px-4 border-b border-gray-200">Защита от CSRF-атак</td>
-                        <td class="py-2 px-4 border-b border-gray-200">1 год</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">cart</td>
-                        <td class="py-2 px-4 border-b border-gray-200">Хранение информации о корзине покупок</td>
-                        <td class="py-2 px-4 border-b border-gray-200">2 недели</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">theme</td>
-                        <td class="py-2 px-4 border-b border-gray-200">Запоминание выбранной пользователем темы оформления</td>
-                        <td class="py-2 px-4 border-b border-gray-200">1 год</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">cookie_accepted</td>
-                        <td class="py-2 px-4 border-b border-gray-200">Подтверждение согласия с использованием файлов cookie</td>
-                        <td class="py-2 px-4 border-b border-gray-200">1 год</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">4. Управление файлами cookie</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-4">
-        <p>Вы можете управлять файлами cookie, изменяя настройки своего браузера. Вы можете принять или отклонить все файлы cookie или настроить веб-браузер так, чтобы он уведомлял вас, когда веб-сайт пытается установить файл cookie.</p>
-        <p>Вот как вы можете управлять файлами cookie в различных браузерах:</p>
-        <ul class="list-disc pl-6 space-y-1">
-            <li><span class="font-medium">Google Chrome:</span> Меню > Настройки > Показать дополнительные настройки > Конфиденциальность > Настройки контента > Файлы cookie</li>
-            <li><span class="font-medium">Mozilla Firefox:</span> Меню > Настройки > Приватность > История > Использовать пользовательские настройки > Файлы cookie</li>
-            <li><span class="font-medium">Microsoft Edge:</span> Меню > Настройки > Файлы cookie и разрешения сайта</li>
-            <li><span class="font-medium">Safari:</span> Настройки > Конфиденциальность > Файлы cookie и данные сайтов</li>
-        </ul>
-        <p class="mt-4">Обратите внимание, что отключение или блокировка файлов cookie может повлиять на функциональность нашего сайта и ограничить доступ к определенным функциям или разделам.</p>
-    </div>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">5. Изменения в политике использования файлов cookie</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-4">
-        <p>Мы можем время от времени обновлять нашу политику использования файлов cookie, чтобы отразить изменения в используемых нами технологиях или по другим операционным или юридическим причинам. Все изменения будут опубликованы на этой странице, и при необходимости мы будем уведомлять вас о существенных изменениях.</p>
-    </div>
-    
-    <h2 class="text-2xl font-semibold text-deep-green mt-6 mb-4">6. Контактная информация</h2>
-    
-    <div class="text-gray-600 space-y-2 mb-4">
-        <p>Если у вас возникли вопросы или комментарии относительно нашей политики использования файлов cookie, пожалуйста, свяжитесь с нами:</p>
-        <p>ООО «СТРОЙМА»</p>
-        <p>Адрес: 305004, г. Курск, ул. Ленина, дом 90/2, офис 215в</p>
-        <p>Email: mvv@stroyma.ru</p>
-        <p>Телефон: +7 (910) 211-40-41</p>
-    </div>
-    
-    <div class="mt-8 text-gray-600">
-        <p>Дата последнего обновления: 13.05.2025</p>
-    </div>
-</section>
+</div>
 
+<div class="flex flex-col lg:flex-row gap-12 lg:gap-24 relative">
+    
+    <!-- Левая колонка: Sticky Sidebar с оглавлением -->
+    <aside class="w-full lg:w-1/4 shrink-0 lg:sticky top-6 lg:top-36 h-fit z-10">
+        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-[2rem] p-6 lg:p-8 shadow-lift mb-6">
+            <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">Оглавление</h3>
+            <nav id="toc" class="space-y-4">
+                <a href="#section-1" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">1. Что такое файлы cookie?</a>
+                <a href="#section-2" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">2. Какие cookie мы используем</a>
+                <a href="#section-3" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">3. Список используемых файлов</a>
+                <a href="#section-4" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">4. Управление файлами</a>
+                <a href="#section-5" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">5. Изменения в политике</a>
+                <a href="#section-6" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors">6. Контакты</a>
+            </nav>
+        </div>
+        
+        <!-- Доп информация -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-700 hidden lg:block hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <h4 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Последнее обновление</h4>
+            <p class="text-sm font-bold font-display text-gray-900 dark:text-white uppercase tracking-widest">13 Май 2025</p>
+            
+            <div class="h-px bg-gray-200 dark:bg-gray-700 my-6"></div>
+            
+            <h4 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-3">Поддержка</h4>
+            <a href="mailto:mvv@stroyma.ru" class="flex items-center gap-3 text-sm font-medium text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center shadow-soft">
+                    <i class="fas fa-cookie-bite text-xs"></i>
+                </div>
+                mvv@stroyma.ru
+            </a>
+        </div>
+    </aside>
+
+    <!-- Правая колонка: Основной контент -->
+    <main class="w-full lg:w-3/4 flex flex-col gap-16 md:gap-24 pb-20">
+        
+        <!-- Секция 1 -->
+        <section id="section-1" class="policy-section scroll-mt-32">
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">01</span>
+                Что такое файлы cookie?
+            </h2>
+            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+                <p class="p-6 md:p-8 bg-white/50 dark:bg-gray-800/50 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+                    <strong>Файлы cookie</strong> — это небольшие текстовые файлы, которые сохраняются на вашем устройстве (компьютере, планшете, мобильном телефоне) при посещении веб-сайтов. Они широко используются для обеспечения эффективной работы веб-сайтов, а также для предоставления персонализированного опыта и информации владельцам сайтов.
+                </p>
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-gray-800">
+
+        <!-- Секция 2 -->
+        <section id="section-2" class="policy-section scroll-mt-32">
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">02</span>
+                Какие cookie мы используем
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <!-- Категория 1 -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-[2rem] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+                    <div class="w-12 h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <i class="fas fa-lock text-deep-green dark:text-emerald-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-display text-gray-900 dark:text-white mb-3">Необходимые</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                        Эти файлы cookie необходимы для функционирования нашего сайта. Они позволяют вам входить в защищенные разделы, оформлять заказы и использовать электронные корзины.
+                    </p>
+                </div>
+                
+                <!-- Категория 2 -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-[2rem] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+                    <div class="w-12 h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <i class="fas fa-chart-line text-deep-green dark:text-emerald-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-display text-gray-900 dark:text-white mb-3">Аналитические</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                        Собирают информацию о том, как посетители используют сайт. Помогают нам отслеживать популярность страниц, улучшать интерфейс и тестировать новый функционал.
+                    </p>
+                </div>
+
+                <!-- Категория 3 -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-[2rem] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+                    <div class="w-12 h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <i class="fas fa-sliders-h text-deep-green dark:text-emerald-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-display text-gray-900 dark:text-white mb-3">Функциональные</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                        Позволяют сайту запоминать выбранные вами настройки (например, темную/светлую тему оформления) и предоставлять расширенные персонализированные функции.
+                    </p>
+                </div>
+
+                <!-- Категория 4 -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-[2rem] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+                    <div class="w-12 h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <i class="fas fa-bullseye text-deep-green dark:text-emerald-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-display text-gray-900 dark:text-white mb-3">Целевые / Рекламные</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                        Используются для отображения более актуальной рекламы. Они запоминают ваши предпочтения и могут передавать эту информацию рекламным сетям.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-gray-800">
+
+        <!-- Секция 3: Таблица -->
+        <section id="section-3" class="policy-section scroll-mt-32">
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">03</span>
+                Список файлов
+            </h2>
+            
+            <div class="overflow-x-auto pb-4">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="py-4 px-6 border-b border-gray-200 dark:border-gray-800 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-gray-400">Название</th>
+                            <th class="py-4 px-6 border-b border-gray-200 dark:border-gray-800 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-gray-400">Цель использования</th>
+                            <th class="py-4 px-6 border-b border-gray-200 dark:border-gray-800 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-gray-400 whitespace-nowrap">Срок хранения</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-light text-gray-600 dark:text-gray-400 divide-y divide-gray-100 dark:divide-gray-800/50">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="py-5 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">sessionid</td>
+                            <td class="py-5 px-6">Хранение сессии пользователя для безопасной аутентификации</td>
+                            <td class="py-5 px-6 whitespace-nowrap">До закрытия браузера</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="py-5 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">csrftoken</td>
+                            <td class="py-5 px-6">Защита от межсайтовой подделки запросов (CSRF-атак)</td>
+                            <td class="py-5 px-6 whitespace-nowrap">1 год</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="py-5 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">cart</td>
+                            <td class="py-5 px-6">Сохранение информации о выбранных товарах в корзине</td>
+                            <td class="py-5 px-6 whitespace-nowrap">2 недели</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="py-5 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">theme</td>
+                            <td class="py-5 px-6">Запоминание выбранной пользователем темы оформления (Светлая/Темная)</td>
+                            <td class="py-5 px-6 whitespace-nowrap">1 год</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="py-5 px-6 font-medium text-gray-900 dark:text-white whitespace-nowrap">cookie_accepted</td>
+                            <td class="py-5 px-6">Отметка о скрытии уведомления о файлах cookie (согласие)</td>
+                            <td class="py-5 px-6 whitespace-nowrap">1 год</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-gray-800">
+
+        <!-- Секция 4 -->
+        <section id="section-4" class="policy-section scroll-mt-32">
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">04</span>
+                Управление файлами
+            </h2>
+            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+                <p>Вы можете управлять файлами cookie, изменяя настройки своего браузера. Вы можете принять или отклонить все файлы cookie или настроить веб-браузер так, чтобы он уведомлял вас, когда веб-сайт пытается установить файл cookie.</p>
+                
+                <h3 class="text-xl font-bold font-display text-gray-900 dark:text-white mt-8 mb-4">Настройки в популярных браузерах:</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-4 hover:border-deep-green dark:hover:border-emerald-400 transition-colors cursor-pointer group">
+                        <i class="fab fa-chrome text-2xl text-gray-400 group-hover:text-deep-green dark:group-hover:text-emerald-400 transition-colors"></i>
+                        <div>
+                            <p class="font-bold text-sm text-gray-900 dark:text-white mb-1">Google Chrome</p>
+                            <p class="text-xs text-gray-500 line-clamp-2">Конфиденциальность > Настройки контента > Файлы cookie</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-4 hover:border-deep-green dark:hover:border-emerald-400 transition-colors cursor-pointer group">
+                        <i class="fab fa-firefox text-2xl text-gray-400 group-hover:text-deep-green dark:group-hover:text-emerald-400 transition-colors"></i>
+                        <div>
+                            <p class="font-bold text-sm text-gray-900 dark:text-white mb-1">Mozilla Firefox</p>
+                            <p class="text-xs text-gray-500 line-clamp-2">Приватность > История > Файлы cookie</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-4 hover:border-deep-green dark:hover:border-emerald-400 transition-colors cursor-pointer group">
+                        <i class="fab fa-edge text-2xl text-gray-400 group-hover:text-deep-green dark:group-hover:text-emerald-400 transition-colors"></i>
+                        <div>
+                            <p class="font-bold text-sm text-gray-900 dark:text-white mb-1">Microsoft Edge</p>
+                            <p class="text-xs text-gray-500 line-clamp-2">Настройки > Файлы cookie и разрешения</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-5 flex items-center gap-4 hover:border-deep-green dark:hover:border-emerald-400 transition-colors cursor-pointer group">
+                        <i class="fab fa-safari text-2xl text-gray-400 group-hover:text-deep-green dark:group-hover:text-emerald-400 transition-colors"></i>
+                        <div>
+                            <p class="font-bold text-sm text-gray-900 dark:text-white mb-1">Apple Safari</p>
+                            <p class="text-xs text-gray-500 line-clamp-2">Конфиденциальность > Данные сайтов</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 p-6 rounded-[2rem] mt-6 flex gap-4 items-start">
+                    <i class="fas fa-exclamation-triangle mt-1"></i>
+                    <p class="text-sm font-medium">Обратите внимание, что отключение или удаление обязательных файлов cookie (таких как `sessionid` или `csrftoken`) приведет к невозможности оформления заказов и использования личного кабинета!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Разделитель -->
+        <hr class="border-gray-200 dark:border-gray-800">
+
+        <!-- Секции 5 и 6 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <section id="section-5" class="policy-section scroll-mt-32">
+                <h2 class="text-xl md:text-2xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-6 flex items-center gap-3">
+                    <span class="text-4xl text-gray-200 dark:text-gray-800 font-black relative top-1">05</span>
+                    Изменения
+                </h2>
+                <div class="text-gray-600 dark:text-gray-400 text-base leading-relaxed font-light">
+                    <p>Мы можем время от времени обновлять нашу политику использования файлов cookie, чтобы отразить изменения в используемых нами технологиях. Все изменения публикуются на этой странице.</p>
+                </div>
+            </section>
+
+            <section id="section-6" class="policy-section scroll-mt-32">
+                <h2 class="text-xl md:text-2xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-6 flex items-center gap-3">
+                    <span class="text-4xl text-gray-200 dark:text-gray-800 font-black relative top-1">06</span>
+                    Контакты
+                </h2>
+                <div class="text-gray-600 dark:text-gray-400 text-base leading-relaxed font-light space-y-2">
+                    <p class="font-medium text-gray-900 dark:text-white mb-2">ООО «СТРОЙМА»</p>
+                    <p>Адрес: 305004, г. Курск, ул. Ленина, дом 90/2, офис 215в</p>
+                    <p>Email: <a href="mailto:mvv@stroyma.ru" class="text-deep-green dark:text-emerald-400 hover:underline">mvv@stroyma.ru</a></p>
+                    <p>Телефон: <a href="tel:+79102114041" class="text-deep-green dark:text-emerald-400 hover:underline">+7 (910) 211-40-41</a></p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Smooth scroll JS
+    document.querySelectorAll('.toc-link').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElem = document.getElementById(targetId);
+            if (targetElem) {
+                targetElem.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Intersection Observer for highlighting current TOC link
+    const sections = document.querySelectorAll('.policy-section');
+    const navLinks = document.querySelectorAll('.toc-link');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Remove active class from all
+                navLinks.forEach(link => {
+                    link.classList.remove('text-deep-green', 'dark:text-emerald-400', 'font-bold');
+                    link.classList.add('text-gray-400');
+                });
+                // Add active class to corresponding link
+                const activeId = entry.target.getAttribute('id');
+                const activeLink = document.querySelector(`.toc-link[href="#${activeId}"]`);
+                if (activeLink) {
+                    activeLink.classList.remove('text-gray-400');
+                    activeLink.classList.add('text-deep-green', 'dark:text-emerald-400', 'font-bold');
+                }
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+</script>
 {% endblock %}
 
 {% block meta_description %}Политика использования файлов cookie ООО "СТРОЙМА". Узнайте, какие файлы cookie мы используем и как они помогают улучшить работу нашего сайта.{% endblock %}
 {% block meta_keywords %}cookies, файлы cookie, политика cookie, куки, СтройМА, конфиденциальность{% endblock %}
-{% block title %}Политика использования файлов cookie - ООО "СТРОЙМА"{% endblock %} 
+{% block title %}Политика использования файлов cookie - ООО "СТРОЙМА"{% endblock %}

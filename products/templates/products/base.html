@@ -96,172 +96,181 @@
     <!-- Текстурный фон -->
     <div class="texture-overlay"></div>
 
-    <!-- Шапка сайта (Glassmorphism effect) -->
-    <header class="fixed top-0 left-0 w-full bg-sandy/80 backdrop-blur-md border-b border-white/20 text-deep-green py-3 shadow-soft z-50 transition-all duration-300">
+    <!-- Шапка сайта (Premium Glassmorphism Navbar) -->
+    <header class="fixed top-0 left-0 w-full bg-sandy/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-white/20 dark:border-white/5 text-deep-green dark:text-white py-3.5 shadow-soft z-50 transition-all duration-300">
         <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8">
             <div class="flex items-center justify-between">
+                
                 <!-- Логотип -->
-                <div class="flex items-center space-x-3">
-                    <a href="{% url 'product_list' %}">
-                        <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 md:h-12 w-auto object-contain" loading="lazy">
-                    </a>
-                    <a href="{% url 'product_list' %}" class="text-xl md:text-2xl font-bold hidden sm:block">СтройМа</a>
-                </div>
+                <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 flex-shrink-0 group">
+                    <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-9 md:h-10 w-auto object-contain" loading="lazy">
+                    <span class="text-lg md:text-xl font-bold font-display hidden sm:block group-hover:text-deep-green dark:group-hover:text-emerald-400 transition-colors">СтройМа</span>
+                </a>
 
-                <!-- Корзина для мобильных экранов -->
-                <div class="flex items-center space-x-4 lg:hidden">
-                    <a href="{% url 'view_cart' %}" class="relative">
-                        <i class="fas fa-shopping-cart text-2xl"></i>
-                        <span id="mobile-cart-count" class="absolute -top-2 -right-2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            {{ cart_item_count|default:0 }}
-                        </span>
+                <!-- Десктопная навигация (центрированная) -->
+                <nav id="nav-menu" class="hidden lg:flex items-center gap-1 xl:gap-1.5">
+                    <a href="{% url 'product_list' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        Главная
                     </a>
-                </div>
-
-                <!-- Переключатель тем и меню -->
-                <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" class="text-deep-green focus:outline-none" aria-label="Переключить тему">
-                        <i class="fas fa-moon text-xl md:text-2xl"></i>
-                    </button>
-                    <button id="menu-toggle" class="lg:hidden text-deep-green focus:outline-none" aria-label="Открыть меню">
-                        <i class="fas fa-bars text-xl md:text-2xl"></i>
-                    </button>
-                </div>
-
-                <!-- Навигация -->
-                <nav id="nav-menu" class="hidden lg:flex items-center space-x-6">
-                    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-home mr-1"></i> Главная
+                    <a href="{% url 'catalog' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        Каталог
                     </a>
-                    <a href="{% url 'catalog' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-list mr-1"></i> Каталог
+                    <a href="{% url 'service_list' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        Услуги
                     </a>
-                    <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-hammer mr-1"></i> Услуги
+                    <a href="{% url 'color_selection' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        Выкрас фасада
                     </a>
-                    <a href="{% url 'color_selection' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fa-solid fa-paint-roller"></i> Онлайн выкрас фасада
+                    <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        О компании
                     </a>
-                    <a href="{% url 'view_cart' %}" class="text-deep-green hover:text-gray-600 transition relative">
-                        <i class="fas fa-shopping-cart mr-1"></i> Корзина
-                        <span id="desktop-cart-count" class="absolute -top-2 -right-2 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center {% if cart_item_count and cart_item_count > 0 %}visible{% else %}hidden{% endif %}">
-                            {{ cart_item_count|default:0 }}
-                        </span>
+                    <a href="{% url 'contact' %}" class="px-3 py-2 rounded-lg text-[0.7rem] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        Контакты
                     </a>
-                    <a href="{% url 'about' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-building mr-1"></i> О компании
-                    </a>
-                    <a href="{% url 'contact' %}" class="text-deep-green hover:text-gray-600 transition">
-                        <i class="fas fa-envelope mr-1"></i> Контакты
-                    </a>
-
-                    <!-- Состояние пользователя -->
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="text-deep-green hover:text-gray-600 transition">
-                            <i class="fas fa-user mr-1"></i> Профиль
-                        </a>
-                        <a href="{% url 'logout' %}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                           class="text-deep-green hover:text-gray-600 transition">
-                           <i class="fas fa-sign-out-alt mr-1"></i> Выход
-                        </a>
-                        <form id="logout-form" method="POST" action="{% url 'logout' %}" class="hidden">
-                            {% csrf_token %}
-                            <input type="hidden">
-                        </form>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="text-deep-green hover:text-gray-600 transition">
-                            <i class="fas fa-sign-in-alt mr-1"></i> Вход
-                        </a>
-                        <a href="{% url 'register' %}" class="text-deep-green hover:text-gray-600 transition">
-                            <i class="fas fa-user-plus mr-1"></i> Регистрация
-                        </a>
-                    {% endif %}
                 </nav>
+
+                <!-- Правая часть: Actions -->
+                <div class="flex items-center gap-2 md:gap-3">
+                    <!-- Тема -->
+                    <button id="theme-toggle" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none" aria-label="Переключить тему">
+                        <i class="fas fa-moon text-sm"></i>
+                    </button>
+
+                    <!-- Корзина -->
+                    <a href="{% url 'view_cart' %}" class="relative w-9 h-9 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                        <i class="fas fa-shopping-cart text-sm"></i>
+                        <span id="desktop-cart-count" class="absolute -top-0.5 -right-0.5 bg-deep-green dark:bg-emerald-500 text-white text-[0.6rem] font-bold rounded-full h-4 w-4 flex items-center justify-center {% if cart_item_count and cart_item_count > 0 %}visible{% else %}hidden{% endif %}">
+                            {{ cart_item_count|default:0 }}
+                        </span>
+                        <span id="mobile-cart-count" class="hidden">{{ cart_item_count|default:0 }}</span>
+                    </a>
+
+                    <!-- Десктоп: User Actions -->
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="hidden lg:inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white dark:hover:bg-emerald-400 transition-colors">
+                        <i class="fas fa-user text-[0.55rem]"></i> Профиль
+                    </a>
+                    <a href="{% url 'logout' %}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                       class="hidden lg:inline-flex items-center text-[0.65rem] font-semibold uppercase tracking-wider text-gray-400 hover:text-red-500 transition-colors px-2 py-2">
+                        <i class="fas fa-sign-out-alt text-xs"></i>
+                    </a>
+                    <form id="logout-form" method="POST" action="{% url 'logout' %}" class="hidden">
+                        {% csrf_token %}
+                        <input type="hidden">
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="hidden lg:inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white dark:hover:bg-emerald-400 transition-colors">
+                        Вход
+                    </a>
+                    <a href="{% url 'register' %}" class="hidden lg:inline-flex items-center text-[0.65rem] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-2 py-2">
+                        Регистрация
+                    </a>
+                    {% endif %}
+
+                    <!-- Бургер (мобайл) -->
+                    <button id="menu-toggle" class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none" aria-label="Открыть меню">
+                        <i class="fas fa-bars text-sm"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Мобильное меню -->
-            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden lg:hidden" style="transition: opacity 0.3s ease;"></div>
-            <div id="mobile-menu" class="lg:hidden fixed top-0 right-0 w-4/5 max-w-xs h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-                <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 mr-3">
-                            <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-10 w-auto">
-                        </div>
-                        <div class="text-deep-green font-bold text-lg">
-                            СтройМа
-                        </div>
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-50 hidden lg:hidden" style="transition: opacity 0.3s ease;"></div>
+            <div id="mobile-menu" class="lg:hidden fixed top-0 right-0 w-4/5 max-w-sm h-full bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-gray-100 dark:border-gray-800">
+                
+                <!-- Шапка мобильного меню -->
+                <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img src="{% static 'images/logo.png' %}" alt="СтройМа" class="h-8 w-auto">
+                        <span class="text-deep-green dark:text-white font-bold font-display">СтройМа</span>
                     </div>
-                    <button id="close-menu-btn" class="text-gray-500 hover:text-deep-green p-2">
-                        <i class="fas fa-times text-xl"></i>
+                    <button id="close-menu-btn" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
                 
-                <!-- Навигационные блоки с иконками -->
-                <div class="flex-1 overflow-y-auto py-2">
-                    <div class="border-b border-gray-100 pb-3">
-                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Навигация</div>
-                        <a href="{% url 'product_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-home mr-3 w-5 text-center"></i> Главная
+                <!-- Навигационные блоки -->
+                <div class="flex-1 overflow-y-auto py-4 px-2">
+                    
+                    <!-- Приветствие (если авторизован) -->
+                    {% if user.is_authenticated %}
+                    <div class="mx-3 mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-deep-green dark:bg-emerald-500 flex items-center justify-center text-white text-sm font-bold">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ user.username }}</p>
+                                <p class="text-[0.65rem] text-gray-400">{{ user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-2">
+                        <div class="px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-gray-400">Навигация</div>
+                        <a href="{% url 'product_list' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-home mr-3 w-5 text-center text-sm opacity-50"></i> Главная
                         </a>
-                        <a href="{% url 'catalog' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'catalog' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-list mr-3 w-5 text-center"></i> Каталог
+                        <a href="{% url 'catalog' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'catalog' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-list mr-3 w-5 text-center text-sm opacity-50"></i> Каталог
                         </a>
-                        <a href="{% url 'service_list' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-hammer mr-3 w-5 text-center"></i> Услуги
+                        <a href="{% url 'service_list' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-hammer mr-3 w-5 text-center text-sm opacity-50"></i> Услуги
                         </a>
-                        <a href="{% url 'color_selection' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'color_selection' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fa-solid fa-paint-roller mr-3 w-5 text-center"></i> Онлайн выкрас фасада
+                        <a href="{% url 'color_selection' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'color_selection' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fa-solid fa-paint-roller mr-3 w-5 text-center text-sm opacity-50"></i> Онлайн выкрас фасада
                         </a>
                     </div>
                     
-                    <div class="border-b border-gray-100 py-3">
-                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Покупки</div>
-                        <a href="{% url 'view_cart' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition relative {% if request.resolver_match.url_name == 'view_cart' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i> Корзина
-                            <span class="absolute right-4 bg-deep-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    <div class="mb-2">
+                        <div class="px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-gray-400">Покупки</div>
+                        <a href="{% url 'view_cart' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition relative {% if request.resolver_match.url_name == 'view_cart' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-shopping-cart mr-3 w-5 text-center text-sm opacity-50"></i> Корзина
+                            <span class="ml-auto bg-deep-green dark:bg-emerald-500 text-white text-[0.6rem] font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                 {{ cart_item_count|default:0 }}
                             </span>
                         </a>
                     </div>
                     
-                    <div class="border-b border-gray-100 py-3">
-                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">О нас</div>
-                        <a href="{% url 'about' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'about' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-building mr-3 w-5 text-center"></i> О компании
+                    <div class="mb-2">
+                        <div class="px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-gray-400">О нас</div>
+                        <a href="{% url 'about' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'about' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-building mr-3 w-5 text-center text-sm opacity-50"></i> О компании
                         </a>
-                        <a href="{% url 'contact' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'contact' %}bg-gray-50 font-medium{% endif %}">
-                            <i class="fas fa-envelope mr-3 w-5 text-center"></i> Контакты
+                        <a href="{% url 'contact' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'contact' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                            <i class="fas fa-envelope mr-3 w-5 text-center text-sm opacity-50"></i> Контакты
                         </a>
                     </div>
 
-                    <!-- Состояние пользователя -->
-                    <div class="py-3">
-                        <div class="px-4 py-2 text-xs uppercase font-semibold text-gray-500">Аккаунт</div>
+                    <!-- Аккаунт -->
+                    <div class="mb-2">
+                        <div class="px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-gray-400">Аккаунт</div>
                         {% if user.is_authenticated %}
-                            <a href="{% url 'profile' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'profile' %}bg-gray-50 font-medium{% endif %}">
-                                <i class="fas fa-user mr-3 w-5 text-center"></i> Профиль
+                            <a href="{% url 'profile' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'profile' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                                <i class="fas fa-user mr-3 w-5 text-center text-sm opacity-50"></i> Профиль
                             </a>
                             <a href="{% url 'logout' %}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                               class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition">
-                               <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Выход
+                               class="text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 py-3 px-4 mx-1 rounded-xl flex items-center transition">
+                               <i class="fas fa-sign-out-alt mr-3 w-5 text-center text-sm opacity-50"></i> Выход
                             </a>
                         {% else %}
-                            <a href="{% url 'login' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'login' %}bg-gray-50 font-medium{% endif %}">
-                                <i class="fas fa-sign-in-alt mr-3 w-5 text-center"></i> Вход
+                            <a href="{% url 'login' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'login' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                                <i class="fas fa-sign-in-alt mr-3 w-5 text-center text-sm opacity-50"></i> Вход
                             </a>
-                            <a href="{% url 'register' %}" class="text-deep-green hover:bg-gray-50 py-3 px-4 flex items-center transition {% if request.resolver_match.url_name == 'register' %}bg-gray-50 font-medium{% endif %}">
-                                <i class="fas fa-user-plus mr-3 w-5 text-center"></i> Регистрация
+                            <a href="{% url 'register' %}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 mx-1 rounded-xl flex items-center transition {% if request.resolver_match.url_name == 'register' %}bg-gray-50 dark:bg-gray-800/50 font-semibold text-gray-900 dark:text-white{% endif %}">
+                                <i class="fas fa-user-plus mr-3 w-5 text-center text-sm opacity-50"></i> Регистрация
                             </a>
                         {% endif %}
                     </div>
                 </div>
                 
-                <!-- Темная/светлая тема в мобильном меню -->
-                <div class="mt-auto border-t border-gray-200 p-4">
-                    <button id="mobile-theme-toggle" class="flex items-center text-deep-green hover:bg-gray-50 py-3 px-4 w-full rounded transition">
-                        <i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему
+                <!-- Нижняя часть мобильного меню -->
+                <div class="mt-auto border-t border-gray-100 dark:border-gray-800 p-4">
+                    <button id="mobile-theme-toggle" class="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 py-3 px-4 w-full rounded-xl transition">
+                        <i class="fas fa-moon mr-3 w-5 text-center text-sm opacity-50"></i> Сменить тему
                     </button>
                 </div>
             </div>
@@ -276,28 +285,99 @@
     </main>
 
     <!-- Подвал -->
-    <footer class="bg-deep-green text-white text-center py-8 mt-12 md:mt-20">
-        <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8">
-            <p class="text-sm">© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены.</p>
-            <div class="mt-4 flex flex-wrap justify-center gap-3 md:gap-6">
-                <a href="{% url 'contact' %}" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fas fa-envelope mr-1"></i> Связаться с нами
-                </a>
-                <a href="{% url 'about' %}#company-info" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fas fa-info-circle mr-1"></i> Юридическая информация
-                </a>
-                <a href="{% url 'policy' %}" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fas fa-shield-alt mr-1"></i> Политика конфиденциальности
-                </a>
-                <a href="{% url 'cookies_policy' %}" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fas fa-cookie-bite mr-1"></i> Политика cookie
-                </a>
-                <a href="https://wa.me/79102114041" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fab fa-telegram mr-1"></i> Whatsapp
-                </a>
-                <a href="https://vk.com/club179330232" target="_blank" class="text-gray-200 hover:text-white transition text-sm">
-                    <i class="fab fa-vk mr-1"></i> ВКонтакте
-                </a>
+    <footer class="bg-gray-950 dark:bg-black text-white mt-16 md:mt-24 relative overflow-hidden">
+        <!-- Декоративная линия -->
+        <div class="h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+        
+        <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8 py-16 md:py-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+                
+                <!-- Колонка 1: Бренд -->
+                <div class="lg:col-span-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="{% static 'images/logo.png' %}" alt="СтройМа" class="h-10 w-auto brightness-0 invert opacity-80">
+                        <span class="text-xl font-bold font-display">СтройМа</span>
+                    </div>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed mb-6 max-w-xs">
+                        Ваш надёжный партнёр в строительных материалах. Качество и экологичность с 2011 года.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <a href="https://vk.com/club179330232" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="ВКонтакте">
+                            <i class="fab fa-vk text-sm"></i>
+                        </a>
+                        <a href="https://wa.me/79102114041" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp text-sm"></i>
+                        </a>
+                        <a href="mailto:mvv@stroyma.ru" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Email">
+                            <i class="fas fa-envelope text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Колонка 2: Навигация -->
+                <div>
+                    <h4 class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white mb-6">Навигация</h4>
+                    <nav class="space-y-3">
+                        <a href="{% url 'product_list' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Главная</a>
+                        <a href="{% url 'catalog' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Каталог</a>
+                        <a href="{% url 'service_list' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Услуги</a>
+                        <a href="{% url 'color_selection' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Онлайн выкрас фасада</a>
+                        <a href="{% url 'about' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">О компании</a>
+                        <a href="{% url 'contact' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Контакты</a>
+                    </nav>
+                </div>
+
+                <!-- Колонка 3: Покупателю -->
+                <div>
+                    <h4 class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white mb-6">Покупателю</h4>
+                    <nav class="space-y-3">
+                        <a href="{% url 'view_cart' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Корзина</a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'profile' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Личный кабинет</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Вход / Регистрация</a>
+                        {% endif %}
+                        <a href="{% url 'policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика конфиденциальности</a>
+                        <a href="{% url 'cookies_policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика cookie</a>
+                    </nav>
+                </div>
+
+                <!-- Колонка 4: Контакты -->
+                <div>
+                    <h4 class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white mb-6">Контакты</h4>
+                    <div class="space-y-4">
+                        <a href="tel:+79102114041" class="flex items-center gap-3 text-sm text-gray-400 hover:text-white transition-colors group">
+                            <div class="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-colors flex-shrink-0">
+                                <i class="fas fa-phone text-xs"></i>
+                            </div>
+                            +7 (910) 211-40-41
+                        </a>
+                        <a href="mailto:mvv@stroyma.ru" class="flex items-center gap-3 text-sm text-gray-400 hover:text-white transition-colors group">
+                            <div class="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-colors flex-shrink-0">
+                                <i class="fas fa-envelope text-xs"></i>
+                            </div>
+                            mvv@stroyma.ru
+                        </a>
+                        <div class="flex items-start gap-3 text-sm text-gray-400">
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i class="fas fa-map-marker-alt text-xs"></i>
+                            </div>
+                            <span>г. Курск, ул. Ленина, 90/2, оф. 215в</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя строка -->
+        <div class="border-t border-white/10">
+            <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-500 font-light">© 2025 ООО «СТРОЙМА». Все права защищены.</p>
+                <div class="flex items-center gap-6">
+                    <a href="{% url 'policy' %}" class="text-xs text-gray-500 hover:text-white transition-colors">Конфиденциальность</a>
+                    <a href="{% url 'cookies_policy' %}" class="text-xs text-gray-500 hover:text-white transition-colors">Cookie</a>
+                    <a href="{% url 'about' %}#company-info" class="text-xs text-gray-500 hover:text-white transition-colors">Реквизиты</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -322,19 +402,23 @@
     </div>
 
     <!-- Уведомление о файлах cookie -->
-    <div id="cookie-notification" class="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 p-4 z-40 hidden">
-        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-            <div class="flex-1 text-sm text-gray-600 mb-4 md:mb-0 md:mr-4">
-                <p>Мы используем файлы cookie для улучшения работы сайта, анализа трафика и персонализации контента. 
-                Продолжая использовать наш сайт, вы соглашаетесь с нашей 
-                <a href="{% url 'cookies_policy' %}" class="text-deep-green hover:underline">политикой использования файлов cookie</a>.</p>
+    <div id="cookie-notification" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-2xl bg-gray-900/95 dark:bg-black/95 backdrop-blur-2xl text-white rounded-2xl shadow-2xl shadow-black/30 p-6 z-40 hidden border border-white/10">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-5">
+            <div class="flex items-start gap-4 flex-1">
+                <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fas fa-cookie-bite text-amber-400 text-sm"></i>
+                </div>
+                <p class="text-sm text-gray-300 font-light leading-relaxed">
+                    Мы используем cookie для улучшения работы сайта.
+                    <a href="{% url 'cookies_policy' %}" class="text-white underline underline-offset-2 hover:text-emerald-400 transition-colors font-medium">Подробнее</a>
+                </p>
             </div>
-            <div class="flex space-x-4">
-                <button id="cookie-accept" class="px-4 py-2 bg-deep-green text-white rounded-md hover:bg-green-700 transition">
-                    Принять
-                </button>
-                <button id="cookie-settings" class="px-4 py-2 bg-sandy text-deep-green rounded-md hover:bg-gray-200 transition">
+            <div class="flex items-center gap-3 flex-shrink-0 ml-auto">
+                <button id="cookie-settings" class="px-5 py-2.5 rounded-full border border-white/20 text-white text-[0.65rem] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
                     Настроить
+                </button>
+                <button id="cookie-accept" class="px-5 py-2.5 rounded-full bg-white text-gray-900 text-[0.65rem] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-colors shadow-md">
+                    Принять
                 </button>
             </div>
         </div>

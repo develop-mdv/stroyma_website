@@ -20,6 +20,9 @@
             <button id="send-email-btn" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green dark:hover:border-emerald-400 dark:hover:text-emerald-400 transition-colors text-[0.65rem] flex items-center group relative overflow-hidden">
                 <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Отправить на Email</span>
             </button>
+            <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-[0.65rem] flex items-center group relative overflow-hidden shadow-md">
+                <span class="btn-text flex items-center"><i class="fas fa-redo mr-2 opacity-70 group-hover:opacity-100 transition-opacity"></i> Повторить заказ</span>
+            </button>
         </div>
     </div>
 
@@ -215,6 +218,41 @@
                 $notifier.removeClass('translate-y-0 opacity-100').addClass('translate-y-32 opacity-0');
             }, 4000);
         }
+        // Reorder button logic
+        $('#reorder-btn').click(function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $btnText = $btn.find('.btn-text');
+            var originalContent = $btnText.html();
+
+            $btn.prop('disabled', true).addClass('opacity-70 cursor-not-allowed');
+            $btnText.html('<i class="fas fa-spinner fa-spin mr-2"></i> Формирование...');
+
+            $.ajax({
+                url: '{% url "reorder" order_id=order.id %}',
+                method: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $btn.removeClass('opacity-70 cursor-not-allowed').addClass('bg-green-600 border-green-600');
+                        $btnText.html('<i class="fas fa-check mr-2"></i> Добавлено в корзину!');
+                        showNotification('Товары из заказа добавлены в корзину!');
+                        
+                        setTimeout(function() {
+                            window.location.href = response.redirect_url;
+                        }, 1500);
+                    }
+                },
+                error: function(xhr) {
+                    $btn.prop('disabled', false).removeClass('opacity-70 cursor-not-allowed');
+                    $btnText.html(originalContent);
+                    showNotification('Ошибка при повторении заказа', false);
+                }
+            });
+        });
+
     });
 </script>
 {% endblock %}

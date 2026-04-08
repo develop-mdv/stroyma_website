@@ -1,110 +1,152 @@
 {% extends 'products/base.html' %}
 {% block content %}
-<div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-    <h2 class="text-2xl font-bold text-deep-green mb-6">Редактирование профиля</h2>
 
-    <form method="post" class="space-y-6" id="edit-profile-form">
-        {% csrf_token %}
-        <div>
-            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.username.label }}</label>
-            {{ form.username }}
-            {% if form.username.errors %}
-                <div class="error-message">{{ form.username.errors }}</div>
-            {% endif %}
+<div class="min-h-[70vh] px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+        
+        <!-- Заголовок -->
+        <div class="mb-10 animate-fade-in">
+            <nav class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
+                <a href="{% url 'profile' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i> Профиль
+                </a>
+                <span class="text-gray-300">/</span>
+                <span class="text-gray-900 dark:text-white">Редактирование</span>
+            </nav>
+            <h1 class="text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight">
+                Редактирование профиля
+            </h1>
         </div>
-        <div>
-            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray">Имя</label>
-            {{ form.first_name }}
-            {% if form.first_name.errors %}
-                <div class="error-message">{{ form.first_name.errors }}</div>
-            {% endif %}
+
+        <!-- Форма -->
+        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 md:p-10 shadow-lift">
+            <form method="post" class="space-y-6" id="edit-profile-form">
+                {% csrf_token %}
+                
+                <!-- Секция: Личные данные -->
+                <div class="mb-8">
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Личные данные</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Имя</label>
+                            <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
+                                   value="{{ form.first_name.value|default_if_none:'' }}"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            {% if form.first_name.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.first_name.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Фамилия</label>
+                            <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
+                                   value="{{ form.last_name.value|default_if_none:'' }}"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            {% if form.last_name.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.last_name.errors }}</p>{% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label for="{{ form.username.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Логин</label>
+                        <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                               value="{{ form.username.value|default_if_none:'' }}"
+                               class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                        {% if form.username.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.username.errors }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Секция: Контакты -->
+                <div class="mb-8">
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Контактная информация</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                                   value="{{ form.email.value|default_if_none:'' }}"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            {% if form.email.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.email.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ form.phone.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Телефон</label>
+                            <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
+                                   value="{{ form.phone.value|default_if_none:'' }}"
+                                   placeholder="+7 (___) ___-__-__"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            {% if form.phone.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.phone.errors }}</p>{% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label for="{{ form.delivery_address.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Адрес доставки</label>
+                        <textarea name="{{ form.delivery_address.name }}" id="{{ form.delivery_address.id_for_label }}" rows="3"
+                                  class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all resize-none">{{ form.delivery_address.value|default_if_none:'' }}</textarea>
+                        {% if form.delivery_address.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.delivery_address.errors }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Секция: Безопасность -->
+                <div class="mb-8">
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Изменение пароля</h3>
+                    
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 p-4 rounded-2xl flex gap-3 items-start text-left mb-6">
+                        <i class="fas fa-info-circle mt-0.5 text-sm"></i>
+                        <p class="text-xs font-medium">Оставьте поля пароля пустыми, если не хотите его менять.</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <label for="{{ form.current_password.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Текущий пароль</label>
+                            <input type="password" name="{{ form.current_password.name }}" id="{{ form.current_password.id_for_label }}"
+                                   placeholder="••••••••"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.current_password.id_for_label }}">
+                                <i class="fas fa-eye eye-icon"></i>
+                                <i class="fas fa-eye-slash eye-off-icon hidden"></i>
+                            </button>
+                            {% if form.current_password.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.current_password.errors }}</p>{% endif %}
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="relative">
+                                <label for="{{ form.new_password.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Новый пароль</label>
+                                <input type="password" name="{{ form.new_password.name }}" id="{{ form.new_password.id_for_label }}"
+                                       placeholder="••••••••"
+                                       class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password.id_for_label }}">
+                                    <i class="fas fa-eye eye-icon"></i>
+                                    <i class="fas fa-eye-slash eye-off-icon hidden"></i>
+                                </button>
+                                {% if form.new_password.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.new_password.errors }}</p>{% endif %}
+                            </div>
+                            <div class="relative">
+                                <label for="{{ form.new_password_confirm.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Подтверждение</label>
+                                <input type="password" name="{{ form.new_password_confirm.name }}" id="{{ form.new_password_confirm.id_for_label }}"
+                                       placeholder="••••••••"
+                                       class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password_confirm.id_for_label }}">
+                                    <i class="fas fa-eye eye-icon"></i>
+                                    <i class="fas fa-eye-slash eye-off-icon hidden"></i>
+                                </button>
+                                {% if form.new_password_confirm.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.new_password_confirm.errors }}</p>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100 dark:border-gray-800">
+                    <button type="submit" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 rounded-xl text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md">
+                        Сохранить изменения
+                    </button>
+                    <a href="{% url 'profile' %}" class="sm:w-auto px-8 py-4 rounded-xl text-center border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-gray-900 dark:hover:border-white text-[0.65rem] font-bold uppercase tracking-widest transition-colors">
+                        Отмена
+                    </a>
+                </div>
+            </form>
         </div>
-        <div>
-            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray">Фамилия</label>
-            {{ form.last_name }}
-            {% if form.last_name.errors %}
-                <div class="error-message">{{ form.last_name.errors }}</div>
-            {% endif %}
-        </div>
-        <div>
-            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.email.label }}</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <div class="error-message">{{ form.email.errors }}</div>
-            {% endif %}
-        </div>
-        <div>
-            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.phone.label }}</label>
-            {{ form.phone }}
-            {% if form.phone.errors %}
-                <div class="error-message">{{ form.phone.errors }}</div>
-            {% endif %}
-        </div>
-        <div>
-            <label for="{{ form.delivery_address.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.delivery_address.label }}</label>
-            {{ form.delivery_address }}
-            {% if form.delivery_address.errors %}
-                <div class="error-message">{{ form.delivery_address.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="relative">
-            <label for="{{ form.current_password.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.current_password.label }}</label>
-            {{ form.current_password }}
-            <button type="button" class="absolute right-2 top-10 text-gray-600 toggle-password" data-target="{{ form.current_password.id_for_label }}">
-                <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                </svg>
-            </button>
-            {% if form.current_password.errors %}
-                <div class="error-message">{{ form.current_password.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="relative">
-            <label for="{{ form.new_password.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.new_password.label }}</label>
-            {{ form.new_password }}
-            <button type="button" class="absolute right-2 top-10 text-gray-600 toggle-password" data-target="{{ form.new_password.id_for_label }}">
-                <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                </svg>
-            </button>
-            {% if form.new_password.errors %}
-                <div class="error-message">{{ form.new_password.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="relative">
-            <label for="{{ form.new_password_confirm.id_for_label }}" class="block text-sm font-medium text-gray">{{ form.new_password_confirm.label }}</label>
-            {{ form.new_password_confirm }}
-            <button type="button" class="absolute right-2 top-10 text-gray-600 toggle-password" data-target="{{ form.new_password_confirm.id_for_label }}">
-                <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                </svg>
-            </button>
-            {% if form.new_password_confirm.errors %}
-                <div class="error-message">{{ form.new_password_confirm.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="flex space-x-4">
-            <button type="submit" class="button bg-deep-green text-white shadow-hover">
-                Сохранить изменения
-            </button>
-            <a href="{% url 'profile' %}" class="button bg-sandy text-deep-green shadow-hover">
-                Отмена
-            </a>
-        </div>
-    </form>
+        
+    </div>
 </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -142,3 +184,5 @@ document.querySelectorAll('.toggle-password').forEach(button => {
 });
 </script>
 {% endblock %}
+
+{% block title %}Редактирование профиля — СтройМА{% endblock %}
