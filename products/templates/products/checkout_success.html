@@ -1,10 +1,36 @@
 {% extends 'products/base.html' %}
+{% block title %}Заказ успешно оформлен | СтройМа{% endblock %}
+
 {% block content %}
-<div class="bg-white rounded-lg shadow-lg p-6 text-center border border-gray-200 dark:border-gray-600">
-    <h2 class="text-2xl font-bold text-deep-green mb-4">Спасибо за заказ!</h2>
-    <p class="text-gray-600 mb-6">Мы получили ваш заказ. Менеджер свяжется с вами в ближайшее время.</p>
-    <a href="{% url 'product_list' %}" class="button bg-deep-green text-white shadow-hover">
-        Продолжить покупки
-    </a>
+<div class="bg-[#F8F5EF] dark:bg-gray-900 min-h-screen flex items-center justify-center py-32 px-4 sm:px-8 relative overflow-hidden">
+    
+    <!-- Декоративные элементы фона -->
+    <div class="absolute top-1/4 left-10 w-[500px] h-[500px] border border-gray-300 dark:border-gray-700 rounded-full opacity-20 pointer-events-none"></div>
+    <div class="absolute bottom-1/4 right-10 w-[800px] h-[800px] border border-gray-300 dark:border-gray-700 rounded-full opacity-20 pointer-events-none"></div>
+    
+    <div class="max-w-[60rem] mx-auto text-center relative z-10 w-full">
+        <!-- Анимация галочки -->
+        <div class="mx-auto w-32 h-32 md:w-48 md:h-48 bg-white/60 dark:bg-gray-800/60 backdrop-blur-3xl border border-white/40 dark:border-gray-700/50 rounded-[4rem] flex items-center justify-center mb-12 shadow-2xl shadow-deep-green/10 transform rotate-[-10deg] hover:rotate-0 transition-transform duration-700">
+            <i class="fas fa-check text-5xl md:text-7xl text-deep-green dark:text-emerald-400"></i>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl lg:text-[6rem] font-bold font-display tracking-tight leading-[1] text-gray-900 dark:text-white uppercase mb-8">
+            Оформлен!
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-gray-500 dark:text-gray-400 font-light max-w-2xl mx-auto mb-16 leading-relaxed">
+            Мы получили ваш заказ. Наш менеджер уже изучает заявку и свяжется с вами в ближайшее время для подтверждения.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-6">
+            <a href="{% url 'product_list' %}" class="bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-6 px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green dark:hover:bg-emerald-400 dark:hover:text-gray-900 transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl">
+                Каталог
+                <i class="fas fa-arrow-right transform group-hover/btn:translate-x-2 transition-transform"></i>
+            </a>
+            <a href="{% url 'product_list' %}" class="bg-transparent border-2 border-gray-900 text-gray-900 dark:border-gray-700 dark:text-white py-6 px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-gray-900 transition-all duration-300 flex items-center justify-center group/home">
+                На главную
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}

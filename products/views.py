@@ -206,6 +206,9 @@ def add_to_cart(request, pk):
             cart[str(product.pk)] = quantity
         request.session['cart'] = cart
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.headers.get('Accept', '').find('application/json') != -1:
+        return JsonResponse({'success': True, 'message': f'{product.name} успешно добавлен в корзину'})
+
     return redirect('view_cart')
 
 def update_cart(request, pk):
@@ -376,13 +379,17 @@ def checkout(request):
                     html_message=html_order_summary,
                     fail_silently=False
                 )
-                if not request.user.is_authenticated:
-                    request.session['cart'] = {}
-                messages.success(request, 'Спасибо! Заказ отправлен менеджеру. С вами свяжутся.')
-                return redirect('checkout_success')
             except Exception as e:
                 logger.error(f'Ошибка при отправке email: {e}')
-                messages.error(request, f'Произошла ошибка при отправке заказа: {e}')
+                messages.error(request, f'Произошла ошибка при отправке email: {e}')
+            
+            # Always clean cart and redirect to success if order was saved
+            if not request.user.is_authenticated:
+                request.session['cart'] = {}
+            else:
+                CartItem.objects.filter(cart__user=request.user).delete()
+                
+            return redirect('checkout_success')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:

@@ -18,12 +18,12 @@
     /* Мобильные стили для карусели */
     @media (max-width: 768px) {
         .f-carousel__slide {
-            height: 250px;
+            height: 350px;
         }
         
         .f-carousel__slide img {
-            height: 250px;
-            object-fit: contain;
+            height: 350px;
+            object-fit: cover;
         }
     }
 </style>
@@ -37,7 +37,7 @@
   "@type": "Product",
   "name": "{{ product.name }}",
   "image": [
-    "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"
+    "{{ request.scheme }}://{{ request.get_host }}{% if product.image %}{{ product.image.url }}{% endif %}"
     {% for image in product.images.all %}
     ,"{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"
     {% endfor %}
@@ -70,102 +70,139 @@
 }
 </script>
 
-<div class="bg-[#F8F5EF] dark:bg-gray-800 min-h-screen py-6 md:py-10 px-3 md:px-4">
-    <div class="max-w-5xl mx-auto">
-        <!-- Хлебные крошки с микроразметкой schema.org -->
-        <nav class="text-sm text-gray-600 dark:text-gray-300 mb-3 md:mb-4 overflow-x-auto whitespace-nowrap pb-2" aria-label="breadcrumb">
-            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                        <span itemprop="name">Главная</span>
-                    </a>
-                    <meta itemprop="position" content="1" />
-                    <span class="mx-2 dark:text-gray-300">/</span>
-                </li>
-                {% for category in product.categories.all|slice:":1" %}
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <a href="{{ category.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                        <span itemprop="name">{{ category.name }}</span>
-                    </a>
-                    <meta itemprop="position" content="2" />
-                    <span class="mx-2 dark:text-gray-300">/</span>
-                </li>
-                {% endfor %}
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <span itemprop="name" class="truncate dark:text-gray-300">{{ product.name }}</span>
-                    <meta itemprop="position" content="3" />
-                </li>
-            </ol>
-        </nav>
+<div class="bg-[#F8F5EF] dark:bg-gray-900 min-h-screen pb-24 md:pb-32 px-4 sm:px-8 xl:px-16 pt-8 md:pt-12">
+    <!-- Хлебные крошки -->
+    <nav class="max-w-[120rem] mx-auto text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-8 md:mb-16 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
+        <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                <a href="{% url 'product_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <span itemprop="name">ГЛАВНАЯ</span>
+                </a>
+                <meta itemprop="position" content="1" />
+                <span class="mx-3 opacity-50">/</span>
+            </li>
+            {% for category in product.categories.all|slice:":1" %}
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                <a href="{{ category.get_absolute_url }}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <span itemprop="name">{{ category.name|upper }}</span>
+                </a>
+                <meta itemprop="position" content="2" />
+                <span class="mx-3 opacity-50">/</span>
+            </li>
+            {% endfor %}
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
+                <span itemprop="name" class="text-gray-900 dark:text-white">{{ product.name|upper }}</span>
+                <meta itemprop="position" content="3" />
+            </li>
+        </ol>
+    </nav>
 
-        <!-- Верхний блок с основной информацией -->
-        <div class="flex flex-col md:flex-row mb-8 md:mb-12 items-start gap-4 md:gap-8">
-            <div class="w-full md:w-1/2 mb-4 md:mb-0">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="rounded-xl shadow-md w-full object-contain h-auto max-h-[300px] md:max-h-[400px]">
-                {% else %}
-                    <img src="https://via.placeholder.com/300x300?text=Нет+изображения" class="rounded-xl shadow-md w-full object-cover">
-                {% endif %}
-            </div>
-            <div class="flex-1">
-                <h1 class="text-2xl md:text-4xl font-serif text-deep-green mb-3 md:mb-4">{{ product.name }}</h1>
-                <p class="text-base md:text-lg text-gray-800 dark:text-gray-200 mb-4 md:mb-6 leading-relaxed">{{ product.description|linebreaks }}</p>
-
-                <div class="space-y-3 md:space-y-4 mb-4 md:mb-6">
-                    <p class="text-xl font-semibold text-deep-green">Цена: {{ product.price }} руб.</p>
-                    <p class="text-gray-700 dark:text-gray-300">На складе: {{ product.stock }} шт.</p>
-                    <p class="text-gray-700 dark:text-gray-300">Рейтинг:
-                        <span class="text-yellow-400 dark:text-yellow-300">
-                            {% for i in '12345' %}
-                                {% if forloop.counter <= product.rating %}
-                                    <i class="fas fa-star"></i>
-                                {% else %}
-                                    <i class="far fa-star"></i>
-                                {% endif %}
-                            {% endfor %}
-                        </span>
-                    </p>
+    <div class="max-w-[120rem] mx-auto">
+        <!-- Гранд Презентация (Grand Presentation View) -->
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-24 mb-24 md:mb-32">
+            
+            <!-- Левая колонка - Изображение -->
+            <div class="w-full lg:w-1/2 flex flex-col justify-center">
+                <div class="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-white dark:bg-gray-800 rounded-[2rem] md:rounded-[4rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-deep-green/10">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
+                    {% else %}
+                        <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                            <span class="text-gray-400 font-display font-medium text-2xl tracking-widest uppercase">НЕТ ФОТО</span>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Бейдж Рейтинга Абсолютный сверху -->
+                    <div class="absolute top-8 left-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 shadow-lg">
+                        <span class="text-yellow-500 text-lg">★</span>
+                        <span class="font-bold text-gray-900 dark:text-white text-sm">{{ product.rating|default:"5" }}.0</span>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Форма выбора количества -->
-                <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-3 md:mt-4">
-                    {% csrf_token %}
-                    <div class="flex items-center mb-4">
-                        <label for="quantity" class="text-sm font-medium text-gray-700 dark:text-gray-300 mr-4">Количество:</label>
-                        <div class="flex border border-gray-300 dark:border-gray-600 rounded-md">
-                            <button type="button" id="decrease-quantity" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-l-md">-</button>
-                            <input type="number" name="quantity" id="quantity" min="1" max="{{ product.stock }}" value="1"
-                                class="w-12 md:w-20 text-center border-none focus:ring-0 focus:outline-none dark:bg-gray-700 dark:text-white">
-                            <button type="button" id="increase-quantity" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-r-md">+</button>
+            <!-- Правая колонка - Типографика и действия -->
+            <div class="w-full lg:w-1/2 flex flex-col justify-center">
+                <div class="sticky top-12">
+                    
+                    <h1 class="text-4xl md:text-5xl xl:text-[4.5rem] font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight font-display mb-8 uppercase break-words">
+                        {{ product.name }}
+                    </h1>
+
+                    <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light leading-relaxed max-w-2xl mb-12">
+                        {{ product.description|linebreaksbr }}
+                    </p>
+
+                    <!-- Архитектурный разделитель -->
+                    <hr class="border-t-2 border-gray-900 dark:border-gray-700 w-24 mb-12">
+
+                    <!-- Блок Цены -->
+                    <div class="mb-12">
+                        <span class="block text-[0.65rem] font-bold uppercase tracking-widest text-deep-green dark:text-emerald-400 mb-2">Стоимость</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[4rem] md:text-[6rem] font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter">
+                                {{ product.price|floatformat:"0" }}
+                            </span>
+                            <span class="text-4xl md:text-5xl font-light text-gray-400 dark:text-gray-600">₽</span>
                         </div>
                     </div>
-                    <div class="flex flex-col md:flex-row gap-2 md:space-x-4">
-                        <button type="submit" class="button bg-deep-green text-white shadow-hover">
-                            <i class="fas fa-shopping-cart mr-2"></i> Добавить в корзину
-                        </button>
-                        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover text-center">
-                            <i class="fas fa-arrow-left mr-2"></i> Вернуться к каталогу
-                        </a>
-                    </div>
-                </form>
+
+                    <!-- Форма заказа -->
+                    <form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="w-full xl:w-4/5">
+                        {% csrf_token %}
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8">
+                            <!-- Элегантный выбор количества -->
+                            <div class="flex items-center min-w-[160px] border-b-2 border-gray-900 dark:border-white pb-3">
+                                <button type="button" id="decrease-quantity" class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl transition-colors w-10 text-left">−</button>
+                                <input type="number" name="quantity" id="quantity" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
+                                    class="flex-1 text-center bg-transparent text-2xl font-bold text-gray-900 dark:text-white border-0 p-0 focus:ring-0">
+                                <button type="button" id="increase-quantity" class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl transition-colors w-10 text-right">+</button>
+                            </div>
+
+                            <!-- Массивная кнопка -->
+                            <button type="submit" class="flex-1 bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-6 px-8 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green dark:hover:bg-emerald-400 dark:hover:text-gray-900 transition-all duration-300 flex justify-between items-center group relative overflow-hidden">
+                                <span class="relative z-10">В корзину</span>
+                                <i class="fas fa-arrow-right relative z-10 transform group-hover:translate-x-2 transition-transform"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Вывод наличия в минималистичном стиле -->
+                        <div class="flex items-center gap-3">
+                            {% if product.stock > 0 %}
+                                <div class="w-2 h-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900 dark:text-white">В наличии ({{ product.stock }})</span>
+                            {% else %}
+                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900 dark:text-white">Ожидается поставка</span>
+                            {% endif %}
+                        </div>
+
+                    </form>
+
+                </div>
             </div>
         </div>
 
-        <!-- Галерея изображений -->
+        <!-- Галерея -->
         {% if product.images.exists %}
-        <div class="mb-8 md:mb-12">
-            <h2 class="text-2xl md:text-3xl font-serif font-bold text-deep-green mb-4 md:mb-6">Галерея изображений</h2>
+        <div class="mt-32">
+            <div class="flex items-end justify-between mb-16 border-b border-gray-200 dark:border-gray-800 pb-8">
+                <h2 class="text-2xl md:text-4xl font-display font-black uppercase tracking-widest text-gray-900 dark:text-white">ДЕТАЛИ</h2>
+            </div>
+            
             <div id="product-gallery" class="f-carousel" data-carousel="static">
                 {% for image in product.images.all %}
-                    <div class="f-carousel__slide">
-                        <a href="{{ image.image.url }}" data-fancybox="gallery">
-                            <img src="{{ image.image.url }}" alt="{{ image.title|default:product.name }}" class="w-full h-64 md:h-96 object-contain rounded-lg" />
+                    <div class="f-carousel__slide w-full md:w-1/2 lg:w-1/3 p-2">
+                        <a href="{{ image.image.url }}" data-fancybox="gallery" class="block relative w-full aspect-square overflow-hidden group rounded-2xl">
+                            <img src="{{ image.image.url }}" alt="{{ image.title|default:product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1000ms] group-hover:scale-110" />
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
                         </a>
                     </div>
                 {% endfor %}
             </div>
         </div>
         {% endif %}
+
     </div>
 </div>
 {% endblock %}
@@ -177,19 +214,35 @@
 document.addEventListener('DOMContentLoaded', function () {
     if (window.Carousel) {
         new Carousel(document.getElementById("product-gallery"), {
-            Dots: true,
+            Dots: false,
+            Navigation: true,
+            breakpoints: {
+              '(min-width: 768px)': {
+                slidesPerPage: 2,
+              },
+              '(min-width: 1024px)': {
+                slidesPerPage: 3,
+              },
+            },
         });
     }
 
     Fancybox.bind('[data-fancybox="gallery"]', {
         Thumbs: false,
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: [],
+                right: ["close"],
+            },
+        },
     });
     
-    // Обработчики для кнопок количества
+    // Обработчики количества
     const quantityInput = document.getElementById('quantity');
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
-    const maxStock = {{ product.stock }};
+    const maxStock = parseInt('{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}', 10);
     
     if (decreaseBtn && increaseBtn && quantityInput) {
         decreaseBtn.addEventListener('click', function() {
@@ -204,6 +257,59 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentValue < maxStock) {
                 quantityInput.value = currentValue + 1;
             }
+        });
+        
+        // Предотвращение ручного ввода больше чем есть на складе
+        quantityInput.addEventListener('change', function() {
+            let val = parseInt(this.value);
+            if(isNaN(val) || val < 1) val = 1;
+            if(val > maxStock) val = maxStock;
+            this.value = val;
+        });
+    }
+
+    // AJAX Добавление в корзину
+    const cartForm = document.getElementById('add-to-cart-form');
+    if (cartForm) {
+        const submitBtn = cartForm.querySelector('button[type="submit"]');
+        cartForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(cartForm);
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<span class="relative z-10 w-full text-center">ДОБАВЛЕНИЕ...</span>';
+            
+            const csrfToken = cartForm.querySelector('[name=csrfmiddlewaretoken]') ? cartForm.querySelector('[name=csrfmiddlewaretoken]').value : '';
+            
+            fetch(cartForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    submitBtn.innerHTML = '<span class="relative z-10 w-full text-center">✓ ДОБАВЛЕНО</span>';
+                    submitBtn.classList.remove('bg-gray-900', 'dark:bg-white', 'text-white', 'dark:text-gray-900');
+                    submitBtn.classList.add('!bg-deep-green', '!text-white', 'dark:!bg-emerald-400', 'dark:!text-gray-900');
+                    
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.classList.remove('!bg-deep-green', '!text-white', 'dark:!bg-emerald-400', 'dark:!text-gray-900');
+                        submitBtn.classList.add('bg-gray-900', 'dark:bg-white', 'text-white', 'dark:text-gray-900');
+                    }, 2500);
+                }
+            })
+            .catch(error => {
+                submitBtn.innerHTML = '<span class="relative z-10 w-full text-center">ОШИБКА</span>';
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                }, 2000);
+            });
         });
     }
 });

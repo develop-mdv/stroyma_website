@@ -27,10 +27,36 @@
     <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства.' }}{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endblock %}">
 
-    <!-- Tailwind CSS через CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Google Fonts: Manrope (поддержка кириллицы) -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS (с конфигом токенов) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-green': '#1a3628', /* Углубляем зеленый для премиальности */
+                        'sandy': '#f4ebd8',      /* Мягкий песочный/молочный фон */
+                        'gold-accent': '#d4af37',
+                        'input-bg': '#374151',
+                        'input-border': '#4B5563',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'lift': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter и Outfit (вместо старых) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- noUiSlider CSS -->
@@ -39,7 +65,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="relative">
+<body class="relative font-sans text-gray-800 antialiased bg-[#fcfcfc] dark:bg-gray-900 transition-colors duration-300">
     <!-- Микроразметка Schema.org - Организация -->
     <script type="application/ld+json">
     {
@@ -70,9 +96,9 @@
     <!-- Текстурный фон -->
     <div class="texture-overlay"></div>
 
-    <!-- Шапка сайта -->
-    <header class="fixed top-0 left-0 w-full bg-sandy text-deep-green py-2 md:py-4 shadow-lg z-50">
-        <div class="container mx-auto px-4">
+    <!-- Шапка сайта (Glassmorphism effect) -->
+    <header class="fixed top-0 left-0 w-full bg-sandy/80 backdrop-blur-md border-b border-white/20 text-deep-green py-3 shadow-soft z-50 transition-all duration-300">
+        <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8">
             <div class="flex items-center justify-between">
                 <!-- Логотип -->
                 <div class="flex items-center space-x-3">
@@ -243,15 +269,15 @@
     </header>
 
     <!-- Основное содержимое -->
-    <main class="container mx-auto px-4 py-4 md:py-8 pt-16 md:pt-24">
+    <main class="container max-w-screen-2xl mx-auto px-4 lg:px-8 py-4 md:py-12 pt-20 md:pt-28">
         {% block content %}
         <!-- Содержимое страницы -->
         {% endblock %}
     </main>
 
     <!-- Подвал -->
-    <footer class="bg-deep-green text-white text-center py-6 mt-8 md:mt-12">
-        <div class="container mx-auto px-4">
+    <footer class="bg-deep-green text-white text-center py-8 mt-12 md:mt-20">
+        <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8">
             <p class="text-sm">© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены.</p>
             <div class="mt-4 flex flex-wrap justify-center gap-3 md:gap-6">
                 <a href="{% url 'contact' %}" class="text-gray-200 hover:text-white transition text-sm">
@@ -284,12 +310,12 @@
     </button>
 
     <!-- Модальное окно для быстрого просмотра -->
-    <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div id="modal-content" class="bg-white rounded-xl p-4 md:p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl mx-4">
-            <button onclick="closeQuickView()" class="absolute top-2 right-2 md:top-4 md:right-4 text-gray-600 hover:text-gray-800 p-2" aria-label="Закрыть модальное окно">
+    <div id="quick-view-modal" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 transition-all duration-500">
+        <div id="modal-content" class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] p-0 max-w-[60rem] w-full h-[85vh] md:h-[600px] xl:h-[650px] overflow-hidden relative shadow-2xl mx-4 border border-white/20 dark:border-white/10">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 md:top-6 md:right-6 z-10 text-gray-400 hover:text-gray-900 dark:hover:text-white p-3 rounded-full hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors backdrop-blur-md" aria-label="Закрыть модальное окно">
                 <i class="fas fa-times text-xl md:text-2xl"></i>
             </button>
-            <div id="quick-view-content" class="flex flex-col md:flex-row gap-4 md:gap-6">
+            <div id="quick-view-content" class="w-full h-full">
                 <!-- Контент загружается через AJAX -->
             </div>
         </div>
@@ -317,6 +343,85 @@
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/base.js' %}"></script>
+    
+    <script>
+    // Глобальный слушатель для всех форм добавления в корзину (на главной, в каталоге)
+    document.addEventListener('submit', function(e) {
+        if (e.target && e.target.classList.contains('ajax-cart-form')) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            let originalText = '';
+            const spanEl = submitBtn.querySelector('span.relative');
+            
+            if (spanEl) {
+                originalText = spanEl.innerHTML;
+                spanEl.innerHTML = 'ЗАГРУЗКА...';
+            } else {
+                originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = 'ЗАГРУЗКА...';
+            }
+            
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]') ? form.querySelector('[name=csrfmiddlewaretoken]').value : '';
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (spanEl) {
+                        spanEl.innerHTML = '✓ ДОБАВЛЕНО';
+                    } else {
+                        submitBtn.innerHTML = '✓ ДОБАВЛЕНО';
+                    }
+                    
+                    submitBtn.classList.remove('opacity-80', 'cursor-not-allowed', 'bg-deep-green/90', 'dark:bg-emerald-500/90');
+                    submitBtn.classList.add('!bg-green-600', '!text-white', 'scale-105');
+                    
+                    if (data.cart_item_count !== undefined) {
+                        const desktopCount = document.getElementById('desktop-cart-count');
+                        const mobileCount = document.getElementById('mobile-cart-count');
+                        if (desktopCount) {
+                            desktopCount.textContent = data.cart_item_count;
+                            desktopCount.classList.remove('hidden');
+                            desktopCount.classList.add('visible');
+                        }
+                        if (mobileCount) {
+                            mobileCount.textContent = data.cart_item_count;
+                        }
+                    }
+                    
+                    setTimeout(() => {
+                        if (spanEl) {
+                            spanEl.innerHTML = originalText;
+                        } else {
+                            submitBtn.innerHTML = originalText;
+                        }
+                        submitBtn.classList.remove('!bg-green-600', '!text-white', 'scale-105');
+                        submitBtn.classList.add('bg-deep-green/90', 'dark:bg-emerald-500/90');
+                    }, 2000);
+                }
+            })
+            .catch(error => {
+                if (spanEl) spanEl.innerHTML = 'ОШИБКА';
+                else submitBtn.innerHTML = 'ОШИБКА';
+                setTimeout(() => {
+                    if (spanEl) spanEl.innerHTML = originalText;
+                    else submitBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+    });
+    </script>
     
     {% block scripts %}{% endblock %}
     {% block extra_js %}{{ block.super }}{% endblock %}

@@ -21,8 +21,12 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import sitemaps
 from django.views.generic.base import TemplateView
+from .admin import StroymAdminSite
 
 from products import views
+
+admin.AdminSite = StroymAdminSite
+admin.site.__class__ = StroymAdminSite
 
 urlpatterns = [
     path('admin/', admin.site.urls),

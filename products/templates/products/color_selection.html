@@ -2,102 +2,215 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/color_selection.css' %}">
 <style>
-    .color-swatch, .texture-swatch {
-        background-color: var(--bg-milky-white);
-        border: 1px solid var(--input-border);
-        transition: border-color 0.3s ease;
+    :root {
+        --house-facade: #F8F5EF;
+        --house-base: none;
     }
-    .color-swatch:hover, .texture-swatch:hover {
-        border-color: var(--deep-green);
+
+    .facade-overlay {
+        background-color: var(--house-facade);
+        transition: background-color 0.3s ease;
     }
-    .color-swatch.selected, .texture-swatch.selected {
-        border: 2px solid var(--deep-green);
+
+    .base-overlay {
+        background-image: var(--house-base);
+        background-repeat: repeat;
+        background-size: 200px;
+        transition: background-image 0.3s ease;
     }
-    .container h1 {
-        color: var(--text-deep-green);
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
+
+    /* Swatches Stylings */
+    .color-swatch {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,0.3);
     }
-    .container h2 {
-        color: var(--text-deep-green);
-        font-size: 1.5rem;
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
+    .color-swatch:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
-    .intro__showcase_house_img {
-        width: 100%;
-        height: auto;
-        display: block;
-        z-index: 10; /* Изображение поверх наложений */
+    .color-swatch.selected {
+        border: 2px solid var(--bg-deep-green);
+        transform: scale(1.15);
+        box-shadow: 0 0 0 4px rgba(45, 93, 76, 0.2);
     }
-    .scrollable-container {
-        max-height: 240px; /* Высота для 3 строк элементов */
+    
+    .texture-swatch {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .texture-swatch:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
+    .texture-swatch.selected {
+        border-color: var(--bg-deep-green);
+        box-shadow: 0 0 0 3px rgba(45, 93, 76, 0.3);
+    }
+
+    /* Scrollbars for Swatch Containers */
+    .config-scroll {
+        max-height: 280px;
         overflow-y: auto;
+        padding: 4px;
+        margin-right: -8px;
         padding-right: 8px;
-        margin-bottom: 1rem;
     }
-    .scrollable-container::-webkit-scrollbar {
-        width: 6px;
+    .config-scroll::-webkit-scrollbar {
+        width: 4px;
     }
-    .scrollable-container::-webkit-scrollbar-track {
-        background: var(--bg-milky-white);
-        border-radius: 3px;
+    .config-scroll::-webkit-scrollbar-track {
+        background: transparent;
     }
-    .scrollable-container::-webkit-scrollbar-thumb {
-        background: var(--deep-green);
-        border-radius: 3px;
+    .config-scroll::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .dark .config-scroll::-webkit-scrollbar-thumb {
+        background: #475569;
+    }
+    
+    /* Configurator Glass Panel */
+    .configurator-panel {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+    }
+    .dark .configurator-panel {
+        background: rgba(30, 41, 59, 0.8);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-bold text-deep-green mb-6">Интерактивный подбор цвета</h1>
-    <div class="flex flex-col md:flex-row gap-8">
-        <div class="md:w-1/2">
-            <div class="house-image relative">
-                <img src="{% static 'images/intro_house.webp' %}" alt="Дом для подбора цвета"
-                     class="intro__showcase_house_img w-full h-auto rounded-lg shadow-lg relative">
-                <div class="facade-overlay absolute top-[20%] left-0 w-full h-[60%] pointer-events-none"
-                     style="background-color: rgba(255, 255, 255, 1);">
-                </div>
-                <div class="base-overlay absolute bottom-0 left-0 pointer-events-none"
-                     style="background-image: url('')">
-                </div>
-            </div>
+<div class="bg-sandy/20 dark:bg-gray-900 min-h-screen py-10 px-4">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- Заголовок -->
+        <div class="mb-8 text-center animate-fade-in relative max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+                Премиум-Конфигуратор
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+                Создайте идеальный экстерьер. Наведите лупу на дом, чтобы рассмотреть текстуру в деталях.
+            </p>
         </div>
-        <div class="md:w-1/2">
-            <h2 class="text-xl font-semibold text-deep-green mb-4">Выберите цвет фасада</h2>
-            <div class="scrollable-container">
-                <div class="flex flex-wrap gap-2 mt-2">
-                    {% for color in facade_colors %}
-                        <div class="color-swatch w-12 h-12 relative cursor-pointer" data-target="facade" data-color="{{ color.hex_code }}" title="{{ color.name }}" style="background-color: {{ color.hex_code }};" role="button" aria-label="Выбрать цвет {{ color.name }} для фасада">
-                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ color.name }}</span>
-                        </div>
-                    {% empty %}
-                        <p class="text-gray-500">Нет доступных цветов. Добавьте цвета в админ-панели.</p>
-                    {% endfor %}
+
+        <div class="flex flex-col xl:flex-row gap-8 lg:gap-12 relative items-start">
+            
+            <!-- Левая часть: HOUSE VISUALIZER (60%) -->
+            <div class="w-full xl:w-3/5 xl:sticky xl:top-24 z-10 animate-fade-in-up">
+                
+                <!-- Контейнер Дома -->
+                <!-- Убираем bg-black и фиксированную высоту, подстраиваемся под картинку -->
+                <div class="interactive-house-container relative rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 cursor-crosshair inline-block w-full" id="houseContainer">
+                    
+                    <!-- РЕАЛЬНЫЕ ВИЗУАЛЬНЫЕ ЭЛЕМЕНТЫ: Исходное фото с маской -->
+                    <div id="visualsWrapper" class="relative w-full h-auto pointer-events-none">
+                        
+                        <!-- Оверлеи снизу (картинка имеет дырки) -->
+                        <div class="facade-overlay absolute top-[20%] left-0 w-full h-[60%] pointer-events-none z-0"></div>
+                        <div class="base-overlay absolute bottom-0 left-0 w-full h-[35%] pointer-events-none z-[1]"></div>
+                        
+                        <!-- Оригинальная картинка (лежит поверх слоев с z-index) -->
+                        <img src="{% static 'images/intro_house.webp' %}" alt="Дом для визуализации" id="baseHouseImg" class="w-full h-auto block select-none pointer-events-auto relative z-10">
+                    </div>
+
+                    <!-- ЛУПА (Zoom Lens) -->
+                    <!-- Приподнятый z-index лупы -->
+                    <div id="zoomLens" class="absolute w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white/50 backdrop-blur-sm shadow-[0_0_40px_rgba(0,0,0,0.6)] pointer-events-none opacity-0 transition-opacity duration-300 overflow-hidden z-[100]">
+                        <div class="w-1 h-3 bg-white/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[110] shadow-sm"></div>
+                        <div class="w-3 h-1 bg-white/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[110] shadow-sm"></div>
+                        
+                        <!-- Клон внутренностей (JS скопирует visualsWrapper сюда) -->
+                        <div id="lensContent" class="absolute top-0 left-0 origin-top-left will-change-transform z-[105]"></div>
+                    </div>
                 </div>
             </div>
-            <h2 class="text-xl font-semibold text-deep-green mb-4 mt-6">Выберите текстуру цоколя</h2>
-            <div class="scrollable-container">
-                <div class="flex flex-wrap gap-2 mt-2">
-                    {% for texture in base_textures %}
-                        <div class="texture-swatch w-12 h-12 relative cursor-pointer"
-                             data-target="base"
-                             data-image="{{ texture.image.url }}"
-                             title="{{ texture.name }}"
-                             style="background-image: url('{{ texture.image.url }}')"
-                             role="button"
-                             aria-label="Выбрать текстуру {{ texture.name }} для цоколя">
-                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white">{{ texture.name }}</span>
+
+            <!-- Правая часть: UI CONTROLS (40%) -->
+            <div class="w-full xl:w-2/5 flex flex-col gap-8 pb-10">
+                
+                <!-- ПАНЕЛЬ ЦВЕТА ФАСАДА -->
+                <div class="configurator-panel p-8 rounded-3xl shadow-soft border border-white dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+                        <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">1</span> 
+                            Цвет Фасада
+                        </h2>
+                        <span id="activeFacadeName" class="text-gray-500 font-medium">Не выбран</span>
+                    </div>
+
+                    <div class="config-scroll">
+                        <div class="flex flex-wrap gap-4 pt-2 pb-4">
+                            {% for color in facade_colors %}
+                                <button type="button" class="color-swatch w-14 h-14 rounded-full relative group outline-none" 
+                                     data-target="facade" 
+                                     data-color="{{ color.hex_code }}" 
+                                     data-name="{{ color.name }}"
+                                     style="background-color: {{ color.hex_code }};" 
+                                     title="{{ color.name }}">
+                                    <!-- Иконка галочки, показывается только если selected -->
+                                    <i class="fas fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/90 opacity-0 transition-opacity drop-shadow-md check-icon text-sm"></i>
+                                    <!-- Тултип -->
+                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                        {{ color.name }}
+                                    </div>
+                                </button>
+                            {% empty %}
+                                <div class="w-full p-4 bg-red-50 text-red-500 rounded-lg text-sm">Цвета не загружены в БД.</div>
+                            {% endfor %}
                         </div>
-                    {% empty %}
-                        <p class="text-gray-500">Нет доступных текстур. Добавьте текстуры в админ-панели.</p>
-                    {% endfor %}
+                    </div>
                 </div>
+
+                <!-- ПАНЕЛЬ ТЕКСТУРЫ ЦОКОЛЯ -->
+                <div class="configurator-panel p-8 rounded-3xl shadow-soft border border-white dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+                        <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">2</span> 
+                            Текстура Цоколя
+                        </h2>
+                        <span id="activeBaseName" class="text-gray-500 font-medium">Не выбрана</span>
+                    </div>
+
+                    <div class="config-scroll">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 pb-4">
+                            {% for texture in base_textures %}
+                                <button type="button" class="texture-swatch aspect-square rounded-2xl relative group overflow-hidden bg-gray-100 dark:bg-gray-800 outline-none"
+                                     data-target="base"
+                                     data-image="{{ texture.image.url }}"
+                                     data-name="{{ texture.name }}"
+                                     title="{{ texture.name }}">
+                                    <!-- Картинка текстуры -->
+                                    <img src="{{ texture.image.url }}" class="absolute inset-0 w-full h-full object-cover">
+                                    <!-- Затемняющий градиент при наведении -->
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                                    <!-- Галочка активного -->
+                                    <div class="absolute top-2 right-2 w-6 h-6 bg-deep-green rounded-full flex items-center justify-center text-white text-xs opacity-0 transition-opacity check-icon shadow-md z-10">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <!-- Имя текстуры поверх картинки снизу -->
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-left">
+                                        <span class="text-white text-xs font-medium">{{ texture.name }}</span>
+                                    </div>
+                                </button>
+                            {% empty %}
+                                <div class="col-span-full p-4 bg-red-50 text-red-500 rounded-lg text-sm">Текстуры не загружены в БД.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- КНОПКИ ДЕЙСТВИЙ -->
+                <div class="flex gap-4">
+                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-1/3 flex items-center justify-center gap-2">
+                        <i class="fas fa-undo"></i> Сбросить
+                    </button>
+                    <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-8 py-4 rounded-xl font-medium shadow-md hover:shadow-xl hover:-translate-y-1 transition-all w-2/3 text-center flex items-center justify-center gap-2">
+                        Рассчитать проект <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
@@ -105,5 +218,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/color_selection.js' %}"></script>
+<script src="{% static 'js/color_selection.js' %}?v=2.1"></script>
 {% endblock %}

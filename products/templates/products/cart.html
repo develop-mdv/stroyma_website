@@ -1,90 +1,152 @@
 {% extends 'products/base.html' %}
 
 {% block content %}
-<h1 class="text-2xl md:text-3xl font-bold text-deep-green mb-4 md:mb-8">Корзина</h1>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-8">Моя Корзина</h1>
 
-<!-- Список товаров в корзине -->
-{% if cart_items %}
-<div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-6 md:mb-8 border border-gray-200 dark:border-gray-700">
-    <div class="grid grid-cols-1 gap-4 md:gap-6">
-        {% for item in cart_items %}
-        <div class="flex flex-col md:flex-row md:items-center border-b border-gray-200 dark:border-gray-600 py-4">
-            <!-- Изображение товара с ссылкой -->
-            <div class="w-full md:w-24 h-48 md:h-24 flex-shrink-0 mb-3 md:mb-0">
-                {% if item.product.image %}
-                <a href="{% url 'product_detail' slug=item.product.slug %}">
-                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain md:object-cover rounded-lg" loading="lazy">
-                </a>
-                {% else %}
-                <a href="{% url 'product_detail' slug=item.product.slug %}">
-                    <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-contain md:object-cover rounded-lg" loading="lazy">
-                </a>
-                {% endif %}
-            </div>
-            <!-- Информация о товаре -->
-            <div class="flex-1 md:ml-6">
-                <a href="{% url 'product_detail' slug=item.product.slug %}" class="text-lg font-medium text-deep-green hover:underline block mb-2">
-                    {{ item.product.name }}
-                </a>
-                <div class="flex flex-wrap items-center justify-between mb-2">
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mr-4 mb-2 md:mb-0">Цена за единицу: {{ item.product.price }} руб.</p>
-                    <p class="text-md font-bold text-deep-green" id="item-total-{{ item.product.pk }}">
-                        Общая цена: {{ item.total_price|floatformat:2 }} руб.
-                    </p>
-                </div>
-                <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="flex items-center mt-2 update-cart-form">
-                    {% csrf_token %}
-                    <label for="quantity-{{ item.product.pk }}" class="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">Количество:</label>
-                    <div class="flex border border-gray-300 dark:border-gray-600 rounded-md">
-                        <button type="button" class="decrease-quantity px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-l-md" data-product-id="{{ item.product.pk }}">-</button>
-                        <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
-                               class="w-12 md:w-16 text-center border-none focus:ring-0 focus:outline-none update-cart-quantity dark:bg-gray-700 dark:text-white"
-                               data-product-id="{{ item.product.pk }}">
-                        <button type="button" class="increase-quantity px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white rounded-r-md" data-product-id="{{ item.product.pk }}">+</button>
+        {% if cart_items %}
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 relative items-start">
+            
+            <!-- Левая колонка: Список товаров (65%) -->
+            <div class="w-full lg:w-2/3 flex flex-col gap-6">
+                {% for item in cart_items %}
+                <!-- Карточка товара -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-center gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
+                    
+                    <!-- Удалить (Только Иконка) -->
+                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-4 right-4 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-all z-10 opacity-70 group-hover:opacity-100" title="Удалить из корзины">
+                        <i class="fas fa-trash-alt text-lg"></i>
+                    </a>
+
+                    <!-- Фото -->
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-3 flex items-center justify-center">
+                        {% if item.product.image %}
+                        <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full block">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal hover:scale-105 transition-transform duration-300" loading="lazy">
+                        </a>
+                        {% else %}
+                        <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full flex items-center justify-center text-gray-400">
+                            <i class="fas fa-image text-3xl"></i>
+                        </a>
+                        {% endif %}
                     </div>
-                </form>
+
+                    <!-- Информация -->
+                    <div class="flex-1 w-full pl-2 pr-4">
+                        <a href="{% url 'product_detail' slug=item.product.slug %}" class="text-lg font-bold text-gray-900 dark:text-white hover:text-deep-green transition-colors pr-6 line-clamp-2 leading-tight">
+                            {{ item.product.name }}
+                        </a>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4 font-medium">{{ item.product.price|floatformat:2 }} руб. / шт</p>
+
+                        <div class="flex items-center justify-between mt-auto">
+                            <!-- Управление количеством (Pill form) -->
+                            <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="update-cart-form m-0">
+                                {% csrf_token %}
+                                <div class="inline-flex items-center bg-gray-100 dark:bg-gray-700/50 rounded-full p-1 border border-transparent focus-within:border-sandy transition-colors shadow-inner-light">
+                                    <button type="button" class="decrease-quantity w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                        <i class="fas fa-minus text-[10px]"></i>
+                                    </button>
+                                    
+                                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
+                                           class="w-10 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 dark:text-white p-0 m-0"
+                                           data-product-id="{{ item.product.pk }}">
+                                    
+                                    <button type="button" class="increase-quantity w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                        <i class="fas fa-plus text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Итого за товар -->
+                            <div class="text-right">
+                                <span class="block text-xs text-gray-400 uppercase tracking-widest font-semibold mb-1">Сумма</span>
+                                <span class="text-xl font-bold text-deep-green tracking-tight transition-all duration-300 price-updating-target" id="item-total-{{ item.product.pk }}">
+                                    {{ item.total_price|floatformat:2 }} руб.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <!-- Действия -->
-            <div class="mt-3 md:mt-0 md:ml-4 text-right">
-                <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="button bg-red-500 text-white hover:bg-red-600 shadow-hover inline-block">
-                    <i class="fas fa-trash-alt mr-1"></i> Удалить
-                </a>
+
+            <!-- Правая колонка: Order Summary (35%) Sticky -->
+            <div class="w-full lg:w-1/3 xl:sticky xl:top-24 z-10 pb-10">
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                    
+                    <!-- Decorative blob background -->
+                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-sandy/20 rounded-full blur-2xl"></div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 font-display">Детали заказа</h2>
+                    
+                    <div class="space-y-5 mb-6 text-gray-600 dark:text-gray-300 font-medium">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
+                            <span>Товаров в корзине</span>
+                            <span class="text-gray-900 dark:text-white">{{ cart_items|length }} шт.</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-400">Доставка</span>
+                            <span class="text-gray-500">Рассчитывается далее</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end mb-8 pt-5 border-t w-full border-gray-100 dark:border-gray-700">
+                        <span class="text-lg font-medium text-gray-900 dark:text-white uppercase tracking-wide">Итого</span>
+                        <span class="text-3xl font-bold text-deep-green tracking-tight transition-all duration-300 price-updating-target" id="total-price">
+                            {{ total_price|floatformat:2 }} руб.
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <a href="{% url 'checkout' %}" class="button bg-deep-green text-white w-full py-4 rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-1 transition-all text-center flex items-center justify-center gap-2 text-lg group">
+                            Оформить заказ <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="{% url 'product_list' %}" class="w-full py-3 rounded-xl text-center text-gray-500 hover:text-deep-green hover:bg-gray-50 dark:hover:bg-gray-700/50 font-medium transition-colors">
+                            <i class="fas fa-undo mr-1 opacity-70"></i> Продолжить покупки
+                        </a>
+                    </div>
+                    
+                </div>
             </div>
+            
         </div>
-        {% endfor %}
-    </div>
+        
+        {% else %}
+        <!-- Эмпи стейт (пустая корзина) -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-soft border border-gray-100 dark:border-gray-700 text-center flex flex-col items-center max-w-2xl mx-auto mt-10 relative overflow-hidden animate-fade-in-up">
+            
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-sandy/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- Итоговая сумма -->
-    <div class="mt-6 text-right">
-        <h4 class="text-xl font-bold text-deep-green" id="total-price">Итого: {{ total_price|floatformat:2 }} руб.</h4>
-    </div>
-
-    <!-- Кнопка оформления заказа -->
-    <div class="mt-6 flex flex-col md:flex-row md:justify-end gap-3 md:gap-4">
-        <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover text-center">
-            <i class="fas fa-arrow-left mr-1"></i> Продолжить покупки
-        </a>
-        <a href="{% url 'checkout' %}" class="button bg-deep-green text-white shadow-hover text-center">
-            <i class="fas fa-shopping-cart mr-1"></i> Оформить заказ
-        </a>
+            <div class="w-32 h-32 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mb-6 text-gray-300 dark:text-gray-500 shadow-inner">
+                <i class="fas fa-shopping-cart text-5xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3 font-display">Тут пока пусто</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm text-lg">Ваша корзина ждет, когда вы её наполните. Загляните в каталог, чтобы найти нужные строительные товары.</p>
+            <a href="{% url 'product_list' %}" class="button bg-deep-green text-white px-8 py-4 rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-1 transition-all flex items-center gap-2 group">
+                В каталог <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
-
-{% else %}
-<div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-700">
-    <p class="text-gray-600 dark:text-gray-300 mb-4">Корзина пуста.</p>
-    <a href="{% url 'product_list' %}" class="button bg-sandy text-deep-green dark:text-white shadow-hover inline-block">
-        <i class="fas fa-arrow-left mr-1"></i> Перейти к покупкам
-    </a>
-</div>
-{% endif %}
-
 {% endblock %}
 
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function () {
+    // Вспомогательная функция для подсветки обновления цены
+    function flashPrice(selector) {
+        const $el = $(selector);
+        $el.css('color', '#41f2a3'); // яркий зеленый
+        $el.css('transform', 'scale(1.05)');
+        setTimeout(() => {
+            $el.css('color', '');
+            $el.css('transform', '');
+        }, 300);
+    }
+
     // Обработка изменения количества товара
     $('.update-cart-quantity').on('change', function () {
         updateCartItem($(this));
@@ -131,6 +193,10 @@ $(document).ready(function () {
             return;
         }
 
+        // Parent form/card interaction
+        const $card = $('#cart-item-row-' + productId);
+        $card.css('opacity', '0.7'); // индикация загрузки
+
         $.ajax({
             url: `/cart/update/${productId}/`,
             method: 'POST',
@@ -139,11 +205,18 @@ $(document).ready(function () {
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             },
             success: function (response) {
+                $card.css('opacity', '1');
                 if (response.success) {
-                    $('#item-total-' + productId).text('Общая цена: ' + response.item_total_price.toFixed(2) + ' руб.');
-                    $('#total-price').text('Итого: ' + response.total_price.toFixed(2) + ' руб.');
                     
-                    // Обновление счетчиков в корзине
+                    // Обновление цен БЕЗ префиксного текста "Общая цена: "
+                    $('#item-total-' + productId).text(response.item_total_price.toFixed(2) + ' руб.');
+                    $('#total-price').text(response.total_price.toFixed(2) + ' руб.');
+                    
+                    // Подсветка обновления
+                    flashPrice('#item-total-' + productId);
+                    flashPrice('#total-price');
+
+                    // Обновление счетчиков в шапке
                     if ($("#mobile-cart-count").length) {
                         $("#mobile-cart-count").text(response.cart_item_count);
                     }
@@ -157,6 +230,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
+                $card.css('opacity', '1');
                 alert('Произошла ошибка при обновлении корзины.');
             }
         });

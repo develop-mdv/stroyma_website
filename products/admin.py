@@ -119,12 +119,8 @@ class CategoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin):
-    """
-    Административный интерфейс для товаров с поддержкой импорта/экспорта.
-    Включает в себя расширенный функционал для управления товарами.
-    """
     resource_classes = [ProductResource]
-    list_display = ('image_preview', 'name', 'price', 'stock', 'rating', 'created_at')
+    list_display = ('image_preview', 'name', 'formatted_price', 'stock_status', 'rating', 'created_at')
     list_filter = (CategoryFilter, 'rating', 'created_at')
     search_fields = ('name', 'description')
     filter_horizontal = ('categories',)
@@ -133,23 +129,25 @@ class ProductAdmin(ImportExportModelAdmin):
     list_per_page = 25
     readonly_fields = ('created_at', 'updated_at', 'image_preview', 'product_popularity')
     fieldsets = (
-        (None, {
-            'fields': ('name', 'slug', 'description', 'price', 'stock', 'rating', 'categories', 'product_popularity')
+        ('Основная информация', {
+            'fields': ('name', 'slug', 'description', 'price', 'stock', 'rating', 'categories', 'product_popularity'),
+            'description': 'Заполните основные данные о товаре. Поле URL-имя заполнится автоматически.'
         }),
         ('Изображение', {
-            'fields': ('image', 'image_preview')
+            'fields': ('image', 'image_preview'),
+            'description': 'Загрузите главное изображение товара. Дополнительные фото можно добавить ниже.'
         }),
-        ('SEO', {
+        ('SEO настройки', {
             'fields': ('meta_title', 'meta_description', 'keywords'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
+            'description': 'Настройки для поисковых систем (необязательно).'
         }),
-        ('Дата и время', {
+        ('Служебная информация', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
-    
-    # Проверка формы для валидации слага
+
     form = forms.modelform_factory(
         Product,
         fields='__all__',
@@ -159,11 +157,31 @@ class ProductAdmin(ImportExportModelAdmin):
     )
 
     def image_preview(self, obj):
-        """Отображает миниатюру изображения товара в админке"""
         if obj.image:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover;" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Изображение'
+            return format_html(
+                '<img src="{}" width="55" height="55" '
+                'style="object-fit: cover; border-radius: 8px; '
+                'border: 2px solid rgba(255,255,255,0.08);" />', obj.image.url
+            )
+        return format_html('<span style="color: rgba(255,255,255,0.2);">—</span>')
+    image_preview.short_description = 'Фото'
+
+    def formatted_price(self, obj):
+        return format_html(
+            '<span style="font-weight:600; font-size:14px;">{} ₽</span>',
+            f'{obj.price:,.0f}'.replace(',', ' ')
+        )
+    formatted_price.short_description = 'Цена'
+    formatted_price.admin_order_field = 'price'
+
+    def stock_status(self, obj):
+        if obj.stock == 0:
+            return format_html('<span class="admin-stock-critical">Нет в наличии</span>')
+        elif obj.stock <= 5:
+            return format_html('<span class="admin-stock-low">{} шт.</span>', obj.stock)
+        return format_html('<span class="admin-stock-ok">{} шт.</span>', obj.stock)
+    stock_status.short_description = 'Остаток'
+    stock_status.admin_order_field = 'stock'
     
     def save_model(self, request, obj, form, change):
         """
@@ -254,15 +272,8 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(ImportExportModelAdmin):
-    """
-    Административный интерфейс для заказов с расширенным функционалом:
-    - Импорт/экспорт заказов
-    - Детальная информация о заказе и клиенте
-    - Статистика и отчеты по продажам
-    - Экспорт в различные форматы
-    """
     resource_classes = [OrderResource]
-    list_display = ('id', 'user', 'get_user_info', 'status', 'created_at', 'get_total_cost', 'get_items_count')
+    list_display = ('order_number', 'user', 'colored_status', 'created_at', 'formatted_total', 'get_items_count')
     list_filter = ('status', 'created_at')
     search_fields = ('user__username', 'id', 'user__profile__phone', 'user__email')
     ordering = ['-created_at']
@@ -273,16 +284,43 @@ class OrderAdmin(ImportExportModelAdmin):
     list_per_page = 25
     change_list_template = 'admin/products/order/change_list.html'
     fieldsets = (
-        (None, {
-            'fields': ('user', 'status')
+        ('Основное', {
+            'fields': ('user', 'status'),
+            'description': 'Выберите пользователя и установите статус заказа.'
         }),
-        ('Информация о пользователе', {
+        ('Информация о клиенте', {
             'fields': ('get_user_info',),
         }),
-        ('Информация о заказе', {
+        ('Детали заказа', {
             'fields': ('get_total_cost', 'created_at', 'updated_at')
         }),
     )
+
+    def order_number(self, obj):
+        return format_html('<strong>#{}</strong>', obj.id)
+    order_number.short_description = '№'
+    order_number.admin_order_field = 'id'
+
+    def colored_status(self, obj):
+        status_map = {
+            'pending': ('В ожидании', 'admin-badge-pending'),
+            'processing': ('Обработка', 'admin-badge-processing'),
+            'shipped': ('Доставка', 'admin-badge-shipped'),
+            'completed': ('Завершён', 'admin-badge-completed'),
+            'canceled': ('Отменён', 'admin-badge-canceled'),
+        }
+        label, css_class = status_map.get(obj.status, (obj.status, ''))
+        return format_html('<span class="admin-badge {}">{}</span>', css_class, label)
+    colored_status.short_description = 'Статус'
+    colored_status.admin_order_field = 'status'
+
+    def formatted_total(self, obj):
+        total = obj.total_cost
+        return format_html(
+            '<span style="font-weight:600;">{} ₽</span>',
+            f'{total:,.0f}'.replace(',', ' ')
+        )
+    formatted_total.short_description = 'Сумма'
 
     def get_user_info(self, obj):
         if obj.user:
@@ -728,35 +766,6 @@ class OrderAdmin(ImportExportModelAdmin):
                 'sales': [],
             }, status=200)
 
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('order', 'product', 'quantity', 'get_total')
-    list_filter = ('order',)
-    search_fields = ('product__name',)
-    
-    def get_total(self, obj):
-        return obj.product.price * obj.quantity
-    get_total.short_description = 'Сумма'
-
-@admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'total_items', 'cart_total')
-    search_fields = ('user__username',)
-
-    def total_items(self, obj):
-        return obj.items.count()
-    total_items.short_description = 'Товаров в корзине'
-    
-    def cart_total(self, obj):
-        total = sum(item.product.price * item.quantity for item in obj.items.all())
-        return total
-    cart_total.short_description = 'Сумма'
-
-@admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('cart', 'product', 'quantity', 'total_price')
-    list_filter = ('cart',)
-    search_fields = ('product__name',)
 
 class FacadeColorForm(forms.ModelForm):
     hex_code = forms.CharField(widget=ColorWidget, max_length=7)
@@ -787,8 +796,3 @@ class BaseTextureAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" width="100" />', obj.image.url)
         return "-"
     texture_preview.short_description = 'Предпросмотр'
-
-# Кастомизация заголовка админки
-admin.site.site_header = 'Система управления Stroyma'
-admin.site.site_title = 'Stroyma - Панель администратора'
-admin.site.index_title = 'Управление системой'

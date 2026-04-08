@@ -13,7 +13,7 @@ class Service(models.Model):
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO Description')
 
     class Meta:
-        verbose_name = "Услуги"
+        verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
 
     def clean(self):

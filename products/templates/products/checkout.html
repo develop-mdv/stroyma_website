@@ -1,117 +1,154 @@
 {% extends 'products/base.html' %}
+{% block title %}Оформление заказа | СтройМа{% endblock %}
+
 {% block content %}
+<div class="bg-[#F8F5EF] dark:bg-gray-900 min-h-screen pb-24 px-4 sm:px-8 xl:px-16 pt-32">
+    <!-- Заголовок -->
+    <div class="max-w-[120rem] mx-auto mb-16 relative">
+        <div class="absolute left-0 top-4 bottom-4 w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+        <h1 class="pl-8 text-6xl md:text-8xl lg:text-[7rem] font-bold font-display tracking-tight leading-[0.95] text-gray-900 dark:text-white uppercase break-words">
+            Оформление
+        </h1>
+    </div>
 
-<h1 class="text-3xl font-bold text-deep-green mb-8">Оформление заказа</h1>
-
-<!-- Товары в корзине -->
-<div class="bg-white rounded-lg shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-600">
-    <h4 class="text-xl font-semibold text-deep-green mb-4">Ваш заказ:</h4>
-    <div class="grid grid-cols-1 gap-4">
-        {% for item in cart_items %}
-        <div class="flex items-center border-b border-gray-200 py-4">
-            <!-- Изображение товара -->
-            <div class="w-16 h-16 flex-shrink-0">
-                {% if item.product.image %}
-                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
-                {% else %}
-                <img src="https://via.placeholder.com/64x64?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
-                {% endif %}
-            </div>
-            <!-- Информация о товаре -->
-            <div class="flex-1 ml-4">
-                <h5 class="text-md font-medium text-deep-green">{{ item.product.name }}</h5>
-                <p class="text-sm text-gray-600">Количество: {{ item.quantity }} шт.</p>
-                <p class="text-sm text-gray-600">Цена за ед.: {{ item.product.price }} руб.</p>
-                <p class="text-sm font-bold text-deep-green">Сумма: {{ item.total_price|floatformat:2 }} руб.</p>
+    <div class="max-w-[120rem] mx-auto flex flex-col lg:flex-row-reverse gap-12 xl:gap-24">
+        
+        <!-- Правая колонка / Сводка заказа (Glassmorphism) -->
+        <div class="w-full lg:w-[40%] xl:w-[35%] relative z-10">
+            <div class="sticky top-32 bg-white/60 dark:bg-gray-800/60 backdrop-blur-3xl border border-white/40 dark:border-gray-700/50 rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-deep-green/5">
+                <h2 class="text-2xl font-black font-display uppercase tracking-widest text-gray-900 dark:text-white mb-8 border-b-2 border-gray-900/10 dark:border-white/10 pb-6">Ваш заказ</h2>
+                
+                <div class="space-y-6 mb-8 max-h-[40vh] overflow-y-auto pr-4 custom-scrollbar">
+                    {% for item in cart_items %}
+                    <div class="flex gap-6 group">
+                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden shrink-0 relative">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            {% endif %}
+                            <div class="absolute -top-2 -right-2 bg-deep-green dark:bg-emerald-400 text-white dark:text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-10">
+                                {{ item.quantity }}
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-sm font-bold uppercase tracking-wide text-gray-900 dark:text-white mb-1 line-clamp-2">{{ item.product.name }}</h3>
+                            <span class="text-deep-green dark:text-emerald-400 font-bold whitespace-nowrap">{{ item.product.price|floatformat:"0" }} ₽ / шт</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="pt-6 border-t-2 border-gray-900/10 dark:border-white/10">
+                    <div class="flex items-end justify-between">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Итого к оплате</span>
+                        <div class="flex items-baseline gap-2 text-right">
+                            <span class="text-4xl md:text-5xl font-black font-display tracking-tighter text-gray-900 dark:text-white leading-none">{{ total_price|floatformat:"0" }}</span>
+                            <span class="text-2xl font-light text-gray-500">₽</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        {% endfor %}
-        <div class="border-t border-gray-200 pt-4 text-right">
-            <h4 class="text-xl font-bold text-deep-green">Итого: {{ total_price|floatformat:2 }} руб.</h4>
+
+        <!-- Левая колонка / Форма (Плавающие лейблы) -->
+        <div class="w-full lg:w-[60%] xl:w-[65%]">
+            <form method="post" class="space-y-12">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+                    
+                    <!-- Блок 01 -->
+                    <div class="md:col-span-2 relative">
+                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8 flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 flex items-center justify-center text-xs">01</span>
+                            Контактные данные
+                        </h3>
+                    </div>
+
+                    <!-- Инпуты -->
+                    <div class="relative group">
+                        <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default_if_none:'' }}" required
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Имя">
+                        <label for="{{ form.first_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Имя <span class="text-red-500">*</span></label>
+                        {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.first_name.errors.0 }}</p>{% endif %}
+                    </div>
+                    
+                    <div class="relative group">
+                        <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default_if_none:'' }}" required
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Фамилия">
+                        <label for="{{ form.last_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Фамилия <span class="text-red-500">*</span></label>
+                        {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.last_name.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <div class="relative group">
+                        <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:'' }}" required
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Email">
+                        <label for="{{ form.email.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Email <span class="text-red-500">*</span></label>
+                        {% if form.email.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.email.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <div class="relative group">
+                        <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}" value="{{ form.phone.value|default_if_none:'' }}" required
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Телефон">
+                        <label for="{{ form.phone.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Телефон <span class="text-red-500">*</span></label>
+                        {% if form.phone.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.phone.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <!-- Блок 02 -->
+                    <div class="md:col-span-2 pt-8">
+                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8 flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 flex items-center justify-center text-xs">02</span>
+                            Детали доставки
+                        </h3>
+                    </div>
+
+                    <div class="md:col-span-2 relative group">
+                        <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" rows="2" required
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent resize-none" placeholder="Адрес доставки">{{ form.address.value|default_if_none:'' }}</textarea>
+                        <label for="{{ form.address.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Полный адрес доставки <span class="text-red-500">*</span></label>
+                        {% if form.address.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.address.errors.0 }}</p>{% endif %}
+                    </div>
+
+                </div>
+
+                <!-- Подтверждение -->
+                <div class="pt-16 border-t-2 border-gray-900/10 dark:border-white/10 mt-16 flex flex-col sm:flex-row items-center justify-between gap-8">
+                    
+                    <label class="flex items-start gap-4 cursor-pointer group w-full sm:w-1/2 cursor-pointer">
+                        <div class="relative flex items-center justify-center mt-1">
+                            <input type="checkbox" name="privacy_policy" required class="peer appearance-none w-6 h-6 border-2 border-gray-300 dark:border-gray-600 rounded bg-transparent checked:bg-deep-green dark:checked:bg-emerald-400 checked:border-transparent transition-colors focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <i class="fas fa-check absolute text-white dark:text-gray-900 text-xs opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                        </div>
+                        <div class="flex-1 text-sm text-gray-500 dark:text-gray-400">
+                            Я согласен с <a href="{% url 'policy' %}" target="_blank" class="text-gray-900 dark:text-white font-bold underline hover:text-deep-green transition-colors">политикой конфиденциальности</a> и даю согласие на обработку данных.
+                        </div>
+                    </label>
+
+                    <button type="submit" class="w-full sm:w-auto bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-6 px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green dark:hover:bg-emerald-400 dark:hover:text-gray-900 transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl">
+                        Оформить заказ
+                        <i class="fas fa-check transform group-hover/btn:scale-125 transition-transform"></i>
+                    </button>
+                    
+                </div>
+            </form>
         </div>
+        
     </div>
 </div>
 
-<!-- Форма оформления заказа -->
-<form method="post" class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600">
-    {% csrf_token %}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Имя -->
-        <div>
-            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Имя</label>
-            <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
-                   value="{{ form.first_name.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
-            {% if form.first_name.errors %}
-                <div class="error-message">{{ form.first_name.errors }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Фамилия -->
-        <div>
-            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Фамилия</label>
-            <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
-                   value="{{ form.last_name.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
-            {% if form.last_name.errors %}
-                <div class="error-message">{{ form.last_name.errors }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Email -->
-        <div>
-            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
-                   value="{{ form.email.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
-            {% if form.email.errors %}
-                <div class="error-message">{{ form.email.errors }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Телефон -->
-        <div>
-            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">Телефон</label>
-            <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
-                   value="{{ form.phone.value|default_if_none:'' }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
-            {% if form.phone.errors %}
-                <div class="error-message">{{ form.phone.errors }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Адрес доставки -->
-        <div class="col-span-1 md:col-span-2">
-            <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Адрес доставки</label>
-            <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">{{ form.address.value|default_if_none:'' }}</textarea>
-            {% if form.address.errors %}
-                <div class="error-message">{{ form.address.errors }}</div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Согласие с политикой конфиденциальности -->
-    <div class="mt-6 flex items-start">
-        <div class="flex items-center h-5">
-            <input id="privacy_policy" name="privacy_policy" type="checkbox" required
-                   class="h-4 w-4 text-deep-green focus:ring-deep-green border-gray-300 rounded">
-        </div>
-        <div class="ml-3 text-sm">
-            <label for="privacy_policy" class="font-medium text-gray-700">Я согласен с <a href="{% url 'policy' %}" class="text-deep-green hover:underline" target="_blank">политикой конфиденциальности</a></label>
-            <p class="text-gray-500">Нажимая кнопку «Подтвердить заказ», вы даете согласие на обработку персональных данных для оформления и доставки заказа</p>
-        </div>
-    </div>
-
-    <!-- Кнопки -->
-    <div class="mt-6 flex space-x-4">
-        <button type="submit" class="button bg-deep-green text-white shadow-hover">
-            Подтвердить заказ
-        </button>
-        <a href="{% url 'view_cart' %}" class="button bg-sandy text-deep-green shadow-hover">
-            Вернуться к корзине
-        </a>
-    </div>
-</form>
-
+<style>
+/* Кастомный утонченный скроллбар для списка товаров */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.5); 
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(107, 114, 128, 0.8); 
+}
+</style>
 {% endblock %}

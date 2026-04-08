@@ -24,10 +24,12 @@ class Category(MPTTModel):
     image = models.ImageField(upload_to='category_images/', blank=True, null=True, verbose_name='Изображение категории')
     alt_text = models.CharField(max_length=255, blank=True, verbose_name='Альтернативный текст изображения')
     
-    class MPTTMeta:
-        order_insertion_by = ['name']
+    class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def clean(self):
         """
@@ -66,6 +68,16 @@ class Category(MPTTModel):
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 
+    def get_total_products_count(self):
+        """
+        Возвращает общее количество товаров в данной категории 
+        и во всех ее дочерних подкатегориях.
+        """
+        from django.db.models import Q
+        return Product.objects.filter(
+            Q(categories=self) | Q(categories__in=self.get_descendants())
+        ).distinct().count()
+
     def __str__(self):
         return self.name
 
@@ -74,13 +86,13 @@ class Product(models.Model):
     Модель товара с полной информацией о продукте, 
     включая SEO-параметры и связи с категориями.
     """
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name='Название')
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/')
-    stock = models.PositiveIntegerField(default=0)
-    rating = models.PositiveIntegerField(default=5)
+    description = models.TextField(verbose_name='Описание')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    image = models.ImageField(upload_to='products/', verbose_name='Изображение')
+    stock = models.PositiveIntegerField(default=0, verbose_name='Остаток на складе')
+    rating = models.PositiveIntegerField(default=5, verbose_name='Рейтинг')
     categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категории', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
@@ -96,7 +108,7 @@ class Product(models.Model):
             models.Index(fields=['slug']),
         ]
         ordering = ['-created_at']
-        verbose_name = "Товары"
+        verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
     def clean(self):
@@ -200,13 +212,13 @@ class Order(models.Model):
     Модель заказа, связывающая пользователя с заказанными товарами.
     Имеет систему отслеживания статусов с ведением истории изменений.
     """
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пользователь')
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending', verbose_name='Статус')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
     class Meta:
-        verbose_name = "Заказы"
+        verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
 
     def __str__(self):
@@ -253,9 +265,13 @@ class OrderItem(models.Model):
     Модель элемента заказа, связывает заказ с конкретным товаром
     и указывает его количество.
     """
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, verbose_name='Заказ')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+
+    class Meta:
+        verbose_name = "Позиция заказа"
+        verbose_name_plural = "Позиции заказов"
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity} шт.)"
@@ -283,8 +299,12 @@ class Cart(models.Model):
     Модель корзины покупок, может быть привязана к пользователю
     или использоваться для анонимных покупателей.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
+    class Meta:
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
 
     def __str__(self):
         return f"Корзина для {self.user.username if self.user else 'Гостя'}"
@@ -294,9 +314,13 @@ class CartItem(models.Model):
     Модель элемента корзины, связывает корзину с конкретным товаром
     и указывает его количество.
     """
-    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE, verbose_name='Корзина')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+
+    class Meta:
+        verbose_name = "Товар в корзине"
+        verbose_name_plural = "Товары в корзинах"
 
     @property
     def total_price(self):
@@ -314,6 +338,10 @@ class FacadeColor(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название цвета')
     hex_code = models.CharField(max_length=7, verbose_name='Код цвета (HEX)')
 
+    class Meta:
+        verbose_name = "Цвет фасада"
+        verbose_name_plural = "Цвета фасадов"
+
     def __str__(self):
         return self.name
 
@@ -325,6 +353,10 @@ class BaseTexture(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название текстуры')
     image = models.ImageField(upload_to='base_textures/', verbose_name='Изображение текстуры')
 
+    class Meta:
+        verbose_name = "Базовая текстура"
+        verbose_name_plural = "Базовые текстуры"
+
     def __str__(self):
         return self.name
 
@@ -333,13 +365,15 @@ class ProductImage(models.Model):
     Модель для хранения дополнительных изображений товара,
     позволяет создавать галерею изображений для каждого товара.
     """
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/gallery/')
-    title = models.CharField(max_length=255, blank=True)
-    order = models.PositiveIntegerField(default=0)
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name='Товар')
+    image = models.ImageField(upload_to='products/gallery/', verbose_name='Изображение')
+    title = models.CharField(max_length=255, blank=True, verbose_name='Название')
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок')
 
     class Meta:
         ordering = ['order']
+        verbose_name = "Фото товара"
+        verbose_name_plural = "Фото товаров"
 
     def __str__(self):
         return f"Изображение для {self.product.name}"

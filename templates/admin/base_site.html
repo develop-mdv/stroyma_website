@@ -3,15 +3,19 @@
 
 {% block extrahead %}
 {{ block.super }}
-<!-- Скрипты подключаются после того, как block.super загрузит jQuery -->
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}?v=2">
+<script>
+(function(){try{var t=localStorage.getItem('stroyma-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
+</script>
+<script src="{% static 'js/admin_theme.js' %}?v=2" defer></script>
 <script src="{% static 'js/admin_datepicker.js' %}"></script>
 <script src="{% static 'js/fix_rangefilter.js' %}"></script>
 {% endblock %}
 
-{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% block title %}{{ title }} | {{ site_title|default:'Stroyma' }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:'Stroyma' }}</a></h1>
 {% endblock %}
 
-{% block nav-global %}{% endblock %} 
+{% block nav-global %}{% endblock %}

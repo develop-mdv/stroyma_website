@@ -44,181 +44,207 @@
 }
 </script>
 
-<!-- Хлебные крошки с микроразметкой schema.org -->
-<nav class="text-sm text-gray-600 mb-3 md:mb-4 overflow-x-auto whitespace-nowrap pb-2" aria-label="breadcrumb">
-    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-            <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                <span itemprop="name">Главная</span>
-            </a>
-            <meta itemprop="position" content="1" />
-            <span class="mx-2">/</span>
-        </li>
-        {% for ancestor in category.get_ancestors %}
-        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-            <a href="{{ ancestor.get_absolute_url }}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                <span itemprop="name">{{ ancestor.name }}</span>
-            </a>
-            <meta itemprop="position" content="{{ forloop.counter|add:"1" }}" />
-            <span class="mx-2">/</span>
-        </li>
-        {% endfor %}
-        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-            <span itemprop="name">{{ category.name }}</span>
-            <meta itemprop="position" content="{{ category.get_ancestors.count|add:"2" }}" />
-        </li>
-    </ol>
-</nav>
+<div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 pt-8 pb-12">
+    <!-- Хлебные крошки Architectural -->
+    <nav class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-8 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
+        <ol class="breadcrumb flex items-center" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                <a href="{% url 'product_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <span itemprop="name">ГЛАВНАЯ</span>
+                </a>
+                <meta itemprop="position" content="1" />
+                <span class="mx-3 opacity-50">/</span>
+            </li>
+            {% for ancestor in category.get_ancestors %}
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                <a href="{{ ancestor.get_absolute_url }}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <span itemprop="name">{{ ancestor.name|upper }}</span>
+                </a>
+                <meta itemprop="position" content="{{ forloop.counter|add:"1" }}" />
+                <span class="mx-3 opacity-50">/</span>
+            </li>
+            {% endfor %}
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                <span itemprop="name" class="text-gray-900 dark:text-white">{{ category.name|upper }}</span>
+                <meta itemprop="position" content="{{ category.get_ancestors.count|add:"2" }}" />
+            </li>
+        </ol>
+    </nav>
 
-<!-- Заголовок категории для мобильных -->
-<h1 class="text-2xl md:text-3xl font-bold text-deep-green mb-4 md:mb-6 animate-fade-in">{{ category.name }}</h1>
-
-<!-- Кнопка для переключения фильтров на мобильных -->
-<button class="block md:hidden w-full py-2 px-4 mb-4 bg-sandy text-deep-green rounded-md shadow transition-colors hover:bg-gray-200" id="toggle-filters">
-    <i class="fas fa-filter mr-2"></i> Показать фильтры
-</button>
-
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
-    <!-- Фильтры -->
-    <div id="filters-panel" class="bg-white p-4 md:p-6 rounded-lg shadow-lg animate-fade-in border border-gray-200 dark:border-gray-600 md:block hidden">
-        <h3 class="text-lg md:text-xl font-bold text-deep-green mb-3 md:mb-4">Фильтры</h3>
-        <form method="get" id="filter-form">
-            <!-- Поиск -->
-            <div class="mb-4">
-                <label for="id_query" class="block text-sm font-medium text-gray">Поиск:</label>
-                <input type="text" name="name" id="id_query" value="{{ request.GET.name }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
-            </div>
-            <!-- Категории -->
-            <div class="mb-4">
-                <h4 class="font-medium text-gray-700 mb-2">Категории</h4>
-                <div class="max-h-48 overflow-y-auto p-2 space-y-2">
-                    {% recursetree category.get_descendants %}
-                        <div class="ml-{{ node.level|add:"-1" }}0">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="category" value="{{ node.id }}" 
-                                       class="form-checkbox text-deep-green h-4 w-4" 
-                                       {% if node.id|stringformat:"i" in selected_categories %}checked{% endif %}>
-                                <span class="ml-2 text-sm">{{ node.name }}</span>
-                            </label>
-                            {% if not node.is_leaf_node %}
-                                {{ children }}
-                            {% endif %}
-                        </div>
-                    {% endrecursetree %}
-                </div>
-            </div>
-            <!-- Цена -->
-            <div class="mb-4">
-                <h4 class="font-medium text-gray-700 mb-2">Цена</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label for="price_min" class="text-xs text-gray-500">От</label>
-                        <input type="number" id="price_min" name="price_min" placeholder="От" 
-                               value="{{ request.GET.price_min }}" 
-                               class="w-full text-sm form-input rounded-md border-gray-300 py-1">
-                    </div>
-                    <div>
-                        <label for="price_max" class="text-xs text-gray-500">До</label>
-                        <input type="number" id="price_max" name="price_max" placeholder="До" 
-                               value="{{ request.GET.price_max }}" 
-                               class="w-full text-sm form-input rounded-md border-gray-300 py-1">
-                    </div>
-                </div>
-            </div>
-            <!-- Сортировка -->
-            <div class="mb-4">
-                <label for="sort_by" class="block text-sm font-medium text-gray">Сортировка:</label>
-                <select name="sort_by" id="sort-by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green">
-                    <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
-                    <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
-                    <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
-                </select>
-            </div>
-            <div class="flex space-x-2">
-                <button type="submit" class="flex-1 button bg-deep-green text-white shadow-hover py-2 text-sm">
-                    Применить
-                </button>
-                <button type="reset" class="button bg-gray-200 text-gray-700 shadow-hover py-2 text-sm">
-                    Сбросить
-                </button>
-            </div>
-        </form>
+    <!-- Заголовок категории -->
+    <div class="mb-12 md:mb-16 relative pl-6">
+        <div class="absolute left-0 top-2 bottom-2 w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+        <h1 class="text-[3.5rem] md:text-[5rem] xl:text-[7rem] font-black text-gray-900 dark:text-white leading-[0.9] tracking-tighter font-display uppercase break-words">
+            {{ category.name }}
+        </h1>
+        {% if category.description %}
+            <p class="mt-8 max-w-3xl text-lg text-gray-500 dark:text-gray-400 leading-relaxed font-light">{{ category.description|linebreaksbr }}</p>
+        {% endif %}
     </div>
 
-    <!-- Товары -->
-    <div class="md:col-span-3">
-        {% if category.description %}
-        <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg mb-4 md:mb-6 animate-fade-in border border-gray-200 dark:border-gray-600">
-            <div class="prose max-w-none text-sm md:text-base">
-                {{ category.description|linebreaks }}
-            </div>
-        </div>
-        {% endif %}
-        
-        {% if category.get_children %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
-                {% for subcategory in category.get_children %}
-                    <a href="{{ subcategory.get_absolute_url }}" 
-                       class="bg-white p-3 md:p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-600 flex items-center">
-                        {% if subcategory.image %}
-                            <div class="w-16 h-16 flex-shrink-0 mr-3">
-                                <img src="{{ subcategory.image.url }}" 
-                                     alt="{{ subcategory.alt_text|default:subcategory.name }}" 
-                                     class="w-full h-full object-cover rounded-md">
-                            </div>
-                        {% else %}
-                            <div class="w-16 h-16 flex-shrink-0 mr-3 bg-gray-100 rounded-md flex items-center justify-center">
-                                <i class="fas fa-folder text-gray-400 text-2xl"></i>
-                            </div>
-                        {% endif %}
-                        <div class="flex-grow">
-                            <h3 class="text-base md:text-lg font-medium text-deep-green">{{ subcategory.name }}</h3>
-                            <p class="text-xs md:text-sm text-gray-600 mt-1">
-                                {{ subcategory.products.count }} товаров
-                            </p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        {% endif %}
+    <!-- Кнопка для переключения фильтров на мобильных -->
+    <button class="block md:hidden w-full py-3 mb-6 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg transition-colors" id="toggle-filter">
+        <i class="fas fa-filter mr-2"></i> Показать фильтры
+    </button>
 
-        <div id="products-grid">
-            {% include 'products/search_results.html' with products=products %}
-        </div>
-        
-        <!-- Пагинация -->
-        {% if products.has_other_pages %}
-        <div class="mt-6 flex justify-center">
-            <div class="inline-flex shadow-sm rounded-md">
-                {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
-                   class="px-3 py-2 bg-white text-deep-green rounded-l-md border border-gray-300 hover:bg-gray-100">
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-                {% endif %}
-                
-                {% for num in products.paginator.page_range %}
-                    {% if products.number == num %}
-                    <span class="px-3 py-2 bg-deep-green text-white border border-deep-green">{{ num }}</span>
-                    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-                    <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
-                       class="px-3 py-2 bg-white text-deep-green border border-gray-300 hover:bg-gray-100">
-                        {{ num }}
+    <div class="flex flex-col md:flex-row gap-6 lg:gap-8 items-start relative">
+        <!-- Сайдбар с фильтрами -->
+        <aside class="w-full md:w-1/3 lg:w-1/4 xl:w-[300px] shrink-0 md:sticky md:top-28 z-20 hidden md:block" id="filters-panel">
+            <form id="search-form" method="get" class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 lg:p-8 rounded-[2rem] shadow-xl shadow-gray-200/50 dark:shadow-black/50 border border-white/50 dark:border-gray-700">
+                <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-gray-900 dark:border-white pb-3">Фильтры</h3>
+
+                <div class="flex flex-col gap-8">
+                    <!-- Поиск -->
+                    <div>
+                        <label for="id_query" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2 dark:text-gray-400">Поиск:</label>
+                        <input type="text" name="name" id="id_query" value="{{ request.GET.name }}" class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-sm focus:border-deep-green focus:ring-deep-green dark:bg-gray-800/50 dark:border-gray-700 py-3 text-gray-900 dark:text-white transition-colors">
+                    </div>
+                    
+                    <!-- Категории (Descendants) -->
+                    <div>
+                        <h4 class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-4 dark:text-gray-400">Категории</h4>
+                        <div class="max-h-48 overflow-y-auto pr-2 custom-scrollbar space-y-3">
+                            {% recursetree category.get_descendants %}
+                                <div class="ml-{{ node.level|add:"-1" }}0">
+                                    <label class="flex items-start gap-3 cursor-pointer group">
+                                        <input type="checkbox" name="category" value="{{ node.id }}" 
+                                               class="mt-0.5 peer form-checkbox text-deep-green h-4 w-4 rounded border-gray-300 focus:ring-deep-green transition-shadow cursor-pointer" 
+                                               {% if node.id|stringformat:"i" in selected_categories %}checked{% endif %}>
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-deep-green dark:group-hover:text-white transition-colors">{{ node.name }}</span>
+                                    </label>
+                                    {% if not node.is_leaf_node %}
+                                        <div class="mt-2 ml-4 pl-2 border-l-2 border-gray-100 dark:border-gray-700 space-y-2">
+                                            {{ children }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endrecursetree %}
+                        </div>
+                    </div>
+
+                    <!-- Цена -->
+                    <div>
+                        <h4 class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-8 dark:text-gray-400">Цена (₽)</h4>
+                        <div id="price-slider" class="mb-6"></div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1">
+                                <input type="number" id="price_min" name="price_min" placeholder="От" value="{{ request.GET.price_min }}" class="w-full rounded-lg border-gray-200 bg-gray-50 text-sm focus:border-deep-green focus:ring-deep-green dark:bg-gray-700 dark:border-gray-600 text-center py-2 h-10">
+                            </div>
+                            <span class="text-gray-400">-</span>
+                            <div class="flex-1">
+                                <input type="number" id="price_max" name="price_max" placeholder="До" value="{{ request.GET.price_max }}" class="w-full rounded-lg border-gray-200 bg-gray-50 text-sm focus:border-deep-green focus:ring-deep-green dark:bg-gray-700 dark:border-gray-600 text-center py-2 h-10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Сортировка -->
+                    <div>
+                        <label for="sort_by" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2 dark:text-gray-400">Сортировка:</label>
+                        <div class="relative">
+                            <select name="sort_by" id="sort-by" class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-sm focus:border-deep-green focus:ring-deep-green dark:bg-gray-800/50 dark:border-gray-700 py-3 appearance-none font-medium text-gray-900 dark:text-white transition-colors cursor-pointer">
+                                <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
+                                <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
+                                <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex flex-col gap-3">
+                    <button type="submit" class="w-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 font-bold uppercase tracking-[0.2em] py-4 rounded-xl shadow-lg hover:bg-deep-green dark:hover:bg-emerald-400 transition-colors text-xs">
+                        Применить
+                    </button>
+                    <button type="reset" class="w-full bg-transparent text-gray-500 font-bold uppercase tracking-widest py-3 hover:text-gray-900 dark:hover:text-white transition-colors text-center text-xs">
+                        Сбросить
+                    </button>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Основной контент -->
+        <main class="w-full flex-grow">
+            <!-- Bento-box Подкатегории -->
+            {% if category.get_children %}
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-10 md:mb-12">
+                    {% for subcategory in category.get_children %}
+                        <a href="{{ subcategory.get_absolute_url }}" class="group relative bg-white dark:bg-gray-800 rounded-[1.5rem] p-4 flex items-center gap-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-100 dark:border-gray-700 overflow-hidden">
+                            {% if subcategory.image %}
+                                <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0">
+                                    <img src="{{ subcategory.image.url }}" alt="{{ subcategory.alt_text|default:subcategory.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                </div>
+                            {% else %}
+                                <div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                                    <i class="fas fa-folder text-gray-300 dark:text-gray-500 text-xl"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow min-w-0">
+                                <h3 class="text-sm font-bold text-gray-900 dark:text-white truncate group-hover:text-deep-green transition-colors">{{ subcategory.name }}</h3>
+                                <p class="text-[0.65rem] uppercase tracking-widest text-gray-400 mt-1 font-bold">{{ subcategory.products.count }} ед.</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div id="products-grid">
+                {% include 'products/search_results.html' with products=products %}
+            </div>
+            
+            <!-- Пагинация -->
+            {% if products.has_other_pages %}
+            <div class="mt-12 flex justify-center">
+                <div class="inline-flex items-center gap-2">
+                    {% if products.has_previous %}
+                    <a href="?page={{ products.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
+                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        <i class="fas fa-chevron-left text-xs"></i>
                     </a>
                     {% endif %}
-                {% endfor %}
-                
-                {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
-                   class="px-3 py-2 bg-white text-deep-green rounded-r-md border border-gray-300 hover:bg-gray-100">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-                {% endif %}
+                    
+                    {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                        <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 font-bold shadow-lg">{{ num }}</span>
+                        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                        <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
+                           class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition font-medium">
+                            {{ num }}
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}" 
+                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        {% endif %}
+            {% endif %}
+        </main>
     </div>
 </div>
+
+<style>
+/* Элегантный скроллбар для списков */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+[data-theme="dark"] .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4B5563;
+}
+</style>
 {% endblock %}
 
 {% block scripts %}

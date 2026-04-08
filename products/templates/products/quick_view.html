@@ -1,33 +1,68 @@
-<div class="flex flex-col md:flex-row gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 h-full w-full overflow-hidden grid-rows-[auto_1fr] md:grid-rows-1">
     <!-- Изображение -->
-    <div class="w-full md:w-1/2">
-        <img src="{{ product.image.url|default:'https://via.placeholder.com/300x200?text=Нет+изображения' }}" alt="{{ product.name }}"
-             class="w-full h-48 object-cover rounded-lg shadow-md hover-scale" loading="lazy">
+    <div class="relative bg-gray-50 dark:bg-gray-800 h-48 sm:h-64 md:h-full shrink-0">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}"
+             class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+        {% else %}
+        <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-400">Нет фото</span>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Информация о товаре -->
-    <div class="w-full md:w-1/2 flex flex-col justify-between">
-        <div>
-            <h5 class="text-xl font-medium text-deep-green mb-2">{{ product.name }}</h5>
-            <p class="text-sm text-gray-600 mb-4">{{ product.description|truncatewords:20 }}</p>
-            <p class="text-lg font-bold text-deep-green mb-2">{{ product.price }} руб.</p>
-            <p class="text-sm text-gray-600 mb-4">На складе: {{ product.stock }} шт.</p>
+    <div class="flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 overflow-y-auto w-full h-full">
+        <div class="flex-grow">
+            <!-- Рейтинг -->
+            <div class="text-yellow-500 text-sm mb-4">
+                {% for i in '12345' %}
+                    {% if forloop.counter <= product.rating|default:5 %}
+                        ★
+                    {% else %}
+                        <span class="text-gray-200">★</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Заголовок -->
+            <h2 class="text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white leading-[1.1] mb-6 tracking-tight uppercase break-words">
+                {{ product.name }}
+            </h2>
+            
+            <!-- Описание -->
+            <p class="text-sm font-light text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
+                {{ product.description|truncatewords:25 }}
+            </p>
+
+            <hr class="border-t border-gray-100 dark:border-gray-800 mb-8">
+
+            <!-- Цена -->
+            <div class="mb-8">
+                <span class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 mb-1">Окончательная цена</span>
+                <p class="text-[3rem] font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter">{{ product.price|floatformat:"0" }} <span class="text-2xl font-light text-gray-400">₽</span></p>
+            </div>
         </div>
 
         <!-- Форма добавления в корзину -->
-        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-4">
+        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
             {% csrf_token %}
-            <div class="flex items-center mb-4">
-                <label for="quantity-{{ product.pk }}" class="text-sm font-medium text-gray-700 mr-4">Количество:</label>
-                <input type="number" name="quantity" id="quantity-{{ product.pk }}" min="1" max="{{ product.stock }}" value="1"
-                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border">
+            <div class="flex items-center justify-between border-2 border-gray-900 dark:border-white rounded-2xl p-2 mb-4">
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-4">Кол-во</span>
+                <div class="flex items-center">
+                    <button type="button" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value) - 1);" class="w-10 h-10 flex items-center justify-center text-gray-900 dark:text-white text-xl hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">−</button>
+                    <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
+                           class="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-gray-900 dark:text-white p-0">
+                    <button type="button" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}, parseInt(input.value) + 1);" class="w-10 h-10 flex items-center justify-center text-gray-900 dark:text-white text-xl hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">+</button>
+                </div>
             </div>
-            <div class="flex gap-2 flex-wrap">
-                <button type="submit" class="button bg-deep-green text-white shadow-hover text-sm">
-                    Добавить в корзину
+            
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                <button type="submit" class="flex-grow bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-4 rounded-2xl text-[0.65rem] sm:text-xs font-bold uppercase tracking-widest hover:bg-deep-green text-center hover:text-white transition-colors duration-300">
+                    В корзину
                 </button>
-                <a href="{% url 'product_detail' slug=product.slug %}" class="button bg-gray-200 text-gray-700 shadow-hover text-sm">
-                    Подробнее
+                <a href="{% url 'product_detail' slug=product.slug %}" class="w-full sm:w-14 h-14 flex items-center justify-center flex-shrink-0 bg-gray-50 dark:bg-gray-800 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-2xl transition-colors" title="Открыть карточку товара">
+                    <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         </form>

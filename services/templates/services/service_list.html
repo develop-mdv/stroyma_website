@@ -1,28 +1,67 @@
 {% extends 'products/base.html' %}
 {% block content %}
-<h1 class="text-3xl font-bold text-deep-green mb-8">Услуги</h1>
-<div class="flex flex-col gap-6">
-  {% for service in services %}
-    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
-      <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center mr-6">
-        {% if service.image %}
-          <a href="{% url 'service_detail' service.slug %}">
-            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover rounded-lg" loading="lazy">
-          </a>
-        {% else %}
-          <a href="{% url 'service_detail' service.slug %}">
-            <img src="https://via.placeholder.com/96x96?text=Нет+изображения" alt="Нет изображения" class="w-full h-full object-cover rounded-lg" loading="lazy">
-          </a>
-        {% endif %}
-      </div>
-      <div class="flex-1">
-        <a href="{% url 'service_detail' service.slug %}" class="text-xl font-semibold text-deep-green hover:underline">{{ service.title }}</a>
-        <p class="text-gray dark:text-gray-300 mt-2">{{ service.short_description }}</p>
-      </div>
-      <div class="ml-6">
-        <a href="{% url 'service_detail' service.slug %}" class="button bg-beige text-deep-green dark:text-white hover:bg-beige-dark shadow-hover">Подробнее</a>
-      </div>
+<div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 py-12 md:py-24">
+    <!-- Грандиозный заголовок -->
+    <div class="mb-20 md:mb-32 relative pl-6">
+        <div class="absolute left-0 top-2 bottom-2 w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+        <h1 class="text-[3.5rem] md:text-[5rem] xl:text-[7rem] font-black text-gray-900 dark:text-white leading-[0.9] tracking-tighter font-display uppercase break-words">
+            Услуги
+        </h1>
+        <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 mt-8 max-w-3xl font-light leading-relaxed">
+            Мы не только поставляем качественные материалы, но и предлагаем экспертный сервис на каждом этапе вашего ремонта.
+        </p>
     </div>
-  {% endfor %}
+
+    <!-- Монументальная Зиг-Заг Верстка для малого кол-ва услуг -->
+    <div class="flex flex-col gap-24 lg:gap-40 pb-16">
+      {% for service in services %}
+        <div class="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-24 group {% if forloop.counter|divisibleby:2 %}lg:flex-row-reverse{% endif %}">
+            
+            <!-- Огромная цифра на фоне (Абсолют) -->
+            <div class="absolute hidden lg:block text-[30rem] xl:text-[35rem] font-black text-gray-50 dark:text-gray-800/30 -z-10 leading-none select-none {% if forloop.counter|divisibleby:2 %}left-0 -translate-x-12{% else %}right-0 translate-x-12{% endif %} top-1/2 -translate-y-1/2 transition-transform duration-1000 group-hover:scale-105">
+                0{{ forloop.counter }}
+            </div>
+
+            <!-- Изображение -->
+            <div class="w-full lg:w-[55%] shrink-0 relative z-10 transition-transform duration-700 group-hover:-translate-y-3">
+                <a href="{% url 'service_detail' service.slug %}" class="block relative aspect-[4/3] md:aspect-video lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl shadow-gray-200/50 dark:shadow-black/50 focus:outline-none focus:ring-4 focus:ring-deep-green/50">
+                    {% if service.image %}
+                        <img src="{{ service.image.url }}" alt="{{ service.title }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" loading="lazy">
+                    {% else %}
+                        <div class="absolute inset-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                            <span class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400">НЕТ ФОТО</span>
+                        </div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition-colors duration-500"></div>
+                </a>
+            </div>
+
+            <!-- Текст -->
+            <div class="w-full lg:w-[45%] relative z-20 flex flex-col justify-center {% if forloop.counter|divisibleby:2 %}lg:pr-8 xl:pr-16{% else %}lg:pl-8 xl:pl-16{% endif %}">
+                <div class="lg:hidden text-[5rem] font-black text-gray-100 dark:text-gray-800 mb-2 leading-none selection-none">0{{ forloop.counter }}</div>
+                
+                <h2 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-gray-900 dark:text-white leading-tight tracking-normal uppercase mb-8 group-hover:text-deep-green transition-colors break-words">
+                    <a href="{% url 'service_detail' service.slug %}">{{ service.title }}</a>
+                </h2>
+                
+                <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-light mb-10 max-w-2xl">
+                    {{ service.short_description }}
+                </p>
+
+                <div>
+                    <a href="{% url 'service_detail' service.slug %}" class="inline-flex items-center justify-center px-10 py-5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green dark:hover:bg-emerald-400 hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1">
+                        Узнать больше
+                        <i class="fas fa-arrow-right ml-3"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+      {% empty %}
+        <div class="text-center py-32 bg-gray-50 dark:bg-gray-800/50 rounded-[4rem] border border-dashed border-gray-300 dark:border-gray-700">
+            <span class="text-[0.8rem] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 block">Раздел пуст</span>
+            <p class="text-3xl font-display font-medium text-gray-900 dark:text-white">Услуги находятся в стадии разработки</p>
+        </div>
+      {% endfor %}
+    </div>
 </div>
-{% endblock %} 
+{% endblock %}

@@ -1,0 +1,757 @@
+/* ==========================================================================
+   Stroyma Admin — Premium Dual-Theme System
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ==========================================================================
+   1. CSS Custom Properties — Dark Theme (default)
+   ========================================================================== */
+:root {
+    --sm-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --sm-radius-sm: 6px;
+    --sm-radius-md: 8px;
+    --sm-radius-lg: 12px;
+    --sm-radius-xl: 16px;
+    --sm-transition: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sm-bg: #101820;
+    --sm-bg-elevated: #141e2b;
+    --sm-surface: #1a2636;
+    --sm-surface-hover: #1f2e42;
+    --sm-sidebar: #0c1219;
+    --sm-sidebar-active: rgba(52,152,219,0.18);
+    --sm-navbar: #0c1219;
+    --sm-input-bg: #0f1923;
+    --sm-border: rgba(255,255,255,0.06);
+    --sm-border-strong: rgba(255,255,255,0.12);
+
+    --sm-text: #e4e8ec;
+    --sm-text-secondary: rgba(255,255,255,0.55);
+    --sm-text-muted: rgba(255,255,255,0.3);
+    --sm-text-inverse: #0f1923;
+
+    --sm-accent: #3498db;
+    --sm-accent-hover: #5dade2;
+    --sm-accent-subtle: rgba(52,152,219,0.12);
+    --sm-accent-glow: rgba(52,152,219,0.25);
+    --sm-link: #5dade2;
+    --sm-link-hover: #85c1e9;
+
+    --sm-success: #2ecc71;
+    --sm-warning: #f1c40f;
+    --sm-danger: #e74c3c;
+    --sm-info: #3498db;
+
+    --sm-shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.15);
+    --sm-shadow-md: 0 4px 16px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    --sm-shadow-lg: 0 12px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.15);
+    --sm-shadow-accent: 0 4px 20px rgba(52,152,219,0.2);
+
+    --sm-badge-pending-bg: rgba(241,196,15,0.18);
+    --sm-badge-pending-text: #f1c40f;
+    --sm-badge-processing-bg: rgba(52,152,219,0.18);
+    --sm-badge-processing-text: #3498db;
+    --sm-badge-shipped-bg: rgba(155,89,182,0.18);
+    --sm-badge-shipped-text: #9b59b6;
+    --sm-badge-completed-bg: rgba(46,204,113,0.18);
+    --sm-badge-completed-text: #2ecc71;
+    --sm-badge-canceled-bg: rgba(231,76,60,0.18);
+    --sm-badge-canceled-text: #e74c3c;
+
+    --sm-stock-ok: #2ecc71;
+    --sm-stock-low-bg: rgba(241,196,15,0.15);
+    --sm-stock-low-text: #f1c40f;
+    --sm-stock-critical-bg: rgba(231,76,60,0.15);
+    --sm-stock-critical-text: #e74c3c;
+
+    --sm-scrollbar-track: #0c1219;
+    --sm-scrollbar-thumb: rgba(255,255,255,0.12);
+    --sm-zebra: rgba(255,255,255,0.02);
+    --sm-selection-bg: rgba(52,152,219,0.3);
+    --sm-selection-text: #fff;
+}
+
+/* ==========================================================================
+   2. Light Theme
+   ========================================================================== */
+[data-theme="light"] {
+    --sm-bg: #f0f2f5;
+    --sm-bg-elevated: #f7f8fa;
+    --sm-surface: #ffffff;
+    --sm-surface-hover: #f5f6f8;
+    --sm-sidebar: #ffffff;
+    --sm-sidebar-active: rgba(52,152,219,0.1);
+    --sm-navbar: #ffffff;
+    --sm-input-bg: #f5f6f8;
+    --sm-border: rgba(0,0,0,0.08);
+    --sm-border-strong: rgba(0,0,0,0.15);
+
+    --sm-text: #1a2332;
+    --sm-text-secondary: rgba(0,0,0,0.55);
+    --sm-text-muted: rgba(0,0,0,0.35);
+    --sm-text-inverse: #ffffff;
+
+    --sm-accent: #2980b9;
+    --sm-accent-hover: #3498db;
+    --sm-accent-subtle: rgba(41,128,185,0.08);
+    --sm-accent-glow: rgba(41,128,185,0.15);
+    --sm-link: #2980b9;
+    --sm-link-hover: #1a6da0;
+
+    --sm-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --sm-shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+    --sm-shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+    --sm-shadow-accent: 0 4px 20px rgba(41,128,185,0.12);
+
+    --sm-badge-pending-bg: rgba(241,196,15,0.15);
+    --sm-badge-pending-text: #b8960a;
+    --sm-badge-processing-bg: rgba(52,152,219,0.12);
+    --sm-badge-processing-text: #2471a3;
+    --sm-badge-shipped-bg: rgba(155,89,182,0.12);
+    --sm-badge-shipped-text: #7d3c98;
+    --sm-badge-completed-bg: rgba(46,204,113,0.12);
+    --sm-badge-completed-text: #1e8449;
+    --sm-badge-canceled-bg: rgba(231,76,60,0.12);
+    --sm-badge-canceled-text: #c0392b;
+
+    --sm-stock-ok: #1e8449;
+    --sm-stock-low-bg: rgba(241,196,15,0.12);
+    --sm-stock-low-text: #9a7d0a;
+    --sm-stock-critical-bg: rgba(231,76,60,0.1);
+    --sm-stock-critical-text: #c0392b;
+
+    --sm-scrollbar-track: #f0f2f5;
+    --sm-scrollbar-thumb: rgba(0,0,0,0.15);
+    --sm-zebra: rgba(0,0,0,0.02);
+    --sm-selection-bg: rgba(41,128,185,0.2);
+    --sm-selection-text: #1a2332;
+}
+
+/* Force light sidebar/navbar styling */
+[data-theme="light"] .main-sidebar,
+[data-theme="light"] .main-sidebar .brand-link {
+    background: var(--sm-sidebar) !important;
+    color: var(--sm-text) !important;
+}
+[data-theme="light"] .nav-sidebar .nav-link,
+[data-theme="light"] .nav-sidebar .nav-header,
+[data-theme="light"] .user-panel .info a {
+    color: var(--sm-text) !important;
+}
+[data-theme="light"] .nav-sidebar .nav-link .nav-icon {
+    color: var(--sm-text-secondary) !important;
+}
+[data-theme="light"] .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+[data-theme="light"] .sidebar-dark-primary .nav-sidebar > .nav-item.menu-open > .nav-link {
+    background: var(--sm-sidebar-active) !important;
+    color: var(--sm-accent) !important;
+}
+[data-theme="light"] .nav-sidebar .nav-link:hover {
+    background: var(--sm-surface-hover) !important;
+}
+[data-theme="light"] .main-header.navbar {
+    background: var(--sm-navbar) !important;
+    border-bottom-color: var(--sm-border) !important;
+}
+[data-theme="light"] .main-header .nav-link,
+[data-theme="light"] .main-header .navbar-nav .nav-link {
+    color: var(--sm-text) !important;
+}
+
+/* ==========================================================================
+   3. Base & Typography
+   ========================================================================== */
+body {
+    font-family: var(--sm-font) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--sm-text) !important;
+}
+::selection {
+    background: var(--sm-selection-bg);
+    color: var(--sm-selection-text);
+}
+
+/* ==========================================================================
+   4. Sidebar
+   ========================================================================== */
+.main-sidebar {
+    background: var(--sm-sidebar) !important;
+    border-right: 1px solid var(--sm-border) !important;
+}
+.main-sidebar .brand-link {
+    border-bottom: 1px solid var(--sm-border) !important;
+    padding: 18px 20px !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.5px !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item.menu-open > .nav-link {
+    background: var(--sm-sidebar-active) !important;
+    border-radius: var(--sm-radius-md) !important;
+    color: var(--sm-accent) !important;
+    font-weight: 600 !important;
+}
+.nav-sidebar .nav-link {
+    border-radius: var(--sm-radius-md) !important;
+    margin: 2px 8px !important;
+    padding: 10px 14px !important;
+    transition: all 0.25s var(--sm-transition) !important;
+    font-size: 13.5px !important;
+    color: var(--sm-text) !important;
+}
+.nav-sidebar .nav-link:hover {
+    background: var(--sm-surface-hover) !important;
+}
+.nav-sidebar .nav-link .nav-icon {
+    font-size: 15px !important;
+    opacity: 0.5;
+    width: 24px !important;
+}
+.nav-sidebar .nav-header {
+    text-transform: uppercase !important;
+    font-size: 10.5px !important;
+    letter-spacing: 1.5px !important;
+    color: var(--sm-text-muted) !important;
+    padding: 20px 16px 6px !important;
+    font-weight: 700 !important;
+}
+.user-panel {
+    border-bottom: 1px solid var(--sm-border) !important;
+    padding: 14px 16px !important;
+}
+.user-panel .info a {
+    font-weight: 600 !important;
+    color: var(--sm-text) !important;
+}
+
+/* ==========================================================================
+   5. Navbar
+   ========================================================================== */
+.main-header.navbar {
+    background: var(--sm-navbar) !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+    box-shadow: var(--sm-shadow-sm) !important;
+}
+
+/* ==========================================================================
+   6. Content Area
+   ========================================================================== */
+.content-wrapper {
+    background: var(--sm-bg-elevated) !important;
+}
+#content {
+    padding: 24px 32px !important;
+    max-width: 1800px;
+}
+.content-header .breadcrumb {
+    background: transparent !important;
+}
+.content-header .breadcrumb a {
+    color: var(--sm-link) !important;
+}
+.content-header h1 {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.3px !important;
+    color: var(--sm-text) !important;
+}
+
+/* ==========================================================================
+   7. Cards & Modules
+   ========================================================================== */
+.card, .module, #changelist {
+    background: var(--sm-surface) !important;
+    border: 1px solid var(--sm-border) !important;
+    border-radius: var(--sm-radius-lg) !important;
+    box-shadow: var(--sm-shadow-sm) !important;
+    overflow: hidden;
+    color: var(--sm-text) !important;
+}
+.card-header, .module > h2 {
+    background: var(--sm-bg) !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+    padding: 14px 20px !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    color: var(--sm-text) !important;
+}
+.card-body {
+    padding: 20px !important;
+}
+
+/* ==========================================================================
+   8. Tables
+   ========================================================================== */
+#result_list, #changelist {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#result_list table, table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100%;
+}
+#result_list th, #changelist table thead th {
+    background: var(--sm-bg) !important;
+    border-bottom: 1px solid var(--sm-border-strong) !important;
+    padding: 12px 16px !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+    font-weight: 700 !important;
+    color: var(--sm-text-secondary) !important;
+    white-space: nowrap;
+}
+#result_list td, #changelist table tbody td {
+    padding: 14px 16px !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+    vertical-align: middle !important;
+    font-size: 14px !important;
+    color: var(--sm-text) !important;
+}
+#result_list tr:nth-child(even) td,
+#changelist table tbody tr:nth-child(even) td {
+    background: var(--sm-zebra);
+}
+#result_list tr:hover td,
+#changelist table tbody tr:hover td {
+    background: var(--sm-surface-hover) !important;
+}
+#result_list a, #changelist table a {
+    color: var(--sm-link) !important;
+    font-weight: 500 !important;
+}
+#result_list a:hover, #changelist table a:hover {
+    color: var(--sm-link-hover) !important;
+}
+
+/* ==========================================================================
+   9. Forms
+   ========================================================================== */
+.form-row, .fieldBox { margin-bottom: 12px !important; }
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea, select,
+.vTextField, .vLargeTextField, .vURLField {
+    background: var(--sm-input-bg) !important;
+    border: 1px solid var(--sm-border-strong) !important;
+    border-radius: var(--sm-radius-md) !important;
+    color: var(--sm-text) !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    transition: border-color 0.25s var(--sm-transition), box-shadow 0.25s var(--sm-transition) !important;
+    font-family: var(--sm-font) !important;
+}
+input[type="text"]:focus, input[type="number"]:focus,
+textarea:focus, select:focus {
+    border-color: var(--sm-accent) !important;
+    box-shadow: 0 0 0 3px var(--sm-accent-subtle) !important;
+    outline: none !important;
+}
+label {
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+    color: var(--sm-text-secondary) !important;
+    margin-bottom: 6px !important;
+}
+.help, .helptext {
+    font-size: 12px !important;
+    color: var(--sm-text-muted) !important;
+    margin-top: 4px !important;
+}
+
+/* ==========================================================================
+   10. Buttons
+   ========================================================================== */
+.btn-primary, input[type="submit"], .submit-row input[type="submit"] {
+    background: linear-gradient(135deg, var(--sm-accent), var(--sm-accent-hover)) !important;
+    border: none !important;
+    border-radius: var(--sm-radius-md) !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #fff !important;
+    transition: all 0.3s var(--sm-transition) !important;
+    box-shadow: var(--sm-shadow-accent) !important;
+}
+.btn-primary:hover, input[type="submit"]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: var(--sm-shadow-lg) !important;
+    filter: brightness(1.08);
+}
+.btn-success {
+    background: linear-gradient(135deg, #27ae60, var(--sm-success)) !important;
+    border: none !important;
+    border-radius: var(--sm-radius-md) !important;
+    color: #fff !important;
+}
+.btn-danger, .deletelink {
+    background: linear-gradient(135deg, #c0392b, var(--sm-danger)) !important;
+    border: none !important;
+    border-radius: var(--sm-radius-md) !important;
+    color: #fff !important;
+}
+.addlink, .changelink, .object-tools a {
+    border-radius: var(--sm-radius-md) !important;
+    font-weight: 500 !important;
+    transition: all 0.25s var(--sm-transition) !important;
+}
+.object-tools a {
+    border-radius: var(--sm-radius-md) !important;
+    padding: 8px 16px !important;
+}
+
+/* ==========================================================================
+   11. Submit row
+   ========================================================================== */
+.submit-row {
+    background: var(--sm-bg) !important;
+    border-top: 1px solid var(--sm-border) !important;
+    border-radius: 0 0 var(--sm-radius-lg) var(--sm-radius-lg) !important;
+    padding: 16px 20px !important;
+}
+
+/* ==========================================================================
+   12. Fieldsets
+   ========================================================================== */
+fieldset {
+    background: var(--sm-surface) !important;
+    border: 1px solid var(--sm-border) !important;
+    border-radius: var(--sm-radius-lg) !important;
+    margin-bottom: 20px !important;
+    overflow: hidden !important;
+    color: var(--sm-text) !important;
+}
+fieldset h2, fieldset .module-title {
+    background: var(--sm-bg) !important;
+    padding: 14px 20px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+    color: var(--sm-text) !important;
+}
+fieldset .form-row {
+    padding: 10px 20px !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+}
+fieldset .description {
+    color: var(--sm-text-secondary) !important;
+}
+
+/* ==========================================================================
+   13. Filters
+   ========================================================================== */
+#changelist-filter {
+    background: var(--sm-surface) !important;
+    border: 1px solid var(--sm-border) !important;
+    border-radius: var(--sm-radius-lg) !important;
+    color: var(--sm-text) !important;
+}
+#changelist-filter h2, #changelist-filter h3 {
+    font-weight: 600 !important;
+    padding: 12px 16px !important;
+    color: var(--sm-text) !important;
+}
+#changelist-filter li a { color: var(--sm-text-secondary) !important; }
+#changelist-filter li a:hover, #changelist-filter li.selected a {
+    color: var(--sm-accent) !important;
+}
+
+/* ==========================================================================
+   14. Pagination
+   ========================================================================== */
+.paginator {
+    padding: 14px 20px !important;
+    border-top: 1px solid var(--sm-border) !important;
+    color: var(--sm-text) !important;
+}
+.paginator a {
+    padding: 6px 14px !important;
+    border-radius: var(--sm-radius-md) !important;
+    margin: 0 2px !important;
+    background: var(--sm-accent-subtle) !important;
+    color: var(--sm-text) !important;
+    text-decoration: none !important;
+    transition: all 0.2s var(--sm-transition) !important;
+}
+.paginator a:hover {
+    background: var(--sm-accent) !important;
+    color: #fff !important;
+}
+
+/* ==========================================================================
+   15. Inline groups
+   ========================================================================== */
+.inline-group h2 {
+    background: var(--sm-bg) !important;
+    border-bottom: 1px solid var(--sm-border) !important;
+    padding: 12px 20px !important;
+    border-radius: var(--sm-radius-lg) var(--sm-radius-lg) 0 0 !important;
+    color: var(--sm-text) !important;
+}
+.inline-related {
+    border: 1px solid var(--sm-border) !important;
+    border-radius: var(--sm-radius-md) !important;
+    margin-bottom: 8px !important;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   16. Image previews
+   ========================================================================== */
+.field-image_preview img, #result_list img {
+    border-radius: var(--sm-radius-md) !important;
+    box-shadow: var(--sm-shadow-sm) !important;
+    border: 2px solid var(--sm-border) !important;
+}
+
+/* ==========================================================================
+   17. Status badges
+   ========================================================================== */
+.admin-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.admin-badge-pending   { background: var(--sm-badge-pending-bg); color: var(--sm-badge-pending-text); }
+.admin-badge-processing{ background: var(--sm-badge-processing-bg); color: var(--sm-badge-processing-text); }
+.admin-badge-shipped   { background: var(--sm-badge-shipped-bg); color: var(--sm-badge-shipped-text); }
+.admin-badge-completed { background: var(--sm-badge-completed-bg); color: var(--sm-badge-completed-text); }
+.admin-badge-canceled  { background: var(--sm-badge-canceled-bg); color: var(--sm-badge-canceled-text); }
+
+.admin-stock-ok { color: var(--sm-stock-ok); font-weight: 600; }
+.admin-stock-low {
+    background: var(--sm-stock-low-bg);
+    color: var(--sm-stock-low-text);
+    padding: 2px 10px;
+    border-radius: var(--sm-radius-sm);
+    font-weight: 700;
+}
+.admin-stock-critical {
+    background: var(--sm-stock-critical-bg);
+    color: var(--sm-stock-critical-text);
+    padding: 2px 10px;
+    border-radius: var(--sm-radius-sm);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   18. Login page
+   ========================================================================== */
+body.login { background: var(--sm-bg) !important; }
+body.login #header { background: transparent !important; }
+body.login #content {
+    background: var(--sm-surface) !important;
+    border-radius: var(--sm-radius-xl) !important;
+    border: 1px solid var(--sm-border) !important;
+    box-shadow: var(--sm-shadow-lg) !important;
+    padding: 40px !important;
+}
+body.login label { color: var(--sm-text) !important; }
+
+/* ==========================================================================
+   19. Footer
+   ========================================================================== */
+.main-footer {
+    background: var(--sm-sidebar) !important;
+    border-top: 1px solid var(--sm-border) !important;
+    color: var(--sm-text-muted) !important;
+    font-size: 13px !important;
+}
+
+/* ==========================================================================
+   20. Scrollbar
+   ========================================================================== */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: var(--sm-scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--sm-scrollbar-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { opacity: 0.8; }
+
+/* ==========================================================================
+   21. Search bar
+   ========================================================================== */
+#toolbar {
+    background: transparent !important;
+    border: none !important;
+    padding: 16px 0 !important;
+}
+#toolbar #searchbar {
+    background: var(--sm-input-bg) !important;
+    border: 1px solid var(--sm-border-strong) !important;
+    border-radius: var(--sm-radius-md) !important;
+    padding: 10px 16px !important;
+    color: var(--sm-text) !important;
+    font-size: 14px !important;
+    min-width: 280px !important;
+    transition: border-color 0.25s var(--sm-transition), box-shadow 0.25s var(--sm-transition) !important;
+}
+#toolbar #searchbar:focus {
+    border-color: var(--sm-accent) !important;
+    box-shadow: 0 0 0 3px var(--sm-accent-subtle) !important;
+}
+#toolbar input[type="submit"] {
+    border-radius: var(--sm-radius-md) !important;
+    margin-left: 8px !important;
+}
+
+/* ==========================================================================
+   22. Actions bar
+   ========================================================================== */
+.actions {
+    padding: 12px 16px !important;
+    background: var(--sm-bg) !important;
+    border-radius: var(--sm-radius-md) !important;
+    margin-bottom: 16px !important;
+    border: 1px solid var(--sm-border) !important;
+}
+.actions select { border-radius: var(--sm-radius-sm) !important; padding: 6px 12px !important; }
+.actions .button { border-radius: var(--sm-radius-sm) !important; }
+
+/* ==========================================================================
+   23. Checkbox
+   ========================================================================== */
+input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: var(--sm-accent) !important;
+}
+
+/* ==========================================================================
+   24. Tab navigation
+   ========================================================================== */
+.changeform-tabs-item { border-radius: var(--sm-radius-md) var(--sm-radius-md) 0 0 !important; }
+.changeform-tabs-item a { padding: 10px 20px !important; font-weight: 500 !important; }
+
+/* ==========================================================================
+   25. Theme toggle button (injected into Jazzmin navbar)
+   ========================================================================== */
+.sm-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--sm-border-strong);
+    background: var(--sm-surface);
+    color: var(--sm-text-secondary);
+    cursor: pointer;
+    transition: all 0.3s var(--sm-transition);
+    font-size: 15px;
+    outline: none;
+    margin: 4px 0;
+    padding: 0;
+}
+.sm-theme-toggle:hover {
+    background: var(--sm-accent-subtle);
+    color: var(--sm-accent);
+    border-color: var(--sm-accent);
+    transform: scale(1.1);
+    box-shadow: var(--sm-shadow-accent);
+}
+
+/* ==========================================================================
+   26. Global transitions & focus
+   ========================================================================== */
+a, .btn, button, input, select, textarea {
+    transition: all 0.25s var(--sm-transition) !important;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--sm-accent) !important;
+    outline-offset: 2px !important;
+}
+.xfull { border-radius: var(--sm-radius-md) !important; overflow: hidden; }
+#recent-actions-module { border-radius: var(--sm-radius-lg) !important; }
+
+/* ==========================================================================
+   27. Date hierarchy
+   ========================================================================== */
+.xfull a {
+    color: var(--sm-text) !important;
+}
+
+/* ==========================================================================
+   28. Responsive — Wide screen (1600px+)
+   ========================================================================== */
+@media (min-width: 1600px) {
+    #result_list th, #changelist table thead th { padding: 14px 20px !important; }
+    #result_list td, #changelist table tbody td { padding: 16px 20px !important; }
+}
+
+/* ==========================================================================
+   29. Responsive — Tablet (768px - 1200px)
+   ========================================================================== */
+@media (max-width: 1200px) {
+    #content { padding: 20px 24px !important; }
+}
+
+/* ==========================================================================
+   30. Responsive — Mobile (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    #content { padding: 16px !important; }
+    .content-header h1 { font-size: 20px !important; }
+
+    #result_list, .table-responsive, #changelist {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    #result_list table, #changelist table {
+        min-width: 600px;
+    }
+
+    .submit-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .submit-row input, .submit-row a, .submit-row .deletelink {
+        flex: 1 1 auto !important;
+        min-width: 120px !important;
+        text-align: center !important;
+    }
+
+    .object-tools { flex-wrap: wrap !important; gap: 8px !important; }
+    .object-tools li { margin: 0 !important; }
+    .object-tools a { padding: 8px 12px !important; font-size: 13px !important; }
+
+    input[type="text"], input[type="number"], textarea, select,
+    .vTextField, .vLargeTextField {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .sm-theme-toggle {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+    #toolbar #searchbar { min-width: auto !important; width: 100% !important; }
+
+    .actions { flex-wrap: wrap !important; }
+    .actions select { width: 100% !important; margin-bottom: 8px !important; }
+}
+
+/* ==========================================================================
+   31. Responsive — Small mobile (< 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+    #content { padding: 12px !important; }
+    .content-header h1 { font-size: 18px !important; }
+    .card-body { padding: 14px !important; }
+    .submit-row { padding: 12px !important; }
+}

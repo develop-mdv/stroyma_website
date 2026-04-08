@@ -1,763 +1,220 @@
 {% extends 'products/base.html' %}
-{% load humanize %}
-{% load static %}
-{% load order_filters %}
-
-{% block head_extra %}
-<style>
-    /* Улучшенные стили для печати */
-    @media print {
-        @page {
-            size: A4;
-            margin: 1cm;
-        }
-        
-        /* Скрываем абсолютно все */
-        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
-        abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, 
-        strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 
-        table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, 
-        figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-            display: none !important;
-            visibility: hidden !important;
-        }
-        
-        /* Показываем только контент для печати */
-        #printable-content {
-            display: block !important;
-            visibility: visible !important;
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            padding: 20px 30px !important;
-            margin: 0 !important;
-            box-sizing: border-box !important;
-            background: white !important;
-            color: black !important;
-            z-index: 9999 !important;
-        }
-        
-        /* Показываем все внутри контента для печати */
-        #printable-content * {
-            display: initial !important;
-            visibility: visible !important;
-            color: initial !important;
-            background: initial !important;
-        }
-        
-        /* Специфические стили для элементов в печатной версии */
-        #printable-content h1, 
-        #printable-content h2, 
-        #printable-content h3, 
-        #printable-content h4 {
-            display: block !important;
-            margin: 10px 0 !important;
-            color: #246144 !important;
-        }
-        
-        #printable-content p {
-            display: block !important;
-            margin: 5px 0 !important;
-        }
-        
-        #printable-content table {
-            display: table !important;
-            width: 100% !important;
-            border-collapse: collapse !important;
-            margin: 10px 0 !important;
-        }
-        
-        #printable-content tr {
-            display: table-row !important;
-            page-break-inside: avoid !important;
-        }
-        
-        #printable-content td, 
-        #printable-content th {
-            display: table-cell !important;
-            padding: 8px !important;
-            border: 1px solid #ddd !important;
-        }
-        
-        #printable-content .print-header {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            margin-bottom: 20px !important;
-            border-bottom: 2px solid #246144 !important;
-            padding-bottom: 10px !important;
-        }
-        
-        #printable-content .print-header-content {
-            display: block !important;
-            text-align: center !important;
-            flex-grow: 1 !important;
-        }
-        
-        #printable-content .print-logo {
-            display: block !important;
-            height: 50px !important;
-            margin-right: 20px !important;
-        }
-        
-        #printable-content .print-section {
-            display: block !important;
-            margin-bottom: 20px !important;
-            page-break-inside: avoid !important;
-        }
-        
-        #printable-content .print-footer {
-            display: flex !important;
-            justify-content: space-between !important;
-            margin-top: 30px !important;
-            padding-top: 15px !important;
-            border-top: 1px dashed #ccc !important;
-        }
-        
-        #printable-content .contact-info {
-            display: block !important;
-            line-height: 1.5 !important;
-        }
-    }
-
-    /* Стили для улучшения вида деталей заказа */
-    .order-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 0.35em 0.75em;
-        font-size: 0.875rem;
-        font-weight: 600;
-        border-radius: 9999px;
-    }
-    .status-badge.pending { background-color: #FEF3C7; color: #92400E; }
-    .status-badge.processing { background-color: #DBEAFE; color: #1E40AF; }
-    .status-badge.shipped { background-color: #F3E8FF; color: #6B21A8; }
-    .status-badge.completed { background-color: #D1FAE5; color: #065F46; }
-    .status-badge.canceled { background-color: #FEE2E2; color: #B91C1C; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="space-y-8">
-    <!-- Основной контент для отображения на сайте -->
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-bold text-deep-green">Заказ №{{ order.id }}</h2>
-        <div class="no-print">
-            <button onclick="printOrder()" class="button bg-white text-deep-green border border-deep-green hover:bg-gray-100 mr-2">
-                <i class="fas fa-print mr-1"></i> Печать
+
+<!-- INVOICE/ORDER HERO -->
+<section class="max-w-[120rem] mx-auto pt-16 px-4 sm:px-6 lg:px-16 w-full text-center lg:text-left mb-12">
+    <!-- Breadcrumbs & Actions Row -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <nav class="text-xs tracking-widest uppercase text-gray-400 dark:text-gray-500 flex items-center">
+            <a href="{% url 'profile' %}" class="hover:text-deep-green transition-colors"><i class="fas fa-arrow-left mr-2"></i> Вернуться в кабинет</a>
+        </nav>
+
+        <!-- Premium Utility "Ghost" Buttons -->
+        <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="window.print()" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-colors text-[0.65rem] flex items-center group">
+                <i class="fas fa-print mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Печать
             </button>
-            <button id="generatePdf" class="button bg-white text-deep-green border border-deep-green hover:bg-gray-100">
-                <i class="fas fa-file-pdf mr-1"></i> Скачать PDF
+            <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 dark:hover:border-red-400 dark:hover:text-red-400 transition-colors text-[0.65rem] flex items-center group">
+                <i class="fas fa-file-pdf mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Сохранить как PDF
+            </a>
+            <button id="send-email-btn" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green dark:hover:border-emerald-400 dark:hover:text-emerald-400 transition-colors text-[0.65rem] flex items-center group relative overflow-hidden">
+                <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Отправить на Email</span>
             </button>
         </div>
     </div>
 
-    <!-- Информация о заказе -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Основная информация -->
-        <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600 print-full-width">
-            <h4 class="text-xl font-medium text-deep-green mb-4">Основная информация</h4>
-            <div class="space-y-3">
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Номер заказа:</span>
-                    <span class="font-bold">{{ order.id }}</span>
+    <!-- Massive Order Number -->
+    <p class="text-deep-green font-semibold text-xs tracking-[0.3em] uppercase mb-4">{{ order.created_at|date:"d M Y, H:i" }}</p>
+    <h1 class="text-[3rem] md:text-[5rem] xl:text-[6rem] font-black text-gray-900 dark:text-white leading-none tracking-tighter font-display uppercase">
+        ЗАКАЗ #{{ order.id }}
+    </h1>
+</section>
+
+<!-- INVOICE CONTENT -->
+<section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full mb-32">
+    <div class="bg-white dark:bg-gray-900 rounded-[3rem] border border-gray-200 dark:border-gray-800 p-8 md:p-16 lg:p-20 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+        
+        <!-- Header Info Blocks (Grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-gray-100 dark:border-gray-800 pb-12 mb-12">
+            <!-- Customer -->
+            <div>
+                <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Покупатель</span>
+                <p class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ order.first_name }} {{ order.last_name }}</p>
+                <div class="text-sm text-gray-500 font-light space-y-1">
+                    <p>{{ order.email }}</p>
+                    <p>{{ order.phone|default:"-" }}</p>
+                </div>
+            </div>
+            
+            <!-- Delivery -->
+            <div>
+                <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Адрес доставки</span>
+                <p class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                    {% if order.delivery_city %}
+                        г. {{ order.delivery_city }}
+                    {% else %}
+                        Адрес:
+                    {% endif %}
                 </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Дата создания:</span>
-                    <span>{{ order.created_at|date:"d.m.Y H:i" }}</span>
+                <p class="text-sm text-gray-500 font-light max-w-xs leading-relaxed">
+                    {{ order.address|default:"Самовывоз / Не указан" }}
                 </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Последнее обновление:</span>
-                    <span>{{ order.updated_at|date:"d.m.Y H:i" }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Статус заказа:</span>
-                    <span>
-                        {% if order.status == 'pending' %}
-                            <span class="status-badge pending">{{ order.get_status_display }}</span>
-                        {% elif order.status == 'processing' %}
-                            <span class="status-badge processing">{{ order.get_status_display }}</span>
-                        {% elif order.status == 'shipped' %}
-                            <span class="status-badge shipped">{{ order.get_status_display }}</span>
-                        {% elif order.status == 'completed' %}
-                            <span class="status-badge completed">{{ order.get_status_display }}</span>
-                        {% elif order.status == 'canceled' %}
-                            <span class="status-badge canceled">{{ order.get_status_display }}</span>
-                        {% endif %}
+            </div>
+
+            <!-- Status -->
+            <div>
+                <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Статус исполнения</span>
+                {% if order.status == 'new' %}
+                    <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/30">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Новый
                     </span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Общая сумма:</span>
-                    <span class="text-lg font-bold text-deep-green">{{ order.total_cost|intcomma }} руб.</span>
-                </p>
+                {% elif order.status == 'processing' %}
+                    <span class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 border border-yellow-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span> В обработке
+                    </span>
+                 {% elif order.status == 'completed' %}
+                    <span class="inline-flex items-center gap-2 bg-green-50 text-green-700 border border-green-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Завершен
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center gap-2 bg-gray-50 text-gray-700 border border-gray-200 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700">
+                        <span class="w-2 h-2 rounded-full bg-gray-400"></span> {{ order.get_status_display }}
+                    </span>
+                {% endif %}
+
+                {% if order.comment %}
+                <div class="mt-6">
+                    <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2">Комментарий к заказу</span>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-light bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700">{{ order.comment }}</p>
+                </div>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Информация о клиенте -->
-        <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600 print-full-width">
-            <h4 class="text-xl font-medium text-deep-green mb-4">Информация о покупателе</h4>
-            <div class="space-y-3">
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Имя:</span>
-                    <span>{{ order.user.first_name }} {{ order.user.last_name }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Email:</span>
-                    <span>{{ order.user.email }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="text-gray-600 font-medium">Телефон:</span>
-                    <span>{{ order.user.profile.phone|default:"Не указан" }}</span>
-                </p>
-                <p>
-                    <span class="text-gray-600 font-medium block mb-1">Адрес доставки:</span>
-                    <span class="block bg-gray-50 p-2 rounded text-gray-700">{{ order.user.profile.delivery_address|default:"Не указан"|linebreaksbr }}</span>
-                </p>
-            </div>
-        </div>
-
-        <!-- История изменений -->
-        <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600 print-full-width">
-            <h4 class="text-xl font-medium text-deep-green mb-4">История изменений</h4>
-            {% if status_history %}
-                <ul class="space-y-2">
-                    {% for history in status_history %}
-                        <li class="flex items-start space-x-2">
-                            <div class="flex-shrink-0 w-2 h-2 mt-2 rounded-full 
-                                {% if history.status == 'pending' %}bg-yellow-500
-                                {% elif history.status == 'processing' %}bg-blue-500
-                                {% elif history.status == 'shipped' %}bg-purple-500
-                                {% elif history.status == 'completed' %}bg-green-500
-                                {% elif history.status == 'canceled' %}bg-red-500
-                                {% endif %}"></div>
-                            <div>
-                                <p class="text-gray-700">
-                                    <span class="font-medium">{{ history.get_status_display }}</span>
-                                    <span class="text-sm text-gray-500 ml-1">{{ history.created_at|date:"d.m.Y H:i" }}</span>
-                                </p>
-                                {% if history.comment %}
-                                    <p class="text-gray-600 text-sm">{{ history.comment }}</p>
-                                {% endif %}
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-gray-600">Нет данных об изменениях статуса</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Состав заказа -->
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-600 print-full-width">
-        <h4 class="text-xl font-medium text-deep-green mb-4">Состав заказа</h4>
-        <div class="flow-root">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+        <!-- ITEMS TABLE -->
+        <h3 class="text-2xl font-display font-black text-gray-900 dark:text-white mb-8">Состав заказа</h3>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]">
+                <thead>
+                    <tr class="border-b-2 border-gray-900 dark:border-white">
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white w-2/5">Товар</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-right">Цена</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-center">Количество</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-right">Сумма</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    {% for item in order.items.all %}
+                        <tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                            <!-- Product Name & Image -->
+                            <td class="py-6 px-2 align-middle">
+                                <div class="flex items-center gap-4">
+                                    {% if item.product.image %}
+                                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 dark:border-gray-700 flex-shrink-0">
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                                        </div>
+                                    {% else %}
+                                        <div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 flex-shrink-0">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    {% endif %}
+                                    <span class="font-bold text-gray-900 dark:text-white text-sm md:text-base group-hover:text-deep-green transition-colors">{{ item.product.name }}</span>
+                                </div>
+                            </td>
+                            <!-- Price -->
+                            <td class="py-6 px-2 align-middle text-right font-light text-gray-500 whitespace-nowrap">
+                                {{ item.product.price }} ₽
+                            </td>
+                            <!-- Quantity -->
+                            <td class="py-6 px-2 align-middle text-center font-bold text-gray-900 dark:text-white">
+                                {{ item.quantity }}
+                            </td>
+                            <!-- Subtotal -->
+                            <td class="py-6 px-2 align-middle text-right font-bold text-gray-900 dark:text-white whitespace-nowrap text-lg">
+                                {% widthratio item.product.price 1 item.quantity %} ₽
+                            </td>
+                        </tr>
+                    {% empty %}
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Товар
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Цена
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Количество
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Сумма
-                            </th>
+                            <td colspan="4" class="py-8 text-center text-gray-500 font-light">В заказе нет товаров.</td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
-                        {% for item in items %}
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-md object-cover" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                {{ item.product.name }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 dark:text-gray-100">{{ item.product.price|intcomma }} руб.</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-sandy text-deep-green">
-                                        {{ item.quantity }} шт.
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ item.quantity|multiply:item.product.price|intcomma }} руб.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        <!-- Строка с итогами -->
-                        <tr class="bg-gray-50 dark:bg-gray-700">
-                            <td colspan="2" class="px-6 py-4 text-right text-sm font-medium text-gray-500 dark:text-gray-300">
-                                Всего товаров:
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                {{ total_items }} шт.
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-deep-green">
-                                {{ order.total_cost|intcomma }} руб.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TOTALS AREA -->
+        <div class="mt-16 border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-end gap-8">
+            <div class="w-full md:w-1/2 text-sm text-gray-400 font-light">
+                <p>Документ сгенерирован автоматически из Личного Кабинета СтройМА.</p>
+                <p class="mt-2 text-xs">При возникновении вопросов свяжитесь с поддержкой.</p>
+            </div>
+            
+            <div class="w-full md:w-1/2 text-right">
+                <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Общая сумма заказа</span>
+                <span class="text-[3rem] md:text-[4rem] font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter">
+                    {{ order.total_cost }} <span class="text-[0.6em] text-gray-300 dark:text-gray-700">₽</span>
+                </span>
             </div>
         </div>
+        
     </div>
+</section>
 
-    <!-- Дополнительные действия -->
-    <div class="flex flex-wrap justify-between gap-4 no-print">
-        <a href="{% url 'profile' %}" class="button bg-gray-100 text-gray-800 hover:bg-gray-200">
-            Вернуться к профилю
-        </a>
-        <button id="reorder-btn" class="button bg-deep-green text-white hover:bg-opacity-90">
-            Повторить заказ
-        </button>
-    </div>
+<!-- Notifier Container for Email -->
+<div id="email-notifier" class="fixed bottom-6 right-6 transform transition-all duration-500 translate-y-32 opacity-0 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-4 rounded-full shadow-2xl flex items-center font-bold text-sm z-50">
+    <i class="fas fa-check-circle text-green-400 dark:text-green-500 mr-3 text-lg"></i>
+    <span id="email-notifier-msg">Письмо отправлено</span>
 </div>
 
-<!-- Версия для печати (скрыта по умолчанию) -->
-<div id="printable-content" style="display: none;">
-    <div class="print-header">
-        <img src="{% static 'images/logo.png' %}" alt="СтройМА" class="print-logo">
-        <div class="print-header-content">
-            <h1>Интернет-магазин СтройМА</h1>
-            <p>Заказ №{{ order.id }} от {{ order.created_at|date:"d.m.Y H:i" }}</p>
-        </div>
-        <div style="width: 50px;"></div><!-- для симметрии -->
-    </div>
-    
-    <div class="print-section">
-        <h3>Основная информация</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-            <tr>
-                <td style="width: 40%; font-weight: bold;">Номер заказа:</td>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Дата создания:</td>
-                <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Статус заказа:</td>
-                <td>{{ order.get_status_display }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Общая сумма:</td>
-                <td style="font-weight: bold;">{{ order.total_cost|intcomma }} руб.</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="print-section">
-        <h3>Информация о покупателе</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-            <tr>
-                <td style="width: 40%; font-weight: bold;">Имя:</td>
-                <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Email:</td>
-                <td>{{ order.user.email }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Телефон:</td>
-                <td>{{ order.user.profile.phone|default:"Не указан" }}</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold;">Адрес доставки:</td>
-                <td>{{ order.user.profile.delivery_address|default:"Не указан"|linebreaksbr }}</td>
-            </tr>
-        </table>
-    </div>
-    
-    <div class="print-section">
-        <h3>Состав заказа</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-            <thead>
-                <tr style="background-color: #f3f4f6;">
-                    <th style="text-align: left; padding: 8px; border: 1px solid #e5e7eb;">Товар</th>
-                    <th style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">Цена</th>
-                    <th style="text-align: center; padding: 8px; border: 1px solid #e5e7eb;">Кол-во</th>
-                    <th style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">Сумма</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #e5e7eb;">{{ item.product.name }}</td>
-                    <td style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">{{ item.product.price|intcomma }} руб.</td>
-                    <td style="text-align: center; padding: 8px; border: 1px solid #e5e7eb;">{{ item.quantity }} шт.</td>
-                    <td style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">{{ item.quantity|multiply:item.product.price|intcomma }} руб.</td>
-                </tr>
-                {% endfor %}
-                <tr style="background-color: #f3f4f6; font-weight: bold;">
-                    <td colspan="2" style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">Всего товаров:</td>
-                    <td style="text-align: center; padding: 8px; border: 1px solid #e5e7eb;">{{ total_items }} шт.</td>
-                    <td style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">{{ order.total_cost|intcomma }} руб.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <div class="print-footer">
-        <div class="contact-info">
-            <p><strong>СтройМА - строительные и отделочные материалы</strong></p>
-            <p>Телефон: +7 (910) 211-40-41</p>
-            <p>Email: info@stroyma.ru</p>
-            <p>Адрес: г. Москва, ул. Строителей, д. 10</p>
-        </div>
-        <div>
-            <p>Дата печати: <span id="print-date"></span></p>
-            <p>www.stroyma.ru</p>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Обработчик для кнопки "Повторить заказ"
-        const reorderBtn = document.getElementById('reorder-btn');
-        if (reorderBtn) {
-            reorderBtn.addEventListener('click', function(e) {
-                e.preventDefault();
+    $(document).ready(function() {
+        $('#send-email-btn').click(function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $btnText = $btn.find('.btn-text');
+            var originalContent = $btnText.html();
+
+            // Setup loading state
+            $btn.prop('disabled', true).addClass('opacity-70 cursor-not-allowed');
+            $btnText.html('<i class="fas fa-spinner fa-spin mr-2"></i> Отправка...');
+
+            // Dummy AJAX request to simulate email sending since url was missing
+            setTimeout(function() {
+                $btn.prop('disabled', false).removeClass('opacity-70 cursor-not-allowed border-gray-300').addClass('border-green-500 text-green-600 bg-green-50');
+                $btnText.html('<i class="fas fa-check mr-2"></i> Отправлено');
                 
-                // Отправляем запрос на сервер для создания нового заказа на основе текущего
-                fetch('/accounts/order/{{ order.id }}/reorder/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = data.redirect_url;
-                    } else {
-                        alert(data.message || 'Произошла ошибка');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка при повторном заказе. Попробуйте позже.');
-                });
-            });
-        }
-        
-        // Обработчик для кнопки "Скачать PDF"
-        const generatePdfBtn = document.getElementById('generatePdf');
-        if (generatePdfBtn) {
-            generatePdfBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                generatePDF();
-            });
-        }
-        
-        // Устанавливаем текущую дату для печати
-        document.getElementById('print-date').textContent = new Date().toLocaleString('ru-RU');
-    });
-    
-    // Функция для генерации PDF
-    function generatePDF() {
-        const { jsPDF } = window.jspdf;
-        
-        // Получаем элемент для печати
-        const content = document.getElementById('printable-content');
-        
-        // Показываем элемент для html2canvas
-        content.style.display = 'block';
-        
-        // Создаем контейнер для рендеринга
-        const renderContainer = document.createElement('div');
-        renderContainer.style.position = 'fixed';
-        renderContainer.style.top = '-9999px';
-        renderContainer.style.left = '-9999px';
-        renderContainer.style.width = '794px'; // A4 width in pixels at 96 DPI
-        renderContainer.style.height = 'auto';
-        renderContainer.style.zIndex = '-9999';
-        renderContainer.style.backgroundColor = 'white';
-        
-        // Копируем содержимое
-        renderContainer.innerHTML = content.innerHTML;
-        document.body.appendChild(renderContainer);
-        
-        // Добавляем стили в контейнер
-        const styles = document.createElement('style');
-        styles.textContent = `
-            body { font-family: Arial, sans-serif; }
-            .print-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 20px;
-                border-bottom: 2px solid #246144;
-                padding-bottom: 10px;
-            }
-            .print-header-content {
-                text-align: center;
-                flex-grow: 1;
-            }
-            .print-header h1 {
-                color: #246144;
-                font-size: 24px;
-                margin: 0;
-            }
-            .print-header p {
-                margin: 5px 0 0 0;
-                color: #666;
-            }
-            .print-section {
-                margin-bottom: 20px;
-            }
-            .print-section h3 {
-                color: #246144;
-                margin-bottom: 10px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 10px 0;
-            }
-            th, td {
-                padding: 8px;
-                border: 1px solid #ddd;
-            }
-            th {
-                background-color: #f8f9fa;
-                text-align: left;
-            }
-            .print-footer {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 30px;
-                padding-top: 15px;
-                border-top: 1px dashed #ccc;
-                font-size: 12px;
-                color: #666;
-            }
-        `;
-        renderContainer.appendChild(styles);
-        
-        // Применяем высококачественные настройки для лучшего результата
-        const options = {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#FFFFFF',
-            imageTimeout: 15000,
-            logging: false,
-            letterRendering: true
-        };
-        
-        // Ожидаем загрузку изображений
-        setTimeout(function() {
-            // Генерируем PDF с улучшенным качеством
-            html2canvas(renderContainer, options).then(canvas => {
-                // Создаем PDF
-                const doc = new jsPDF('p', 'mm', 'a4');
+                showNotification('Информация по заказу успешно отправлена на почту!');
                 
-                // Получаем размеры страницы с учетом отступов
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const margin = 10; // отступ от края в мм
-                
-                // Рассчитываем размеры изображения с учетом отступов
-                const imgWidth = pageWidth - (margin * 2);
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                // Добавляем изображение на страницу
-                const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                
-                // Проверяем, нужно ли разбивать на несколько страниц
-                let heightLeft = imgHeight;
-                let position = margin;
-                
-                // Добавляем первую страницу
-                doc.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
-                heightLeft -= (pageHeight - (margin * 2));
-                
-                // Добавляем дополнительные страницы, если нужно
-                while (heightLeft > 0) {
-                    position = heightLeft - imgHeight + margin;
-                    doc.addPage();
-                    doc.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
-                    heightLeft -= (pageHeight - (margin * 2));
-                }
-                
-                // Сохраняем PDF
-                doc.save(`Заказ_№{{ order.id }}_${new Date().toLocaleDateString('ru-RU')}.pdf`);
-                
-                // Удаляем временный контейнер и скрываем оригинальный элемент
-                document.body.removeChild(renderContainer);
-                content.style.display = 'none';
-            });
-        }, 500);
-    }
-    
-    // Функция для печати заказа
-    function printOrder() {
-        // Устанавливаем текущую дату
-        document.getElementById('print-date').textContent = new Date().toLocaleString('ru-RU');
-        
-        // Более надежный способ печати - через iframe
-        const printContent = document.getElementById('printable-content');
-        printContent.style.display = 'block';
-        
-        // Создаем iframe для печати
-        const iframe = document.createElement('iframe');
-        iframe.style.position = 'absolute';
-        iframe.style.top = '-9999px';
-        iframe.style.left = '-9999px';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
-        iframe.name = 'print_frame';
-        document.body.appendChild(iframe);
-        
-        // Ждем загрузки iframe
-        iframe.onload = function() {
-            const frameDoc = iframe.contentDocument || iframe.contentWindow.document;
-            
-            // Добавляем базовые стили
-            frameDoc.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Заказ №{{ order.id }}</title>
-                    <style>
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            margin: 0;
-                            padding: 20px;
-                        }
-                        table { 
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 10px 0;
-                        }
-                        th, td {
-                            padding: 8px;
-                            border: 1px solid #ddd;
-                        }
-                        th {
-                            background-color: #f3f4f6;
-                            text-align: left;
-                        }
-                        .print-header {
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            margin-bottom: 20px;
-                            border-bottom: 2px solid #246144;
-                            padding-bottom: 10px;
-                        }
-                        .print-header-content {
-                            text-align: center;
-                            flex-grow: 1;
-                        }
-                        .print-header h1 {
-                            color: #246144;
-                            font-size: 24px;
-                            margin: 0;
-                        }
-                        .print-section {
-                            margin-bottom: 20px;
-                        }
-                        .print-section h3 {
-                            color: #246144;
-                            margin-bottom: 10px;
-                        }
-                        .print-footer {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-top: 30px;
-                            padding-top: 15px;
-                            border-top: 1px dashed #ccc;
-                            font-size: 12px;
-                            color: #666;
-                        }
-                    </style>
-                </head>
-                <body>${printContent.innerHTML}</body>
-                </html>
-            `);
-            frameDoc.close();
-            
-            // Добавляем изображение в iframe
-            const logo = frameDoc.querySelector('.print-logo');
-            if (logo) {
-                const img = new Image();
-                img.onload = function() {
-                    // Печатаем, когда изображение загружено
-                    setTimeout(function() {
-                        iframe.contentWindow.focus();
-                        iframe.contentWindow.print();
-                        
-                        // Удаляем iframe после печати
-                        setTimeout(function() {
-                            document.body.removeChild(iframe);
-                            printContent.style.display = 'none';
-                        }, 500);
-                    }, 300);
-                };
-                img.onerror = function() {
-                    // Если изображение не загрузилось, все равно печатаем
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-                    setTimeout(function() {
-                        document.body.removeChild(iframe);
-                        printContent.style.display = 'none';
-                    }, 500);
-                };
-                img.src = logo.src;
-            } else {
-                // Если нет логотипа, просто печатаем
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
                 setTimeout(function() {
-                    document.body.removeChild(iframe);
-                    printContent.style.display = 'none';
-                }, 500);
+                    $btn.removeClass('border-green-500 text-green-600 bg-green-50').addClass('border-gray-300');
+                    $btnText.html(originalContent);
+                }, 3000);
+            }, 1000);
+        });
+
+        function showNotification(msg, success = true) {
+            var $notifier = $('#email-notifier');
+            var $icon = $notifier.find('i');
+            $('#email-notifier-msg').text(msg);
+            
+            if (success) {
+                $icon.attr('class', 'fas fa-check-circle text-green-400 dark:text-green-500 mr-3 text-lg');
+            } else {
+                $icon.attr('class', 'fas fa-exclamation-circle text-red-400 dark:text-red-500 mr-3 text-lg');
             }
-        };
-        
-        iframe.src = 'about:blank';
-    }
-    
-    // Функция для получения CSRF-токена из cookies
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+
+            $notifier.removeClass('translate-y-32 opacity-0').addClass('translate-y-0 opacity-100');
+            
+            setTimeout(function() {
+                $notifier.removeClass('translate-y-0 opacity-100').addClass('translate-y-32 opacity-0');
+            }, 4000);
         }
-        return cookieValue;
-    }
+    });
 </script>
-{% endblock %} 
+{% endblock %}

@@ -12,23 +12,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 <style>
     .service-card {
         transition: transform 0.3s ease;
     }
     .service-card:hover {
         transform: translateY(-5px);
-    }
-    .gallery-item {
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    .gallery-item:hover img {
-        transform: scale(1.05);
-    }
-    .gallery-item img {
-        transition: transform 0.5s ease;
     }
     .cta-button {
         transition: all 0.3s ease;
@@ -55,145 +44,13 @@
         background-repeat: no-repeat;
         background-position: center;
     }
-    .swiper {
-        width: 100%;
-        height: 500px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .swiper-slide {
-        text-align: center;
-        font-size: 18px;
-        background: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    [data-theme="dark"] .swiper-slide {
-        background: #374151;
-    }
-    .swiper-slide img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        max-height: 500px;
-    }
-    .video-slide {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        position: relative;
-    }
-    .video-slide::after {
-        content: '\f144';
-        font-family: 'Font Awesome 5 Free';
-        position: absolute;
-        font-size: 48px;
-        color: rgba(255, 255, 255, 0.8);
-        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        z-index: 1;
-        transition: all 0.3s ease;
-    }
-    .video-slide:hover::after {
-        transform: scale(1.1);
-        color: rgba(255, 255, 255, 0.9);
-    }
-    .video-slide video {
-        max-width: 100%;
-        max-height: 500px;
-    }
-    .slide-caption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(45, 93, 76, 0.8);
-        color: white;
-        padding: 8px 12px;
-        font-size: 14px;
-        text-align: center;
-        z-index: 10;
-    }
-    .swiper-thumbs {
-        height: 100px;
-        box-sizing: border-box;
-        padding: 10px 0;
-    }
-    .swiper-thumbs .swiper-slide {
-        width: 100px;
-        height: 80px;
-        opacity: 0.5;
-        cursor: pointer;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .swiper-thumbs .swiper-slide-thumb-active {
-        opacity: 1;
-        border: 2px solid var(--bg-deep-green);
-    }
-    .swiper-thumbs .swiper-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .swiper-thumbs .video-thumb {
-        background-color: rgba(45, 93, 76, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    [data-theme="dark"] .swiper-thumbs .video-thumb {
-        background-color: rgba(110, 231, 183, 0.1);
-    }
-    .swiper-thumbs .video-thumb i {
-        color: var(--bg-deep-green);
-        font-size: 24px;
-    }
+    /* Modern Scroll Track */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
     .fancybox__container video {
         max-width: 90vw;
         max-height: 90vh;
-    }
-    .media-filter-buttons {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-        gap: 12px;
-    }
-    .media-filter-button {
-        padding: 8px 16px;
-        border-radius: 30px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        cursor: pointer;
-    }
-    .media-filter-button.active {
-        background-color: var(--bg-deep-green);
-        color: white;
-    }
-    .media-filter-button:not(.active) {
-        background-color: rgba(45, 93, 76, 0.1);
-        color: var(--text-deep-green);
-        border-color: var(--bg-deep-green);
-    }
-    .media-filter-button:hover:not(.active) {
-        background-color: rgba(45, 93, 76, 0.2);
-    }
-    [data-media-type="photo"] {
-        display: none;
-    }
-    [data-media-type="video"] {
-        display: none;
-    }
-    .show-photos [data-media-type="photo"] {
-        display: flex;
-    }
-    .show-videos [data-media-type="video"] {
-        display: flex;
     }
 </style>
 {% endblock %}
@@ -211,167 +68,152 @@
     "name": "СтройМа",
     "url": "{{ request.scheme }}://{{ request.get_host }}"
   },
-  "description": "{{ service.description|striptags|truncatechars:1000 }}",
-  "image": "{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}"
+  "description": "{{ service.description|striptags|truncatechars:1000 }}"{% if service.image %},
+  "image": "{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}"{% endif %}
 }
 </script>
 
-<div class="bg-[#F8F5EF] dark:bg-gray-800 min-h-screen py-10 px-4">
-    <div class="max-w-5xl mx-auto">
-        <!-- Хлебные крошки с микроразметкой schema.org -->
-        <nav class="text-sm text-gray dark:text-gray-300 mb-6" aria-label="breadcrumb">
-            <ol class="breadcrumb flex flex-wrap" itemscope itemtype="https://schema.org/BreadcrumbList">
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                        <span itemprop="name">Главная</span>
+<div class="bg-[#F8F5EF] dark:bg-gray-800 min-h-screen pb-12">
+    <div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 pt-8 pb-12">
+        <!-- Хлебные крошки Architectural -->
+        <nav class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-12 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
+            <ol class="breadcrumb flex items-center" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                    <a href="{% url 'product_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                        <span itemprop="name">ГЛАВНАЯ</span>
                     </a>
                     <meta itemprop="position" content="1" />
-                    <span class="mx-2 dark:text-gray-300">/</span>
+                    <span class="mx-3 opacity-50">/</span>
                 </li>
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <a href="{% url 'service_list' %}" class="text-deep-green hover:text-gray-600 transition" itemprop="item">
-                        <span itemprop="name">Услуги</span>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                    <a href="{% url 'service_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                        <span itemprop="name">УСЛУГИ</span>
                     </a>
                     <meta itemprop="position" content="2" />
-                    <span class="mx-2 dark:text-gray-300">/</span>
+                    <span class="mx-3 opacity-50">/</span>
                 </li>
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                    <span itemprop="name" class="text-gray-500 dark:text-gray-400">{{ service.title }}</span>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
+                    <span itemprop="name" class="text-gray-900 dark:text-white">{{ service.title|upper }}</span>
                     <meta itemprop="position" content="3" />
                 </li>
             </ol>
         </nav>
 
-        <!-- Основной контент -->
-        <div class="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg service-card">
-            <h1 class="text-4xl font-serif text-deep-green mb-6 border-b border-sandy pb-3">{{ service.title }}</h1>
+        <!-- Заголовок -->
+        <div class="mb-16 md:mb-24 relative pl-6">
+            <div class="absolute left-0 top-2 bottom-2 w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl xl:text-[8rem] font-bold text-gray-900 dark:text-white leading-tight tracking-normal font-display uppercase break-words">
+                {{ service.title }}
+            </h1>
+        </div>
+
+        <!-- Основной контент (Две колонки) -->
+        <div class="flex flex-col xl:flex-row gap-12 lg:gap-24 relative items-start">
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
-                <div class="md:col-span-2">
-                    <div class="prose max-w-none mb-8 text-lg dark:text-gray-200">
-                        {{ service.description|linebreaks }}
-                    </div>
-                    
-                    {% if service.advantages %}
-                    <div class="mb-8 bg-sandy bg-opacity-40 dark:bg-opacity-10 p-6 rounded-lg">
-                        <h3 class="text-2xl font-serif text-deep-green mb-4">Преимущества нашей услуги</h3>
-                        <ul class="list-none space-y-3 service-advantages">
-                            {% for advantage in service.advantages.splitlines %}
-                                {% if advantage %}
-                                <li class="text-gray dark:text-gray-300">{{ advantage }}</li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
+            <main class="w-full xl:w-[65%] 2xl:w-[70%]">
+                
+                <div class="prose prose-lg md:prose-xl max-w-none text-gray-600 dark:text-gray-300 leading-relaxed font-light mb-16 xl:mb-24">
+                    {{ service.description|linebreaks }}
                 </div>
                 
-                <div>
-                    <div class="sticky top-24">
-                        <img src="{{ service.image.url }}" alt="{{ service.title }}" 
-                             class="w-full h-auto rounded-lg shadow-md mb-6" loading="lazy">
-                        
-                        <div class="bg-sandy dark:bg-gray-600 p-6 rounded-lg shadow-md">
-                            <h3 class="text-xl font-medium text-deep-green mb-3">Заинтересовала услуга?</h3>
-                            <p class="text-gray dark:text-gray-400 mb-4">Свяжитесь с нами для получения консультации и оформления заказа.</p>
-                            <a href="{% url 'contact' %}" class="button bg-deep-green text-white w-full text-center block py-3 rounded-lg font-medium cta-button">
-                                Заказать услугу
-                            </a>
-                            <p class="text-center text-sm text-gray dark:text-gray-100 mt-3">Или позвоните нам: <a href="tel:+79102114041" class="text-deep-green font-bold">+7 (910) 211-40-41</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Галерея работ и видео с Swiper -->
-            {% if service.photos.exists or service.videos.exists %}
-            <div class="mt-12">
-                <h2 class="text-3xl font-serif text-deep-green mb-6">Примеры наших работ</h2>
-                
-                <!-- Фильтр для переключения между фото и видео -->
-                <div class="media-filter-buttons">
-                    {% if service.photos.exists %}
-                    <button type="button" id="btn-photos" class="media-filter-button active">
-                        <i class="fas fa-image mr-2"></i>Фото
-                    </button>
-                    {% endif %}
-                    {% if service.videos.exists %}
-                    <button type="button" id="btn-videos" class="media-filter-button">
-                        <i class="fas fa-video mr-2"></i>Видео
-                    </button>
-                    {% endif %}
-                </div>
-                
-                <!-- Скрытые видео для Fancybox -->
-                <div style="display: none;">
-                    {% for video in service.videos.all %}
-                    <a href="{{ video.video.url }}" 
-                       data-fancybox="video-gallery" 
-                       data-caption="{% if video.title %}{{ video.title }}{% else %}Видео {{ forloop.counter }}{% endif %}"
-                       id="video-link-{{ forloop.counter }}">
-                        Видео {{ forloop.counter }}
-                    </a>
-                    {% endfor %}
-                </div>
-                
-                <!-- Основной слайдер -->
-                <div class="swiper mySwiper2 mb-4 rounded-lg shadow-lg show-photos">
-                    <div class="swiper-wrapper">
-                        {% for photo in service.photos.all %}
-                        <div class="swiper-slide" data-media-type="photo">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:service.title }}" loading="lazy" 
-                                 data-fancybox="gallery" data-src="{{ photo.image.url }}" />
-                            {% if photo.title %}
-                            <div class="slide-caption">{{ photo.title }}</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                        
-                        {% for video in service.videos.all %}
-                        <div class="swiper-slide" data-media-type="video">
-                            <div class="video-slide" data-video-index="{{ forloop.counter }}">
-                                <video controlsList="nodownload" preload="none" poster="{{ service.image.url }}" id="video-{{ forloop.counter }}">
-                                    <source src="{{ video.video.url }}" type="video/mp4">
-                                    Ваш браузер не поддерживает видео.
-                                </video>
+                <!-- Особенности / Преимущества (Bento Grid) -->
+                {% if service.advantages %}
+                <div class="mb-16 xl:mb-24">
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white mb-8 border-b-2 border-gray-900 dark:border-white pb-3 inline-block">Особенности и преимущества</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for advantage in service.advantages.splitlines %}
+                            {% if advantage %}
+                            <div class="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm p-8 lg:p-10 rounded-[2rem] md:rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm flex items-start gap-5 hover:shadow-xl hover:shadow-deep-green/10 hover:-translate-y-1 transition-all duration-500 group">
+                                <div class="w-10 h-10 shrink-0 rounded-full bg-deep-green dark:bg-emerald-400 text-white dark:text-gray-900 flex items-center justify-center shadow-lg shadow-deep-green/30 mt-1 transition-transform group-hover:scale-110">
+                                    <i class="fas fa-check text-sm"></i>
+                                </div>
+                                <p class="text-gray-900 dark:text-white font-medium text-lg lg:text-xl leading-relaxed">{{ advantage }}</p>
                             </div>
-                            {% if video.title %}
-                            <div class="slide-caption">{{ video.title }}</div>
                             {% endif %}
-                        </div>
                         {% endfor %}
                     </div>
-                    <div class="swiper-button-next text-deep-green"></div>
-                    <div class="swiper-button-prev text-deep-green"></div>
                 </div>
-                
-                <!-- Слайдер с миниатюрами -->
-                <div class="swiper mySwiper swiper-thumbs show-photos">
-                    <div class="swiper-wrapper">
-                        {% for photo in service.photos.all %}
-                        <div class="swiper-slide" data-media-type="photo">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Фото' }}" loading="lazy" />
-                        </div>
-                        {% endfor %}
+                {% endif %}
+
+                <!-- Галерея работ: Modern Horizontal Snap Track -->
+                {% if service.photos.exists or service.videos.exists %}
+                <div class="mb-16 xl:mb-24">
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white mb-8 border-b-2 border-gray-900 dark:border-white pb-3 inline-block">Примеры наших работ</h3>
+                    
+                    <div class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-12 -mx-4 px-4 sm:-mx-8 sm:px-8 xl:mx-0 xl:px-0">
                         
                         {% for video in service.videos.all %}
-                        <div class="swiper-slide video-thumb" data-media-type="video">
-                            <i class="fas fa-play"></i>
-                        </div>
+                            <a href="{{ video.video.url }}" data-fancybox="gallery" data-type="video" data-caption="{{ video.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 dark:shadow-black/50 hover:shadow-2xl transition-all duration-500">
+                                <div class="w-full aspect-video bg-gray-900 flex items-center justify-center overflow-hidden">
+                                    {% if service.image %}
+                                        <img src="{{ service.image.url }}" alt="{{ video.title }}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105">
+                                    {% endif %}
+                                    <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white z-10 group-hover:scale-110 transition-transform duration-500 shadow-lg border border-white/20">
+                                        <i class="fas fa-play text-2xl ml-2"></i>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-8 lg:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                                    <h4 class="text-white font-bold text-xl">{{ video.title|default:"Видео-обзор" }}</h4>
+                                </div>
+                            </a>
                         {% endfor %}
+
+                        {% for photo in service.photos.all %}
+                            <a href="{{ photo.image.url }}" data-fancybox="gallery" data-caption="{{ photo.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 dark:shadow-black/50 hover:shadow-2xl transition-all duration-500">
+                                <div class="w-full aspect-video bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1500ms]">
+                                </div>
+                                {% if photo.title %}
+                                <div class="absolute bottom-0 left-0 right-0 p-8 lg:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                                    <h4 class="text-white font-bold text-xl">{{ photo.title }}</h4>
+                                </div>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+
                     </div>
                 </div>
-            </div>
-            {% endif %}
-            
-            <!-- Призыв к действию в конце страницы -->
-            <div class="mt-12 text-center bg-sandy bg-opacity-30 dark:bg-opacity-10 p-8 rounded-lg shadow-inner">
-                <h2 class="text-3xl font-serif text-deep-green mb-4">Готовы заказать услугу?</h2>
-                <p class="text-lg text-gray dark:text-gray-300 mb-6 max-w-2xl mx-auto">Мы гарантируем высокое качество и профессиональный подход к выполнению всех работ. Наши специалисты имеют большой опыт и используют только качественные материалы.</p>
-                <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-8 py-3 rounded-lg font-medium inline-block cta-button">
-                    Оставить заявку
-                </a>
-            </div>
+                {% endif %}
+                
+                <!-- Призыв к действию (Внизу контента) -->
+                <div class="text-center bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 p-12 lg:p-20 rounded-[3rem] shadow-2xl relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-deep-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div class="relative z-10">
+                        <h2 class="text-3xl md:text-5xl font-display font-black mb-6 tracking-tight uppercase">Готовы обсудить?</h2>
+                        <p class="text-lg text-gray-400 dark:text-gray-600 mb-10 max-w-2xl mx-auto font-light">Свяжитесь с нами для получения подробной консультации и точного расчета стоимости вашей задачи.</p>
+                        <a href="{% url 'contact' %}" class="inline-flex items-center justify-center px-10 py-5 bg-white text-gray-900 dark:bg-gray-900 dark:text-white rounded-full font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:text-white hover:shadow-2xl hover:shadow-deep-green/30 transition-all duration-300 transform hover:-translate-y-1">
+                            Оставить заявку
+                        </a>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Левый/Правый Сайдбар с CTA (Стекло) -->
+            <aside class="w-full xl:w-[35%] 2xl:w-[30%] shrink-0">
+                <div class="sticky top-28 flex flex-col gap-6">
+                    {% if service.image %}
+                        <div class="aspect-video xl:aspect-square 2xl:aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl shadow-gray-200/50 dark:shadow-black/50 group block">
+                            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl p-10 xl:p-12 rounded-[3rem] shadow-xl shadow-gray-200/50 dark:shadow-black/50 border border-white/50 dark:border-gray-700">
+                        <h3 class="text-2xl lg:text-3xl font-display font-black text-gray-900 dark:text-white mb-4 uppercase tracking-tighter">Начать работу</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mb-10 font-light leading-relaxed">Наши специалисты всегда готовы помочь вам на любом этапе вашего ремонта или строительства.</p>
+                        
+                        <a href="{% url 'contact' %}" class="flex items-center justify-center px-8 py-5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-[0.65rem] hover:bg-deep-green dark:hover:bg-emerald-400 hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 w-full text-center">
+                            Оформить заявку
+                        </a>
+                        
+                        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+                            <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Прямая связь</p>
+                            <a href="tel:+79102114041" class="text-2xl lg:text-3xl font-black font-display text-gray-900 dark:text-white hover:text-deep-green dark:hover:text-emerald-400 transition-colors tracking-tight">+7 (910) 211-40-41</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
         </div>
     </div>
 </div>
@@ -379,50 +221,9 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация Swiper
-    var swiperThumbs = new Swiper(".mySwiper", {
-        spaceBetween: 10,
-        slidesPerView: 'auto',
-        freeMode: true,
-        watchSlidesProgress: true,
-    });
-    
-    var swiperMain = new Swiper(".mySwiper2", {
-        spaceBetween: 10,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        thumbs: {
-            swiper: swiperThumbs,
-        },
-        on: {
-            slideChange: function() {
-                // Остановить все видео при смене слайда
-                document.querySelectorAll('video').forEach(function(video) {
-                    video.pause();
-                });
-            }
-        }
-    });
-    
-    // Обработка клика на видео
-    document.querySelectorAll('.video-slide').forEach(function(videoSlide) {
-        videoSlide.addEventListener('click', function() {
-            // Получаем индекс видео
-            const videoIndex = this.getAttribute('data-video-index');
-            // Находим соответствующую скрытую ссылку и открываем её
-            const videoLink = document.getElementById('video-link-' + videoIndex);
-            if (videoLink) {
-                videoLink.click();
-            }
-        });
-    });
-    
-    // Инициализация Fancybox
+    // Инициализация Fancybox для фото и видео единой галереей
     Fancybox.bind("[data-fancybox='gallery']", {
         Image: {
             zoom: true,
@@ -438,63 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 "close",
             ],
         }
-    });
-    
-    // Инициализация Fancybox для видео
-    Fancybox.bind("[data-fancybox='video-gallery']", {
-        Video: {
-            autoplay: true,
-            ratio: 16/9
-        },
-        Toolbar: {
-            display: [
-                "close",
-            ],
-        }
-    });
-    
-    // Фильтрация медиа
-    const filterButtons = document.querySelectorAll('.media-filter-button');
-    const mainSlider = document.querySelector('.mySwiper2');
-    const thumbsSlider = document.querySelector('.mySwiper');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Обновляем активную кнопку
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Применяем фильтр
-            const filterType = this.id;
-            
-            if (filterType === 'btn-photos') {
-                mainSlider.classList.remove('show-videos');
-                mainSlider.classList.add('show-photos');
-                thumbsSlider.classList.remove('show-videos');
-                thumbsSlider.classList.add('show-photos');
-                
-                // Переход к первому фото
-                const firstPhotoIndex = Array.from(swiperMain.slides).findIndex(slide => slide.getAttribute('data-media-type') === 'photo');
-                if (firstPhotoIndex > -1) {
-                    swiperMain.slideTo(firstPhotoIndex);
-                }
-            } else if (filterType === 'btn-videos') {
-                mainSlider.classList.remove('show-photos');
-                mainSlider.classList.add('show-videos');
-                thumbsSlider.classList.remove('show-photos');
-                thumbsSlider.classList.add('show-videos');
-                
-                // Переход к первому видео
-                const firstVideoIndex = Array.from(swiperMain.slides).findIndex(slide => slide.getAttribute('data-media-type') === 'video');
-                if (firstVideoIndex > -1) {
-                    swiperMain.slideTo(firstVideoIndex);
-                }
-            }
-            
-            // Обновляем слайдеры после изменения
-            swiperMain.update();
-            swiperThumbs.update();
-        });
     });
 });
 </script>

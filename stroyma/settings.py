@@ -163,116 +163,104 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Настройки Jazzmin (для улучшения интерфейса админ-панели)
 JAZZMIN_SETTINGS = {
-    # Название в заголовке админки
     "site_title": "Stroyma",
-    # Название в шапке админки
-    "site_header": "Система управления Stroyma",
-    # Название в главном меню
-    "site_brand": "Stroyma",
-    # Путь к логотипу
+    "site_header": "Stroyma",
+    "site_brand": "STROYMA",
     "site_logo": None,
-    # Текст-приветствие
-    "welcome_sign": "Добро пожаловать в панель управления",
-    # Авто-копирайт внизу страницы
+    "welcome_sign": "Добро пожаловать в панель управления Stroyma",
     "copyright": "Stroyma ООО",
-    # Путь к логотипу на странице входа
     "login_logo": None,
-    # Текст на странице логина
     "login_logo_dark": None,
-    # Фон на странице логина
-    "login_background": None,
-    # Настройки меню
-    "show_ui_builder": True,
-    
-    # Упрощаем интерфейс для непрограммистов
-    "show_app_references": False,  # Скрывает документацию и ссылки
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "brand_small_text": False,
-    
-    # Делаем интерфейс более читаемым
-    "related_modal_active": True,  # Включаем модальные окна для связанных объектов
-    
-    # Настраиваем боковое меню
-    "navigation_expanded": True,  # Меню будет развернуто
-    
-    # Добавляем пункт "Аналитика" в меню
+    "site_logo_classes": "img-circle",
+    "site_icon": None,
+
+    "show_ui_builder": False,
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "related_modal_active": True,
+
+    "hide_apps": ["auth"],
+    "hide_models": [
+        "products.BaseTexture",
+        "products.FacadeColor",
+    ],
+
+    "order_with_respect_to": ["products", "services", "accounts"],
+
     "custom_links": {
         "products": [
             {
                 "name": "Отчет по продажам",
                 "url": "admin:sales_report",
                 "icon": "fas fa-chart-line",
+                "permissions": ["products.view_order"],
             }
         ],
     },
-    
-    # Группируем приложения в меню
-    "order_with_respect_to": ["auth", "products", "services", "accounts"],
-    
-    # Добавляем раздел "Аналитика" в меню
-    "menu": [
-        {
-            "name": "Аналитика",
-            "icon": "fas fa-chart-bar",
-            "models": [
-                {
-                    "name": "Отчет по продажам",
-                    "url": "admin:sales_report",
-                    "icon": "fas fa-chart-line",
-                },
-            ],
-        },
+
+    "topmenu_links": [
+        {"name": "Главная сайта", "url": "/", "new_window": True},
+        {"name": "Отчёт", "url": "admin:sales_report"},
     ],
-    
-    # Иконки (для наглядности)
+
     "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "products.Product": "fas fa-box",
-        "products.Category": "fas fa-folder",
-        "products.Order": "fas fa-shopping-cart",
-        "products.OrderItem": "fas fa-list",
-        "products.Cart": "fas fa-shopping-basket",
-        "products.CartItem": "fas fa-shopping-bag",
+        "auth": "fas fa-shield-alt",
+        "auth.user": "fas fa-user-shield",
+        "auth.Group": "fas fa-users-cog",
+        "products.Product": "fas fa-box-open",
+        "products.Category": "fas fa-sitemap",
+        "products.Order": "fas fa-file-invoice-dollar",
         "products.FacadeColor": "fas fa-palette",
         "products.BaseTexture": "fas fa-brush",
-        "services.Service": "fas fa-tools",
-        "accounts.UserProfile": "fas fa-user-circle",
+        "services.Service": "fas fa-hard-hat",
+        "services.ServicePhoto": "fas fa-images",
+        "services.ServiceVideo": "fas fa-video",
+        "accounts.UserProfile": "fas fa-id-card",
     },
+    "default_icon_parents": "fas fa-folder-open",
+    "default_icon_children": "fas fa-circle",
+
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+    },
+
+    "language_chooser": False,
+    "custom_css": "css/admin_custom.css",
 }
 
-# Дополнительные настройки Jazzmin для меню
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-success",
-    "accent": "accent-teal",
+    "brand_colour": False,
+    "accent": "accent-primary",
     "navbar": "navbar-dark",
-    "no_navbar_border": False,
+    "no_navbar_border": True,
     "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
     "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-success",
+    "sidebar": "sidebar-dark-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": True,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "cosmo",
+    "theme": "default",
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
-        "secondary": "btn-secondary",
+        "secondary": "btn-outline-secondary",
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",
-        "success": "btn-success"
-    }
+        "success": "btn-success",
+    },
+    "actions_sticky_top": True,
 }
 
 # Настройки для кеширования
