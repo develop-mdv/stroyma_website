@@ -5,21 +5,21 @@ themeToggle.addEventListener('click', () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon text-2xl"></i>' : '<i class="fas fa-sun text-2xl"></i>';
+    themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon text-sm"></i>' : '<i class="fas fa-sun text-sm"></i>';
     
     // Обновляем иконку в мобильном меню
     const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
     if (mobileThemeToggle) {
-        mobileThemeToggle.innerHTML = newTheme === 'light' 
-            ? '<i class="fas fa-moon mr-3 w-5 text-center"></i> Сменить тему'
-            : '<i class="fas fa-sun mr-3 w-5 text-center"></i> Сменить тему';
+            mobileThemeToggle.innerHTML = newTheme === 'light' 
+            ? '<i class="fas fa-moon text-sm"></i> Сменить тему'
+            : '<i class="fas fa-sun text-sm"></i> Сменить тему';
     }
 });
 
 // Загрузка сохраненной темы
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', savedTheme);
-themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon text-2xl"></i>' : '<i class="fas fa-sun text-2xl"></i>';
+themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon text-sm"></i>' : '<i class="fas fa-sun text-sm"></i>';
 
 // Мобильное меню
 document.addEventListener('DOMContentLoaded', function() {
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
         
         // Изменить иконку меню на крестик
-        menuToggle.innerHTML = '<i class="fas fa-times text-xl md:text-2xl"></i>';
+        menuToggle.innerHTML = '<i class="fas fa-times text-base"></i>';
         
         // Плавное появление оверлея
         setTimeout(() => {
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
         
         // Вернуть иконку меню
-        menuToggle.innerHTML = '<i class="fas fa-bars text-xl md:text-2xl"></i>';
+        menuToggle.innerHTML = '<i class="fas fa-bars text-base"></i>';
         
         // Скрытие оверлея после анимации
         setTimeout(() => {

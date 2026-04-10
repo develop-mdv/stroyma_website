@@ -58,7 +58,7 @@ h1 { font-size: 2.25rem; }
 h2 { font-size: 1.875rem; }
 h3 { font-size: 1.5rem; }
 p, li, a, span { font-size: 1rem; font-weight: 400; }
-.text-sm { font-size: 0.875rem; }
+h1 span, h2 span, h3 span, h4 span, h5 span, h6 span { font-size: inherit; font-weight: inherit; }
 .text-lg { font-size: 1.125rem; }
 
 /* Стили для форм и полей ввода */
@@ -317,10 +317,10 @@ button:focus, a:focus {
         padding-right: 1rem;
     }
 
-    /* Адаптивные размеры для мобильного меню */
+    /* Мобильное меню — fullscreen */
     #mobile-menu {
-        width: 85%;
-        max-width: 400px;
+        width: 100% !important;
+        max-width: none !important;
     }
 }
 
@@ -384,19 +384,15 @@ button:focus, a:focus {
         padding-right: 0.75rem;
     }
 
-    /* Адаптивные размеры для мобильного меню */
-    #mobile-menu {
-        width: 100%;
-        max-width: none;
-    }
+    /* Мобильное меню (fullscreen наследуется) */
 }
 
-/* Улучшенные стили для мобильного меню */
+/* Улучшенные стили для мобильного меню (fullscreen) */
 #mobile-menu {
     opacity: 1;
-    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    width: 100% !important;
+    max-width: none !important;
 }
 
 #mobile-menu-overlay {
