@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load static %}
 {% block content %}
 
 <!-- Хлебные крошки -->
@@ -10,10 +11,12 @@
 
 <!-- Hero-Баннер -->
 <section class="relative mb-10 md:mb-16 animate-fade-in overflow-hidden">
-    <div class="relative z-10 py-10 md:py-16 lg:py-20">
+    <div class="relative z-10 py-10 md:py-16 lg:py-20 grid lg:grid-cols-[minmax(0,1fr)_auto] gap-10 items-center">
         <div class="max-w-4xl">
             <p class="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-deep-green dark:text-emerald-400 mb-4 flex items-center gap-3">
-                <span class="w-8 h-px bg-deep-green dark:bg-emerald-400"></span> Каталог СтройМа
+                <span class="w-8 h-px bg-deep-green dark:bg-emerald-400"></span>
+                <img src="{% static 'images/logo_hero.png' %}" alt="Логотип СтройМа" class="h-7 w-auto object-contain -my-1" loading="lazy">
+                Каталог СтройМа
             </p>
             <h2 class="text-4xl md:text-5xl lg:text-7xl font-black font-display text-gray-900 dark:text-white leading-[1.05] tracking-tighter uppercase mb-6" style="font-size:clamp(2.5rem,8vw,4.5rem)">
                 Лучшие<br>строительные<br><span style="color:#2D5D4C">материалы</span>
@@ -25,8 +28,32 @@
                 Посмотреть каталог <i class="fas fa-arrow-down group-hover:translate-y-0.5 transition-transform text-xs"></i>
             </a>
         </div>
+
+        <!-- Декоративный логотип-локап СтройМа -->
+        <div class="hidden lg:flex relative items-center justify-center pr-2 xl:pr-6 select-none" aria-hidden="true">
+            <div class="absolute inset-0 bg-gradient-to-br from-deep-green/15 via-emerald-400/10 to-sandy/30 dark:from-emerald-400/15 dark:via-emerald-500/10 dark:to-gray-700/20 rounded-full blur-3xl animate-hero-glow"></div>
+            <div class="absolute inset-4 rounded-full border border-deep-green/10 dark:border-emerald-400/10 animate-[spin_40s_linear_infinite]"></div>
+            <div class="absolute inset-10 rounded-full border border-dashed border-deep-green/20 dark:border-emerald-400/20 animate-[spin_60s_linear_infinite_reverse]"></div>
+            <div class="relative z-10 animate-hero-float flex flex-col items-center gap-3 xl:gap-4">
+                <img src="{% static 'images/logo_hero.png' %}"
+                     alt="Логотип СтройМа"
+                     class="w-80 xl:w-[26rem] 2xl:w-[30rem] h-auto object-contain drop-shadow-[0_25px_45px_rgba(45,93,76,0.28)] dark:drop-shadow-[0_25px_45px_rgba(52,211,153,0.22)] transition-transform duration-700 ease-out hover:scale-[1.03]"
+                     loading="lazy" decoding="async">
+                <div class="flex flex-col items-center -mt-4 xl:-mt-6">
+                    <span class="font-black tracking-tight text-deep-green dark:text-emerald-400 leading-none"
+                          style="font-size:clamp(2.4rem,4vw,3.75rem); letter-spacing:-0.02em">
+                        СтройМа
+                    </span>
+                    <span class="mt-2 flex items-center gap-3 text-[0.6rem] xl:text-[0.7rem] font-bold uppercase tracking-[0.35em] text-gray-500 dark:text-gray-400">
+                        <span class="w-4 h-px bg-gray-400/60 dark:bg-gray-500/60"></span>
+                        Строительные материалы
+                        <span class="w-4 h-px bg-gray-400/60 dark:bg-gray-500/60"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Декоративный элемент -->
+    <!-- Декоративный фон -->
     <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-sandy/40 to-transparent dark:from-gray-800/30 pointer-events-none hidden lg:block"></div>
     <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-gray-200 via-gray-300 to-transparent dark:from-gray-800 dark:via-gray-700"></div>
 </section>

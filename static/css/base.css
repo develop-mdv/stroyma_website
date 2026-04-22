@@ -235,6 +235,32 @@ button:hover, a.button:hover {
     animation: fadeIn 0.5s ease forwards;
 }
 
+/* Плавающая анимация для hero-логотипа */
+@keyframes heroLogoFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-10px) rotate(-1deg); }
+}
+.animate-hero-float {
+    animation: heroLogoFloat 6s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* Пульсирующее свечение за логотипом */
+@keyframes heroGlowPulse {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50%      { opacity: 0.9;  transform: scale(1.08); }
+}
+.animate-hero-glow {
+    animation: heroGlowPulse 5s ease-in-out infinite;
+    will-change: opacity, transform;
+}
+
+/* Отключаем на reduced-motion для доступности */
+@media (prefers-reduced-motion: reduce) {
+    .animate-hero-float,
+    .animate-hero-glow { animation: none; }
+}
+
 /* Модальное окно */
 #quick-view-modal {
     opacity: 0;

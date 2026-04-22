@@ -191,24 +191,46 @@ def quick_view(request, pk):
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    quantity = int(request.POST.get('quantity', 1))
+
+    is_ajax = (
+        request.headers.get('x-requested-with') == 'XMLHttpRequest'
+        or 'application/json' in request.headers.get('Accept', '')
+    )
+
+    if request.method != 'POST':
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': 'Метод не разрешён.'}, status=405)
+        return redirect(product.get_absolute_url())
+
+    try:
+        quantity = int(request.POST.get('quantity') or 1)
+    except (TypeError, ValueError):
+        quantity = 1
+    if quantity < 1:
+        quantity = 1
 
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         cart_item.quantity = quantity if created else cart_item.quantity + quantity
         cart_item.save()
+        cart_item_count = CartItem.objects.filter(cart=cart).count()
     else:
         cart = request.session.get('cart', {})
-        if str(product.pk) in cart:
-            cart[str(product.pk)] += quantity
-        else:
-            cart[str(product.pk)] = quantity
+        key = str(product.pk)
+        cart[key] = cart.get(key, 0) + quantity
         request.session['cart'] = cart
+        request.session.modified = True
+        cart_item_count = len(cart)
 
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.headers.get('Accept', '').find('application/json') != -1:
-        return JsonResponse({'success': True, 'message': f'{product.name} успешно добавлен в корзину'})
+    if is_ajax:
+        return JsonResponse({
+            'success': True,
+            'message': f'{product.name} успешно добавлен в корзину',
+            'cart_item_count': cart_item_count,
+        })
 
+    messages.success(request, f'{product.name} добавлен в корзину')
     return redirect('view_cart')
 
 def update_cart(request, pk):
