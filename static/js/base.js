@@ -1,37 +1,9 @@
-// Переключатель тем
-const themeToggle = document.getElementById('theme-toggle');
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon text-sm"></i>' : '<i class="fas fa-sun text-sm"></i>';
-
-        // Обновляем иконку в мобильном меню
-        const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-        if (mobileThemeToggle) {
-            mobileThemeToggle.innerHTML = newTheme === 'light'
-                ? '<i class="fas fa-moon text-sm"></i> Сменить тему'
-                : '<i class="fas fa-sun text-sm"></i> Сменить тему';
-        }
-    });
-}
-
-// Загрузка сохраненной темы
-const savedTheme = localStorage.getItem('theme') || 'light';
-document.documentElement.setAttribute('data-theme', savedTheme);
-if (themeToggle) {
-    themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon text-sm"></i>' : '<i class="fas fa-sun text-sm"></i>';
-}
-
 // Мобильное меню
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
     const closeMenuBtn = document.getElementById('close-menu-btn');
-    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
 
     // Функция для открытия меню
     function openMobileMenu() {
@@ -64,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
     if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    if (mobileThemeToggle && themeToggle) mobileThemeToggle.addEventListener('click', () => themeToggle.click());
 
     // Обработка клавиши Escape для закрытия меню
     document.addEventListener('keydown', function(event) {

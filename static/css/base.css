@@ -21,14 +21,14 @@ body {
 /* Гарантированная минимальная тач-цель */
 .tap-target { min-width: 44px; min-height: 44px; }
 
-/* Переменные для тем */
-[data-theme="light"] {
-    --bg-milky-white: #F9FAFB; /* Мягкий белый */
-    --bg-sandy: #F5E6D3; /* Теплый песочный */
-    --bg-deep-green: #2D5D4C; /* Насыщенный зеленый */
+/* CSS-переменные цветовой схемы */
+:root {
+    --bg-milky-white: #F9FAFB;
+    --bg-sandy: #F5E6D3;
+    --bg-deep-green: #2D5D4C;
     --text-deep-green: #2D5D4C;
-    --bg-concrete-gray: #6B7280; /* Нейтральный серый */
-    --text-gray: #1F2937; /* Темно-серый для текста */
+    --bg-concrete-gray: #6B7280;
+    --text-gray: #1F2937;
     --bg-white: #FFFFFF;
     --text-gray-600: #4B5563;
     --input-bg: #FFFFFF;
@@ -36,22 +36,6 @@ body {
     --input-focus: #2D5D4C;
     --button-hover: #4B6B5D;
     --error-color: #DC2626;
-}
-
-[data-theme="dark"] {
-    --bg-milky-white: #1F2937; /* Темно-серый */
-    --bg-sandy: #4B3F2F; /* Темный песочный */
-    --bg-deep-green: #2D5D4C; /* Тот же зеленый для консистентности */
-    --text-deep-green: #6EE7B7; /* Светло-зеленый для контраста */
-    --bg-concrete-gray: #4B5563; /* Темный серый */
-    --text-gray: #E5E7EB; /* Светло-серый для текста */
-    --bg-white: #374151; /* Темный фон панелей */
-    --text-gray-600: #D1D5DB; /* Усиленный контраст для текста */
-    --input-bg: #374151;
-    --input-border: #6B7280;
-    --input-focus: #6EE7B7;
-    --button-hover: #3E8A6A; /* Более светлый зеленый для лучшей заметности */
-    --error-color: #F87171;
 }
 
 /* Применение переменных */
@@ -142,9 +126,6 @@ button:hover, a.button:hover {
     margin: 2.5rem 0 1rem;
     height: 4px; 
 }
-[data-theme="dark"] .noUi-target {
-    background: #374151;
-}
 
 .noUi-connect {
     background: var(--text-deep-green); 
@@ -161,10 +142,6 @@ button:hover, a.button:hover {
     right: -10px !important;
     cursor: grab;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-[data-theme="dark"] .noUi-handle {
-    background: #FFFFFF;
-    border-color: #111827;
 }
 
 .noUi-handle:active {
@@ -191,10 +168,6 @@ button:hover, a.button:hover {
     bottom: 140%;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
-[data-theme="dark"] .noUi-tooltip {
-    background: #FFFFFF;
-    color: #111827;
-}
 
 .noUi-tooltip::after { 
     content: '';
@@ -205,9 +178,6 @@ button:hover, a.button:hover {
     border-width: 4px 4px 0;
     border-style: solid;
     border-color: #111827 transparent transparent transparent;
-}
-[data-theme="dark"] .noUi-tooltip::after {
-    border-color: #FFFFFF transparent transparent transparent;
 }
 
 /* Эффекты наведения и переходы */
@@ -491,39 +461,4 @@ button:focus, a:focus {
 
 .animate-fade-in {
     animation: fadeIn 0.5s ease forwards;
-}
-
-/* Улучшенные стили для темной темы */
-[data-theme="dark"] .bg-white {
-    background-color: var(--bg-white);
-}
-
-[data-theme="dark"] .text-gray-600 {
-    color: var(--text-gray-600);
-}
-
-[data-theme="dark"] .border-gray-200 {
-    border-color: #4B5563;
-}
-
-[data-theme="dark"] .bg-gray-100 {
-    background-color: #374151;
-}
-
-[data-theme="dark"] .text-gray-800, 
-[data-theme="dark"] .text-gray-700 {
-    color: #E5E7EB;
-}
-
-/* Улучшение контраста кнопок в темной теме */
-[data-theme="dark"] .button.bg-sandy {
-    background-color: #6D5B44; /* Более светлый песочный для темной темы */
-    color: #FFFFFF; /* Белый текст для лучшего контраста */
-}
-
-/* Стили для фокуса элементов в темной теме */
-[data-theme="dark"] a:focus,
-[data-theme="dark"] button:focus {
-    outline: 2px solid var(--input-focus);
-    outline-offset: 2px;
 }

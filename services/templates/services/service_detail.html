@@ -74,27 +74,27 @@
 }
 </script>
 
-<div class="bg-[#F8F5EF] dark:bg-gray-800 min-h-screen pb-12">
+<div class="bg-[#F8F5EF] min-h-screen pb-12">
     <div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 pt-8 pb-12">
         <!-- Хлебные крошки Architectural -->
-        <nav class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-8 md:mb-12 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
+        <nav class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-8 md:mb-12 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
             <ol class="breadcrumb flex items-center" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
-                    <a href="{% url 'product_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <a href="{% url 'product_list' %}" class="hover:text-gray-900 transition-colors" itemprop="item">
                         <span itemprop="name">ГЛАВНАЯ</span>
                     </a>
                     <meta itemprop="position" content="1" />
                     <span class="mx-3 opacity-50">/</span>
                 </li>
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
-                    <a href="{% url 'service_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                    <a href="{% url 'service_list' %}" class="hover:text-gray-900 transition-colors" itemprop="item">
                         <span itemprop="name">УСЛУГИ</span>
                     </a>
                     <meta itemprop="position" content="2" />
                     <span class="mx-3 opacity-50">/</span>
                 </li>
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline-flex items-center">
-                    <span itemprop="name" class="text-gray-900 dark:text-white">{{ service.title|upper }}</span>
+                    <span itemprop="name" class="text-gray-900">{{ service.title|upper }}</span>
                     <meta itemprop="position" content="3" />
                 </li>
             </ol>
@@ -102,8 +102,8 @@
 
         <!-- Заголовок -->
         <div class="mb-10 md:mb-24 relative pl-4 md:pl-6">
-            <div class="absolute left-0 top-2 bottom-2 w-1.5 md:w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
-            <h1 class="font-bold text-gray-900 dark:text-white leading-tight tracking-normal font-display uppercase break-words" style="font-size:clamp(2rem,8vw,8rem)">
+            <div class="absolute left-0 top-2 bottom-2 w-1.5 md:w-2 rounded-full bg-deep-green"></div>
+            <h1 class="font-bold text-gray-900 leading-tight tracking-normal font-display uppercase break-words" style="font-size:clamp(2rem,8vw,8rem)">
                 {{ service.title }}
             </h1>
         </div>
@@ -113,22 +113,22 @@
             
             <main class="w-full xl:w-[65%] 2xl:w-[70%]">
                 
-                <div class="prose prose-lg md:prose-xl max-w-none text-gray-600 dark:text-gray-300 leading-relaxed font-light mb-16 xl:mb-24">
+                <div class="prose prose-lg md:prose-xl max-w-none text-gray-600 leading-relaxed font-light mb-16 xl:mb-24">
                     {{ service.description|linebreaks }}
                 </div>
                 
                 <!-- Особенности / Преимущества (Bento Grid) -->
                 {% if service.advantages %}
                 <div class="mb-16 xl:mb-24">
-                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white mb-8 border-b-2 border-gray-900 dark:border-white pb-3 inline-block">Особенности и преимущества</h3>
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 mb-8 border-b-2 border-gray-900 pb-3 inline-block">Особенности и преимущества</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {% for advantage in service.advantages.splitlines %}
                             {% if advantage %}
-                            <div class="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm p-8 lg:p-10 rounded-[2rem] md:rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm flex items-start gap-5 hover:shadow-xl hover:shadow-deep-green/10 hover:-translate-y-1 transition-all duration-500 group">
-                                <div class="w-10 h-10 shrink-0 rounded-full bg-deep-green dark:bg-emerald-400 text-white dark:text-gray-900 flex items-center justify-center shadow-lg shadow-deep-green/30 mt-1 transition-transform group-hover:scale-110">
+                            <div class="bg-white/50 backdrop-blur-sm p-8 lg:p-10 rounded-[2rem] md:rounded-[3rem] border border-gray-100 shadow-sm flex items-start gap-5 hover:shadow-xl hover:shadow-deep-green/10 hover:-translate-y-1 transition-all duration-500 group">
+                                <div class="w-10 h-10 shrink-0 rounded-full bg-deep-green text-white flex items-center justify-center shadow-lg shadow-deep-green/30 mt-1 transition-transform group-hover:scale-110">
                                     <i class="fas fa-check text-sm"></i>
                                 </div>
-                                <p class="text-gray-900 dark:text-white font-medium text-lg lg:text-xl leading-relaxed">{{ advantage }}</p>
+                                <p class="text-gray-900 font-medium text-lg lg:text-xl leading-relaxed">{{ advantage }}</p>
                             </div>
                             {% endif %}
                         {% endfor %}
@@ -139,12 +139,12 @@
                 <!-- Галерея работ: Modern Horizontal Snap Track -->
                 {% if service.photos.exists or service.videos.exists %}
                 <div class="mb-16 xl:mb-24">
-                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white mb-8 border-b-2 border-gray-900 dark:border-white pb-3 inline-block">Примеры наших работ</h3>
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 mb-8 border-b-2 border-gray-900 pb-3 inline-block">Примеры наших работ</h3>
                     
                     <div class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-12 -mx-4 px-4 sm:-mx-8 sm:px-8 xl:mx-0 xl:px-0">
                         
                         {% for video in service.videos.all %}
-                            <a href="{{ video.video.url }}" data-fancybox="gallery" data-type="video" data-caption="{{ video.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 dark:shadow-black/50 hover:shadow-2xl transition-all duration-500">
+                            <a href="{{ video.video.url }}" data-fancybox="gallery" data-type="video" data-caption="{{ video.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 hover:shadow-2xl transition-all duration-500">
                                 <div class="w-full aspect-video bg-gray-900 flex items-center justify-center overflow-hidden">
                                     {% if service.image %}
                                         <img src="{{ service.image.url }}" alt="{{ video.title }}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105">
@@ -160,8 +160,8 @@
                         {% endfor %}
 
                         {% for photo in service.photos.all %}
-                            <a href="{{ photo.image.url }}" data-fancybox="gallery" data-caption="{{ photo.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 dark:shadow-black/50 hover:shadow-2xl transition-all duration-500">
-                                <div class="w-full aspect-video bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                            <a href="{{ photo.image.url }}" data-fancybox="gallery" data-caption="{{ photo.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 hover:shadow-2xl transition-all duration-500">
+                                <div class="w-full aspect-video bg-gray-100 overflow-hidden">
                                     <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1500ms]">
                                 </div>
                                 {% if photo.title %}
@@ -177,12 +177,12 @@
                 {% endif %}
                 
                 <!-- Призыв к действию (Внизу контента) -->
-                <div class="text-center bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 p-8 md:p-12 lg:p-20 rounded-[1.5rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden group">
+                <div class="text-center bg-gray-900 text-white p-8 md:p-12 lg:p-20 rounded-[1.5rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden group">
                     <div class="absolute inset-0 bg-gradient-to-br from-deep-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     <div class="relative z-10">
                         <h2 class="text-2xl sm:text-3xl md:text-5xl font-display font-black mb-4 md:mb-6 tracking-tight uppercase break-words">Готовы обсудить?</h2>
-                        <p class="text-base md:text-lg text-gray-400 dark:text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto font-light">Свяжитесь с нами для получения подробной консультации и точного расчета стоимости вашей задачи.</p>
-                        <a href="{% url 'contact' %}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-white text-gray-900 dark:bg-gray-900 dark:text-white rounded-full font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:text-white hover:shadow-2xl hover:shadow-deep-green/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[48px]">
+                        <p class="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto font-light">Свяжитесь с нами для получения подробной консультации и точного расчета стоимости вашей задачи.</p>
+                        <a href="{% url 'contact' %}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-white text-gray-900 rounded-full font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:text-white hover:shadow-2xl hover:shadow-deep-green/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[48px]">
                             Оставить заявку
                         </a>
                     </div>
@@ -194,22 +194,22 @@
             <aside class="w-full xl:w-[35%] 2xl:w-[30%] shrink-0">
                 <div class="xl:sticky xl:top-28 flex flex-col gap-6">
                     {% if service.image %}
-                        <div class="aspect-video xl:aspect-square 2xl:aspect-[4/3] rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl shadow-gray-200/50 dark:shadow-black/50 group block">
+                        <div class="aspect-video xl:aspect-square 2xl:aspect-[4/3] rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl shadow-gray-200/50 group block">
                             <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
                         </div>
                     {% endif %}
 
-                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl p-6 md:p-10 xl:p-12 rounded-[1.5rem] md:rounded-[3rem] shadow-xl shadow-gray-200/50 dark:shadow-black/50 border border-white/50 dark:border-gray-700">
-                        <h3 class="text-xl md:text-2xl lg:text-3xl font-display font-black text-gray-900 dark:text-white mb-4 uppercase tracking-tighter">Начать работу</h3>
-                        <p class="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-8 md:mb-10 font-light leading-relaxed">Наши специалисты всегда готовы помочь вам на любом этапе вашего ремонта или строительства.</p>
+                    <div class="bg-white/80 backdrop-blur-2xl p-6 md:p-10 xl:p-12 rounded-[1.5rem] md:rounded-[3rem] shadow-xl shadow-gray-200/50 border border-white/50">
+                        <h3 class="text-xl md:text-2xl lg:text-3xl font-display font-black text-gray-900 mb-4 uppercase tracking-tighter">Начать работу</h3>
+                        <p class="text-sm md:text-base text-gray-500 mb-8 md:mb-10 font-light leading-relaxed">Наши специалисты всегда готовы помочь вам на любом этапе вашего ремонта или строительства.</p>
 
-                        <a href="{% url 'contact' %}" class="flex items-center justify-center px-6 md:px-8 py-4 md:py-5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green dark:hover:bg-emerald-400 hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 w-full text-center min-h-[48px]">
+                        <a href="{% url 'contact' %}" class="flex items-center justify-center px-6 md:px-8 py-4 md:py-5 bg-gray-900 text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 w-full text-center min-h-[48px]">
                             Оформить заявку
                         </a>
 
-                        <div class="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+                        <div class="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-gray-200 text-center">
                             <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Прямая связь</p>
-                            <a href="tel:+79102114041" class="text-xl md:text-2xl lg:text-3xl font-black font-display text-gray-900 dark:text-white hover:text-deep-green dark:hover:text-emerald-400 transition-colors tracking-tight whitespace-nowrap">+7 (910) 211-40-41</a>
+                            <a href="tel:+79102114041" class="text-xl md:text-2xl lg:text-3xl font-black font-display text-gray-900 hover:text-deep-green transition-colors tracking-tight whitespace-nowrap">+7 (910) 211-40-41</a>
                         </div>
                     </div>
                 </div>

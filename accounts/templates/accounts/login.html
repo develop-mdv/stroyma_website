@@ -3,16 +3,16 @@
 
 <!-- LUXURY SPLIT-SCREEN LOGIN -->
 <section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full flex items-center justify-center min-h-[80dvh] mb-12 md:mb-20 mt-4 md:mt-8">
-    <div class="flex flex-col lg:flex-row w-full bg-white dark:bg-gray-900 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-gray-800 rounded-[1.5rem] md:rounded-[3rem]">
+    <div class="flex flex-col lg:flex-row w-full bg-white overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 rounded-[1.5rem] md:rounded-[3rem]">
 
         <!-- LEFT PANEL: PRESENTATION / TYPOGRAPHY -->
-        <div class="relative w-full lg:w-1/2 bg-gray-50 dark:bg-gray-800/40 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800">
+        <div class="relative w-full lg:w-1/2 bg-gray-50 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100">
             <!-- Background effects -->
             <div class="absolute -top-[10%] -left-[10%] w-[40vw] h-[40vw] bg-deep-green/5 rounded-full blur-[100px] opacity-70 pointer-events-none"></div>
 
             <p class="text-deep-green font-semibold text-xs lg:text-sm tracking-[0.3em] uppercase mb-4 relative z-10">Экосистема СтройМА</p>
 
-            <h2 class="clamp-hero font-black text-gray-900 dark:text-white leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words">
+            <h2 class="clamp-hero font-black text-gray-900 leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words">
                 ВХОД
             </h2>
 
@@ -21,14 +21,14 @@
                 <li class="flex items-start opacity-70 hover:opacity-100 transition-opacity">
                     <i class="fas fa-check text-deep-green mt-1 mr-4"></i>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-widest mb-1">Специальные цены</h4>
+                        <h4 class="font-bold text-gray-900 text-sm uppercase tracking-widest mb-1">Специальные цены</h4>
                         <p class="text-xs text-gray-500 font-light leading-relaxed">Индивидуальные скидки для оптовых и постоянных покупателей.</p>
                     </div>
                 </li>
                 <li class="flex items-start opacity-80 hover:opacity-100 transition-opacity group">
                     <i class="fas fa-box text-deep-green mt-1 mr-4"></i>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-widest mb-1">История заказов</h4>
+                        <h4 class="font-bold text-gray-900 text-sm uppercase tracking-widest mb-1">История заказов</h4>
                         <p class="text-xs text-gray-500 font-light leading-relaxed">Быстрое повторение предыдущих заказов и закрывающие документы.</p>
                     </div>
                 </li>
@@ -37,7 +37,7 @@
 
         <!-- RIGHT PANEL: PREMIUM MINIMALIST FORM -->
         <div class="w-full lg:w-1/2 p-8 md:p-12 lg:p-24 flex flex-col justify-center relative">
-            <h3 class="text-2xl md:text-3xl font-display font-medium text-gray-900 dark:text-white mb-8 md:mb-12">Авторизация</h3>
+            <h3 class="text-2xl md:text-3xl font-display font-medium text-gray-900 mb-8 md:mb-12">Авторизация</h3>
 
             <form method="post" class="w-full flex-grow flex flex-col justify-between max-w-md">
                 {% csrf_token %}
@@ -48,9 +48,9 @@
                         <label for="{{ form.username.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Логин / Имя пользователя</label>
                         <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
                                value="{{ form.username.value|default_if_none:'' }}"
-                               class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light placeholder-transparent transition-colors focus:outline-none" placeholder="Логин">
+                               class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light placeholder-transparent transition-colors focus:outline-none" placeholder="Логин">
                         {% if form.username.errors %}
-                            <div class="text-red-500 text-xs mt-2 bg-red-50 dark:bg-red-900/10 p-2 rounded">{{ form.username.errors }}</div>
+                            <div class="text-red-500 text-xs mt-2 bg-red-50 p-2 rounded">{{ form.username.errors }}</div>
                         {% endif %}
                     </div>
 
@@ -58,20 +58,20 @@
                     <div class="relative group mt-8">
                         <label for="{{ form.password.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Пароль</label>
                         <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
-                               class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light transition-colors focus:outline-none" placeholder="••••••••">
+                               class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light transition-colors focus:outline-none" placeholder="••••••••">
                         {% if form.password.errors %}
-                            <div class="text-red-500 text-xs mt-2 bg-red-50 dark:bg-red-900/10 p-2 rounded">{{ form.password.errors }}</div>
+                            <div class="text-red-500 text-xs mt-2 bg-red-50 p-2 rounded">{{ form.password.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="mt-10 md:mt-16 flex flex-col space-y-6">
-                    <button type="submit" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 px-8 rounded-full font-bold uppercase tracking-widest hover:bg-deep-green dark:hover:bg-emerald-400 transition-colors text-sm shadow-xl hover:shadow-2xl min-h-[52px]">
+                    <button type="submit" class="w-full bg-gray-900 text-white py-4 px-8 rounded-full font-bold uppercase tracking-widest hover:bg-deep-green transition-colors text-sm shadow-xl hover:shadow-2xl min-h-[52px]">
                         Войти в систему
                     </button>
 
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:items-start text-xs font-semibold uppercase tracking-widest pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:items-start text-xs font-semibold uppercase tracking-widest pt-4 border-t border-gray-100">
                         <a href="{% url 'register' %}" class="text-gray-400 hover:text-deep-green transition-colors py-2">
                             Регистрация
                         </a>

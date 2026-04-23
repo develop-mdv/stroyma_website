@@ -102,14 +102,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="bg-sandy/20 dark:bg-gray-900 min-h-screen py-10 px-4">
+<div class="bg-sandy/20 min-h-screen py-10 px-4">
     <div class="max-w-[1400px] mx-auto">
         <!-- Заголовок -->
         <div class="mb-8 text-center animate-fade-in relative max-w-3xl mx-auto px-2">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4 break-words">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4 break-words">
                 Премиум-Конфигуратор
             </h1>
-            <p class="text-base md:text-lg text-gray-600 dark:text-gray-400">
+            <p class="text-base md:text-lg text-gray-600">
                 Создайте идеальный экстерьер. <span class="hidden md:inline">Наведите лупу на дом, чтобы рассмотреть текстуру в деталях.</span><span class="md:hidden">Нажмите и удерживайте палец на доме, чтобы использовать лупу.</span>
             </p>
         </div>
@@ -121,7 +121,7 @@
                 
                 <!-- Контейнер Дома -->
                 <!-- Убираем bg-black и фиксированную высоту, подстраиваемся под картинку -->
-                <div class="interactive-house-container relative rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 cursor-crosshair inline-block w-full" id="houseContainer">
+                <div class="interactive-house-container relative rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 bg-gray-50 cursor-crosshair inline-block w-full" id="houseContainer">
                     
                     <!-- РЕАЛЬНЫЕ ВИЗУАЛЬНЫЕ ЭЛЕМЕНТЫ: Исходное фото с маской -->
                     <div id="visualsWrapper" class="relative w-full h-auto pointer-events-none">
@@ -150,9 +150,9 @@
             <div class="w-full xl:w-2/5 flex flex-col gap-8 pb-10">
                 
                 <!-- ПАНЕЛЬ ЦВЕТА ФАСАДА -->
-                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 gap-3 flex-wrap">
-                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-4 gap-3 flex-wrap">
+                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">1</span>
                             Цвет Фасада
                         </h2>
@@ -183,9 +183,9 @@
                 </div>
 
                 <!-- ПАНЕЛЬ ТЕКСТУРЫ ЦОКОЛЯ -->
-                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 gap-3 flex-wrap">
-                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-4 gap-3 flex-wrap">
+                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">2</span>
                             Текстура Цоколя
                         </h2>
@@ -195,7 +195,7 @@
                     <div class="config-scroll">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 pb-4">
                             {% for texture in base_textures %}
-                                <button type="button" class="texture-swatch aspect-square rounded-2xl relative group overflow-hidden bg-gray-100 dark:bg-gray-800 outline-none"
+                                <button type="button" class="texture-swatch aspect-square rounded-2xl relative group overflow-hidden bg-gray-100 outline-none"
                                      data-target="base"
                                      data-image="{{ texture.image.url }}"
                                      data-name="{{ texture.name }}"
@@ -222,7 +222,7 @@
 
                 <!-- КНОПКИ ДЕЙСТВИЙ -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full sm:w-1/3 flex items-center justify-center gap-2 min-h-[48px]">
+                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-700 font-medium hover:bg-gray-100 transition-colors w-full sm:w-1/3 flex items-center justify-center gap-2 min-h-[48px]">
                         <i class="fas fa-undo"></i> Сбросить
                     </button>
                     <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-6 sm:px-8 py-4 rounded-xl font-medium shadow-md hover:shadow-xl hover:-translate-y-1 transition-all w-full sm:w-2/3 text-center flex items-center justify-center gap-2 min-h-[48px]">

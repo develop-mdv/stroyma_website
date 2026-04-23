@@ -5,19 +5,19 @@
 <section class="max-w-[120rem] mx-auto pt-8 md:pt-16 px-4 sm:px-6 lg:px-16 w-full text-center lg:text-left mb-8 md:mb-12">
     <!-- Breadcrumbs & Actions Row -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
-        <nav class="text-xs tracking-widest uppercase text-gray-400 dark:text-gray-500 flex items-center">
+        <nav class="text-xs tracking-widest uppercase text-gray-400 flex items-center">
             <a href="{% url 'profile' %}" class="hover:text-deep-green transition-colors py-2 inline-flex items-center"><i class="fas fa-arrow-left mr-2"></i> Вернуться в кабинет</a>
         </nav>
 
         <!-- Premium Utility "Ghost" Buttons -->
         <div class="flex flex-wrap justify-center gap-2 md:gap-3 w-full md:w-auto">
-            <button onclick="window.print()" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-colors text-xs flex items-center group min-h-[44px]">
+            <button onclick="window.print()" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-gray-900 hover:text-gray-900 transition-colors text-xs flex items-center group min-h-[44px]">
                 <i class="fas fa-print mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Печать
             </button>
-            <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 dark:hover:border-red-400 dark:hover:text-red-400 transition-colors text-xs flex items-center group min-h-[44px]">
+            <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 transition-colors text-xs flex items-center group min-h-[44px]">
                 <i class="fas fa-file-pdf mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> PDF
             </a>
-            <button id="send-email-btn" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green dark:hover:border-emerald-400 dark:hover:text-emerald-400 transition-colors text-xs flex items-center group relative overflow-hidden min-h-[44px]">
+            <button id="send-email-btn" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green transition-colors text-xs flex items-center group relative overflow-hidden min-h-[44px]">
                 <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email</span>
             </button>
             <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
@@ -28,21 +28,21 @@
 
     <!-- Massive Order Number -->
     <p class="text-deep-green font-semibold text-xs tracking-[0.3em] uppercase mb-4">{{ order.created_at|date:"d M Y, H:i" }}</p>
-    <h1 class="font-black text-gray-900 dark:text-white leading-none tracking-tighter font-display uppercase break-words" style="font-size:clamp(2rem,8vw,6rem)">
+    <h1 class="font-black text-gray-900 leading-none tracking-tighter font-display uppercase break-words" style="font-size:clamp(2rem,8vw,6rem)">
         ЗАКАЗ #{{ order.id }}
     </h1>
 </section>
 
 <!-- INVOICE CONTENT -->
 <section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full mb-20 md:mb-32">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl md:rounded-[3rem] border border-gray-200 dark:border-gray-800 p-6 md:p-12 lg:p-20 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+    <div class="bg-white rounded-2xl md:rounded-[3rem] border border-gray-200 p-6 md:p-12 lg:p-20 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
         
         <!-- Header Info Blocks (Grid) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-b border-gray-100 dark:border-gray-800 pb-8 md:pb-12 mb-8 md:mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-b border-gray-100 pb-8 md:pb-12 mb-8 md:mb-12">
             <!-- Customer -->
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Покупатель</span>
-                <p class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ order.first_name }} {{ order.last_name }}</p>
+                <p class="text-lg font-bold text-gray-900 mb-1">{{ order.first_name }} {{ order.last_name }}</p>
                 <div class="text-sm text-gray-500 font-light space-y-1">
                     <p>{{ order.email }}</p>
                     <p>{{ order.phone|default:"-" }}</p>
@@ -52,7 +52,7 @@
             <!-- Delivery -->
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Адрес доставки</span>
-                <p class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                <p class="text-lg font-bold text-gray-900 mb-1">
                     {% if order.delivery_city %}
                         г. {{ order.delivery_city }}
                     {% else %}
@@ -68,19 +68,19 @@
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Статус исполнения</span>
                 {% if order.status == 'new' %}
-                    <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/30">
+                    <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
                         <span class="w-2 h-2 rounded-full bg-blue-500"></span> Новый
                     </span>
                 {% elif order.status == 'processing' %}
-                    <span class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 border border-yellow-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30">
+                    <span class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 border border-yellow-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
                         <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span> В обработке
                     </span>
                  {% elif order.status == 'completed' %}
-                    <span class="inline-flex items-center gap-2 bg-green-50 text-green-700 border border-green-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30">
+                    <span class="inline-flex items-center gap-2 bg-green-50 text-green-700 border border-green-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
                         <span class="w-2 h-2 rounded-full bg-green-500"></span> Завершен
                     </span>
                 {% else %}
-                    <span class="inline-flex items-center gap-2 bg-gray-50 text-gray-700 border border-gray-200 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700">
+                    <span class="inline-flex items-center gap-2 bg-gray-50 text-gray-700 border border-gray-200 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
                         <span class="w-2 h-2 rounded-full bg-gray-400"></span> {{ order.get_status_display }}
                     </span>
                 {% endif %}
@@ -88,41 +88,41 @@
                 {% if order.comment %}
                 <div class="mt-6">
                     <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2">Комментарий к заказу</span>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 font-light bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700">{{ order.comment }}</p>
+                    <p class="text-sm text-gray-600 font-light bg-gray-50 p-4 rounded-xl border border-gray-100">{{ order.comment }}</p>
                 </div>
                 {% endif %}
             </div>
         </div>
 
         <!-- ITEMS TABLE -->
-        <h3 class="text-xl md:text-2xl font-display font-black text-gray-900 dark:text-white mb-6 md:mb-8">Состав заказа</h3>
+        <h3 class="text-xl md:text-2xl font-display font-black text-gray-900 mb-6 md:mb-8">Состав заказа</h3>
         
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[600px]">
                 <thead>
-                    <tr class="border-b-2 border-gray-900 dark:border-white">
-                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white w-2/5">Товар</th>
-                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-right">Цена</th>
-                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-center">Количество</th>
-                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 dark:text-white text-right">Сумма</th>
+                    <tr class="border-b-2 border-gray-900">
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 w-2/5">Товар</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 text-right">Цена</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 text-center">Количество</th>
+                        <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 text-right">Сумма</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody class="divide-y divide-gray-100">
                     {% for item in order.items.all %}
-                        <tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                        <tr class="group hover:bg-gray-50 transition-colors">
                             <!-- Product Name & Image -->
                             <td class="py-6 px-2 align-middle">
                                 <div class="flex items-center gap-4">
                                     {% if item.product.image %}
-                                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 dark:border-gray-700 flex-shrink-0">
+                                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
                                             <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
                                         </div>
                                     {% else %}
-                                        <div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 flex-shrink-0">
+                                        <div class="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 flex-shrink-0">
                                             <i class="fas fa-image"></i>
                                         </div>
                                     {% endif %}
-                                    <span class="font-bold text-gray-900 dark:text-white text-sm md:text-base group-hover:text-deep-green transition-colors">{{ item.product.name }}</span>
+                                    <span class="font-bold text-gray-900 text-sm md:text-base group-hover:text-deep-green transition-colors">{{ item.product.name }}</span>
                                 </div>
                             </td>
                             <!-- Price -->
@@ -130,11 +130,11 @@
                                 {{ item.product.price }} ₽
                             </td>
                             <!-- Quantity -->
-                            <td class="py-6 px-2 align-middle text-center font-bold text-gray-900 dark:text-white">
+                            <td class="py-6 px-2 align-middle text-center font-bold text-gray-900">
                                 {{ item.quantity }}
                             </td>
                             <!-- Subtotal -->
-                            <td class="py-6 px-2 align-middle text-right font-bold text-gray-900 dark:text-white whitespace-nowrap text-lg">
+                            <td class="py-6 px-2 align-middle text-right font-bold text-gray-900 whitespace-nowrap text-lg">
                                 {% widthratio item.product.price 1 item.quantity %} ₽
                             </td>
                         </tr>
@@ -148,7 +148,7 @@
         </div>
 
         <!-- TOTALS AREA -->
-        <div class="mt-10 md:mt-16 border-t border-gray-200 dark:border-gray-800 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
+        <div class="mt-10 md:mt-16 border-t border-gray-200 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
             <div class="w-full md:w-1/2 text-sm text-gray-400 font-light">
                 <p>Документ сгенерирован автоматически из Личного Кабинета СтройМА.</p>
                 <p class="mt-2 text-xs">При возникновении вопросов свяжитесь с поддержкой.</p>
@@ -156,8 +156,8 @@
             
             <div class="w-full md:w-1/2 text-left md:text-right">
                 <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Общая сумма заказа</span>
-                <span class="font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter block" style="font-size:clamp(2.25rem,7vw,4rem)">
-                    {{ order.total_cost }} <span class="text-[0.6em] text-gray-300 dark:text-gray-700">₽</span>
+                <span class="font-black font-display text-gray-900 leading-none tracking-tighter block" style="font-size:clamp(2.25rem,7vw,4rem)">
+                    {{ order.total_cost }} <span class="text-[0.6em] text-gray-300">₽</span>
                 </span>
             </div>
         </div>
@@ -166,8 +166,8 @@
 </section>
 
 <!-- Notifier Container for Email -->
-<div id="email-notifier" class="fixed bottom-4 right-4 left-4 md:left-auto md:bottom-6 md:right-6 md:max-w-md transform transition-all duration-500 translate-y-32 opacity-0 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 md:px-6 py-4 rounded-2xl md:rounded-full shadow-2xl flex items-center font-bold text-sm z-50">
-    <i class="fas fa-check-circle text-green-400 dark:text-green-500 mr-3 text-lg"></i>
+<div id="email-notifier" class="fixed bottom-4 right-4 left-4 md:left-auto md:bottom-6 md:right-6 md:max-w-md transform transition-all duration-500 translate-y-32 opacity-0 bg-gray-900 text-white px-5 md:px-6 py-4 rounded-2xl md:rounded-full shadow-2xl flex items-center font-bold text-sm z-50">
+    <i class="fas fa-check-circle text-green-400 mr-3 text-lg"></i>
     <span id="email-notifier-msg">Письмо отправлено</span>
 </div>
 
@@ -208,9 +208,9 @@
             $('#email-notifier-msg').text(msg);
             
             if (success) {
-                $icon.attr('class', 'fas fa-check-circle text-green-400 dark:text-green-500 mr-3 text-lg');
+                $icon.attr('class', 'fas fa-check-circle text-green-400  mr-3 text-lg');
             } else {
-                $icon.attr('class', 'fas fa-exclamation-circle text-red-400 dark:text-red-500 mr-3 text-lg');
+                $icon.attr('class', 'fas fa-exclamation-circle text-red-400  mr-3 text-lg');
             }
 
             $notifier.removeClass('translate-y-32 opacity-0').addClass('translate-y-0 opacity-100');

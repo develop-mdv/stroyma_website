@@ -1,9 +1,9 @@
 {% extends 'products/base.html' %}
 
 {% block content %}
-<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+<div class="bg-gray-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-8">Моя Корзина</h1>
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-8">Моя Корзина</h1>
 
         {% if cart_items %}
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 relative items-start">
@@ -12,18 +12,18 @@
             <div class="w-full lg:w-2/3 flex flex-col gap-6">
                 {% for item in cart_items %}
                 <!-- Карточка товара -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
+                <div class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-soft border border-gray-100 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
                     
                     <!-- Удалить (Только Иконка) -->
-                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-3 right-3 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all z-10 opacity-80 group-hover:opacity-100 flex items-center justify-center" style="min-width:44px;min-height:44px" title="Удалить из корзины" aria-label="Удалить из корзины">
+                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-3 right-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all z-10 opacity-80 group-hover:opacity-100 flex items-center justify-center" style="min-width:44px;min-height:44px" title="Удалить из корзины" aria-label="Удалить из корзины">
                         <i class="fas fa-trash-alt text-base"></i>
                     </a>
 
                     <!-- Фото -->
-                    <div class="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-3 flex items-center justify-center">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 rounded-2xl p-3 flex items-center justify-center">
                         {% if item.product.image %}
                         <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full block">
-                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal hover:scale-105 transition-transform duration-300" loading="lazy">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain mix-blend-multiply hover:scale-105 transition-transform duration-300" loading="lazy">
                         </a>
                         {% else %}
                         <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full flex items-center justify-center text-gray-400">
@@ -34,25 +34,25 @@
 
                     <!-- Информация -->
                     <div class="flex-1 w-full pl-2 pr-4">
-                        <a href="{% url 'product_detail' slug=item.product.slug %}" class="text-lg font-bold text-gray-900 dark:text-white hover:text-deep-green transition-colors pr-6 line-clamp-2 leading-tight">
+                        <a href="{% url 'product_detail' slug=item.product.slug %}" class="text-lg font-bold text-gray-900 hover:text-deep-green transition-colors pr-6 line-clamp-2 leading-tight">
                             {{ item.product.name }}
                         </a>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4 font-medium">{{ item.product.price|floatformat:2 }} руб. / шт</p>
+                        <p class="text-sm text-gray-500 mt-2 mb-4 font-medium">{{ item.product.price|floatformat:2 }} руб. / шт</p>
 
                         <div class="flex items-center justify-between mt-auto gap-3 flex-wrap">
                             <!-- Управление количеством (Pill form) -->
                             <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="update-cart-form m-0">
                                 {% csrf_token %}
-                                <div class="inline-flex items-center bg-gray-100 dark:bg-gray-700/50 rounded-full p-1 border border-transparent focus-within:border-sandy transition-colors shadow-inner-light">
-                                    <button type="button" aria-label="Уменьшить" class="decrease-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                <div class="inline-flex items-center bg-gray-100 rounded-full p-1 border border-transparent focus-within:border-sandy transition-colors shadow-inner-light">
+                                    <button type="button" aria-label="Уменьшить" class="decrease-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
                                         <i class="fas fa-minus text-xs"></i>
                                     </button>
 
                                     <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
-                                           class="w-12 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 dark:text-white p-0 m-0"
+                                           class="w-12 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 p-0 m-0"
                                            data-product-id="{{ item.product.pk }}">
 
-                                    <button type="button" aria-label="Увеличить" class="increase-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                    <button type="button" aria-label="Увеличить" class="increase-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
                                         <i class="fas fa-plus text-xs"></i>
                                     </button>
                                 </div>
@@ -73,17 +73,17 @@
 
             <!-- Правая колонка: Order Summary (35%) Sticky -->
             <div class="w-full lg:w-1/3 xl:sticky xl:top-24 z-10 pb-10">
-                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                <div class="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 relative overflow-hidden">
                     
                     <!-- Decorative blob background -->
                     <div class="absolute -top-16 -right-16 w-32 h-32 bg-sandy/20 rounded-full blur-2xl"></div>
 
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 font-display">Детали заказа</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 font-display">Детали заказа</h2>
                     
-                    <div class="space-y-5 mb-6 text-gray-600 dark:text-gray-300 font-medium">
-                        <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
+                    <div class="space-y-5 mb-6 text-gray-600 font-medium">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100">
                             <span>Товаров в корзине</span>
-                            <span class="text-gray-900 dark:text-white">{{ cart_items|length }} шт.</span>
+                            <span class="text-gray-900">{{ cart_items|length }} шт.</span>
                         </div>
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-gray-400">Доставка</span>
@@ -91,8 +91,8 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-end mb-8 pt-5 border-t w-full border-gray-100 dark:border-gray-700">
-                        <span class="text-lg font-medium text-gray-900 dark:text-white uppercase tracking-wide">Итого</span>
+                    <div class="flex justify-between items-end mb-8 pt-5 border-t w-full border-gray-100">
+                        <span class="text-lg font-medium text-gray-900 uppercase tracking-wide">Итого</span>
                         <span class="text-3xl font-bold text-deep-green tracking-tight transition-all duration-300 price-updating-target" id="total-price">
                             {{ total_price|floatformat:2 }} руб.
                         </span>
@@ -102,7 +102,7 @@
                         <a href="{% url 'checkout' %}" class="button bg-deep-green text-white w-full py-4 rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-1 transition-all text-center flex items-center justify-center gap-2 text-lg group">
                             Оформить заказ <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </a>
-                        <a href="{% url 'product_list' %}" class="w-full py-3 rounded-xl text-center text-gray-500 hover:text-deep-green hover:bg-gray-50 dark:hover:bg-gray-700/50 font-medium transition-colors">
+                        <a href="{% url 'product_list' %}" class="w-full py-3 rounded-xl text-center text-gray-500 hover:text-deep-green hover:bg-gray-50 font-medium transition-colors">
                             <i class="fas fa-undo mr-1 opacity-70"></i> Продолжить покупки
                         </a>
                     </div>
@@ -114,15 +114,15 @@
         
         {% else %}
         <!-- Эмпи стейт (пустая корзина) -->
-        <div class="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-soft border border-gray-100 dark:border-gray-700 text-center flex flex-col items-center max-w-2xl mx-auto mt-10 relative overflow-hidden animate-fade-in-up">
+        <div class="bg-white rounded-3xl p-12 shadow-soft border border-gray-100 text-center flex flex-col items-center max-w-2xl mx-auto mt-10 relative overflow-hidden animate-fade-in-up">
             
             <div class="absolute -top-10 -right-10 w-40 h-40 bg-sandy/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="w-32 h-32 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mb-6 text-gray-300 dark:text-gray-500 shadow-inner">
+            <div class="w-32 h-32 bg-gray-50 rounded-full flex items-center justify-center mb-6 text-gray-300 shadow-inner">
                 <i class="fas fa-shopping-cart text-5xl"></i>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3 font-display">Тут пока пусто</h2>
-            <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm text-lg">Ваша корзина ждет, когда вы её наполните. Загляните в каталог, чтобы найти нужные строительные товары.</p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-3 font-display">Тут пока пусто</h2>
+            <p class="text-gray-500 mb-8 max-w-sm text-lg">Ваша корзина ждет, когда вы её наполните. Загляните в каталог, чтобы найти нужные строительные товары.</p>
             <a href="{% url 'product_list' %}" class="button bg-deep-green text-white px-8 py-4 rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-1 transition-all flex items-center gap-2 group">
                 В каталог <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </a>

@@ -3,22 +3,22 @@
 
 <!-- LUXURY SPLIT-SCREEN REGISTER -->
 <section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full flex items-center justify-center min-h-[80dvh] mb-12 md:mb-20 mt-4 md:mt-8">
-    <div class="flex flex-col lg:flex-row w-full bg-white dark:bg-gray-900 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-gray-800 rounded-[1.5rem] md:rounded-[3rem]">
+    <div class="flex flex-col lg:flex-row w-full bg-white overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 rounded-[1.5rem] md:rounded-[3rem]">
 
         <!-- LEFT PANEL: PRESENTATION / TYPOGRAPHY -->
-        <div class="relative w-full lg:w-1/2 bg-gray-50 dark:bg-gray-800/40 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800">
+        <div class="relative w-full lg:w-1/2 bg-gray-50 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100">
             <!-- Background effects -->
             <div class="absolute -top-[10%] -left-[10%] w-[40vw] h-[40vw] bg-deep-green/5 rounded-full blur-[100px] opacity-70 pointer-events-none"></div>
             
-            <nav class="text-xs tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-8 flex relative z-10">
+            <nav class="text-xs tracking-widest uppercase text-gray-400 mb-8 flex relative z-10">
                 <a href="{% url 'login' %}" class="hover:text-deep-green transition-colors">Вход</a>
                 <span class="mx-3 opacity-30">/</span>
-                <span class="text-gray-900 dark:text-gray-300">Регистрация</span>
+                <span class="text-gray-900">Регистрация</span>
             </nav>
 
             <p class="text-deep-green font-semibold text-xs lg:text-sm tracking-[0.3em] uppercase mb-4 relative z-10">Новый Партнер</p>
             
-            <h2 class="font-black text-gray-900 dark:text-white leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words w-full" style="font-size:clamp(2.5rem,10vw,6rem)">
+            <h2 class="font-black text-gray-900 leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words w-full" style="font-size:clamp(2.5rem,10vw,6rem)">
                 РЕГИСТРАЦИЯ
             </h2>
 
@@ -27,14 +27,14 @@
                 <li class="flex items-start opacity-70 hover:opacity-100 transition-opacity">
                     <i class="fas fa-hammer text-deep-green mt-1 mr-4"></i>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-widest mb-1">Профессиональный Доступ</h4>
+                        <h4 class="font-bold text-gray-900 text-sm uppercase tracking-widest mb-1">Профессиональный Доступ</h4>
                         <p class="text-xs text-gray-500 font-light leading-relaxed">Полный каталог услуг, онлайн-выкрас и расчет проектов.</p>
                     </div>
                 </li>
                 <li class="flex items-start opacity-80 hover:opacity-100 transition-opacity">
                     <i class="fas fa-shield-alt text-deep-green mt-1 mr-4"></i>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-widest mb-1">Сохранность данных</h4>
+                        <h4 class="font-bold text-gray-900 text-sm uppercase tracking-widest mb-1">Сохранность данных</h4>
                         <p class="text-xs text-gray-500 font-light leading-relaxed">Все данные защищены политикой конфиденциальности. Быстрая авторизация.</p>
                     </div>
                 </li>
@@ -44,7 +44,7 @@
         <!-- RIGHT PANEL: PREMIUM MINIMALIST FORM -->
         <div class="w-full lg:w-1/2 p-8 md:p-12 lg:p-24 flex flex-col justify-center relative">
 
-            <h3 id="form-title" class="text-2xl md:text-3xl font-display font-medium text-gray-900 dark:text-white mb-8 md:mb-10">Создать аккаунт</h3>
+            <h3 id="form-title" class="text-2xl md:text-3xl font-display font-medium text-gray-900 mb-8 md:mb-10">Создать аккаунт</h3>
 
             <form method="post" id="register-form" class="w-full flex-grow flex flex-col justify-between max-w-lg">
                 {% csrf_token %}
@@ -55,7 +55,7 @@
                         <label for="{{ form.username.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Логин / Имя пользователя</label>
                         <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
                                value="{{ form.username.value|default_if_none:'' }}"
-                               class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light placeholder-transparent transition-colors focus:outline-none">
+                               class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light placeholder-transparent transition-colors focus:outline-none">
                         {% if form.username.errors %}
                             <div class="text-red-500 text-xs mt-1">{{ form.username.errors }}</div>
                         {% endif %}
@@ -66,7 +66,7 @@
                         <label for="{{ form.email.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Email адрес</label>
                         <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
                                value="{{ form.email.value|default_if_none:'' }}"
-                               class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light placeholder-transparent transition-colors focus:outline-none">
+                               class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light placeholder-transparent transition-colors focus:outline-none">
                         {% if form.email.errors %}
                             <div class="text-red-500 text-xs mt-1">{{ form.email.errors }}</div>
                         {% endif %}
@@ -78,7 +78,7 @@
                         <div class="relative group">
                             <label for="{{ form.password1.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Пароль</label>
                             <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
-                                   class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light transition-colors focus:outline-none" placeholder="••••••••">
+                                   class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light transition-colors focus:outline-none" placeholder="••••••••">
                             {% if form.password1.errors %}
                                 <div class="text-red-500 text-xs mt-1">{{ form.password1.errors }}</div>
                             {% endif %}
@@ -88,7 +88,7 @@
                         <div class="relative group">
                             <label for="{{ form.password2.id_for_label }}" class="text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2 block transition-colors group-focus-within:text-deep-green">Подтверждение</label>
                             <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
-                                   class="w-full bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 dark:text-white font-light transition-colors focus:outline-none" placeholder="••••••••">
+                                   class="w-full bg-transparent border-0 border-b border-gray-200 border-solid focus:ring-0 focus:border-deep-green px-0 py-2 text-xl text-gray-900 font-light transition-colors focus:outline-none" placeholder="••••••••">
                             {% if form.password2.errors %}
                                 <div class="text-red-500 text-xs mt-1">{{ form.password2.errors }}</div>
                             {% endif %}
@@ -100,10 +100,10 @@
                 <div class="mt-8 flex items-start group">
                     <div class="flex items-center h-5 cursor-pointer mt-1">
                         <input id="privacy_policy" name="privacy_policy" type="checkbox" required
-                               class="h-5 w-5 bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-sm text-deep-green focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors checked:border-deep-green">
+                               class="h-5 w-5 bg-transparent border-2 border-gray-300 rounded-sm text-deep-green focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors checked:border-deep-green">
                     </div>
                     <div class="ml-4 text-xs">
-                        <label for="privacy_policy" class="font-normal text-gray-500 dark:text-gray-400 cursor-pointer">
+                        <label for="privacy_policy" class="font-normal text-gray-500 cursor-pointer">
                             Нажимая кнопку, вы даете согласие на обработку персональных данных и соглашаетесь с 
                             <a href="{% url 'policy' %}" class="text-deep-green hover:underline font-semibold" target="_blank">политикой конфиденциальности</a>.
                         </label>
@@ -114,7 +114,7 @@
                 {% if messages %}
                 <div class="mt-6 space-y-2">
                     {% for message in messages %}
-                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl text-deep-green dark:text-emerald-400 text-xs font-semibold border border-gray-200 dark:border-gray-700">
+                    <div class="bg-gray-50 p-4 rounded-xl text-deep-green text-xs font-semibold border border-gray-200">
                         <i class="fas fa-info-circle mr-2"></i>{{ message }}
                     </div>
                     {% endfor %}
@@ -123,11 +123,11 @@
 
                 <!-- Form Actions -->
                 <div class="mt-8 md:mt-10 flex flex-col space-y-6">
-                    <button type="submit" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 px-8 rounded-full font-bold uppercase tracking-widest hover:bg-deep-green dark:hover:bg-emerald-400 transition-colors text-sm shadow-xl hover:shadow-2xl min-h-[52px]">
+                    <button type="submit" class="w-full bg-gray-900 text-white py-4 px-8 rounded-full font-bold uppercase tracking-widest hover:bg-deep-green transition-colors text-sm shadow-xl hover:shadow-2xl min-h-[52px]">
                         Зарегистрироваться
                     </button>
 
-                    <div class="text-center pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <div class="text-center pt-4 border-t border-gray-100">
                         <a href="{% url 'login' %}" class="text-xs uppercase tracking-widest font-semibold text-gray-400 hover:text-deep-green transition-colors">
                             Уже есть аккаунт? Войти
                         </a>
@@ -140,7 +140,7 @@
                 <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
                     <i class="fas fa-envelope-open-text text-4xl text-green-500"></i>
                 </div>
-                <h3 class="text-2xl font-display font-medium text-gray-900 dark:text-white mb-4">Письмо отправлено</h3>
+                <h3 class="text-2xl font-display font-medium text-gray-900 mb-4">Письмо отправлено</h3>
                 <p class="text-gray-500 font-light mb-2">На ваш email отправлено письмо для подтверждения аккаунта.</p>
                 <p class="text-gray-500 font-light">Пожалуйста, следуйте инструкциям в письме.</p>
                 <div class="mt-8 text-xs text-gray-400 border border-gray-200 rounded-full py-2 px-4 inline-block">

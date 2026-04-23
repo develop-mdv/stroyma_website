@@ -3,11 +3,11 @@
 <div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 py-8 md:py-24">
     <!-- Грандиозный заголовок -->
     <div class="mb-12 md:mb-32 relative pl-4 md:pl-6">
-        <div class="absolute left-0 top-2 bottom-2 w-1.5 md:w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
-        <h1 class="clamp-hero font-black text-gray-900 dark:text-white leading-[0.95] tracking-tighter font-display uppercase break-words">
+        <div class="absolute left-0 top-2 bottom-2 w-1.5 md:w-2 rounded-full bg-deep-green"></div>
+        <h1 class="clamp-hero font-black text-gray-900 leading-[0.95] tracking-tighter font-display uppercase break-words">
             Услуги
         </h1>
-        <p class="text-base md:text-xl text-gray-500 dark:text-gray-400 mt-6 md:mt-8 max-w-3xl font-light leading-relaxed">
+        <p class="text-base md:text-xl text-gray-500 mt-6 md:mt-8 max-w-3xl font-light leading-relaxed">
             Мы не только поставляем качественные материалы, но и предлагаем экспертный сервис на каждом этапе вашего ремонта.
         </p>
     </div>
@@ -18,17 +18,17 @@
         <div class="relative flex flex-col lg:flex-row items-center gap-8 md:gap-12 lg:gap-24 group {% if forloop.counter|divisibleby:2 %}lg:flex-row-reverse{% endif %}">
             
             <!-- Огромная цифра на фоне (Абсолют) -->
-            <div class="absolute hidden lg:block text-[30rem] xl:text-[35rem] font-black text-gray-50 dark:text-gray-800/30 -z-10 leading-none select-none {% if forloop.counter|divisibleby:2 %}left-0 -translate-x-12{% else %}right-0 translate-x-12{% endif %} top-1/2 -translate-y-1/2 transition-transform duration-1000 group-hover:scale-105">
+            <div class="absolute hidden lg:block text-[30rem] xl:text-[35rem] font-black text-gray-50 -z-10 leading-none select-none {% if forloop.counter|divisibleby:2 %}left-0 -translate-x-12{% else %}right-0 translate-x-12{% endif %} top-1/2 -translate-y-1/2 transition-transform duration-1000 group-hover:scale-105">
                 0{{ forloop.counter }}
             </div>
 
             <!-- Изображение -->
             <div class="w-full lg:w-[55%] shrink-0 relative z-10 transition-transform duration-700 group-hover:-translate-y-3">
-                <a href="{% url 'service_detail' service.slug %}" class="block relative aspect-[4/3] md:aspect-video lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl shadow-gray-200/50 dark:shadow-black/50 focus:outline-none focus:ring-4 focus:ring-deep-green/50">
+                <a href="{% url 'service_detail' service.slug %}" class="block relative aspect-[4/3] md:aspect-video lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl shadow-gray-200/50 focus:outline-none focus:ring-4 focus:ring-deep-green/50">
                     {% if service.image %}
                         <img src="{{ service.image.url }}" alt="{{ service.title }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" loading="lazy">
                     {% else %}
-                        <div class="absolute inset-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gray-100 flex items-center justify-center">
                             <span class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400">НЕТ ФОТО</span>
                         </div>
                     {% endif %}
@@ -38,18 +38,18 @@
 
             <!-- Текст -->
             <div class="w-full lg:w-[45%] relative z-20 flex flex-col justify-center {% if forloop.counter|divisibleby:2 %}lg:pr-8 xl:pr-16{% else %}lg:pl-8 xl:pl-16{% endif %}">
-                <div class="lg:hidden font-black text-gray-100 dark:text-gray-800 mb-2 leading-none select-none" style="font-size:clamp(3rem,12vw,5rem)">0{{ forloop.counter }}</div>
+                <div class="lg:hidden font-black text-gray-100 mb-2 leading-none select-none" style="font-size:clamp(3rem,12vw,5rem)">0{{ forloop.counter }}</div>
 
-                <h2 class="font-display font-bold text-gray-900 dark:text-white leading-tight tracking-normal uppercase mb-6 md:mb-8 group-hover:text-deep-green transition-colors break-words" style="font-size:clamp(1.75rem,6vw,4.5rem)">
+                <h2 class="font-display font-bold text-gray-900 leading-tight tracking-normal uppercase mb-6 md:mb-8 group-hover:text-deep-green transition-colors break-words" style="font-size:clamp(1.75rem,6vw,4.5rem)">
                     <a href="{% url 'service_detail' service.slug %}">{{ service.title }}</a>
                 </h2>
 
-                <p class="text-base md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-light mb-8 md:mb-10 max-w-2xl">
+                <p class="text-base md:text-xl text-gray-500 leading-relaxed font-light mb-8 md:mb-10 max-w-2xl">
                     {{ service.short_description }}
                 </p>
 
                 <div>
-                    <a href="{% url 'service_detail' service.slug %}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green dark:hover:bg-emerald-400 hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 min-h-[48px]">
+                    <a href="{% url 'service_detail' service.slug %}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-gray-900 text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 min-h-[48px]">
                         Узнать больше
                         <i class="fas fa-arrow-right ml-3"></i>
                     </a>
@@ -57,9 +57,9 @@
             </div>
         </div>
       {% empty %}
-        <div class="text-center py-32 bg-gray-50 dark:bg-gray-800/50 rounded-[4rem] border border-dashed border-gray-300 dark:border-gray-700">
+        <div class="text-center py-32 bg-gray-50 rounded-[4rem] border border-dashed border-gray-300">
             <span class="text-[0.8rem] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 block">Раздел пуст</span>
-            <p class="text-3xl font-display font-medium text-gray-900 dark:text-white">Услуги находятся в стадии разработки</p>
+            <p class="text-3xl font-display font-medium text-gray-900">Услуги находятся в стадии разработки</p>
         </div>
       {% endfor %}
     </div>

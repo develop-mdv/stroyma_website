@@ -7,39 +7,39 @@
         <!-- Заголовок -->
         <div class="mb-8 md:mb-10 animate-fade-in">
             <nav class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5 md:mb-6 flex items-center gap-2">
-                <a href="{% url 'profile' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors py-2">
+                <a href="{% url 'profile' %}" class="text-deep-green hover:text-gray-900 transition-colors py-2">
                     <i class="fas fa-arrow-left mr-1"></i> Профиль
                 </a>
                 <span class="text-gray-300">/</span>
-                <span class="text-gray-900 dark:text-white">Редактирование</span>
+                <span class="text-gray-900">Редактирование</span>
             </nav>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 uppercase tracking-tight">
                 Редактирование профиля
             </h1>
         </div>
 
         <!-- Форма -->
-        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-2xl md:rounded-[2rem] p-6 md:p-10 shadow-lift">
+        <div class="bg-white/70 backdrop-blur-2xl border border-gray-100 rounded-2xl md:rounded-[2rem] p-6 md:p-10 shadow-lift">
             <form method="post" class="space-y-6" id="edit-profile-form">
                 {% csrf_token %}
                 
                 <!-- Секция: Личные данные -->
                 <div class="mb-8">
-                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Личные данные</h3>
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100">Личные данные</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="{{ form.first_name.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Имя</label>
                             <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
                                    value="{{ form.first_name.value|default_if_none:'' }}"
-                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
                             {% if form.first_name.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.first_name.errors }}</p>{% endif %}
                         </div>
                         <div>
                             <label for="{{ form.last_name.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Фамилия</label>
                             <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
                                    value="{{ form.last_name.value|default_if_none:'' }}"
-                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
                             {% if form.last_name.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.last_name.errors }}</p>{% endif %}
                         </div>
                     </div>
@@ -48,21 +48,21 @@
                         <label for="{{ form.username.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Логин</label>
                         <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
                                value="{{ form.username.value|default_if_none:'' }}"
-                               class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                               class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
                         {% if form.username.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.username.errors }}</p>{% endif %}
                     </div>
                 </div>
 
                 <!-- Секция: Контакты -->
                 <div class="mb-8">
-                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Контактная информация</h3>
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100">Контактная информация</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="{{ form.email.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
                             <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
                                    value="{{ form.email.value|default_if_none:'' }}"
-                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
                             {% if form.email.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.email.errors }}</p>{% endif %}
                         </div>
                         <div>
@@ -70,7 +70,7 @@
                             <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
                                    value="{{ form.phone.value|default_if_none:'' }}"
                                    placeholder="+7 (___) ___-__-__"
-                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
                             {% if form.phone.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.phone.errors }}</p>{% endif %}
                         </div>
                     </div>
@@ -78,16 +78,16 @@
                     <div class="mt-6">
                         <label for="{{ form.delivery_address.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Адрес доставки</label>
                         <textarea name="{{ form.delivery_address.name }}" id="{{ form.delivery_address.id_for_label }}" rows="3"
-                                  class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all resize-none">{{ form.delivery_address.value|default_if_none:'' }}</textarea>
+                                  class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all resize-none">{{ form.delivery_address.value|default_if_none:'' }}</textarea>
                         {% if form.delivery_address.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.delivery_address.errors }}</p>{% endif %}
                     </div>
                 </div>
 
                 <!-- Секция: Безопасность -->
                 <div class="mb-8">
-                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">Изменение пароля</h3>
+                    <h3 class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-6 pb-3 border-b border-gray-100">Изменение пароля</h3>
                     
-                    <div class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 p-4 rounded-2xl flex gap-3 items-start text-left mb-6">
+                    <div class="bg-yellow-50 text-yellow-800 p-4 rounded-2xl flex gap-3 items-start text-left mb-6">
                         <i class="fas fa-info-circle mt-0.5 text-sm"></i>
                         <p class="text-xs font-medium">Оставьте поля пароля пустыми, если не хотите его менять.</p>
                     </div>
@@ -97,8 +97,8 @@
                             <label for="{{ form.current_password.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Текущий пароль</label>
                             <input type="password" name="{{ form.current_password.name }}" id="{{ form.current_password.id_for_label }}"
                                    placeholder="••••••••"
-                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                            <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.current_password.id_for_label }}" aria-label="Показать/скрыть пароль">
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 pr-12 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 toggle-password transition-colors" data-target="{{ form.current_password.id_for_label }}" aria-label="Показать/скрыть пароль">
                                 <i class="fas fa-eye eye-icon"></i>
                                 <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                             </button>
@@ -110,8 +110,8 @@
                                 <label for="{{ form.new_password.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Новый пароль</label>
                                 <input type="password" name="{{ form.new_password.name }}" id="{{ form.new_password.id_for_label }}"
                                        placeholder="••••••••"
-                                       class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password.id_for_label }}" aria-label="Показать/скрыть пароль">
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 pr-12 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 toggle-password transition-colors" data-target="{{ form.new_password.id_for_label }}" aria-label="Показать/скрыть пароль">
                                     <i class="fas fa-eye eye-icon"></i>
                                     <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                                 </button>
@@ -121,8 +121,8 @@
                                 <label for="{{ form.new_password_confirm.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Подтверждение</label>
                                 <input type="password" name="{{ form.new_password_confirm.name }}" id="{{ form.new_password_confirm.id_for_label }}"
                                        placeholder="••••••••"
-                                       class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password_confirm.id_for_label }}" aria-label="Показать/скрыть пароль">
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 pr-12 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 toggle-password transition-colors" data-target="{{ form.new_password_confirm.id_for_label }}" aria-label="Показать/скрыть пароль">
                                     <i class="fas fa-eye eye-icon"></i>
                                     <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                                 </button>
@@ -133,11 +133,11 @@
                 </div>
 
                 <!-- Кнопки -->
-                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100 dark:border-gray-800">
-                    <button type="submit" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md min-h-[52px]">
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100">
+                    <button type="submit" class="flex-1 bg-gray-900 text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md min-h-[52px]">
                         Сохранить изменения
                     </button>
-                    <a href="{% url 'profile' %}" class="sm:w-auto px-8 py-4 rounded-xl text-center border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-gray-900 dark:hover:border-white text-xs font-bold uppercase tracking-widest transition-colors inline-flex items-center justify-center min-h-[52px]">
+                    <a href="{% url 'profile' %}" class="sm:w-auto px-8 py-4 rounded-xl text-center border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-900 text-xs font-bold uppercase tracking-widest transition-colors inline-flex items-center justify-center min-h-[52px]">
                         Отмена
                     </a>
                 </div>

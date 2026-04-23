@@ -68,12 +68,12 @@
 }
 </script>
 
-<div class="bg-[#F8F5EF] dark:bg-gray-900 min-h-screen pb-16 md:pb-32 px-4 sm:px-8 xl:px-16 pt-4 md:pt-12">
+<div class="bg-[#F8F5EF] min-h-screen pb-16 md:pb-32 px-4 sm:px-8 xl:px-16 pt-4 md:pt-12">
     <!-- Хлебные крошки -->
-    <nav class="max-w-[120rem] mx-auto text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 md:mb-16 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
+    <nav class="max-w-[120rem] mx-auto text-xs font-bold uppercase tracking-widest text-gray-400 mb-6 md:mb-16 overflow-x-auto whitespace-nowrap" aria-label="breadcrumb">
         <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                <a href="{% url 'product_list' %}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                <a href="{% url 'product_list' %}" class="hover:text-gray-900 transition-colors" itemprop="item">
                     <span itemprop="name">ГЛАВНАЯ</span>
                 </a>
                 <meta itemprop="position" content="1" />
@@ -81,7 +81,7 @@
             </li>
             {% for category in product.categories.all|slice:":1" %}
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                <a href="{{ category.get_absolute_url }}" class="hover:text-gray-900 dark:hover:text-white transition-colors" itemprop="item">
+                <a href="{{ category.get_absolute_url }}" class="hover:text-gray-900 transition-colors" itemprop="item">
                     <span itemprop="name">{{ category.name|upper }}</span>
                 </a>
                 <meta itemprop="position" content="2" />
@@ -89,7 +89,7 @@
             </li>
             {% endfor %}
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inline">
-                <span itemprop="name" class="text-gray-900 dark:text-white">{{ product.name|upper }}</span>
+                <span itemprop="name" class="text-gray-900">{{ product.name|upper }}</span>
                 <meta itemprop="position" content="3" />
             </li>
         </ol>
@@ -101,19 +101,19 @@
             
             <!-- Левая колонка - Изображение -->
             <div class="w-full lg:w-1/2 flex flex-col justify-center">
-                <div class="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-white dark:bg-gray-800 rounded-[1.5rem] md:rounded-[3rem] lg:rounded-[4rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-deep-green/10">
+                <div class="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-white rounded-[1.5rem] md:rounded-[3rem] lg:rounded-[4rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-deep-green/10">
                     {% if product.image %}
                         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
                     {% else %}
-                        <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                        <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100">
                             <span class="text-gray-400 font-display font-medium text-2xl tracking-widest uppercase">НЕТ ФОТО</span>
                         </div>
                     {% endif %}
                     
                     <!-- Бейдж Рейтинга Абсолютный сверху -->
-                    <div class="absolute top-4 md:top-8 left-4 md:left-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 shadow-lg">
+                    <div class="absolute top-4 md:top-8 left-4 md:left-8 bg-white/80 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 shadow-lg">
                         <span class="text-yellow-500 text-base md:text-lg">★</span>
-                        <span class="font-bold text-gray-900 dark:text-white text-xs md:text-sm">{{ product.rating|default:"5" }}.0</span>
+                        <span class="font-bold text-gray-900 text-xs md:text-sm">{{ product.rating|default:"5" }}.0</span>
                     </div>
                 </div>
             </div>
@@ -122,25 +122,25 @@
             <div class="w-full lg:w-1/2 flex flex-col justify-center">
                 <div class="lg:sticky lg:top-24">
                     
-                    <h1 class="font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight font-display mb-6 md:mb-8 uppercase break-words" style="font-size:clamp(1.75rem,5vw,4.5rem)">
+                    <h1 class="font-black text-gray-900 leading-[1.1] tracking-tight font-display mb-6 md:mb-8 uppercase break-words" style="font-size:clamp(1.75rem,5vw,4.5rem)">
                         {{ product.name }}
                     </h1>
 
-                    <p class="text-base md:text-xl text-gray-500 dark:text-gray-400 font-light leading-relaxed max-w-2xl mb-8 md:mb-12">
+                    <p class="text-base md:text-xl text-gray-500 font-light leading-relaxed max-w-2xl mb-8 md:mb-12">
                         {{ product.description|linebreaksbr }}
                     </p>
 
                     <!-- Архитектурный разделитель -->
-                    <hr class="border-t-2 border-gray-900 dark:border-gray-700 w-24 mb-8 md:mb-12">
+                    <hr class="border-t-2 border-gray-900 w-24 mb-8 md:mb-12">
 
                     <!-- Блок Цены -->
                     <div class="mb-8 md:mb-12">
-                        <span class="block text-xs font-bold uppercase tracking-widest text-deep-green dark:text-emerald-400 mb-2">Стоимость</span>
+                        <span class="block text-xs font-bold uppercase tracking-widest text-deep-green mb-2">Стоимость</span>
                         <div class="flex items-baseline gap-2 flex-wrap">
-                            <span class="clamp-price font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter">
+                            <span class="clamp-price font-black font-display text-gray-900 leading-none tracking-tighter">
                                 {{ product.price|floatformat:"0" }}
                             </span>
-                            <span class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-400 dark:text-gray-600">₽</span>
+                            <span class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-400">₽</span>
                         </div>
                     </div>
 
@@ -150,15 +150,15 @@
                         
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 md:mb-8">
                             <!-- Элегантный выбор количества -->
-                            <div class="flex items-center min-w-[160px] border-b-2 border-gray-900 dark:border-white pb-3">
-                                <button type="button" id="decrease-quantity" aria-label="Уменьшить количество" class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl transition-colors flex items-center justify-start" style="min-width:44px;min-height:44px">−</button>
+                            <div class="flex items-center min-w-[160px] border-b-2 border-gray-900 pb-3">
+                                <button type="button" id="decrease-quantity" aria-label="Уменьшить количество" class="text-gray-400 hover:text-gray-900 text-2xl transition-colors flex items-center justify-start" style="min-width:44px;min-height:44px">−</button>
                                 <input type="number" name="quantity" id="quantity" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
-                                    class="flex-1 text-center bg-transparent text-2xl font-bold text-gray-900 dark:text-white border-0 p-0 focus:ring-0">
-                                <button type="button" id="increase-quantity" aria-label="Увеличить количество" class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl transition-colors flex items-center justify-end" style="min-width:44px;min-height:44px">+</button>
+                                    class="flex-1 text-center bg-transparent text-2xl font-bold text-gray-900 border-0 p-0 focus:ring-0">
+                                <button type="button" id="increase-quantity" aria-label="Увеличить количество" class="text-gray-400 hover:text-gray-900 text-2xl transition-colors flex items-center justify-end" style="min-width:44px;min-height:44px">+</button>
                             </div>
 
                             <!-- Массивная кнопка -->
-                            <button type="submit" class="flex-1 bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-5 md:py-6 px-6 md:px-8 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green dark:hover:bg-emerald-400 dark:hover:text-gray-900 transition-all duration-300 flex justify-between items-center group relative overflow-hidden min-h-[56px]">
+                            <button type="submit" class="flex-1 bg-gray-900 text-white py-5 md:py-6 px-6 md:px-8 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green transition-all duration-300 flex justify-between items-center group relative overflow-hidden min-h-[56px]">
                                 <span class="relative z-10">В корзину</span>
                                 <i class="fas fa-arrow-right relative z-10 transform group-hover:translate-x-2 transition-transform"></i>
                             </button>
@@ -167,11 +167,11 @@
                         <!-- Вывод наличия в минималистичном стиле -->
                         <div class="flex items-center gap-3">
                             {% if product.stock > 0 %}
-                                <div class="w-2 h-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
-                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900 dark:text-white">В наличии ({{ product.stock }})</span>
+                                <div class="w-2 h-2 rounded-full bg-deep-green"></div>
+                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900">В наличии ({{ product.stock }})</span>
                             {% else %}
                                 <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900 dark:text-white">Ожидается поставка</span>
+                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900">Ожидается поставка</span>
                             {% endif %}
                         </div>
 
@@ -184,8 +184,8 @@
         <!-- Галерея -->
         {% if product.images.exists %}
         <div class="mt-16 md:mt-32">
-            <div class="flex items-end justify-between mb-10 md:mb-16 border-b border-gray-200 dark:border-gray-800 pb-6 md:pb-8">
-                <h2 class="text-xl md:text-4xl font-display font-black uppercase tracking-widest text-gray-900 dark:text-white">ДЕТАЛИ</h2>
+            <div class="flex items-end justify-between mb-10 md:mb-16 border-b border-gray-200 pb-6 md:pb-8">
+                <h2 class="text-xl md:text-4xl font-display font-black uppercase tracking-widest text-gray-900">ДЕТАЛИ</h2>
             </div>
             
             <div id="product-gallery" class="f-carousel" data-carousel="static">
@@ -292,13 +292,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     submitBtn.innerHTML = '<span class="relative z-10 w-full text-center">✓ ДОБАВЛЕНО</span>';
-                    submitBtn.classList.remove('bg-gray-900', 'dark:bg-white', 'text-white', 'dark:text-gray-900');
-                    submitBtn.classList.add('!bg-deep-green', '!text-white', 'dark:!bg-emerald-400', 'dark:!text-gray-900');
+                    submitBtn.classList.remove('bg-gray-900', 'text-white');
+                    submitBtn.classList.add('!bg-deep-green', '!text-white', );
                     
                     setTimeout(() => {
                         submitBtn.innerHTML = originalText;
-                        submitBtn.classList.remove('!bg-deep-green', '!text-white', 'dark:!bg-emerald-400', 'dark:!text-gray-900');
-                        submitBtn.classList.add('bg-gray-900', 'dark:bg-white', 'text-white', 'dark:text-gray-900');
+                        submitBtn.classList.remove('!bg-deep-green', '!text-white', );
+                        submitBtn.classList.add('bg-gray-900', 'text-white');
                     }, 2500);
                 }
             })

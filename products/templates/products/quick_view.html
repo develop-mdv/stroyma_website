@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 md:grid-cols-2 h-full w-full grid-rows-[auto_1fr] md:grid-rows-1 overflow-hidden">
     <!-- Изображение -->
-    <div class="relative bg-gray-50 dark:bg-gray-800 w-full aspect-[4/3] md:aspect-auto md:h-full shrink-0">
+    <div class="relative bg-gray-50 w-full aspect-[4/3] md:aspect-auto md:h-full shrink-0">
         {% if product.image %}
         <img src="{{ product.image.url }}" alt="{{ product.name }}"
              class="absolute inset-0 w-full h-full object-cover" loading="lazy">
@@ -26,42 +26,42 @@
             </div>
 
             <!-- Заголовок -->
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white leading-[1.1] mb-4 md:mb-6 tracking-tight uppercase break-words">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 leading-[1.1] mb-4 md:mb-6 tracking-tight uppercase break-words">
                 {{ product.name }}
             </h2>
 
             <!-- Описание -->
-            <p class="text-sm font-light text-gray-500 dark:text-gray-400 leading-relaxed mb-6 md:mb-8">
+            <p class="text-sm font-light text-gray-500 leading-relaxed mb-6 md:mb-8">
                 {{ product.description|truncatewords:25 }}
             </p>
 
-            <hr class="border-t border-gray-100 dark:border-gray-800 mb-6 md:mb-8">
+            <hr class="border-t border-gray-100 mb-6 md:mb-8">
 
             <!-- Цена -->
             <div class="mb-6 md:mb-8">
                 <span class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Окончательная цена</span>
-                <p class="font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter" style="font-size:clamp(2rem,7vw,3rem)">{{ product.price|floatformat:"0" }} <span class="text-xl sm:text-2xl font-light text-gray-400">₽</span></p>
+                <p class="font-black font-display text-gray-900 leading-none tracking-tighter" style="font-size:clamp(2rem,7vw,3rem)">{{ product.price|floatformat:"0" }} <span class="text-xl sm:text-2xl font-light text-gray-400">₽</span></p>
             </div>
         </div>
 
         <!-- Форма добавления в корзину -->
         <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
             {% csrf_token %}
-            <div class="flex items-center justify-between border-2 border-gray-900 dark:border-white rounded-2xl p-2 mb-4">
+            <div class="flex items-center justify-between border-2 border-gray-900 rounded-2xl p-2 mb-4">
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-2 sm:ml-4">Кол-во</span>
                 <div class="flex items-center">
-                    <button type="button" aria-label="Уменьшить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value) - 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 dark:text-white text-xl hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">−</button>
+                    <button type="button" aria-label="Уменьшить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value) - 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">−</button>
                     <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
-                           class="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-gray-900 dark:text-white p-0">
-                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}, parseInt(input.value) + 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 dark:text-white text-xl hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">+</button>
+                           class="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-gray-900 p-0">
+                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}, parseInt(input.value) + 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">+</button>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 md:mt-6">
-                <button type="submit" class="flex-grow bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green text-center hover:text-white transition-colors duration-300 min-h-[48px]">
+                <button type="submit" class="flex-grow bg-gray-900 text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green text-center hover:text-white transition-colors duration-300 min-h-[48px]">
                     В корзину
                 </button>
-                <a href="{% url 'product_detail' slug=product.slug %}" class="w-full sm:w-14 h-14 flex items-center justify-center flex-shrink-0 bg-gray-50 dark:bg-gray-800 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-2xl transition-colors" title="Открыть карточку товара" aria-label="Открыть карточку товара">
+                <a href="{% url 'product_detail' slug=product.slug %}" class="w-full sm:w-14 h-14 flex items-center justify-center flex-shrink-0 bg-gray-50 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-2xl transition-colors" title="Открыть карточку товара" aria-label="Открыть карточку товара">
                     <i class="fas fa-arrow-right"></i>
                 </a>
             </div>

@@ -59,7 +59,7 @@ class CustomUserChangeForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'
+            field.widget.attrs['class'] = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green  '
         # Заполняем начальные значения для полей phone и delivery_address
         if self.instance and hasattr(self.instance, 'profile'):
             self.fields['phone'].initial = self.instance.profile.phone
@@ -114,15 +114,15 @@ class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         label="Email",
         max_length=254,
-        widget=forms.EmailInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'})
+        widget=forms.EmailInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green'})
     )
 
 class CustomSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
         label="Новый пароль",
-        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'}),
+        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green'}),
     )
     new_password2 = forms.CharField(
         label="Подтверждение пароля",
-        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green dark:bg-input-bg dark:border-input-border'}),
+        widget=forms.PasswordInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green'}),
     )

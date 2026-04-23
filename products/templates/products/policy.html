@@ -3,14 +3,14 @@
 
 <!-- Хлебные крошки -->
 <nav class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6 md:mb-12 flex items-center gap-2">
-    <a href="{% url 'product_list' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors py-2">Главная</a>
+    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-900 transition-colors py-2">Главная</a>
     <span class="text-gray-300">/</span>
-    <span class="text-gray-900 dark:text-white py-2">Политика конфиденциальности</span>
+    <span class="text-gray-900 py-2">Политика конфиденциальности</span>
 </nav>
 
 <!-- Header -->
 <div class="mb-10 md:mb-20 animate-fade-in fade-in-up">
-    <h1 class="font-black font-display text-gray-900 dark:text-white leading-[1.1] tracking-tighter uppercase mb-6 break-words" style="font-size:clamp(2rem,7vw,4.5rem)">
+    <h1 class="font-black font-display text-gray-900 leading-[1.1] tracking-tighter uppercase mb-6 break-words" style="font-size:clamp(2rem,7vw,4.5rem)">
         Политика <span class="text-transparent bg-clip-text bg-gradient-to-r from-deep-green to-emerald-400">конфиденциальности</span>
     </h1>
     <p class="text-base md:text-xl text-gray-500 font-light max-w-4xl leading-relaxed">
@@ -22,34 +22,34 @@
     
     <!-- Левая колонка: Sticky Sidebar с оглавлением -->
     <aside class="w-full lg:w-1/4 shrink-0 lg:sticky top-6 lg:top-28 h-fit z-10">
-        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-2xl md:rounded-[2rem] p-5 md:p-6 lg:p-8 shadow-lift mb-6">
-            <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4 md:mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">Оглавление</h3>
+        <div class="bg-white/70 backdrop-blur-2xl border border-gray-100 rounded-2xl md:rounded-[2rem] p-5 md:p-6 lg:p-8 shadow-lift mb-6">
+            <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-900 mb-4 md:mb-6 border-b border-gray-200 pb-4">Оглавление</h3>
             <nav id="toc" class="space-y-3 md:space-y-4">
-                <a href="#section-1" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">1. Определение терминов</a>
-                <a href="#section-2" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">2. Собираемые данные</a>
-                <a href="#section-3" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">3. Цели сбора</a>
-                <a href="#section-4" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">4. Способы и сроки</a>
-                <a href="#section-5" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">5. Права и обязанности</a>
-                <a href="#section-6" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green dark:hover:text-emerald-400 transition-colors py-1">6. Положения</a>
+                <a href="#section-1" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">1. Определение терминов</a>
+                <a href="#section-2" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">2. Собираемые данные</a>
+                <a href="#section-3" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">3. Цели сбора</a>
+                <a href="#section-4" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">4. Способы и сроки</a>
+                <a href="#section-5" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">5. Права и обязанности</a>
+                <a href="#section-6" class="toc-link block text-sm font-medium text-gray-400 hover:text-deep-green transition-colors py-1">6. Положения</a>
             </nav>
         </div>
         
         <!-- Контакты -->
-        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl md:rounded-[2rem] p-6 border border-gray-100 dark:border-gray-700 hidden lg:block hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <div class="bg-gray-50 rounded-2xl md:rounded-[2rem] p-6 border border-gray-100 hidden lg:block hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
             <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Принято к исполнению</h4>
-            <p class="text-sm font-bold font-display text-gray-900 dark:text-white uppercase tracking-widest">13 Май 2025</p>
+            <p class="text-sm font-bold font-display text-gray-900 uppercase tracking-widest">13 Май 2025</p>
             
-            <div class="h-px bg-gray-200 dark:bg-gray-700 my-6"></div>
+            <div class="h-px bg-gray-200 my-6"></div>
             
             <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Остались вопросы?</h4>
-            <a href="mailto:mvv@stroyma.ru" class="flex items-center gap-3 text-sm font-medium text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center shadow-soft">
+            <a href="mailto:mvv@stroyma.ru" class="flex items-center gap-3 text-sm font-medium text-deep-green hover:text-gray-900 transition-colors">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-soft">
                     <i class="fas fa-envelope text-xs"></i>
                 </div>
                 mvv@stroyma.ru
             </a>
-            <a href="tel:+79102114041" class="flex items-center gap-3 text-sm font-medium text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors mt-3">
-                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center shadow-soft">
+            <a href="tel:+79102114041" class="flex items-center gap-3 text-sm font-medium text-deep-green hover:text-gray-900 transition-colors mt-3">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-soft">
                     <i class="fas fa-phone text-xs"></i>
                 </div>
                 +7 (910) 211-40-41
@@ -62,29 +62,29 @@
         
         <!-- Секция 1 -->
         <section id="section-1" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">01</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">01</span>
                 Определение терминов
             </h2>
-            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
                 <p>В настоящей Политике конфиденциальности используются следующие термины:</p>
-                <div class="bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div class="bg-white/50 p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-sm">
                     <ul class="space-y-6">
                         <li class="relative pl-6">
-                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green dark:bg-emerald-400 rounded-sm"></span>
-                            <strong class="text-gray-900 dark:text-white font-medium">«Администрация сайта»</strong> – уполномоченные сотрудники на управление сайтом, действующие от имени ООО «СТРОЙМА», которые организуют и (или) осуществляют обработку персональных данных, а также определяют цели обработки персональных данных, состав персональных данных, подлежащих обработке, действия (операции), совершаемые с персональными данными.
+                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green rounded-sm"></span>
+                            <strong class="text-gray-900 font-medium">«Администрация сайта»</strong> – уполномоченные сотрудники на управление сайтом, действующие от имени ООО «СТРОЙМА», которые организуют и (или) осуществляют обработку персональных данных, а также определяют цели обработки персональных данных, состав персональных данных, подлежащих обработке, действия (операции), совершаемые с персональными данными.
                         </li>
                         <li class="relative pl-6">
-                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green dark:bg-emerald-400 rounded-sm"></span>
-                            <strong class="text-gray-900 dark:text-white font-medium">«Персональные данные»</strong> - любая информация, относящаяся к прямо или косвенно определенному или определяемому физическому лицу (субъекту персональных данных).
+                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green rounded-sm"></span>
+                            <strong class="text-gray-900 font-medium">«Персональные данные»</strong> - любая информация, относящаяся к прямо или косвенно определенному или определяемому физическому лицу (субъекту персональных данных).
                         </li>
                         <li class="relative pl-6">
-                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green dark:bg-emerald-400 rounded-sm"></span>
-                            <strong class="text-gray-900 dark:text-white font-medium">«Обработка персональных данных»</strong> - любое действие (операция) или совокупность действий (операций), совершаемых с использованием средств автоматизации или без использования таких средств с персональными данными, включая сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу (распространение, предоставление, доступ), обезличивание, блокирование, удаление, уничтожение персональных данных.
+                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green rounded-sm"></span>
+                            <strong class="text-gray-900 font-medium">«Обработка персональных данных»</strong> - любое действие (операция) или совокупность действий (операций), совершаемых с использованием средств автоматизации или без использования таких средств с персональными данными, включая сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу (распространение, предоставление, доступ), обезличивание, блокирование, удаление, уничтожение персональных данных.
                         </li>
                         <li class="relative pl-6">
-                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green dark:bg-emerald-400 rounded-sm"></span>
-                            <strong class="text-gray-900 dark:text-white font-medium">«Конфиденциальность персональных данных»</strong> - обязательное для соблюдения Оператором или иным получившим доступ к персональным данным лицом требование не допускать их распространения без согласия субъекта персональных данных или наличия иного законного основания.
+                            <span class="absolute left-0 top-3 w-2 h-2 bg-deep-green rounded-sm"></span>
+                            <strong class="text-gray-900 font-medium">«Конфиденциальность персональных данных»</strong> - обязательное для соблюдения Оператором или иным получившим доступ к персональным данным лицом требование не допускать их распространения без согласия субъекта персональных данных или наличия иного законного основания.
                         </li>
                     </ul>
                 </div>
@@ -92,28 +92,28 @@
         </section>
 
         <!-- Разделитель -->
-        <hr class="border-gray-200 dark:border-gray-800">
+        <hr class="border-gray-200">
 
         <!-- Секция 2 -->
         <section id="section-2" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">02</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">02</span>
                 Собираемые данные
             </h2>
-            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
                 <p>При регистрации, оформлении заказа или обращении через формы обратной связи на сайте ООО «СТРОЙМА» может запрашивать следующие персональные данные:</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-[2rem] hover:shadow-md transition-shadow">
-                        <i class="fas fa-user-circle text-2xl text-deep-green dark:text-emerald-400 mb-4 block"></i>
-                        <h4 class="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white mb-2">Личная информация</h4>
+                    <div class="bg-gray-50 p-6 rounded-[2rem] hover:shadow-md transition-shadow">
+                        <i class="fas fa-user-circle text-2xl text-deep-green mb-4 block"></i>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-2">Личная информация</h4>
                         <ul class="text-sm space-y-2">
                             <li>— Фамилия, имя, отчество</li>
                             <li>— Данные для входа в кабинет</li>
                         </ul>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-[2rem] hover:shadow-md transition-shadow">
-                        <i class="fas fa-address-book text-2xl text-deep-green dark:text-emerald-400 mb-4 block"></i>
-                        <h4 class="text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white mb-2">Контактные данные</h4>
+                    <div class="bg-gray-50 p-6 rounded-[2rem] hover:shadow-md transition-shadow">
+                        <i class="fas fa-address-book text-2xl text-deep-green mb-4 block"></i>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-2">Контактные данные</h4>
                         <ul class="text-sm space-y-2">
                             <li>— Адрес электронной почты</li>
                             <li>— Контактный телефон</li>
@@ -127,39 +127,39 @@
         </section>
 
         <!-- Разделитель -->
-        <hr class="border-gray-200 dark:border-gray-800">
+        <hr class="border-gray-200">
 
         <!-- Секция 3 -->
         <section id="section-3" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">03</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">03</span>
                 Цели сбора
             </h2>
-            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
                 <p>Персональные данные Пользователя Администрация сайта может использовать в следующих целях:</p>
-                <div class="bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden">
+                <div class="bg-white/50 p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-sm relative overflow-hidden">
                     <!-- Декоративный элемент -->
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-deep-green/5 dark:bg-emerald-400/5 rounded-bl-[5rem]"></div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-deep-green/5 rounded-bl-[5rem]"></div>
                     
                     <ul class="space-y-4 relative z-10">
                         <li class="flex items-start gap-4">
-                            <i class="fas fa-check text-deep-green dark:text-emerald-400 mt-2 text-sm"></i>
+                            <i class="fas fa-check text-deep-green mt-2 text-sm"></i>
                             <span>Идентификации Пользователя для оформления заказа и заключения договора купли-продажи товара.</span>
                         </li>
                         <li class="flex items-start gap-4">
-                            <i class="fas fa-check text-deep-green dark:text-emerald-400 mt-2 text-sm"></i>
+                            <i class="fas fa-check text-deep-green mt-2 text-sm"></i>
                             <span>Предоставления доступа к персонализированным ресурсам Сайта.</span>
                         </li>
                         <li class="flex items-start gap-4">
-                            <i class="fas fa-check text-deep-green dark:text-emerald-400 mt-2 text-sm"></i>
+                            <i class="fas fa-check text-deep-green mt-2 text-sm"></i>
                             <span>Установления обратной связи, включая направление уведомлений, оказание услуг и обработку запросов.</span>
                         </li>
                         <li class="flex items-start gap-4">
-                            <i class="fas fa-check text-deep-green dark:text-emerald-400 mt-2 text-sm"></i>
+                            <i class="fas fa-check text-deep-green mt-2 text-sm"></i>
                             <span>Определения места нахождения для обеспечения безопасности и предотвращения мошенничества.</span>
                         </li>
                         <li class="flex items-start gap-4">
-                            <i class="fas fa-check text-deep-green dark:text-emerald-400 mt-2 text-sm"></i>
+                            <i class="fas fa-check text-deep-green mt-2 text-sm"></i>
                             <span>Предоставления эффективной клиентской и технической поддержки.</span>
                         </li>
                     </ul>
@@ -168,23 +168,23 @@
         </section>
 
         <!-- Разделитель -->
-        <hr class="border-gray-200 dark:border-gray-800">
+        <hr class="border-gray-200">
 
         <!-- Секция 4 -->
         <section id="section-4" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">04</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">04</span>
                 Способы и сроки
             </h2>
-            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
                 <p>Обработка персональных данных Пользователя осуществляется без ограничения срока, любым законным способом, в том числе в информационных системах персональных данных с использованием средств автоматизации или без использования таких средств.</p>
                 <p>С кем мы можем делиться данными для выполнения услуг:</p>
                 
                 <div class="flex flex-wrap gap-3 mt-4">
-                    <span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700">Курьерские службы</span>
-                    <span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700">Почта России</span>
-                    <span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700">Операторы электросвязи</span>
-                    <span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700">Государственные органы (по закону)</span>
+                    <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200">Курьерские службы</span>
+                    <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200">Почта России</span>
+                    <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200">Операторы электросвязи</span>
+                    <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200">Государственные органы (по закону)</span>
                 </div>
                 
                 <p class="mt-6">Мы принимаем все необходимые организационные и технические меры для защиты персональной информации от неправомерного доступа, уничтожения, изменения и копирования.</p>
@@ -192,43 +192,43 @@
         </section>
 
         <!-- Разделитель -->
-        <hr class="border-gray-200 dark:border-gray-800">
+        <hr class="border-gray-200">
 
         <!-- Секция 5 -->
         <section id="section-5" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">05</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">05</span>
                 Права и обязанности сторон
             </h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 text-gray-600 text-base md:text-lg leading-loose font-light">
                 
                 <div>
-                    <h3 class="text-xl font-bold font-display text-gray-900 dark:text-white mb-6 uppercase tracking-widest">Права пользователя</h3>
+                    <h3 class="text-xl font-bold font-display text-gray-900 mb-6 uppercase tracking-widest">Права пользователя</h3>
                     <ul class="space-y-4">
                         <li class="flex items-start gap-3">
-                            <span class="text-deep-green dark:text-emerald-400 mt-1">—</span>
+                            <span class="text-deep-green mt-1">—</span>
                             <span>Получать информацию, касающуюся обработки его персональных данных;</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <span class="text-deep-green dark:text-emerald-400 mt-1">—</span>
+                            <span class="text-deep-green mt-1">—</span>
                             <span>Требовать уточнения, блокирования или уничтожения данных, если они неполные или устарели;</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <span class="text-deep-green dark:text-emerald-400 mt-1">—</span>
+                            <span class="text-deep-green mt-1">—</span>
                             <span>Отозвать свое согласие на обработку.</span>
                         </li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-bold font-display text-gray-900 dark:text-white mb-6 uppercase tracking-widest">Обязанности администрации</h3>
+                    <h3 class="text-xl font-bold font-display text-gray-900 mb-6 uppercase tracking-widest">Обязанности администрации</h3>
                     <ul class="space-y-4">
                         <li class="flex items-start gap-3">
-                            <span class="text-deep-green dark:text-emerald-400 mt-1">—</span>
+                            <span class="text-deep-green mt-1">—</span>
                             <span>Использовать информацию исключительно для заявленных целей;</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <span class="text-deep-green dark:text-emerald-400 mt-1">—</span>
+                            <span class="text-deep-green mt-1">—</span>
                             <span>Обеспечить хранение конфиденциальной информации в тайне и принимать меры защиты;</span>
                         </li>
                     </ul>
@@ -238,19 +238,19 @@
         </section>
         
         <!-- Разделитель -->
-        <hr class="border-gray-200 dark:border-gray-800">
+        <hr class="border-gray-200">
 
         <!-- Секция 6 -->
         <section id="section-6" class="policy-section scroll-mt-32">
-            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight mb-8 flex items-center gap-4">
-                <span class="text-5xl md:text-6xl text-gray-200 dark:text-gray-800 font-black relative top-1">06</span>
+            <h2 class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-4">
+                <span class="text-5xl md:text-6xl text-gray-200 font-black relative top-1">06</span>
                 Заключительные положения
             </h2>
-            <div class="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-loose font-light">
+            <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
                 <p>Администрация сайта вправе вносить изменения в настоящую Политику конфиденциальности без согласия Пользователя. Новая Политика вступает в силу с момента ее размещения на Сайте.</p>
-                <div class="bg-sandy/30 dark:bg-gray-800 p-6 md:p-10 rounded-[2rem] mt-8 text-center border border-gray-100 dark:border-gray-700">
-                    <p class="text-gray-900 dark:text-white font-medium mb-4">Официальный адрес публикации:</p>
-                    <a href="{% url 'policy' %}" class="inline-block bg-white dark:bg-gray-900 text-deep-green dark:text-emerald-400 font-bold px-8 py-3 rounded-full shadow-sm hover:shadow-md transition-shadow">https://stroyma-kursk.ru/policy/</a>
+                <div class="bg-sandy/30 p-6 md:p-10 rounded-[2rem] mt-8 text-center border border-gray-100">
+                    <p class="text-gray-900 font-medium mb-4">Официальный адрес публикации:</p>
+                    <a href="{% url 'policy' %}" class="inline-block bg-white text-deep-green font-bold px-8 py-3 rounded-full shadow-sm hover:shadow-md transition-shadow">https://stroyma-kursk.ru/policy/</a>
                 </div>
             </div>
         </section>
@@ -291,7 +291,7 @@
             if (entry.isIntersecting) {
                 // Remove active class from all
                 navLinks.forEach(link => {
-                    link.classList.remove('text-deep-green', 'dark:text-emerald-400', 'font-bold');
+                    link.classList.remove('text-deep-green', 'font-bold');
                     link.classList.add('text-gray-400');
                 });
                 // Add active class to corresponding link
@@ -299,7 +299,7 @@
                 const activeLink = document.querySelector(`.toc-link[href="#${activeId}"]`);
                 if (activeLink) {
                     activeLink.classList.remove('text-gray-400');
-                    activeLink.classList.add('text-deep-green', 'dark:text-emerald-400', 'font-bold');
+                    activeLink.classList.add('text-deep-green', 'font-bold');
                 }
             }
         });

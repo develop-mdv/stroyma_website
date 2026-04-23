@@ -2,11 +2,11 @@
 {% block title %}Оформление заказа | СтройМа{% endblock %}
 
 {% block content %}
-<div class="bg-[#F8F5EF] dark:bg-gray-900 min-h-screen pb-16 md:pb-24 px-4 sm:px-8 xl:px-16 pt-8 md:pt-16 lg:pt-20">
+<div class="bg-[#F8F5EF] min-h-screen pb-16 md:pb-24 px-4 sm:px-8 xl:px-16 pt-8 md:pt-16 lg:pt-20">
     <!-- Заголовок -->
     <div class="max-w-[120rem] mx-auto mb-10 md:mb-16 relative">
-        <div class="absolute left-0 top-2 md:top-4 bottom-2 md:bottom-4 w-1.5 md:w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
-        <h1 class="pl-5 md:pl-8 clamp-hero font-bold font-display tracking-tight leading-[0.95] text-gray-900 dark:text-white uppercase break-words">
+        <div class="absolute left-0 top-2 md:top-4 bottom-2 md:bottom-4 w-1.5 md:w-2 rounded-full bg-deep-green"></div>
+        <h1 class="pl-5 md:pl-8 clamp-hero font-bold font-display tracking-tight leading-[0.95] text-gray-900 uppercase break-words">
             Оформление
         </h1>
     </div>
@@ -15,33 +15,33 @@
         
         <!-- Правая колонка / Сводка заказа (Glassmorphism) -->
         <div class="w-full lg:w-[40%] xl:w-[35%] relative z-10">
-            <div class="lg:sticky lg:top-28 bg-white/60 dark:bg-gray-800/60 backdrop-blur-3xl border border-white/40 dark:border-gray-700/50 rounded-[1.5rem] md:rounded-[2.5rem] lg:rounded-[3rem] p-6 md:p-8 lg:p-12 shadow-2xl shadow-deep-green/5">
-                <h2 class="text-xl md:text-2xl font-black font-display uppercase tracking-widest text-gray-900 dark:text-white mb-6 md:mb-8 border-b-2 border-gray-900/10 dark:border-white/10 pb-4 md:pb-6">Ваш заказ</h2>
+            <div class="lg:sticky lg:top-28 bg-white/60 backdrop-blur-3xl border border-white/40 rounded-[1.5rem] md:rounded-[2.5rem] lg:rounded-[3rem] p-6 md:p-8 lg:p-12 shadow-2xl shadow-deep-green/5">
+                <h2 class="text-xl md:text-2xl font-black font-display uppercase tracking-widest text-gray-900 mb-6 md:mb-8 border-b-2 border-gray-900/10 pb-4 md:pb-6">Ваш заказ</h2>
                 
                 <div class="space-y-6 mb-8 max-h-[45dvh] lg:max-h-[50dvh] overflow-y-auto pr-4 custom-scrollbar">
                     {% for item in cart_items %}
                     <div class="flex gap-6 group">
-                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden shrink-0 relative">
+                        <div class="w-20 h-20 bg-gray-100 rounded-2xl overflow-hidden shrink-0 relative">
                             {% if item.product.image %}
                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {% endif %}
-                            <div class="absolute -top-2 -right-2 bg-deep-green dark:bg-emerald-400 text-white dark:text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-10">
+                            <div class="absolute -top-2 -right-2 bg-deep-green text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg z-10">
                                 {{ item.quantity }}
                             </div>
                         </div>
                         <div class="flex flex-col justify-center">
-                            <h3 class="text-sm font-bold uppercase tracking-wide text-gray-900 dark:text-white mb-1 line-clamp-2">{{ item.product.name }}</h3>
-                            <span class="text-deep-green dark:text-emerald-400 font-bold whitespace-nowrap">{{ item.product.price|floatformat:"0" }} ₽ / шт</span>
+                            <h3 class="text-sm font-bold uppercase tracking-wide text-gray-900 mb-1 line-clamp-2">{{ item.product.name }}</h3>
+                            <span class="text-deep-green font-bold whitespace-nowrap">{{ item.product.price|floatformat:"0" }} ₽ / шт</span>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 
-                <div class="pt-6 border-t-2 border-gray-900/10 dark:border-white/10">
+                <div class="pt-6 border-t-2 border-gray-900/10">
                     <div class="flex items-end justify-between">
-                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Итого к оплате</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Итого к оплате</span>
                         <div class="flex items-baseline gap-2 text-right">
-                            <span class="text-4xl md:text-5xl font-black font-display tracking-tighter text-gray-900 dark:text-white leading-none">{{ total_price|floatformat:"0" }}</span>
+                            <span class="text-4xl md:text-5xl font-black font-display tracking-tighter text-gray-900 leading-none">{{ total_price|floatformat:"0" }}</span>
                             <span class="text-2xl font-light text-gray-500">₽</span>
                         </div>
                     </div>
@@ -58,8 +58,8 @@
                     
                     <!-- Блок 01 -->
                     <div class="md:col-span-2 relative">
-                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8 flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 flex items-center justify-center text-xs">01</span>
+                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 mb-8 flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs">01</span>
                             Контактные данные
                         </h3>
                     </div>
@@ -67,63 +67,63 @@
                     <!-- Инпуты -->
                     <div class="relative group">
                         <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Имя">
-                        <label for="{{ form.first_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Имя <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Имя">
+                        <label for="{{ form.first_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Имя <span class="text-red-500">*</span></label>
                         {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.first_name.errors.0 }}</p>{% endif %}
                     </div>
                     
                     <div class="relative group">
                         <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Фамилия">
-                        <label for="{{ form.last_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Фамилия <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Фамилия">
+                        <label for="{{ form.last_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Фамилия <span class="text-red-500">*</span></label>
                         {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.last_name.errors.0 }}</p>{% endif %}
                     </div>
 
                     <div class="relative group">
                         <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Email">
-                        <label for="{{ form.email.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Email <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Email">
+                        <label for="{{ form.email.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Email <span class="text-red-500">*</span></label>
                         {% if form.email.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.email.errors.0 }}</p>{% endif %}
                     </div>
 
                     <div class="relative group">
                         <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}" value="{{ form.phone.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent" placeholder="Телефон">
-                        <label for="{{ form.phone.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Телефон <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Телефон">
+                        <label for="{{ form.phone.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Телефон <span class="text-red-500">*</span></label>
                         {% if form.phone.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.phone.errors.0 }}</p>{% endif %}
                     </div>
 
                     <!-- Блок 02 -->
                     <div class="md:col-span-2 pt-8">
-                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8 flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 flex items-center justify-center text-xs">02</span>
+                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400 mb-8 flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs">02</span>
                             Детали доставки
                         </h3>
                     </div>
 
                     <div class="md:col-span-2 relative group">
                         <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" rows="2" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-700 py-4 text-xl font-medium text-gray-900 dark:text-white focus:border-deep-green dark:focus:border-emerald-400 focus:ring-0 transition-colors placeholder-transparent resize-none" placeholder="Адрес доставки">{{ form.address.value|default_if_none:'' }}</textarea>
-                        <label for="{{ form.address.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green dark:peer-focus:text-emerald-400 cursor-text">Полный адрес доставки <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent resize-none" placeholder="Адрес доставки">{{ form.address.value|default_if_none:'' }}</textarea>
+                        <label for="{{ form.address.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Полный адрес доставки <span class="text-red-500">*</span></label>
                         {% if form.address.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.address.errors.0 }}</p>{% endif %}
                     </div>
 
                 </div>
 
                 <!-- Подтверждение -->
-                <div class="pt-16 border-t-2 border-gray-900/10 dark:border-white/10 mt-16 flex flex-col sm:flex-row items-center justify-between gap-8">
+                <div class="pt-16 border-t-2 border-gray-900/10 mt-16 flex flex-col sm:flex-row items-center justify-between gap-8">
                     
                     <label class="flex items-start gap-4 cursor-pointer group w-full sm:w-1/2 cursor-pointer">
                         <div class="relative flex items-center justify-center mt-1">
-                            <input type="checkbox" name="privacy_policy" required class="peer appearance-none w-6 h-6 border-2 border-gray-300 dark:border-gray-600 rounded bg-transparent checked:bg-deep-green dark:checked:bg-emerald-400 checked:border-transparent transition-colors focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <i class="fas fa-check absolute text-white dark:text-gray-900 text-xs opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                            <input type="checkbox" name="privacy_policy" required class="peer appearance-none w-6 h-6 border-2 border-gray-300 rounded bg-transparent checked:bg-deep-green checked:border-transparent transition-colors focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <i class="fas fa-check absolute text-white text-xs opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
                         </div>
-                        <div class="flex-1 text-sm text-gray-500 dark:text-gray-400">
-                            Я согласен с <a href="{% url 'policy' %}" target="_blank" class="text-gray-900 dark:text-white font-bold underline hover:text-deep-green transition-colors">политикой конфиденциальности</a> и даю согласие на обработку данных.
+                        <div class="flex-1 text-sm text-gray-500">
+                            Я согласен с <a href="{% url 'policy' %}" target="_blank" class="text-gray-900 font-bold underline hover:text-deep-green transition-colors">политикой конфиденциальности</a> и даю согласие на обработку данных.
                         </div>
                     </label>
 
-                    <button type="submit" class="w-full sm:w-auto bg-gray-900 text-white dark:bg-white dark:text-gray-900 py-5 md:py-6 px-8 md:px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green dark:hover:bg-emerald-400 dark:hover:text-gray-900 transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl min-h-[56px]">
+                    <button type="submit" class="w-full sm:w-auto bg-gray-900 text-white py-5 md:py-6 px-8 md:px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl min-h-[56px]">
                         Оформить заказ
                         <i class="fas fa-check transform group-hover/btn:scale-125 transition-transform"></i>
                     </button>
