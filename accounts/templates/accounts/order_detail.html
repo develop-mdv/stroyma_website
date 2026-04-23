@@ -2,43 +2,43 @@
 {% block content %}
 
 <!-- INVOICE/ORDER HERO -->
-<section class="max-w-[120rem] mx-auto pt-16 px-4 sm:px-6 lg:px-16 w-full text-center lg:text-left mb-12">
+<section class="max-w-[120rem] mx-auto pt-8 md:pt-16 px-4 sm:px-6 lg:px-16 w-full text-center lg:text-left mb-8 md:mb-12">
     <!-- Breadcrumbs & Actions Row -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
         <nav class="text-xs tracking-widest uppercase text-gray-400 dark:text-gray-500 flex items-center">
-            <a href="{% url 'profile' %}" class="hover:text-deep-green transition-colors"><i class="fas fa-arrow-left mr-2"></i> Вернуться в кабинет</a>
+            <a href="{% url 'profile' %}" class="hover:text-deep-green transition-colors py-2 inline-flex items-center"><i class="fas fa-arrow-left mr-2"></i> Вернуться в кабинет</a>
         </nav>
 
         <!-- Premium Utility "Ghost" Buttons -->
-        <div class="flex flex-wrap justify-center gap-3">
-            <button onclick="window.print()" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-colors text-[0.65rem] flex items-center group">
+        <div class="flex flex-wrap justify-center gap-2 md:gap-3 w-full md:w-auto">
+            <button onclick="window.print()" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-colors text-xs flex items-center group min-h-[44px]">
                 <i class="fas fa-print mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Печать
             </button>
-            <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 dark:hover:border-red-400 dark:hover:text-red-400 transition-colors text-[0.65rem] flex items-center group">
-                <i class="fas fa-file-pdf mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Сохранить как PDF
+            <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 dark:hover:border-red-400 dark:hover:text-red-400 transition-colors text-xs flex items-center group min-h-[44px]">
+                <i class="fas fa-file-pdf mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> PDF
             </a>
-            <button id="send-email-btn" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green dark:hover:border-emerald-400 dark:hover:text-emerald-400 transition-colors text-[0.65rem] flex items-center group relative overflow-hidden">
-                <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Отправить на Email</span>
+            <button id="send-email-btn" class="bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green dark:hover:border-emerald-400 dark:hover:text-emerald-400 transition-colors text-xs flex items-center group relative overflow-hidden min-h-[44px]">
+                <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email</span>
             </button>
-            <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-2 px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-[0.65rem] flex items-center group relative overflow-hidden shadow-md">
-                <span class="btn-text flex items-center"><i class="fas fa-redo mr-2 opacity-70 group-hover:opacity-100 transition-opacity"></i> Повторить заказ</span>
+            <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
+                <span class="btn-text flex items-center"><i class="fas fa-redo mr-2 opacity-70 group-hover:opacity-100 transition-opacity"></i> Повторить</span>
             </button>
         </div>
     </div>
 
     <!-- Massive Order Number -->
     <p class="text-deep-green font-semibold text-xs tracking-[0.3em] uppercase mb-4">{{ order.created_at|date:"d M Y, H:i" }}</p>
-    <h1 class="text-[3rem] md:text-[5rem] xl:text-[6rem] font-black text-gray-900 dark:text-white leading-none tracking-tighter font-display uppercase">
+    <h1 class="font-black text-gray-900 dark:text-white leading-none tracking-tighter font-display uppercase break-words" style="font-size:clamp(2rem,8vw,6rem)">
         ЗАКАЗ #{{ order.id }}
     </h1>
 </section>
 
 <!-- INVOICE CONTENT -->
-<section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full mb-32">
-    <div class="bg-white dark:bg-gray-900 rounded-[3rem] border border-gray-200 dark:border-gray-800 p-8 md:p-16 lg:p-20 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+<section class="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-16 w-full mb-20 md:mb-32">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl md:rounded-[3rem] border border-gray-200 dark:border-gray-800 p-6 md:p-12 lg:p-20 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
         
         <!-- Header Info Blocks (Grid) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-gray-100 dark:border-gray-800 pb-12 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-b border-gray-100 dark:border-gray-800 pb-8 md:pb-12 mb-8 md:mb-12">
             <!-- Customer -->
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Покупатель</span>
@@ -95,7 +95,7 @@
         </div>
 
         <!-- ITEMS TABLE -->
-        <h3 class="text-2xl font-display font-black text-gray-900 dark:text-white mb-8">Состав заказа</h3>
+        <h3 class="text-xl md:text-2xl font-display font-black text-gray-900 dark:text-white mb-6 md:mb-8">Состав заказа</h3>
         
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[600px]">
@@ -148,15 +148,15 @@
         </div>
 
         <!-- TOTALS AREA -->
-        <div class="mt-16 border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-end gap-8">
+        <div class="mt-10 md:mt-16 border-t border-gray-200 dark:border-gray-800 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
             <div class="w-full md:w-1/2 text-sm text-gray-400 font-light">
                 <p>Документ сгенерирован автоматически из Личного Кабинета СтройМА.</p>
                 <p class="mt-2 text-xs">При возникновении вопросов свяжитесь с поддержкой.</p>
             </div>
             
-            <div class="w-full md:w-1/2 text-right">
+            <div class="w-full md:w-1/2 text-left md:text-right">
                 <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Общая сумма заказа</span>
-                <span class="text-[3rem] md:text-[4rem] font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter">
+                <span class="font-black font-display text-gray-900 dark:text-white leading-none tracking-tighter block" style="font-size:clamp(2.25rem,7vw,4rem)">
                     {{ order.total_cost }} <span class="text-[0.6em] text-gray-300 dark:text-gray-700">₽</span>
                 </span>
             </div>
@@ -166,7 +166,7 @@
 </section>
 
 <!-- Notifier Container for Email -->
-<div id="email-notifier" class="fixed bottom-6 right-6 transform transition-all duration-500 translate-y-32 opacity-0 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-4 rounded-full shadow-2xl flex items-center font-bold text-sm z-50">
+<div id="email-notifier" class="fixed bottom-4 right-4 left-4 md:left-auto md:bottom-6 md:right-6 md:max-w-md transform transition-all duration-500 translate-y-32 opacity-0 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 md:px-6 py-4 rounded-2xl md:rounded-full shadow-2xl flex items-center font-bold text-sm z-50">
     <i class="fas fa-check-circle text-green-400 dark:text-green-500 mr-3 text-lg"></i>
     <span id="email-notifier-msg">Письмо отправлено</span>
 </div>
@@ -177,6 +177,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        if ($('#send-email-btn').length === 0) return;
         $('#send-email-btn').click(function(e) {
             e.preventDefault();
             var $btn = $(this);

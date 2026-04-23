@@ -8,6 +8,20 @@
         --house-base: none;
     }
 
+    /* Контейнер дома: запрет нативного тач-скролла внутри, чтобы лупа корректно работала на тач-устройствах */
+    .interactive-house-container {
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* На тач-устройствах подсказка — тап и удержание */
+    @media (hover: none) and (pointer: coarse) {
+        .interactive-house-container {
+            cursor: pointer;
+        }
+    }
+
     .facade-overlay {
         background-color: var(--house-facade);
         transition: background-color 0.3s ease;
@@ -25,6 +39,11 @@
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: 2px solid transparent;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,0.3);
+        min-width: 44px;
+        min-height: 44px;
+    }
+    @media (max-width: 640px) {
+        .color-swatch { width: 48px !important; height: 48px !important; }
     }
     .color-swatch:hover {
         transform: scale(1.1);
@@ -86,12 +105,12 @@
 <div class="bg-sandy/20 dark:bg-gray-900 min-h-screen py-10 px-4">
     <div class="max-w-[1400px] mx-auto">
         <!-- Заголовок -->
-        <div class="mb-8 text-center animate-fade-in relative max-w-3xl mx-auto">
-            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+        <div class="mb-8 text-center animate-fade-in relative max-w-3xl mx-auto px-2">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4 break-words">
                 Премиум-Конфигуратор
             </h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">
-                Создайте идеальный экстерьер. Наведите лупу на дом, чтобы рассмотреть текстуру в деталях.
+            <p class="text-base md:text-lg text-gray-600 dark:text-gray-400">
+                Создайте идеальный экстерьер. <span class="hidden md:inline">Наведите лупу на дом, чтобы рассмотреть текстуру в деталях.</span><span class="md:hidden">Нажмите и удерживайте палец на доме, чтобы использовать лупу.</span>
             </p>
         </div>
 
@@ -131,13 +150,13 @@
             <div class="w-full xl:w-2/5 flex flex-col gap-8 pb-10">
                 
                 <!-- ПАНЕЛЬ ЦВЕТА ФАСАДА -->
-                <div class="configurator-panel p-8 rounded-3xl shadow-soft border border-white dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-                        <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">1</span> 
+                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 gap-3 flex-wrap">
+                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">1</span>
                             Цвет Фасада
                         </h2>
-                        <span id="activeFacadeName" class="text-gray-500 font-medium">Не выбран</span>
+                        <span id="activeFacadeName" class="text-gray-500 font-medium text-sm md:text-base">Не выбран</span>
                     </div>
 
                     <div class="config-scroll">
@@ -164,13 +183,13 @@
                 </div>
 
                 <!-- ПАНЕЛЬ ТЕКСТУРЫ ЦОКОЛЯ -->
-                <div class="configurator-panel p-8 rounded-3xl shadow-soft border border-white dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-                        <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">2</span> 
+                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 gap-3 flex-wrap">
+                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">2</span>
                             Текстура Цоколя
                         </h2>
-                        <span id="activeBaseName" class="text-gray-500 font-medium">Не выбрана</span>
+                        <span id="activeBaseName" class="text-gray-500 font-medium text-sm md:text-base">Не выбрана</span>
                     </div>
 
                     <div class="config-scroll">
@@ -202,11 +221,11 @@
                 </div>
 
                 <!-- КНОПКИ ДЕЙСТВИЙ -->
-                <div class="flex gap-4">
-                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-1/3 flex items-center justify-center gap-2">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full sm:w-1/3 flex items-center justify-center gap-2 min-h-[48px]">
                         <i class="fas fa-undo"></i> Сбросить
                     </button>
-                    <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-8 py-4 rounded-xl font-medium shadow-md hover:shadow-xl hover:-translate-y-1 transition-all w-2/3 text-center flex items-center justify-center gap-2">
+                    <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-6 sm:px-8 py-4 rounded-xl font-medium shadow-md hover:shadow-xl hover:-translate-y-1 transition-all w-full sm:w-2/3 text-center flex items-center justify-center gap-2 min-h-[48px]">
                         Рассчитать проект <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>

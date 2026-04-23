@@ -1,25 +1,25 @@
 {% extends 'products/base.html' %}
 {% block content %}
 
-<div class="min-h-[70vh] px-4 py-12">
+<div class="min-h-[70dvh] px-4 py-8 md:py-12">
     <div class="max-w-2xl mx-auto">
         
         <!-- Заголовок -->
-        <div class="mb-10 animate-fade-in">
-            <nav class="text-[0.65rem] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
-                <a href="{% url 'profile' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <div class="mb-8 md:mb-10 animate-fade-in">
+            <nav class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5 md:mb-6 flex items-center gap-2">
+                <a href="{% url 'profile' %}" class="text-deep-green dark:text-emerald-400 hover:text-gray-900 dark:hover:text-white transition-colors py-2">
                     <i class="fas fa-arrow-left mr-1"></i> Профиль
                 </a>
                 <span class="text-gray-300">/</span>
                 <span class="text-gray-900 dark:text-white">Редактирование</span>
             </nav>
-            <h1 class="text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 dark:text-white uppercase tracking-tight">
                 Редактирование профиля
             </h1>
         </div>
 
         <!-- Форма -->
-        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 md:p-10 shadow-lift">
+        <div class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-gray-100 dark:border-gray-800 rounded-2xl md:rounded-[2rem] p-6 md:p-10 shadow-lift">
             <form method="post" class="space-y-6" id="edit-profile-form">
                 {% csrf_token %}
                 
@@ -98,7 +98,7 @@
                             <input type="password" name="{{ form.current_password.name }}" id="{{ form.current_password.id_for_label }}"
                                    placeholder="••••••••"
                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                            <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.current_password.id_for_label }}">
+                            <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.current_password.id_for_label }}" aria-label="Показать/скрыть пароль">
                                 <i class="fas fa-eye eye-icon"></i>
                                 <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                             </button>
@@ -111,7 +111,7 @@
                                 <input type="password" name="{{ form.new_password.name }}" id="{{ form.new_password.id_for_label }}"
                                        placeholder="••••••••"
                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                                <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password.id_for_label }}">
+                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password.id_for_label }}" aria-label="Показать/скрыть пароль">
                                     <i class="fas fa-eye eye-icon"></i>
                                     <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                                 </button>
@@ -122,7 +122,7 @@
                                 <input type="password" name="{{ form.new_password_confirm.name }}" id="{{ form.new_password_confirm.id_for_label }}"
                                        placeholder="••••••••"
                                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 pr-12 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
-                                <button type="button" class="absolute right-4 top-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password_confirm.id_for_label }}">
+                                <button type="button" class="absolute right-2 top-[calc(1.75rem+2px)] w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 toggle-password transition-colors" data-target="{{ form.new_password_confirm.id_for_label }}" aria-label="Показать/скрыть пароль">
                                     <i class="fas fa-eye eye-icon"></i>
                                     <i class="fas fa-eye-slash eye-off-icon hidden"></i>
                                 </button>
@@ -134,10 +134,10 @@
 
                 <!-- Кнопки -->
                 <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100 dark:border-gray-800">
-                    <button type="submit" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 rounded-xl text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md">
+                    <button type="submit" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md min-h-[52px]">
                         Сохранить изменения
                     </button>
-                    <a href="{% url 'profile' %}" class="sm:w-auto px-8 py-4 rounded-xl text-center border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-gray-900 dark:hover:border-white text-[0.65rem] font-bold uppercase tracking-widest transition-colors">
+                    <a href="{% url 'profile' %}" class="sm:w-auto px-8 py-4 rounded-xl text-center border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-gray-900 dark:hover:border-white text-xs font-bold uppercase tracking-widest transition-colors inline-flex items-center justify-center min-h-[52px]">
                         Отмена
                     </a>
                 </div>
@@ -151,18 +151,21 @@
 
 {% block scripts %}
 <script>
-document.getElementById('edit-profile-form').addEventListener('submit', function (e) {
-    var newPassword = document.getElementById('{{ form.new_password.id_for_label }}');
-    var confirmPassword = document.getElementById('{{ form.new_password_confirm.id_for_label }}');
-    if (newPassword.value && newPassword.value !== confirmPassword.value) {
-        e.preventDefault();
-        confirmPassword.classList.add('border-red-500');
-        alert('Пароли не совпадают.');
-        confirmPassword.focus();
-    } else {
-        confirmPassword.classList.remove('border-red-500');
-    }
-});
+var editProfileForm = document.getElementById('edit-profile-form');
+if (editProfileForm) {
+    editProfileForm.addEventListener('submit', function (e) {
+        var newPassword = document.getElementById('{{ form.new_password.id_for_label }}');
+        var confirmPassword = document.getElementById('{{ form.new_password_confirm.id_for_label }}');
+        if (newPassword && confirmPassword && newPassword.value && newPassword.value !== confirmPassword.value) {
+            e.preventDefault();
+            confirmPassword.classList.add('border-red-500');
+            alert('Пароли не совпадают.');
+            confirmPassword.focus();
+        } else if (confirmPassword) {
+            confirmPassword.classList.remove('border-red-500');
+        }
+    });
+}
 
 // Показать/скрыть пароль
 document.querySelectorAll('.toggle-password').forEach(button => {

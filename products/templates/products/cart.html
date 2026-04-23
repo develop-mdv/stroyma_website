@@ -12,11 +12,11 @@
             <div class="w-full lg:w-2/3 flex flex-col gap-6">
                 {% for item in cart_items %}
                 <!-- Карточка товара -->
-                <div class="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-center gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
                     
                     <!-- Удалить (Только Иконка) -->
-                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-4 right-4 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-all z-10 opacity-70 group-hover:opacity-100" title="Удалить из корзины">
-                        <i class="fas fa-trash-alt text-lg"></i>
+                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-3 right-3 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all z-10 opacity-80 group-hover:opacity-100 flex items-center justify-center" style="min-width:44px;min-height:44px" title="Удалить из корзины" aria-label="Удалить из корзины">
+                        <i class="fas fa-trash-alt text-base"></i>
                     </a>
 
                     <!-- Фото -->
@@ -39,21 +39,21 @@
                         </a>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4 font-medium">{{ item.product.price|floatformat:2 }} руб. / шт</p>
 
-                        <div class="flex items-center justify-between mt-auto">
+                        <div class="flex items-center justify-between mt-auto gap-3 flex-wrap">
                             <!-- Управление количеством (Pill form) -->
                             <form method="post" action="{% url 'update_cart' pk=item.product.pk %}" class="update-cart-form m-0">
                                 {% csrf_token %}
                                 <div class="inline-flex items-center bg-gray-100 dark:bg-gray-700/50 rounded-full p-1 border border-transparent focus-within:border-sandy transition-colors shadow-inner-light">
-                                    <button type="button" class="decrease-quantity w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
-                                        <i class="fas fa-minus text-[10px]"></i>
+                                    <button type="button" aria-label="Уменьшить" class="decrease-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                        <i class="fas fa-minus text-xs"></i>
                                     </button>
-                                    
+
                                     <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
-                                           class="w-10 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 dark:text-white p-0 m-0"
+                                           class="w-12 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 dark:text-white p-0 m-0"
                                            data-product-id="{{ item.product.pk }}">
-                                    
-                                    <button type="button" class="increase-quantity w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
-                                        <i class="fas fa-plus text-[10px]"></i>
+
+                                    <button type="button" aria-label="Увеличить" class="increase-quantity w-11 h-11 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm transition-all" data-product-id="{{ item.product.pk }}">
+                                        <i class="fas fa-plus text-xs"></i>
                                     </button>
                                 </div>
                             </form>
@@ -61,7 +61,7 @@
                             <!-- Итого за товар -->
                             <div class="text-right">
                                 <span class="block text-xs text-gray-400 uppercase tracking-widest font-semibold mb-1">Сумма</span>
-                                <span class="text-xl font-bold text-deep-green tracking-tight transition-all duration-300 price-updating-target" id="item-total-{{ item.product.pk }}">
+                                <span class="text-lg sm:text-xl font-bold text-deep-green tracking-tight transition-all duration-300 price-updating-target whitespace-nowrap" id="item-total-{{ item.product.pk }}">
                                     {{ item.total_price|floatformat:2 }} руб.
                                 </span>
                             </div>

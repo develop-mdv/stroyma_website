@@ -8,11 +8,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 py-12 md:py-24 min-h-[70vh]">
+<div class="max-w-[120rem] mx-auto px-4 sm:px-8 xl:px-16 py-8 md:py-24 min-h-[70dvh]">
     <!-- Грандиозный заголовок -->
-    <div class="mb-16 md:mb-24 relative pl-6">
-        <div class="absolute left-0 top-2 bottom-2 w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
-        <h1 class="text-[3.5rem] md:text-[5rem] xl:text-[7rem] font-black text-gray-900 dark:text-white leading-[0.9] tracking-tighter font-display uppercase break-words">
+    <div class="mb-10 md:mb-24 relative pl-4 md:pl-6">
+        <div class="absolute left-0 top-2 bottom-2 w-1.5 md:w-2 rounded-full bg-deep-green dark:bg-emerald-400"></div>
+        <h1 class="clamp-hero font-black text-gray-900 dark:text-white leading-[0.95] tracking-tighter font-display uppercase break-words">
             Коллекции
         </h1>
     </div>
@@ -37,15 +37,15 @@
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                         
                         <!-- Счетчик товаров -->
-                        <div class="absolute top-6 right-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white font-bold text-[0.65rem] uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg z-10 flex items-center gap-2">
+                        <div class="absolute top-4 md:top-6 right-4 md:right-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white font-bold text-[0.65rem] uppercase tracking-widest px-4 md:px-5 py-2 md:py-2.5 rounded-full shadow-lg z-10 flex items-center gap-2">
                             <span>{{ category.get_total_products_count }} ед.</span>
                             <div class="w-1.5 h-1.5 rounded-full bg-deep-green dark:bg-emerald-400"></div>
                         </div>
                     </div>
 
                     <!-- Информация -->
-                    <div class="pt-8 pb-4 px-2 xl:px-4 flex-grow flex flex-col">
-                        <h2 class="text-3xl md:text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight uppercase leading-[1.1] group-hover:text-deep-green transition-colors mb-4 break-words">
+                    <div class="pt-6 md:pt-8 pb-4 px-2 xl:px-4 flex-grow flex flex-col">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight uppercase leading-[1.1] group-hover:text-deep-green transition-colors mb-4 break-words">
                             {{ category.name }}
                         </h2>
                         

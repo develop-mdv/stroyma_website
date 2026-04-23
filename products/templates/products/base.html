@@ -3,7 +3,7 @@
 <html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
     <!-- Динамические мета-теги -->
     <title>{% block title %}{{ meta_title|default:"СтройМа - Строительные материалы" }}{% endblock %}</title>
@@ -242,17 +242,17 @@
                 <div class="px-6 py-5 border-t border-gray-100 dark:border-gray-800/50 space-y-3">
                     {% if user.is_authenticated %}
                     <div class="flex gap-3">
-                        <a href="{% url 'profile' %}" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider">Профиль</a>
+                        <a href="{% url 'profile' %}" class="flex-1 inline-flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider min-h-[48px]">Профиль</a>
                         <a href="{% url 'logout' %}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                           class="w-12 flex items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-red-500 hover:border-red-200 transition-all">
+                           class="w-12 min-h-[48px] flex items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-red-500 hover:border-red-200 transition-all">
                             <i class="fas fa-sign-out-alt"></i>
                         </a>
                     </div>
                     {% else %}
                     <div class="flex gap-3">
-                        <a href="{% url 'login' %}" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider">Вход</a>
-                        <a href="{% url 'register' %}" class="flex-1 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">Регистрация</a>
+                        <a href="{% url 'login' %}" class="flex-1 inline-flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider min-h-[48px]">Вход</a>
+                        <a href="{% url 'register' %}" class="flex-1 inline-flex items-center justify-center border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors min-h-[48px]">Регистрация</a>
                     </div>
                     {% endif %}
                     <button id="mobile-theme-toggle" class="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-white py-2 transition-colors text-sm">
@@ -399,7 +399,7 @@
 
     <!-- Модальное окно для быстрого просмотра -->
     <div id="quick-view-modal" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 transition-all duration-500">
-        <div id="modal-content" class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] p-0 max-w-[60rem] w-full h-[85vh] md:h-[600px] xl:h-[650px] overflow-hidden relative shadow-2xl mx-4 border border-white/20 dark:border-white/10">
+        <div id="modal-content" class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] p-0 max-w-[60rem] w-full max-h-[92dvh] md:max-h-[600px] xl:max-h-[650px] h-auto md:h-[600px] xl:h-[650px] overflow-hidden relative shadow-2xl mx-4 border border-white/20 dark:border-white/10">
             <button onclick="closeQuickView()" class="absolute top-4 right-4 md:top-6 md:right-6 z-10 text-gray-400 hover:text-gray-900 dark:hover:text-white p-3 rounded-full hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors backdrop-blur-md" aria-label="Закрыть модальное окно">
                 <i class="fas fa-times text-xl md:text-2xl"></i>
             </button>

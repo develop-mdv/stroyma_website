@@ -1,4 +1,8 @@
 /* Базовые стили */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
 body {
     font-family: 'Manrope', sans-serif;
     color: var(--text-gray);
@@ -6,6 +10,16 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
     line-height: 1.6;
 }
+
+/* Адаптивная типографика (для больших декоративных заголовков) */
+.clamp-h1 { font-size: clamp(1.75rem, 6vw, 4rem); line-height: 1.1; }
+.clamp-h2 { font-size: clamp(1.5rem, 5vw, 3rem); line-height: 1.15; }
+.clamp-hero { font-size: clamp(2rem, 10vw, 7rem); line-height: 1.05; }
+.clamp-giga { font-size: clamp(2.5rem, 12vw, 10rem); line-height: 1; }
+.clamp-price { font-size: clamp(2.5rem, 8vw, 6rem); line-height: 1; }
+
+/* Гарантированная минимальная тач-цель */
+.tap-target { min-width: 44px; min-height: 44px; }
 
 /* Переменные для тем */
 [data-theme="light"] {
@@ -382,13 +396,10 @@ button:focus, a:focus {
     h2 { font-size: 1.25rem; }
     h3 { font-size: 1.125rem; }
     
-    /* Изменения размеров кнопок */
+    /* Изменения размеров кнопок (без принудительного width:100% — конфликтует с flex) */
     button, a.button {
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        text-align: center;
     }
     
     /* Отступы в формах */
@@ -399,9 +410,9 @@ button:focus, a:focus {
     
     /* Увеличиваем размер элементов управления */
     .noUi-handle {
-        width: 28px;
-        height: 28px;
-        top: -11px;
+        width: 28px !important;
+        height: 28px !important;
+        top: -12px !important;
     }
 
     /* Адаптивные отступы для контейнера */
@@ -411,6 +422,18 @@ button:focus, a:focus {
     }
 
     /* Мобильное меню (fullscreen наследуется) */
+}
+
+/* Тач-устройства без hover: увеличиваем ручки слайдера для удобства пальцем */
+@media (hover: none) and (pointer: coarse) {
+    .noUi-handle {
+        width: 36px !important;
+        height: 36px !important;
+        top: -16px !important;
+    }
+    .noUi-target {
+        height: 6px;
+    }
 }
 
 /* Улучшенные стили для мобильного меню (fullscreen) */

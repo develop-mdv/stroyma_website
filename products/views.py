@@ -163,7 +163,7 @@ def search_ajax(request):
         'sort_by': sort_by,
     }
 
-    results_html = render_to_string('products/search_results.html', context)
+    results_html = render_to_string('products/search_results.html', context, request=request)
     return JsonResponse({
         'results': results_html,
         'has_next': page.has_next(),
@@ -499,11 +499,25 @@ class CategoryDetailView(DetailView):
             Q(categories=category) | 
             Q(categories__in=category.get_descendants())
         ).distinct()
-        
+
+        # Глобальные min/max цены для слайдера (до применения фильтров)
+        price_range = products.aggregate(Min('price'), Max('price'))
+        min_price = int(price_range.get('price__min') or 0)
+        max_price = int(price_range.get('price__max') or 0)
+
         # Применяем фильтры
         self.filterset = ProductFilter(self.request.GET, queryset=products)
         products = self.filterset.qs
-        
+
+        # Сортировка
+        sort_by = self.request.GET.get('sort_by', 'name')
+        if sort_by == 'price_asc':
+            products = products.order_by('price')
+        elif sort_by == 'price_desc':
+            products = products.order_by('-price')
+        else:
+            products = products.order_by('name')
+
         # Добавляем пагинацию
         paginator = Paginator(products, self.paginate_by)
         page_number = self.request.GET.get('page')
@@ -522,6 +536,9 @@ class CategoryDetailView(DetailView):
             'subcategories': category.get_children(),
             'breadcrumbs': self.get_breadcrumbs(category),
             'selected_categories': selected_categories,
+            'min_price': min_price,
+            'max_price': max_price,
+            'sort_by': sort_by,
         })
         return context
     
