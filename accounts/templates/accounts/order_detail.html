@@ -17,9 +17,11 @@
             <a href="#" onclick="window.print(); return false;" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-red-500 hover:text-red-600 transition-colors text-xs flex items-center group min-h-[44px]">
                 <i class="fas fa-file-pdf mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> PDF
             </a>
-            <button id="send-email-btn" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green transition-colors text-xs flex items-center group relative overflow-hidden min-h-[44px]">
-                <span class="btn-text flex items-center"><i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email</span>
-            </button>
+            {% if order.contact.email %}
+            <a href="mailto:{{ order.contact.email }}?subject=Заказ%20№{{ order.id }}" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green transition-colors text-xs flex items-center group min-h-[44px]">
+                <i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email
+            </a>
+            {% endif %}
             <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
                 <span class="btn-text flex items-center"><i class="fas fa-redo mr-2 opacity-70 group-hover:opacity-100 transition-opacity"></i> Повторить</span>
             </button>
@@ -42,25 +44,27 @@
             <!-- Customer -->
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Покупатель</span>
-                <p class="text-lg font-bold text-gray-900 mb-1">{{ order.first_name }} {{ order.last_name }}</p>
+                {% if order.contact %}
+                <p class="text-lg font-bold text-gray-900 mb-1">{{ order.contact.first_name }} {{ order.contact.last_name }}</p>
                 <div class="text-sm text-gray-500 font-light space-y-1">
-                    <p>{{ order.email }}</p>
-                    <p>{{ order.phone|default:"-" }}</p>
+                    <p>{{ order.contact.email|default:"—" }}</p>
+                    <p>{{ order.contact.phone|default:"—" }}</p>
                 </div>
+                {% else %}
+                <p class="text-lg font-bold text-gray-900 mb-1">—</p>
+                <div class="text-sm text-gray-500 font-light">Данные клиента не сохранены</div>
+                {% endif %}
             </div>
-            
+
             <!-- Delivery -->
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Адрес доставки</span>
-                <p class="text-lg font-bold text-gray-900 mb-1">
-                    {% if order.delivery_city %}
-                        г. {{ order.delivery_city }}
-                    {% else %}
-                        Адрес:
-                    {% endif %}
-                </p>
                 <p class="text-sm text-gray-500 font-light max-w-xs leading-relaxed">
-                    {{ order.address|default:"Самовывоз / Не указан" }}
+                    {% if order.contact and order.contact.address %}
+                        {{ order.contact.address }}
+                    {% else %}
+                        Самовывоз / Не указан
+                    {% endif %}
                 </p>
             </div>
 
@@ -85,10 +89,10 @@
                     </span>
                 {% endif %}
 
-                {% if order.comment %}
+                {% if order.contact.comment %}
                 <div class="mt-6">
                     <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-2">Комментарий к заказу</span>
-                    <p class="text-sm text-gray-600 font-light bg-gray-50 p-4 rounded-xl border border-gray-100">{{ order.comment }}</p>
+                    <p class="text-sm text-gray-600 font-light bg-gray-50 p-4 rounded-xl border border-gray-100">{{ order.contact.comment }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -127,7 +131,7 @@
                             </td>
                             <!-- Price -->
                             <td class="py-6 px-2 align-middle text-right font-light text-gray-500 whitespace-nowrap">
-                                {{ item.product.price }} ₽
+                                {{ item.product.price|floatformat:2 }} ₽
                             </td>
                             <!-- Quantity -->
                             <td class="py-6 px-2 align-middle text-center font-bold text-gray-900">
@@ -135,7 +139,7 @@
                             </td>
                             <!-- Subtotal -->
                             <td class="py-6 px-2 align-middle text-right font-bold text-gray-900 whitespace-nowrap text-lg">
-                                {% widthratio item.product.price 1 item.quantity %} ₽
+                                {{ item.total_price|floatformat:2 }} ₽
                             </td>
                         </tr>
                     {% empty %}
@@ -157,7 +161,7 @@
             <div class="w-full md:w-1/2 text-left md:text-right">
                 <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Общая сумма заказа</span>
                 <span class="font-black font-display text-gray-900 leading-none tracking-tighter block" style="font-size:clamp(2.25rem,7vw,4rem)">
-                    {{ order.total_cost }} <span class="text-[0.6em] text-gray-300">₽</span>
+                    {{ order.total_cost|floatformat:2 }} <span class="text-[0.6em] text-gray-300">₽</span>
                 </span>
             </div>
         </div>
@@ -174,39 +178,13 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        if ($('#send-email-btn').length === 0) return;
-        $('#send-email-btn').click(function(e) {
-            e.preventDefault();
-            var $btn = $(this);
-            var $btnText = $btn.find('.btn-text');
-            var originalContent = $btnText.html();
-
-            // Setup loading state
-            $btn.prop('disabled', true).addClass('opacity-70 cursor-not-allowed');
-            $btnText.html('<i class="fas fa-spinner fa-spin mr-2"></i> Отправка...');
-
-            // Dummy AJAX request to simulate email sending since url was missing
-            setTimeout(function() {
-                $btn.prop('disabled', false).removeClass('opacity-70 cursor-not-allowed border-gray-300').addClass('border-green-500 text-green-600 bg-green-50');
-                $btnText.html('<i class="fas fa-check mr-2"></i> Отправлено');
-                
-                showNotification('Информация по заказу успешно отправлена на почту!');
-                
-                setTimeout(function() {
-                    $btn.removeClass('border-green-500 text-green-600 bg-green-50').addClass('border-gray-300');
-                    $btnText.html(originalContent);
-                }, 3000);
-            }, 1000);
-        });
-
         function showNotification(msg, success = true) {
             var $notifier = $('#email-notifier');
             var $icon = $notifier.find('i');
             $('#email-notifier-msg').text(msg);
-            
+
             if (success) {
                 $icon.attr('class', 'fas fa-check-circle text-green-400  mr-3 text-lg');
             } else {
@@ -214,7 +192,7 @@
             }
 
             $notifier.removeClass('translate-y-32 opacity-0').addClass('translate-y-0 opacity-100');
-            
+
             setTimeout(function() {
                 $notifier.removeClass('translate-y-0 opacity-100').addClass('translate-y-32 opacity-0');
             }, 4000);

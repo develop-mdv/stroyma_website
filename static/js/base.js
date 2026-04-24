@@ -100,7 +100,7 @@ function openQuickView(productId) {
 
     content.innerHTML = '';
 
-    fetch(`/product/${productId}/quick-view/`)
+    fetch(`/quick-view/${productId}/`)
         .then(response => response.text())
         .then(data => {
             content.innerHTML = data;

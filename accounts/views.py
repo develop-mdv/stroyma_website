@@ -1,19 +1,48 @@
+import logging
+from uuid import UUID
+
 from django.shortcuts import render, redirect, get_object_or_404
-from products.models import Order, OrderItem, Cart, CartItem
+from products.models import Order, Cart, CartItem
 from products.views import merge_session_cart_to_user_cart
 from .forms import RegisterForm, LoginForm, CustomUserChangeForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .decorators import login_required, custom_login_required
+from .decorators import custom_login_required
+from django.db.models import Count, F, Sum
 from django.http import JsonResponse
 from accounts.models import UserProfile
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from uuid import UUID
 from django.views.decorators.http import require_POST
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
+
+
+def _send_confirmation_email(user, profile, request):
+    """Рендерит и отправляет письмо с подтверждением email. Возвращает True/False."""
+    current_site = get_current_site(request)
+    mail_subject = 'Подтверждение регистрации на сайте Stroyma'
+    message = render_to_string('accounts/email/email_confirmation.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'protocol': 'https' if request.is_secure() else 'http',
+        'token': profile.confirmation_token,
+    })
+    try:
+        send_mail(
+            mail_subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [user.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as exc:
+        logger.error('Ошибка отправки письма подтверждения email для %s: %s', user.email, exc)
+        return False
 
 def register_view(request):
     if request.method == 'POST':
@@ -21,23 +50,22 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             profile = UserProfile.objects.create(user=user)
-            
-            # Отправка письма с подтверждением email
-            current_site = get_current_site(request)
-            mail_subject = 'Подтверждение регистрации на сайте Stroyma'
-            message = render_to_string('accounts/email/email_confirmation.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'protocol': 'https' if request.is_secure() else 'http',
-                'token': profile.confirmation_token,
-            })
-            
-            to_email = form.cleaned_data.get('email')
-            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
-            
+
+            email_sent = _send_confirmation_email(user, profile, request)
+
             login(request, user)
             merge_session_cart_to_user_cart(request)
-            messages.success(request, "Регистрация прошла успешно! Пожалуйста, проверьте вашу почту и подтвердите email-адрес для активации всех функций аккаунта.")
+            if email_sent:
+                messages.success(
+                    request,
+                    "Регистрация прошла успешно! Пожалуйста, проверьте вашу почту и подтвердите email-адрес."
+                )
+            else:
+                messages.warning(
+                    request,
+                    "Регистрация прошла успешно, но письмо подтверждения не удалось отправить. "
+                    "Попробуйте отправить его повторно из личного кабинета."
+                )
             return JsonResponse({'success': True})
         else:
             errors = form.errors.as_json()
@@ -46,23 +74,38 @@ def register_view(request):
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+
 def confirm_email_view(request, token):
+    success = False
     try:
-        profile = get_object_or_404(UserProfile, confirmation_token=UUID(token))
+        token_uuid = UUID(token)
+    except (ValueError, TypeError):
+        token_uuid = None
+
+    profile = None
+    if token_uuid is not None:
+        profile = UserProfile.objects.filter(confirmation_token=token_uuid).first()
+
+    if profile is None:
+        messages.error(request, "Ссылка для подтверждения email недействительна.")
+    elif profile.email_confirmed:
+        success = True
+        messages.info(request, "Ваш email уже был подтверждён ранее.")
+    elif not profile.token_is_valid():
+        messages.error(
+            request,
+            "Ссылка для подтверждения устарела. Запросите новое письмо в личном кабинете."
+        )
+    else:
         profile.email_confirmed = True
-        profile.save()
-        
-        # Авторизуем пользователя, если он еще не авторизован
+        profile.save(update_fields=['email_confirmed'])
+        profile.rotate_confirmation_token()
         if not request.user.is_authenticated:
             login(request, profile.user)
             merge_session_cart_to_user_cart(request)
-            
         success = True
-        messages.success(request, "Ваш email успешно подтвержден!")
-    except (ValueError, UserProfile.DoesNotExist):
-        success = False
-        messages.error(request, "Ссылка для подтверждения email недействительна!")
-    
+        messages.success(request, "Ваш email успешно подтверждён!")
+
     return render(request, 'accounts/email_confirmation.html', {'success': success})
 
 def login_view(request):
@@ -97,8 +140,20 @@ def logout_view(request):
 
 @custom_login_required
 def profile_view(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'accounts/profile.html', {'orders': orders})
+    orders = (
+        Order.objects.filter(user=request.user)
+        .prefetch_related('items__product')
+        .annotate(
+            items_count=Count('items'),
+            total_sum=Sum(F('items__quantity') * F('items__product__price')),
+        )
+        .order_by('-created_at')
+    )
+    email_warning = not request.user.profile.email_confirmed
+    return render(request, 'accounts/profile.html', {
+        'orders': orders,
+        'email_warning': email_warning,
+    })
 
 @custom_login_required
 def order_detail_view(request, order_id):
@@ -125,24 +180,22 @@ def edit_profile(request):
 
 @custom_login_required
 def resend_confirmation(request):
-    if request.user.profile.email_confirmed:
-        messages.info(request, "Ваш email уже подтвержден!")
+    profile = request.user.profile
+    if profile.email_confirmed:
+        messages.info(request, "Ваш email уже подтверждён.")
         return redirect('profile')
-        
-    # Отправка письма с подтверждением email
-    current_site = get_current_site(request)
-    mail_subject = 'Подтверждение регистрации на сайте Stroyma'
-    message = render_to_string('accounts/email/email_confirmation.html', {
-        'user': request.user,
-        'domain': current_site.domain,
-        'protocol': 'https' if request.is_secure() else 'http',
-        'token': request.user.profile.confirmation_token,
-    })
-    
-    to_email = request.user.email
-    send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
-    
-    messages.success(request, "Письмо с подтверждением отправлено повторно. Пожалуйста, проверьте вашу почту.")
+
+    profile.rotate_confirmation_token()
+    if _send_confirmation_email(request.user, profile, request):
+        messages.success(
+            request,
+            "Письмо с подтверждением отправлено повторно. Пожалуйста, проверьте вашу почту."
+        )
+    else:
+        messages.error(
+            request,
+            "Не удалось отправить письмо подтверждения. Попробуйте позже."
+        )
     return redirect('profile')
 
 @custom_login_required

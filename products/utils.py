@@ -81,10 +81,12 @@ def export_orders_to_pdf(queryset):
     return pdf
 
 def export_orders_csv(queryset):
-    """Экспортирует заказы в CSV-файл"""
-    response = HttpResponse(content_type='text/csv')
+    """Экспортирует заказы в CSV-файл (UTF-8 с BOM для корректного открытия в Excel)."""
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = f'attachment; filename="orders_{timezone.now().strftime("%Y%m%d%H%M%S")}.csv"'
-    
+
+    response.write('\ufeff')  # BOM для корректного открытия кириллицы в Excel
+
     writer = csv.writer(response)
     writer.writerow(['ID', 'Пользователь', 'Статус', 'Дата создания', 'Товары', 'Сумма'])
     

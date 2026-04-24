@@ -23,7 +23,8 @@ class Category(MPTTModel):
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO описание')
     image = models.ImageField(upload_to='category_images/', blank=True, null=True, verbose_name='Изображение категории')
     alt_text = models.CharField(max_length=255, blank=True, verbose_name='Альтернативный текст изображения')
-    
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='Дата обновления')
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -200,11 +201,13 @@ class Product(models.Model):
         return popular_products
 
 ORDER_STATUS_CHOICES = (
+    ('new', 'Новый'),
     ('pending', 'В ожидании'),
     ('processing', 'Обработка'),
     ('shipped', 'Доставляется'),
+    ('delivered', 'Доставлен'),
     ('completed', 'Завершен'),
-    ('canceled', 'Отменен'),
+    ('cancelled', 'Отменен'),
 )
 
 class Order(models.Model):
@@ -213,7 +216,7 @@ class Order(models.Model):
     Имеет систему отслеживания статусов с ведением истории изменений.
     """
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пользователь')
-    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending', verbose_name='Статус')
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='new', verbose_name='Статус')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
@@ -273,8 +276,35 @@ class OrderItem(models.Model):
         verbose_name = "Позиция заказа"
         verbose_name_plural = "Позиции заказов"
 
+    @property
+    def total_price(self):
+        return self.quantity * self.product.price
+
     def __str__(self):
         return f"{self.product.name} ({self.quantity} шт.)"
+
+class OrderContact(models.Model):
+    """
+    Контактная и адресная информация по заказу.
+    Хранится отдельно от Order, чтобы не смешивать бизнес-состояние заказа
+    и персональные данные клиента.
+    """
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='contact', verbose_name='Заказ')
+    first_name = models.CharField(max_length=100, verbose_name='Имя')
+    last_name = models.CharField(max_length=100, verbose_name='Фамилия')
+    email = models.EmailField(verbose_name='Email')
+    phone = models.CharField(max_length=20, verbose_name='Телефон')
+    address = models.CharField(max_length=255, verbose_name='Адрес доставки')
+    comment = models.TextField(blank=True, verbose_name='Комментарий')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
+    class Meta:
+        verbose_name = 'Контакты заказа'
+        verbose_name_plural = 'Контакты заказов'
+
+    def __str__(self):
+        return f"Контакты заказа #{self.order_id}"
+
 
 class OrderStatusHistory(models.Model):
     """

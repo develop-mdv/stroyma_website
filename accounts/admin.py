@@ -1,8 +1,7 @@
 from django.contrib import admin
 from .models import UserProfile
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.urls import reverse
-from products.models import Order
 
 # Удаляем неработающий inline и используем другой подход
 @admin.register(UserProfile)
@@ -45,45 +44,63 @@ class UserProfileAdmin(admin.ModelAdmin):
         return '0 заказов'
     orders_count.short_description = 'Заказы'
     
+    STATUS_COLORS = {
+        'new': '#03A9F4',
+        'pending': '#FFC107',
+        'processing': '#2196F3',
+        'shipped': '#9C27B0',
+        'delivered': '#8BC34A',
+        'completed': '#4CAF50',
+        'cancelled': '#F44336',
+    }
+
     def orders_history(self, obj):
-        orders = obj.get_last_orders(10)
+        orders = list(obj.get_last_orders(10))
         if not orders:
             return 'Нет заказов'
-        
-        html = '<table style="width:100%; border-collapse: collapse;">'
-        html += '<tr><th style="border:1px solid #ddd; padding:8px;">ID</th><th style="border:1px solid #ddd; padding:8px;">Дата</th><th style="border:1px solid #ddd; padding:8px;">Статус</th><th style="border:1px solid #ddd; padding:8px;">Сумма</th><th style="border:1px solid #ddd; padding:8px;">Действие</th></tr>'
-        
+
+        rows = []
         for order in orders:
-            status_colors = {
-                'pending': '#FFC107',
-                'processing': '#2196F3',
-                'shipped': '#9C27B0',
-                'completed': '#4CAF50',
-                'canceled': '#F44336',
-            }
-            status_display = {
-                'pending': 'В ожидании',
-                'processing': 'Обработка',
-                'shipped': 'Доставляется',
-                'completed': 'Завершен',
-                'canceled': 'Отменен',
-            }
-            color = status_colors.get(order.status, '#000')
+            color = self.STATUS_COLORS.get(order.status, '#000')
             url = reverse('admin:products_order_change', args=[order.id])
-            
-            html += f'<tr>'
-            html += f'<td style="border:1px solid #ddd; padding:8px;">{order.id}</td>'
-            html += f'<td style="border:1px solid #ddd; padding:8px;">{order.created_at.strftime("%d.%m.%Y %H:%M")}</td>'
-            html += f'<td style="border:1px solid #ddd; padding:8px; color:{color}; font-weight:bold;">{status_display.get(order.status, order.status)}</td>'
-            html += f'<td style="border:1px solid #ddd; padding:8px;">{order.total_cost} ₽</td>'
-            html += f'<td style="border:1px solid #ddd; padding:8px;"><a href="{url}" class="button">Просмотр</a></td>'
-            html += f'</tr>'
-        
-        html += '</table>'
-        
-        # Ссылка на все заказы пользователя
+            rows.append((
+                order.id,
+                order.created_at.strftime('%d.%m.%Y %H:%M'),
+                color,
+                order.get_status_display(),
+                order.total_cost,
+                url,
+            ))
+
+        rows_html = format_html_join(
+            '',
+            (
+                '<tr>'
+                '<td style="border:1px solid #ddd; padding:8px;">{}</td>'
+                '<td style="border:1px solid #ddd; padding:8px;">{}</td>'
+                '<td style="border:1px solid #ddd; padding:8px; color:{}; font-weight:bold;">{}</td>'
+                '<td style="border:1px solid #ddd; padding:8px;">{} ₽</td>'
+                '<td style="border:1px solid #ddd; padding:8px;">'
+                '<a href="{}" class="button">Просмотр</a></td>'
+                '</tr>'
+            ),
+            rows,
+        )
+
         all_orders_url = reverse('admin:products_order_changelist') + f'?user__id__exact={obj.user.id}'
-        html += f'<div style="margin-top:10px;"><a href="{all_orders_url}" class="button">Все заказы пользователя</a></div>'
-        
-        return format_html(html)
+        return format_html(
+            '<table style="width:100%; border-collapse: collapse;">'
+            '<tr>'
+            '<th style="border:1px solid #ddd; padding:8px;">ID</th>'
+            '<th style="border:1px solid #ddd; padding:8px;">Дата</th>'
+            '<th style="border:1px solid #ddd; padding:8px;">Статус</th>'
+            '<th style="border:1px solid #ddd; padding:8px;">Сумма</th>'
+            '<th style="border:1px solid #ddd; padding:8px;">Действие</th>'
+            '</tr>'
+            '{}'
+            '</table>'
+            '<div style="margin-top:10px;"><a href="{}" class="button">Все заказы пользователя</a></div>',
+            rows_html,
+            all_orders_url,
+        )
     orders_history.short_description = 'История заказов'

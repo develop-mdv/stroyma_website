@@ -23,6 +23,9 @@ class CategorySitemap(Sitemap):
     def items(self):
         return Category.objects.all()
 
+    def lastmod(self, obj):
+        return obj.updated_at
+
     def location(self, obj):
         return obj.get_absolute_url()
 
@@ -32,7 +35,10 @@ class ServiceSitemap(Sitemap):
 
     def items(self):
         return Service.objects.all()
-    
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
     def location(self, obj):
         return reverse('service_detail', args=[obj.slug])
 

@@ -18,15 +18,28 @@
             Оформлен!
         </h1>
 
+        {% if order %}
+        <p class="text-base sm:text-lg md:text-xl text-gray-700 font-medium max-w-2xl mx-auto mb-6 leading-relaxed">
+            Номер вашего заказа: <span class="font-bold">№ {{ order.id }}</span>
+        </p>
+        {% endif %}
+
         <p class="text-base sm:text-xl md:text-2xl text-gray-500 font-light max-w-2xl mx-auto mb-10 md:mb-16 leading-relaxed">
             Мы получили ваш заказ. Наш менеджер уже изучает заявку и свяжется с вами в ближайшее время для подтверждения.
         </p>
 
         <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+            {% if order and user.is_authenticated %}
+            <a href="{% url 'order_detail' order.id %}" class="bg-gray-900 text-white py-5 md:py-6 px-8 md:px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl min-h-[56px]">
+                Мой заказ
+                <i class="fas fa-arrow-right transform group-hover/btn:translate-x-2 transition-transform"></i>
+            </a>
+            {% else %}
             <a href="{% url 'product_list' %}" class="bg-gray-900 text-white py-5 md:py-6 px-8 md:px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-deep-green transition-all duration-300 flex items-center justify-center gap-4 group/btn hover:scale-[1.02] shadow-2xl min-h-[56px]">
                 Каталог
                 <i class="fas fa-arrow-right transform group-hover/btn:translate-x-2 transition-transform"></i>
             </a>
+            {% endif %}
             <a href="{% url 'product_list' %}" class="bg-transparent border-2 border-gray-900 text-gray-900 py-5 md:py-6 px-8 md:px-12 text-sm md:text-base font-bold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all duration-300 flex items-center justify-center group/home min-h-[56px]">
                 На главную
             </a>

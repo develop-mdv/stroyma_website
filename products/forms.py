@@ -17,6 +17,12 @@ class OrderForm(forms.Form):
         ]
     )
     address = forms.CharField(max_length=255, label="Адрес доставки")
+    comment = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False,
+        label="Комментарий к заказу",
+        max_length=1000,
+    )
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -39,10 +45,4 @@ class ContactForm(forms.Form):
         widget=forms.Textarea,
         label="Сообщение",
         max_length=1000,
-        validators=[
-            RegexValidator(
-                regex=r'^[a-zA-Z0-9\s.,!?]*$',
-                message="Сообщение может содержать только буквы, цифры, пробелы и знаки препинания."
-            )
-        ]
     )

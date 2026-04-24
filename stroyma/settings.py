@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',  # Добавлено для фильтрации
     'rangefilter',  # Добавлено для фильтрации по диапазону дат
     'import_export',  # Добавлено для экспорта данных
+    'colorfield',  # Добавлено для цветовых полей в админке
     'accounts',
     'products',
     'services',
@@ -73,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',  # Добавлен для поддержки переводов в шаблонах
+                'products.context_processors.cart_info',  # Глобальный счётчик корзины
             ],
         },
     },
@@ -263,6 +266,19 @@ JAZZMIN_UI_TWEAKS = {
     "actions_sticky_top": True,
 }
 
+# Продакшен-безопасность: включаем только если DEBUG=False
+if not DEBUG:
+    SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
+    SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=60 * 60 * 24 * 30, cast=int)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
+
 # Настройки для кеширования
 CACHES = {
     'default': {
@@ -271,10 +287,19 @@ CACHES = {
         'TIMEOUT': 300,  # 5 минут по умолчанию
         'OPTIONS': {
             'MAX_ENTRIES': 300,  # Максимальное количество объектов в кеше
-            'CULL_FREQUENCY': 3,  # Частота очистки кеша при превышении лимита 
+            'CULL_FREQUENCY': 3,  # Частота очистки кеша при превышении лимита
         }
     }
 }
+
+# Опциональный Redis-кеш: задайте REDIS_URL в .env, чтобы включить
+REDIS_URL = config('REDIS_URL', default='')
+if REDIS_URL:
+    CACHES['default'] = {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': REDIS_URL,
+        'TIMEOUT': 300,
+    }
 
 # Настройки API агрегации данных для кеша
 DATA_CACHE_TIMEOUT = 60 * 30  # 30 минут для данных отчетов

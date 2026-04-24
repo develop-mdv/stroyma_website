@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Запрещаем индексацию админки
+# Запрещаем индексацию админки и приватных разделов
 Disallow: /admin/
 Disallow: /accounts/login/
 Disallow: /accounts/register/
@@ -10,10 +10,11 @@ Disallow: /checkout/
 Disallow: /cart/
 
 # Разрешаем индексацию основных разделов
-Allow: /products/
+Allow: /product/
+Allow: /category/
 Allow: /services/
 Allow: /about/
 Allow: /contact/
 
 # Указываем расположение карты сайта
-Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml 
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

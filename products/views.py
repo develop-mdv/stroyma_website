@@ -1,19 +1,34 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture, Category
+from .models import Product, Order, OrderItem, OrderContact, Cart, CartItem, FacadeColor, BaseTexture, Category
 from .forms import OrderForm, SearchForm, ContactForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.db import transaction
 from django.db.models import Q, Max, Min
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
 import logging
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import DetailView, TemplateView
 from .filters import ProductFilter
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.urls import reverse
+
+
+def cart_total_quantity(request):
+    """Подсчитывает суммарное количество товаров в корзине (сумма quantity, а не позиций)."""
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        if not cart:
+            return 0
+        return sum(item.quantity for item in cart.items.all())
+    session_cart = request.session.get('cart', {}) or {}
+    try:
+        return sum(int(q) for q in session_cart.values())
+    except (TypeError, ValueError):
+        return 0
 
 logger = logging.getLogger(__name__)
 EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
@@ -108,10 +123,7 @@ def search_ajax(request):
     page_number = request.GET.get('page', 1)
     autocomplete = request.GET.get('autocomplete', False)
     
-    # Получаем все параметры category из запроса
     selected_categories = request.GET.getlist('category')
-    print(f"Request GET: {request.GET}")  # Отладочная информация
-    print(f"Selected categories: {selected_categories}")  # Отладочная информация
 
     products = Product.objects.all()
 
@@ -119,27 +131,19 @@ def search_ajax(request):
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
     if selected_categories:
-        # Получаем только выбранные категории
         categories_to_filter = []
         for category_id in selected_categories:
             try:
                 category = Category.objects.get(id=category_id)
                 categories_to_filter.append(category)
             except Category.DoesNotExist:
-                print(f"Category not found: {category_id}")  # Отладочная информация
                 continue
-        
-        print(f"Categories to filter: {[cat.id for cat in categories_to_filter]}")  # Отладочная информация
-        
-        # Создаем Q-объект для каждой категории
+
         category_filters = Q()
         for category in categories_to_filter:
             category_filters |= Q(categories=category)
-        
-        # Применяем фильтр с использованием OR
+
         products = products.filter(category_filters).distinct()
-        print(f"SQL Query: {products.query}")  # Отладочная информация
-        print(f"Filtered products count: {products.count()}")  # Отладочная информация
 
     if autocomplete:
         products = products[:5]
@@ -212,16 +216,30 @@ def add_to_cart(request, pk):
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        cart_item.quantity = quantity if created else cart_item.quantity + quantity
-        cart_item.save()
-        cart_item_count = CartItem.objects.filter(cart=cart).count()
+        desired_quantity = quantity if created else cart_item.quantity + quantity
     else:
-        cart = request.session.get('cart', {})
+        session_cart = request.session.get('cart', {})
         key = str(product.pk)
-        cart[key] = cart.get(key, 0) + quantity
-        request.session['cart'] = cart
+        desired_quantity = session_cart.get(key, 0) + quantity
+
+    if desired_quantity > product.stock:
+        message = (f'Доступно только {product.stock} шт. товара «{product.name}».'
+                   if product.stock > 0
+                   else f'Товара «{product.name}» нет в наличии.')
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': message}, status=400)
+        messages.error(request, message)
+        return redirect(product.get_absolute_url())
+
+    if request.user.is_authenticated:
+        cart_item.quantity = desired_quantity
+        cart_item.save()
+    else:
+        session_cart[key] = desired_quantity
+        request.session['cart'] = session_cart
         request.session.modified = True
-        cart_item_count = len(cart)
+
+    cart_item_count = cart_total_quantity(request)
 
     if is_ajax:
         return JsonResponse({
@@ -266,11 +284,13 @@ def update_cart(request, pk):
                 total_price = sum(get_object_or_404(Product, pk=pid).price * qty for pid, qty in cart.items())
 
             item_total_price = product.price * quantity
+            cart_item_count = cart_total_quantity(request)
 
             return JsonResponse({
                 'success': True,
                 'item_total_price': float(item_total_price),
-                'total_price': float(total_price)
+                'total_price': float(total_price),
+                'cart_item_count': cart_item_count,
             })
         except ValueError:
             return JsonResponse({
@@ -366,20 +386,35 @@ def checkout(request):
             user_email = form.cleaned_data['email']
             user_phone = form.cleaned_data['phone']
             delivery_address = form.cleaned_data['address']
+            comment = form.cleaned_data.get('comment', '') or ''
 
-            order = Order.objects.create(
-                user=request.user if request.user.is_authenticated else None,
-                status='pending'
-            )
+            with transaction.atomic():
+                order = Order.objects.create(
+                    user=request.user if request.user.is_authenticated else None,
+                    status='new'
+                )
+                OrderContact.objects.create(
+                    order=order,
+                    first_name=user_name,
+                    last_name=user_lastname,
+                    email=user_email,
+                    phone=user_phone,
+                    address=delivery_address,
+                    comment=comment,
+                )
 
-            if request.user.is_authenticated:
-                for item in cart:
-                    OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-                    item.delete()  # Удаляем из корзины после оформления
-            else:
-                for product_id, quantity in cart.items():
-                    product = get_object_or_404(Product, pk=product_id)
-                    OrderItem.objects.create(order=order, product=product, quantity=quantity)
+                if request.user.is_authenticated:
+                    for item in cart:
+                        OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
+                    CartItem.objects.filter(cart__user=request.user).delete()
+                else:
+                    for product_id, quantity in cart.items():
+                        product = get_object_or_404(Product, pk=product_id)
+                        OrderItem.objects.create(order=order, product=product, quantity=quantity)
+                    request.session['cart'] = {}
+                    request.session.modified = True
+
+            request.session['last_order_id'] = order.id
 
             html_order_summary = render_to_string('products/order_email_template.html', {
                 'items': cart_items,
@@ -389,12 +424,13 @@ def checkout(request):
                 'user_email': user_email,
                 'user_phone': user_phone,
                 'delivery_address': delivery_address,
+                'order': order,
             })
 
             plain_text = strip_tags(html_order_summary)
             try:
                 send_mail(
-                    f'Новый заказ от {user_name} {user_lastname}',
+                    f'Новый заказ №{order.id} от {user_name} {user_lastname}',
                     plain_text,
                     EMAIL_TO_SEND,
                     [EMAIL_TO_SEND],
@@ -402,15 +438,13 @@ def checkout(request):
                     fail_silently=False
                 )
             except Exception as e:
-                logger.error(f'Ошибка при отправке email: {e}')
-                messages.error(request, f'Произошла ошибка при отправке email: {e}')
-            
-            # Always clean cart and redirect to success if order was saved
-            if not request.user.is_authenticated:
-                request.session['cart'] = {}
-            else:
-                CartItem.objects.filter(cart__user=request.user).delete()
-                
+                logger.error('Ошибка при отправке email о заказе #%s: %s', order.id, e)
+                messages.warning(
+                    request,
+                    'Заказ оформлен, но уведомление на email отправить не удалось. '
+                    'Мы свяжемся с вами по указанным контактам.'
+                )
+
             return redirect('checkout_success')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
@@ -426,7 +460,11 @@ def checkout(request):
     return render(request, 'products/checkout.html', context)
 
 def checkout_success(request):
-    return render(request, 'products/checkout_success.html')
+    order = None
+    order_id = request.session.pop('last_order_id', None)
+    if order_id:
+        order = Order.objects.filter(pk=order_id).first()
+    return render(request, 'products/checkout_success.html', {'order': order})
 
 def contact(request):
     if request.method == 'POST':
@@ -466,23 +504,6 @@ def color_selection(request):
         'facade_colors': facade_colors,
         'base_textures': base_textures,
     })
-
-class ProductListView(ListView):
-    model = Product
-    template_name = 'products/product_list.html'
-    context_object_name = 'products'
-    paginate_by = 12
-
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        self.filterset = ProductFilter(self.request.GET, queryset=queryset)
-        return self.filterset.qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        context['filter'] = self.filterset
-        return context
 
 class CategoryDetailView(DetailView):
     model = Category
@@ -561,14 +582,6 @@ class CategoryDetailView(DetailView):
         })
         
         return breadcrumbs
-
-def get_subcategories(request):
-    category_id = request.GET.get('category_id')
-    if category_id:
-        subcategories = Category.objects.filter(parent_id=category_id)
-        data = [{'id': cat.id, 'name': cat.name} for cat in subcategories]
-        return JsonResponse({'subcategories': data})
-    return JsonResponse({'subcategories': []})
 
 def about(request):
     """

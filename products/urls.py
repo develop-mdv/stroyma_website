@@ -4,8 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.product_list, name='product_list'),
     path('catalog/', views.CatalogView.as_view(), name='catalog'),  # Новый маршрут для каталога
+    path('product/<int:pk>/', views.product_detail_legacy, name='product_detail_legacy'),  # Legacy URL должен стоять ДО slug, чтобы ловить числовые id
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
-    path('product/<int:pk>/', views.product_detail_legacy, name='product_detail_legacy'),  # Legacy URL для поддержки старых ссылок
     path('add/<int:pk>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.view_cart, name='view_cart'),
     path('cart/remove/<int:pk>/', views.remove_from_cart, name='remove_from_cart'),
@@ -20,5 +20,4 @@ urlpatterns = [
     path('quick-view/<int:pk>/', views.quick_view, name='quick_view'),
     path('color-selection/', views.color_selection, name='color_selection'),
     path('category/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
-    path('get-subcategories/', views.get_subcategories, name='get_subcategories'),
 ]

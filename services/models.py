@@ -11,6 +11,8 @@ class Service(models.Model):
     advantages = models.TextField(blank=True, verbose_name='Преимущества (по одному на строку)')
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO Title')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO Description')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='Дата обновления')
 
     class Meta:
         verbose_name = "Услуга"

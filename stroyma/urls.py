@@ -23,8 +23,6 @@ from .sitemaps import sitemaps
 from django.views.generic.base import TemplateView
 from .admin import StroymAdminSite
 
-from products import views
-
 admin.AdminSite = StroymAdminSite
 admin.site.__class__ = StroymAdminSite
 
@@ -33,8 +31,7 @@ urlpatterns = [
     path('', include('products.urls')),
     path('accounts/', include('accounts.urls')),
     path('services/', include('services.urls')),
-    path('product/<int:pk>/quick-view/', views.quick_view, name='quick_view'),
-    
+
     # SEO URLs
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
