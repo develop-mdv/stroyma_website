@@ -48,7 +48,7 @@
                                         <i class="fas fa-minus text-xs"></i>
                                     </button>
 
-                                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"
+                                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="9999" value="{{ item.quantity }}"
                                            class="w-12 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 p-0 m-0"
                                            data-product-id="{{ item.product.pk }}">
 
@@ -167,8 +167,8 @@ $(document).ready(function () {
         const productId = $(this).data('product-id');
         const inputElement = $('#quantity-' + productId);
         const currentValue = parseInt(inputElement.val());
-        const maxValue = parseInt(inputElement.attr('max'));
-        
+        const maxValue = parseInt(inputElement.attr('max'), 10) || 9999;
+
         if (currentValue < maxValue) {
             inputElement.val(currentValue + 1);
             updateCartItem(inputElement);

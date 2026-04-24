@@ -57,3 +57,11 @@ class UserProfile(models.Model):
         self.confirmation_token_created_at = timezone.now()
         if save:
             self.save(update_fields=['confirmation_token', 'confirmation_token_created_at'])
+
+
+def get_or_create_profile(user):
+    """
+    Возвращает UserProfile. Создаёт запись, если её нет (superuser, импорт, старые аккаунты).
+    """
+    profile, _created = UserProfile.objects.get_or_create(user=user)
+    return profile

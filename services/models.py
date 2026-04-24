@@ -1,13 +1,22 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
+
+from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES, MAX_VIDEO_UPLOAD_BYTES
 
 class Service(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название услуги')
     slug = models.SlugField(unique=True, verbose_name='URL', blank=True)
     short_description = models.TextField(verbose_name='Краткое описание')
     description = models.TextField(verbose_name='Подробное описание')
-    image = models.ImageField(upload_to='services/', verbose_name='Изображение/иконка')
+    image = models.ImageField(
+        upload_to='services/', verbose_name='Изображение/иконка',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
     advantages = models.TextField(blank=True, verbose_name='Преимущества (по одному на строку)')
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO Title')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO Description')
@@ -47,7 +56,13 @@ class Service(models.Model):
 
 class ServicePhoto(models.Model):
     service = models.ForeignKey(Service, related_name='photos', on_delete=models.CASCADE, verbose_name='Услуга')
-    image = models.ImageField(upload_to='service_photos/', verbose_name='Фото примера работы')
+    image = models.ImageField(
+        upload_to='service_photos/', verbose_name='Фото примера работы',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
     title = models.CharField(max_length=255, blank=True, verbose_name='Название фото')
     description = models.TextField(blank=True, verbose_name='Описание фото')
     order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
@@ -62,7 +77,13 @@ class ServicePhoto(models.Model):
 
 class ServiceVideo(models.Model):
     service = models.ForeignKey(Service, related_name='videos', on_delete=models.CASCADE, verbose_name='Услуга')
-    video = models.FileField(upload_to='service_videos/', verbose_name='Видео примера работы')
+    video = models.FileField(
+        upload_to='service_videos/', verbose_name='Видео примера работы',
+        validators=[
+            FileExtensionValidator(['mp4', 'webm']),
+            MaxFileSizeValidator(MAX_VIDEO_UPLOAD_BYTES, message='Максимальный размер видео — 50 МБ.'),
+        ],
+    )
     title = models.CharField(max_length=255, blank=True, verbose_name='Название видео')
     description = models.TextField(blank=True, verbose_name='Описание видео')
     order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')

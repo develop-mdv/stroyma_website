@@ -1,22 +1,27 @@
 import logging
 from uuid import UUID
 
-from django.shortcuts import render, redirect, get_object_or_404
-from products.models import Order, Cart, CartItem
-from products.views import merge_session_cart_to_user_cart
-from .forms import RegisterForm, LoginForm, CustomUserChangeForm
-from django.contrib.auth import login, authenticate, logout
+from django.conf import settings
 from django.contrib import messages
-from .decorators import custom_login_required
+from django.contrib.auth import login, logout
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+from django.db import transaction
 from django.db.models import Count, F, Sum
 from django.http import JsonResponse
-from accounts.models import UserProfile
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
-from django.urls import reverse
+from django_ratelimit.decorators import ratelimit
+
+from products.models import Cart, CartItem, Order
+from products.views import merge_session_cart_to_user_cart
+
+from .decorators import custom_login_required
+from .forms import CustomPasswordResetForm, CustomSetPasswordForm, CustomUserChangeForm, LoginForm, RegisterForm
+from .models import UserProfile, get_or_create_profile
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +49,7 @@ def _send_confirmation_email(user, profile, request):
         logger.error('Ошибка отправки письма подтверждения email для %s: %s', user.email, exc)
         return False
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -75,6 +81,7 @@ def register_view(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
+@ratelimit(key='ip', rate='60/h', block=True)
 def confirm_email_view(request, token):
     success = False
     try:
@@ -108,6 +115,7 @@ def confirm_email_view(request, token):
 
     return render(request, 'accounts/email_confirmation.html', {'success': success})
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def login_view(request):
     if request.user.is_authenticated:
         messages.info(request, "Вы уже авторизованы.")
@@ -115,16 +123,13 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            user = form.get_user()
             if user is not None:
                 login(request, user)
                 merge_session_cart_to_user_cart(request)
-                messages.info(request, f"Вы вошли как {username}.")
+                messages.info(request, f"Вы вошли как {user.get_username()}.")
                 return redirect("product_list")
-            else:
-                messages.error(request, "Неверный логин или пароль.")
+            messages.error(request, "Неверный логин или пароль.")
         else:
             messages.error(request, "Неверные данные формы.")
     else:
@@ -149,7 +154,8 @@ def profile_view(request):
         )
         .order_by('-created_at')
     )
-    email_warning = not request.user.profile.email_confirmed
+    profile = get_or_create_profile(request.user)
+    email_warning = not profile.email_confirmed
     return render(request, 'accounts/profile.html', {
         'orders': orders,
         'email_warning': email_warning,
@@ -179,8 +185,9 @@ def edit_profile(request):
     return render(request, 'accounts/edit_profile.html', {'form': form})
 
 @custom_login_required
+@ratelimit(key='ip', rate='3/m', block=True)
 def resend_confirmation(request):
-    profile = request.user.profile
+    profile = get_or_create_profile(request.user)
     if profile.email_confirmed:
         messages.info(request, "Ваш email уже подтверждён.")
         return redirect('profile')
@@ -200,36 +207,73 @@ def resend_confirmation(request):
 
 @custom_login_required
 @require_POST
+@ratelimit(key='ip', rate='20/m', method='POST', block=True)
 def reorder_view(request, order_id):
-    """Создает новый заказ на основе существующего"""
+    """Копирует позиции заказа в корзину пользователя (доступно при любом остатке на складе)."""
     try:
-        # Получаем исходный заказ
-        original_order = get_object_or_404(Order, id=order_id, user=request.user)
-        
-        # Создаем или получаем корзину пользователя
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        
-        # Очищаем текущую корзину
-        cart.items.all().delete()
-        
-        # Добавляем товары из оригинального заказа в корзину
-        for item in original_order.items.all():
-            # Если товар еще доступен
-            if item.product.stock > 0:
-                CartItem.objects.create(
-                    cart=cart,
-                    product=item.product,
-                    quantity=min(item.quantity, item.product.stock)  # Учитываем доступный остаток
+        with transaction.atomic():
+            original_order = (
+                Order.objects.filter(id=order_id, user=request.user)
+                .first()
+            )
+            if not original_order:
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Заказ не найден или нет доступа.',
+                    },
+                    status=404,
                 )
-        
-        # Перенаправляем пользователя на страницу корзины
-        return JsonResponse({
-            'success': True,
-            'redirect_url': reverse('view_cart')
-        })
-    
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=400)
+            cart, _created = Cart.objects.get_or_create(user=request.user)
+            cart.items.all().delete()
+            order_items = list(
+                original_order.items.select_related('product').all()
+            )
+            for item in order_items:
+                existing = cart.items.filter(product_id=item.product_id).first()
+                if existing:
+                    existing.quantity += item.quantity
+                    existing.save(update_fields=['quantity'])
+                else:
+                    CartItem.objects.create(
+                        cart=cart,
+                        product=item.product,
+                        quantity=item.quantity,
+                    )
+        return JsonResponse(
+            {
+                'success': True,
+                'redirect_url': reverse('view_cart'),
+            }
+        )
+    except Exception:
+        logger.exception(
+            'reorder_view failed for user=%s order_id=%s',
+            request.user.pk,
+            order_id,
+        )
+        return JsonResponse(
+            {
+                'success': False,
+                'message': 'Не удалось обновить корзину. Попробуйте снова.',
+            },
+            status=400,
+        )
+
+
+from django.contrib.auth import views as auth_views  # noqa: E402
+
+
+@method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True), name='dispatch')
+class RateLimitedPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'accounts/password_reset.html'
+    form_class = CustomPasswordResetForm
+    email_template_name = 'accounts/email/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+
+@method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True), name='dispatch')
+class RateLimitedPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'accounts/password_reset_confirm.html'
+    form_class = CustomSetPasswordForm
+    success_url = reverse_lazy('password_reset_complete')

@@ -10,11 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
+
+from csp.constants import NONE, SELF, UNSAFE_EVAL, UNSAFE_INLINE
 from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# URL админки (без ведущего слеша, со слешем в конце), например "admin/" или "secret-path/"
+ADMIN_URL = config('ADMIN_URL', default='admin/').strip()
+if not ADMIN_URL:
+    ADMIN_URL = 'admin/'
+if not ADMIN_URL.endswith('/'):
+    ADMIN_URL = ADMIN_URL + '/'
+
+LOGS_DIR = BASE_DIR / 'logs'
+try:
+    LOGS_DIR.mkdir(exist_ok=True)
+except OSError:
+    pass
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,6 +38,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+# Старые ключи при ротации SECRET_KEY (через запятую в .env, без пробелов)
+SECRET_KEY_FALLBACKS = [k for k in config('SECRET_KEY_FALLBACKS', default='', cast=Csv()) if k]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
@@ -40,6 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.sitemaps',  # Добавляем для поддержки sitemap
+    'axes',
+    'csp',
     'mptt',  # Добавлено для поддержки иерархических категорий
     'django_filters',  # Добавлено для фильтрации
     'rangefilter',  # Добавлено для фильтрации по диапазону дат
@@ -53,15 +73,23 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Добавлен для поддержки локализации
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # После CommonMiddleware (рекомендация Django)
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'stroyma.urls'
+
+# Аутентификация: django-axes (брутфорс) + стандартный backend
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 TEMPLATES = [
     {
@@ -106,6 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 10},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -135,6 +164,21 @@ USE_I18N = True  # Включено для поддержки интернаци
 USE_L10N = True  # Включено для локализованных форматов (даты, числа и т.д.)
 USE_TZ = True
 
+# Сессия и CSRF
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False
+
+# Лимиты размера запроса (видео в админке — до 50 МБ, см. stroyma.validators)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
+
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -158,11 +202,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+# Сек: не крутить весь HTTP-запрос, если SMTP недоступен (локальная разработка, файрвол)
+EMAIL_TIMEOUT = int(config('EMAIL_TIMEOUT', default='20'))
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+# Куда слать уведомления о новых заказах и заявках (пусто = EMAIL_HOST_USER)
+ORDER_NOTIFY_EMAIL = (config('ORDER_NOTIFY_EMAIL', default='') or '').strip() or EMAIL_HOST_USER
 
 # Настройки Jazzmin (для улучшения интерфейса админ-панели)
 JAZZMIN_SETTINGS = {
@@ -276,8 +325,91 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_REFERRER_POLICY = 'same-origin'
     X_FRAME_OPTIONS = 'DENY'
+else:
+    # Локальная разработка: cookie без secure
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+# Content-Security-Policy (публичный фронт: Tailwind CDN, Google Fonts, cdnjs)
+_csp_admin_prefix = '/' + ADMIN_URL.rstrip('/').lstrip('/') + '/'
+CONTENT_SECURITY_POLICY = {
+    'EXCLUDE_URL_PREFIXES': [_csp_admin_prefix],
+    'DIRECTIVES': {
+        'default-src': [SELF],
+        'script-src': [SELF, 'https://cdn.tailwindcss.com', UNSAFE_INLINE, UNSAFE_EVAL],
+        'style-src': [
+            SELF,
+            UNSAFE_INLINE,
+            'https://fonts.googleapis.com',
+            'https://cdnjs.cloudflare.com',
+        ],
+        'font-src': [SELF, 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+        'img-src': [SELF, 'data:', 'https:'],
+        'connect-src': [SELF],
+        # Виджеты Яндекс.Карт (iframe на contact.html и др.); без frame-src падает в default-src 'self'
+        'frame-src': [
+            SELF,
+            'https://yandex.ru',
+            'https://yandex.com',
+        ],
+        'frame-ancestors': [NONE],
+        'form-action': [SELF],
+        'base-uri': [SELF],
+    },
+}
+
+# django-axes: блокировка после N неудачных попыток входа
+AXES_FAILURE_LIMIT = config('AXES_FAILURE_LIMIT', default=5, cast=int)
+AXES_COOLOFF_TIME = timedelta(hours=config('AXES_COOLOFF_HOURS', default=1, cast=int))
+AXES_LOCKOUT_PARAMETERS = [['username', 'ip_address']]
+
+# django-ratelimit использует default cache
+RATELIMIT_USE_CACHE = 'default'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'app_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': str(LOGS_DIR / 'app.log'),
+            'maxBytes': 2 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': str(LOGS_DIR / 'errors.log'),
+            'maxBytes': 2 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'INFO',
+        },
+        'django.security': {
+            'handlers': ['app_file', 'error_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
 
 # Настройки для кеширования
 CACHES = {

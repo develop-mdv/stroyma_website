@@ -2,11 +2,14 @@ import time
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 from django.core.cache import cache
+
+from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES
 
 class Category(MPTTModel):
     """
@@ -21,7 +24,13 @@ class Category(MPTTModel):
     description = models.TextField(blank=True, verbose_name='Описание категории')
     meta_title = models.CharField(max_length=255, blank=True, verbose_name='SEO заголовок')
     meta_description = models.CharField(max_length=255, blank=True, verbose_name='SEO описание')
-    image = models.ImageField(upload_to='category_images/', blank=True, null=True, verbose_name='Изображение категории')
+    image = models.ImageField(
+        upload_to='category_images/', blank=True, null=True, verbose_name='Изображение категории',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
     alt_text = models.CharField(max_length=255, blank=True, verbose_name='Альтернативный текст изображения')
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='Дата обновления')
 
@@ -91,7 +100,13 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField(verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
-    image = models.ImageField(upload_to='products/', verbose_name='Изображение')
+    image = models.ImageField(
+        upload_to='products/', verbose_name='Изображение',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
     stock = models.PositiveIntegerField(default=0, verbose_name='Остаток на складе')
     rating = models.PositiveIntegerField(default=5, verbose_name='Рейтинг')
     categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категории', blank=True)
@@ -381,7 +396,13 @@ class BaseTexture(models.Model):
     и выбора при создании/редактировании товаров.
     """
     name = models.CharField(max_length=100, verbose_name='Название текстуры')
-    image = models.ImageField(upload_to='base_textures/', verbose_name='Изображение текстуры')
+    image = models.ImageField(
+        upload_to='base_textures/', verbose_name='Изображение текстуры',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
 
     class Meta:
         verbose_name = "Базовая текстура"
@@ -396,7 +417,13 @@ class ProductImage(models.Model):
     позволяет создавать галерею изображений для каждого товара.
     """
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name='Товар')
-    image = models.ImageField(upload_to='products/gallery/', verbose_name='Изображение')
+    image = models.ImageField(
+        upload_to='products/gallery/', verbose_name='Изображение',
+        validators=[
+            FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
+            MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
+        ],
+    )
     title = models.CharField(max_length=255, blank=True, verbose_name='Название')
     order = models.PositiveIntegerField(default=0, verbose_name='Порядок')
 

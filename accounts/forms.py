@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
-from accounts.models import UserProfile
+from accounts.models import UserProfile, get_or_create_profile
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -61,9 +61,10 @@ class CustomUserChangeForm(UserChangeForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green  '
         # Заполняем начальные значения для полей phone и delivery_address
-        if self.instance and hasattr(self.instance, 'profile'):
-            self.fields['phone'].initial = self.instance.profile.phone
-            self.fields['delivery_address'].initial = self.instance.profile.delivery_address
+        if self.instance and self.instance.pk:
+            profile = get_or_create_profile(self.instance)
+            self.fields['phone'].initial = profile.phone
+            self.fields['delivery_address'].initial = profile.delivery_address
         # Удаляем ненужные поля
         self.fields.pop('is_active', None)
         self.fields.pop('is_staff', None)

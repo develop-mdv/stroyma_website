@@ -68,7 +68,7 @@
     </button>
 </div>
 
-<!-- Layout Контейнер с Сайдбаром -->
+<!-- Layout: min-w-0 у flex-ребёнка — иначе сетка товаров не сжимается и ломается рядом с сайдбаром -->
 <div class="flex flex-col md:flex-row gap-6 lg:gap-8 items-start relative">
 
     <!-- Сайдбар с фильтрами -->
@@ -173,12 +173,10 @@
         </form>
     </aside>
 
-    <!-- Основной контент (Товары) -->
-    <main class="w-full flex-grow">
-        <div id="search-results">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
-                {% include 'products/search_results.html' with products=page_obj %}
-            </div>
+    <!-- Основной контент: одна сетка только в search_results.html (двойной grid ломал вёрстку — весь блок садился в 1 колонку) -->
+    <main class="w-full min-w-0 flex-1">
+        <div id="search-results" class="w-full min-w-0">
+            {% include 'products/search_results.html' with products=page_obj %}
             <div class="mt-10 text-center">
                 <button id="load-more" class="hidden bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-3 px-8 rounded-xl transition-colors inline-block w-auto">
                     Показать ещё

@@ -1,0 +1,11 @@
+{% extends "products/base.html" %}
+{% block title %}Страница не найдена — СтройМа{% endblock %}
+{% block content %}
+<main class="pt-24 pb-16 min-h-[50vh]">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+        <h1 class="text-4xl font-display font-bold text-deep-green mb-4">404</h1>
+        <p class="text-gray-600 mb-8">Такой страницы нет. Проверьте адрес или перейдите в каталог.</p>
+        <a href="{% url 'product_list' %}" class="inline-block bg-deep-green text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90">На главную</a>
+    </div>
+</main>
+{% endblock %}

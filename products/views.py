@@ -1,20 +1,37 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Order, OrderItem, OrderContact, Cart, CartItem, FacadeColor, BaseTexture, Category
-from .forms import OrderForm, SearchForm, ContactForm
-from django.http import JsonResponse
-from django.template.loader import render_to_string
-from django.db import transaction
-from django.db.models import Q, Max, Min
+import logging
+import threading
+
+from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.utils.html import strip_tags
-import logging
-from django.views.generic import DetailView, TemplateView
-from .filters import ProductFilter
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
+from django.db import transaction
+from django.db.models import Q, Max, Min
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.html import strip_tags
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import DetailView, TemplateView
+from django_ratelimit.decorators import ratelimit
+
+from .filters import ProductFilter
+from .forms import ContactForm, OrderForm, SearchForm
+from .models import (
+    BaseTexture,
+    Cart,
+    CartItem,
+    Category,
+    FacadeColor,
+    Order,
+    OrderContact,
+    OrderItem,
+    Product,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def cart_total_quantity(request):
@@ -30,22 +47,34 @@ def cart_total_quantity(request):
     except (TypeError, ValueError):
         return 0
 
-logger = logging.getLogger(__name__)
-EMAIL_TO_SEND = 'ivanverovitch@yandex.ru'
+def _order_notify_recipient():
+    return getattr(settings, 'ORDER_NOTIFY_EMAIL', None) or settings.EMAIL_HOST_USER
+
+
+def _sanitize_mail_subject_line(value: str, max_len: int = 200) -> str:
+    return ''.join(value.splitlines()).strip()[:max_len]
+
 
 def get_or_create_cart(request):
-    if request.user.is_authenticated:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        # Синхронизация сессии с базой данных при входе
-        session_cart = request.session.get('cart', {})
-        for product_id, quantity in session_cart.items():
-            product = get_object_or_404(Product, pk=product_id)
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-            cart_item.quantity = quantity
-            cart_item.save()
+    if not request.user.is_authenticated:
+        return None
+    cart, _created = Cart.objects.get_or_create(user=request.user)
+    session_cart = request.session.get('cart', {}) or {}
+    for product_id, quantity in list(session_cart.items()):
+        product = Product.objects.filter(pk=product_id).first()
+        if not product:
+            continue
+        try:
+            qty = int(quantity)
+        except (TypeError, ValueError):
+            continue
+        if qty < 1:
+            continue
+        cart_item, _c = CartItem.objects.get_or_create(cart=cart, product=product)
+        cart_item.quantity = qty
+        cart_item.save()
+    if session_cart:
         request.session['cart'] = {}
-    else:
-        cart = None
     return cart
 
 def product_list(request):
@@ -115,6 +144,8 @@ def product_list(request):
         'selected_categories': selected_categories,
     })
 
+
+@ratelimit(key='ip', rate='30/m', block=True)
 def search_ajax(request):
     query = request.GET.get('query', '').lower()
     price_min = request.GET.get('price_min', None)
@@ -193,15 +224,14 @@ def quick_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/quick_view.html', {'product': product})
 
+@ratelimit(key='ip', rate='30/m', method='POST', block=True)
 def add_to_cart(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-
     is_ajax = (
         request.headers.get('x-requested-with') == 'XMLHttpRequest'
         or 'application/json' in request.headers.get('Accept', '')
     )
-
     if request.method != 'POST':
+        product = get_object_or_404(Product, pk=pk)
         if is_ajax:
             return JsonResponse({'success': False, 'message': 'Метод не разрешён.'}, status=405)
         return redirect(product.get_absolute_url())
@@ -213,114 +243,114 @@ def add_to_cart(request, pk):
     if quantity < 1:
         quantity = 1
 
-    if request.user.is_authenticated:
-        cart = get_or_create_cart(request)
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        desired_quantity = quantity if created else cart_item.quantity + quantity
-    else:
-        session_cart = request.session.get('cart', {})
-        key = str(product.pk)
-        desired_quantity = session_cart.get(key, 0) + quantity
+    with transaction.atomic():
+        product = Product.objects.select_for_update().get(pk=pk)
+        if request.user.is_authenticated:
+            cart = get_or_create_cart(request)
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            desired_quantity = quantity if created else cart_item.quantity + quantity
+        else:
+            session_cart = request.session.get('cart', {}) or {}
+            key = str(product.pk)
+            desired_quantity = int(session_cart.get(key, 0) or 0) + quantity
 
-    if desired_quantity > product.stock:
-        message = (f'Доступно только {product.stock} шт. товара «{product.name}».'
-                   if product.stock > 0
-                   else f'Товара «{product.name}» нет в наличии.')
-        if is_ajax:
-            return JsonResponse({'success': False, 'message': message}, status=400)
-        messages.error(request, message)
-        return redirect(product.get_absolute_url())
-
-    if request.user.is_authenticated:
-        cart_item.quantity = desired_quantity
-        cart_item.save()
-    else:
-        session_cart[key] = desired_quantity
-        request.session['cart'] = session_cart
-        request.session.modified = True
+        if request.user.is_authenticated:
+            cart_item.quantity = desired_quantity
+            cart_item.save()
+        else:
+            session_cart[key] = desired_quantity
+            request.session['cart'] = session_cart
+            request.session.modified = True
 
     cart_item_count = cart_total_quantity(request)
-
     if is_ajax:
         return JsonResponse({
             'success': True,
             'message': f'{product.name} успешно добавлен в корзину',
             'cart_item_count': cart_item_count,
         })
-
     messages.success(request, f'{product.name} добавлен в корзину')
     return redirect('view_cart')
 
+@ratelimit(key='ip', rate='30/m', method='POST', block=True)
 def update_cart(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-
-    if request.method == 'POST':
-        try:
-            quantity = int(request.POST.get('quantity', 1))
-            if quantity <= 0:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Количество должно быть больше 0.',
-                    'current_quantity': 1
-                })
-
-            if quantity > product.stock:
-                return JsonResponse({
-                    'success': False,
-                    'message': f'Доступно только {product.stock} шт.',
-                    'current_quantity': product.stock
-                })
-
-            if request.user.is_authenticated:
-                cart = get_or_create_cart(request)
-                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-                cart_item.quantity = quantity
-                cart_item.save()
-                total_price = sum(item.product.price * item.quantity for item in CartItem.objects.filter(cart=cart))
-            else:
-                cart = request.session.get('cart', {})
-                cart[str(product.pk)] = quantity
-                request.session['cart'] = cart
-                total_price = sum(get_object_or_404(Product, pk=pid).price * qty for pid, qty in cart.items())
-
-            item_total_price = product.price * quantity
-            cart_item_count = cart_total_quantity(request)
-
-            return JsonResponse({
-                'success': True,
-                'item_total_price': float(item_total_price),
-                'total_price': float(total_price),
-                'cart_item_count': cart_item_count,
-            })
-        except ValueError:
-            return JsonResponse({
-                'success': False,
-                'message': 'Недопустимое количество.',
-                'current_quantity': 1
-            })
-
-    return redirect('view_cart')
+    if request.method != 'POST':
+        return redirect('view_cart')
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except ValueError:
+        return JsonResponse({
+            'success': False,
+            'message': 'Недопустимое количество.',
+            'current_quantity': 1
+        })
+    if quantity <= 0:
+        return JsonResponse({
+            'success': False,
+            'message': 'Количество должно быть больше 0.',
+            'current_quantity': 1
+        })
+    with transaction.atomic():
+        product = Product.objects.select_for_update().get(pk=pk)
+        if request.user.is_authenticated:
+            cart = get_or_create_cart(request)
+            cart_item, _ = CartItem.objects.get_or_create(cart=cart, product=product)
+            cart_item.quantity = quantity
+            cart_item.save()
+            total_price = sum(
+                item.product.price * item.quantity
+                for item in CartItem.objects.filter(cart=cart)
+            )
+        else:
+            sc = request.session.get('cart', {}) or {}
+            sc[str(product.pk)] = quantity
+            request.session['cart'] = sc
+            request.session.modified = True
+            total_price = 0
+            for spid, qty in sc.items():
+                p = Product.objects.filter(pk=spid).first()
+                if p:
+                    total_price += p.price * int(qty)
+    item_total_price = product.price * quantity
+    cart_item_count = cart_total_quantity(request)
+    return JsonResponse({
+        'success': True,
+        'item_total_price': float(item_total_price),
+        'total_price': float(total_price),
+        'cart_item_count': cart_item_count,
+    })
 
 def view_cart(request):
     cart_items = []
     total_price = 0
-
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         cart_items = CartItem.objects.filter(cart=cart) if cart else []
         total_price = sum(item.total_price for item in cart_items)
     else:
-        cart = request.session.get('cart', {})
-        for product_id, quantity in cart.items():
-            product = get_object_or_404(Product, pk=product_id)
-            total_item_price = product.price * quantity
+        sc = request.session.get('cart', {}) or {}
+        cleaned = {}
+        for product_id, quantity in sc.items():
+            product = Product.objects.filter(pk=product_id).first()
+            if not product:
+                continue
+            try:
+                qty = int(quantity)
+            except (TypeError, ValueError):
+                continue
+            if qty < 1:
+                continue
+            cleaned[str(product_id)] = qty
+            total_item_price = product.price * qty
             cart_items.append({
                 'product': product,
-                'quantity': quantity,
+                'quantity': qty,
                 'total_price': total_item_price,
             })
             total_price += total_item_price
-
+        if cleaned != sc:
+            request.session['cart'] = cleaned
+            request.session.modified = True
     context = {
         'cart_items': cart_items,
         'total_price': float(total_price),
@@ -342,41 +372,131 @@ def remove_from_cart(request, pk):
     return redirect('view_cart')
 
 def merge_session_cart_to_user_cart(request):
-    session_cart = request.session.get('cart', {})
-    if request.user.is_authenticated and session_cart:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        for product_id, quantity in session_cart.items():
-            product = get_object_or_404(Product, pk=product_id)
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-            cart_item.quantity = quantity
-            cart_item.save()
-        request.session['cart'] = {}
+    session_cart = request.session.get('cart', {}) or {}
+    if not request.user.is_authenticated or not session_cart:
+        return
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    for product_id, quantity in list(session_cart.items()):
+        product = Product.objects.filter(pk=product_id).first()
+        if not product:
+            continue
+        try:
+            qty = int(quantity)
+        except (TypeError, ValueError):
+            continue
+        if qty < 1:
+            continue
+        cart_item, _c = CartItem.objects.get_or_create(cart=cart, product=product)
+        cart_item.quantity = qty
+        cart_item.save()
+    request.session['cart'] = {}
 
-def checkout(request):
-    cart = request.session.get('cart', {}) if not request.user.is_authenticated else get_or_create_cart(request).items.all()
-    if not cart:
-        return redirect('view_cart')
-
-    cart_items = []
-    total_price = 0
-
+def _build_checkout_lines_for_post(request):
+    """Возвращает список (product_id, quantity) для оформления или None, если корзина пуста/некорректна."""
     if request.user.is_authenticated:
-        for item in cart:
-            cart_items.append({
-                'product': item.product,
-                'quantity': item.quantity,
-                'total_price': item.total_price,
-            })
-            total_price += item.total_price
+        cart = get_or_create_cart(request)
+        if not cart:
+            return None
+        rows = list(
+            CartItem.objects.filter(cart=cart).values_list('product_id', 'quantity')
+        )
+        return rows if rows else None
+    sc = request.session.get('cart', {}) or {}
+    out = []
+    for product_id, quantity in sc.items():
+        try:
+            pid = int(product_id)
+            q = int(quantity)
+        except (TypeError, ValueError):
+            continue
+        if q < 1:
+            continue
+        if Product.objects.filter(pk=pid).exists():
+            out.append((pid, q))
+    return out if out else None
+
+
+def _queue_order_notification_email(
+    subject, plain_text, html_message, from_email, notify, order_id
+):
+    def _run():
+        try:
+            send_mail(
+                subject,
+                plain_text,
+                from_email,
+                [notify],
+                html_message=html_message,
+                fail_silently=False,
+            )
+        except Exception as e:
+            logger.error('Ошибка при отправке email о заказе #%s: %s', order_id, e)
+
+    threading.Thread(target=_run, daemon=True).start()
+
+
+@ratelimit(key='ip', rate='20/m', method='POST', block=True)
+def checkout(request):
+    if request.user.is_authenticated:
+        cart = get_or_create_cart(request)
+        items_qs = (
+            CartItem.objects.filter(cart=cart).select_related('product')
+            if cart
+            else CartItem.objects.none()
+        )
+        if not items_qs.exists():
+            if request.method == 'GET':
+                if request.session.get('last_order_id'):
+                    return redirect('checkout_success')
+                return redirect('view_cart')
+            cart_items = []
+            total_price = 0
+        else:
+            cart_items = [
+                {
+                    'product': item.product,
+                    'quantity': item.quantity,
+                    'total_price': item.total_price,
+                }
+                for item in items_qs
+            ]
+            total_price = sum(x['total_price'] for x in cart_items)
     else:
-        for product_id, quantity in cart.items():
-            product = get_object_or_404(Product, pk=product_id)
-            cart_items.append({
-                'product': product,
-                'quantity': quantity,
-                'total_price': product.price * quantity,
-            })
-            total_price += product.price * quantity
+        sc = request.session.get('cart', {}) or {}
+        if not sc:
+            if request.method == 'GET':
+                if request.session.get('last_order_id'):
+                    return redirect('checkout_success')
+                return redirect('view_cart')
+            cart_items = []
+            total_price = 0
+        else:
+            cart_items = []
+            total_price = 0
+            for product_id, quantity in sc.items():
+                product = Product.objects.filter(pk=product_id).first()
+                if not product:
+                    continue
+                try:
+                    q = int(quantity)
+                except (TypeError, ValueError):
+                    continue
+                if q < 1:
+                    continue
+                line_total = product.price * q
+                cart_items.append(
+                    {
+                        'product': product,
+                        'quantity': q,
+                        'total_price': line_total,
+                    }
+                )
+                total_price += line_total
+        if not cart_items:
+            if request.method == 'GET':
+                if request.session.get('last_order_id'):
+                    return redirect('checkout_success')
+                return redirect('view_cart')
 
     if request.method == 'POST':
         form = OrderForm(request.POST, user=request.user)
@@ -388,37 +508,52 @@ def checkout(request):
             delivery_address = form.cleaned_data['address']
             comment = form.cleaned_data.get('comment', '') or ''
 
-            with transaction.atomic():
-                order = Order.objects.create(
-                    user=request.user if request.user.is_authenticated else None,
-                    status='new'
-                )
-                OrderContact.objects.create(
-                    order=order,
-                    first_name=user_name,
-                    last_name=user_lastname,
-                    email=user_email,
-                    phone=user_phone,
-                    address=delivery_address,
-                    comment=comment,
-                )
+            lines = _build_checkout_lines_for_post(request)
+            if not lines:
+                messages.error(request, 'Корзина пуста или устарела. Оформите заказ снова.')
+                return redirect('view_cart')
 
-                if request.user.is_authenticated:
-                    for item in cart:
-                        OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-                    CartItem.objects.filter(cart__user=request.user).delete()
-                else:
-                    for product_id, quantity in cart.items():
-                        product = get_object_or_404(Product, pk=product_id)
-                        OrderItem.objects.create(order=order, product=product, quantity=quantity)
-                    request.session['cart'] = {}
-                    request.session.modified = True
+            try:
+                with transaction.atomic():
+                    order = Order.objects.create(
+                        user=request.user if request.user.is_authenticated else None,
+                        status='new',
+                    )
+                    OrderContact.objects.create(
+                        order=order,
+                        first_name=user_name,
+                        last_name=user_lastname,
+                        email=user_email,
+                        phone=user_phone,
+                        address=delivery_address,
+                        comment=comment,
+                    )
+                    for product_id, qty in sorted(lines, key=lambda t: t[0]):
+                        product = Product.objects.select_for_update().get(pk=product_id)
+                        OrderItem.objects.create(order=order, product=product, quantity=qty)
+                        product.stock = max(0, product.stock - qty)
+                        product.save(update_fields=['stock'])
+                    if request.user.is_authenticated:
+                        CartItem.objects.filter(cart__user=request.user).delete()
+                    else:
+                        request.session['cart'] = {}
+                        request.session.modified = True
+            except Product.DoesNotExist:
+                messages.error(request, 'В корзине указан несуществующий товар. Обновите корзину.')
+                return redirect('view_cart')
 
             request.session['last_order_id'] = order.id
-
+            email_items = [
+                {
+                    'product': oi.product,
+                    'quantity': oi.quantity,
+                    'total_price': oi.total_price,
+                }
+                for oi in order.items.select_related('product').all()
+            ]
             html_order_summary = render_to_string('products/order_email_template.html', {
-                'items': cart_items,
-                'total_price': total_price,
+                'items': email_items,
+                'total_price': order.total_cost,
                 'user_name': user_name,
                 'user_lastname': user_lastname,
                 'user_email': user_email,
@@ -426,38 +561,28 @@ def checkout(request):
                 'delivery_address': delivery_address,
                 'order': order,
             })
-
             plain_text = strip_tags(html_order_summary)
-            try:
-                send_mail(
-                    f'Новый заказ №{order.id} от {user_name} {user_lastname}',
-                    plain_text,
-                    EMAIL_TO_SEND,
-                    [EMAIL_TO_SEND],
-                    html_message=html_order_summary,
-                    fail_silently=False
-                )
-            except Exception as e:
-                logger.error('Ошибка при отправке email о заказе #%s: %s', order.id, e)
-                messages.warning(
-                    request,
-                    'Заказ оформлен, но уведомление на email отправить не удалось. '
-                    'Мы свяжемся с вами по указанным контактам.'
-                )
-
+            notify = _order_notify_recipient()
+            _queue_order_notification_email(
+                _sanitize_mail_subject_line(
+                    f'Новый заказ №{order.id} от {user_name} {user_lastname}'
+                ),
+                plain_text,
+                html_order_summary,
+                settings.DEFAULT_FROM_EMAIL,
+                notify,
+                order.id,
+            )
             return redirect('checkout_success')
-        else:
-            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
+        messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = OrderForm(user=request.user)
 
-    context = {
+    return render(request, 'products/checkout.html', {
         'form': form,
         'cart_items': cart_items,
         'total_price': total_price,
-    }
-
-    return render(request, 'products/checkout.html', context)
+    })
 
 def checkout_success(request):
     order = None
@@ -466,36 +591,38 @@ def checkout_success(request):
         order = Order.objects.filter(pk=order_id).first()
     return render(request, 'products/checkout_success.html', {'order': order})
 
+@ratelimit(key='ip', rate='20/m', method='POST', block=True)
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
-            name += f'|email:{email}'
-
+            name_with_email = f'{name}|email:{email}'
             message = form.cleaned_data['message']
-
+            notify = _order_notify_recipient()
             try:
                 send_mail(
-                    f'Новое сообщение от {name}',
+                    _sanitize_mail_subject_line(f'Новое сообщение от {name_with_email}'),
                     message,
-                    EMAIL_TO_SEND,
-                    [EMAIL_TO_SEND],
+                    settings.DEFAULT_FROM_EMAIL,
+                    [notify],
                     fail_silently=False
                 )
                 messages.success(request, 'Ваше сообщение успешно отправлено!')
-            except Exception as e:
-                logger.error(f'Ошибка при отправке email: {str(e)}')
-                messages.error(request, f'Произошла ошибка при отправке сообщения: {str(e)}')
+            except Exception:
+                logger.exception('Ошибка при отправке email из формы контактов')
+                messages.error(
+                    request,
+                    'Произошла ошибка при отправке сообщения. Попробуйте позже.',
+                )
             return redirect('contact')
     else:
         form = ContactForm()
 
-    context = {
+    return render(request, 'products/contact.html', {
         'form': form,
-    }
-    return render(request, 'products/contact.html', context)
+    })
 
 def color_selection(request):
     facade_colors = FacadeColor.objects.all()

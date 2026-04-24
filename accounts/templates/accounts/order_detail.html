@@ -22,7 +22,7 @@
                 <i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email
             </a>
             {% endif %}
-            <button id="reorder-btn" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
+            <button type="button" id="reorder-btn" data-reorder-url="{% url 'reorder' order_id=order.id %}" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
                 <span class="btn-text flex items-center"><i class="fas fa-redo mr-2 opacity-70 group-hover:opacity-100 transition-opacity"></i> Повторить</span>
             </button>
         </div>
@@ -179,59 +179,135 @@
 
 {% block scripts %}
 <script>
-    $(document).ready(function() {
-        function showNotification(msg, success = true) {
-            var $notifier = $('#email-notifier');
-            var $icon = $notifier.find('i');
-            $('#email-notifier-msg').text(msg);
+(function () {
+    function getCookie(name) {
+        if (!document.cookie) return null;
+        var parts = document.cookie.split(';');
+        for (var i = 0; i < parts.length; i++) {
+            var t = parts[i].trim();
+            if (t.indexOf(name + '=') === 0) {
+                return decodeURIComponent(t.slice(name.length + 1));
+            }
+        }
+        return null;
+    }
 
-            if (success) {
-                $icon.attr('class', 'fas fa-check-circle text-green-400  mr-3 text-lg');
-            } else {
-                $icon.attr('class', 'fas fa-exclamation-circle text-red-400  mr-3 text-lg');
+    function showNotification(msg, success) {
+        var n = document.getElementById('email-notifier');
+        if (!n) { window.alert(msg); return; }
+        var icon = n.querySelector('i');
+        var span = document.getElementById('email-notifier-msg');
+        if (span) span.textContent = msg;
+        if (icon) {
+            icon.setAttribute('class', success
+                ? 'fas fa-check-circle text-green-400 mr-3 text-lg'
+                : 'fas fa-exclamation-circle text-red-400 mr-3 text-lg');
+        }
+        n.classList.remove('translate-y-32', 'opacity-0');
+        n.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(function () {
+            n.classList.remove('translate-y-0', 'opacity-100');
+            n.classList.add('translate-y-32', 'opacity-0');
+        }, 4000);
+    }
+
+    function bindReorder() {
+        var btn = document.getElementById('reorder-btn');
+        if (!btn) return;
+        var url = btn.getAttribute('data-reorder-url');
+        if (!url) return;
+
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (btn.getAttribute('aria-busy') === 'true') return;
+
+            var hidden = document.querySelector('input[name=csrfmiddlewaretoken]');
+            var csrf = (hidden && hidden.value) || getCookie('csrftoken');
+            if (!csrf) {
+                showNotification('Обновите страницу (не найден токен CSRF) и войдите снова.', false);
+                return;
             }
 
-            $notifier.removeClass('translate-y-32 opacity-0').addClass('translate-y-0 opacity-100');
+            var btnText = btn.querySelector('.btn-text');
+            var original = btnText ? btnText.innerHTML : '';
+            btn.setAttribute('aria-busy', 'true');
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            if (btnText) {
+                btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Формирование...';
+            }
 
-            setTimeout(function() {
-                $notifier.removeClass('translate-y-0 opacity-100').addClass('translate-y-32 opacity-0');
-            }, 4000);
-        }
-        // Reorder button logic
-        $('#reorder-btn').click(function(e) {
-            e.preventDefault();
-            var $btn = $(this);
-            var $btnText = $btn.find('.btn-text');
-            var originalContent = $btnText.html();
+            var formData = new FormData();
+            formData.append('csrfmiddlewaretoken', csrf);
+            var willRedirect = false;
 
-            $btn.prop('disabled', true).addClass('opacity-70 cursor-not-allowed');
-            $btnText.html('<i class="fas fa-spinner fa-spin mr-2"></i> Формирование...');
-
-            $.ajax({
-                url: '{% url "reorder" order_id=order.id %}',
+            fetch(url, {
                 method: 'POST',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                body: formData,
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRFToken': csrf,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
                 },
-                success: function(response) {
-                    if (response.success) {
-                        $btn.removeClass('opacity-70 cursor-not-allowed').addClass('bg-green-600 border-green-600');
-                        $btnText.html('<i class="fas fa-check mr-2"></i> Добавлено в корзину!');
-                        showNotification('Товары из заказа добавлены в корзину!');
-                        
-                        setTimeout(function() {
-                            window.location.href = response.redirect_url;
-                        }, 1500);
+            })
+            .then(function (r) {
+                return r.text().then(function (text) {
+                    var data = null;
+                    if (text) {
+                        try { data = JSON.parse(text); } catch (err) { data = null; }
                     }
-                },
-                error: function(xhr) {
-                    $btn.prop('disabled', false).removeClass('opacity-70 cursor-not-allowed');
-                    $btnText.html(originalContent);
-                    showNotification('Ошибка при повторении заказа', false);
+                    return { status: r.status, ok: r.ok, data: data };
+                });
+            })
+            .then(function (res) {
+                if (res.ok && res.data && res.data.success && res.data.redirect_url) {
+                    willRedirect = true;
+                    if (btnText) {
+                        btnText.innerHTML = '<i class="fas fa-check mr-2"></i> Добавлено в корзину!';
+                    }
+                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                    btn.classList.add('bg-green-600', 'border-green-600');
+                    showNotification('Товары из заказа добавлены в корзину!', true);
+                    setTimeout(function () {
+                        window.location.href = res.data.redirect_url;
+                    }, 400);
+                    return;
+                }
+                var errMsg = (res.data && res.data.message) || 'Не удалось повторить заказ. Попробуйте снова.';
+                if (res.status === 403) {
+                    errMsg = 'Сессия устарела или много запросов (CSRF / лимит). Обновите страницу.';
+                } else if (res.status === 404) {
+                    errMsg = (res.data && res.data.message) || 'Заказ не найден.';
+                } else if (res.status === 429) {
+                    errMsg = 'Слишком много попыток. Подождите минуту и нажмите снова.';
+                } else if (res.status === 0) {
+                    errMsg = 'Нет ответа от сервера. Проверьте сеть.';
+                }
+                showNotification(errMsg, false);
+            })
+            .catch(function () {
+                showNotification('Ошибка сети. Проверьте подключение и обновите страницу.', false);
+            })
+            .finally(function () {
+                if (willRedirect) {
+                    return;
+                }
+                btn.setAttribute('aria-busy', 'false');
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                if (btnText) {
+                    btnText.innerHTML = original;
                 }
             });
         });
+    }
 
-    });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindReorder);
+    } else {
+        bindReorder();
+    }
+})();
 </script>
 {% endblock %}

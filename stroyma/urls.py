@@ -26,8 +26,12 @@ from .admin import StroymAdminSite
 admin.AdminSite = StroymAdminSite
 admin.site.__class__ = StroymAdminSite
 
+handler404 = 'stroyma.views.handler404'
+handler500 = 'stroyma.views.handler500'
+handler403 = 'stroyma.views.handler403'
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path('', include('products.urls')),
     path('accounts/', include('accounts.urls')),
     path('services/', include('services.urls')),

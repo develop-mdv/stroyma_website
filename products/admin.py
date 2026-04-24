@@ -22,6 +22,9 @@ from colorfield.widgets import ColorWidget
 from accounts.models import UserProfile
 from django.core.cache import cache
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Ресурсы для импорта/экспорта
 class ProductResource(resources.ModelResource):
@@ -235,7 +238,7 @@ class ProductAdmin(ImportExportModelAdmin):
                 cache.set(cache_key, popularity_data, settings.PRODUCT_CACHE_TIMEOUT)
             except Exception as e:
                 # В случае ошибки кеширования просто логируем и продолжаем
-                print(f"Ошибка кеширования популярности товара: {e}")
+                logger.warning('Ошибка кеширования популярности товара: %s', e)
         
         if popularity_data.get('orders_count', 0) > 0:
             return format_html(
@@ -581,11 +584,11 @@ class OrderAdmin(ImportExportModelAdmin):
             try:
                 cache.set(cache_key, chart_data, settings.DATA_CACHE_TIMEOUT)
             except Exception as e:
-                print(f"Ошибка кеширования данных графика: {e}")
+                logger.warning('Ошибка кеширования данных графика: %s', e)
             
             return JsonResponse(chart_data)
         except Exception as e:
-            print(f"Ошибка в sales_chart_data: {str(e)}")
+            logger.exception('Ошибка в sales_chart_data: %s', e)
             return JsonResponse({
                 'error': 'Произошла ошибка при получении данных графика продаж',
                 'details': str(e),
@@ -753,11 +756,11 @@ class OrderAdmin(ImportExportModelAdmin):
             try:
                 cache.set(cache_key, chart_data, settings.POPULAR_PRODUCTS_TIMEOUT)
             except Exception as e:
-                print(f"Ошибка кеширования данных популярных товаров: {e}")
+                logger.warning('Ошибка кеширования данных популярных товаров: %s', e)
                 
             return JsonResponse(chart_data)
         except Exception as e:
-            print(f"Ошибка в popular_products_view: {str(e)}")
+            logger.exception('Ошибка в popular_products_view: %s', e)
             return JsonResponse({
                 'error': 'Произошла ошибка при получении данных о популярных товарах',
                 'details': str(e),

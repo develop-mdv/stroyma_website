@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
+from accounts.models import get_or_create_profile
+
 class OrderForm(forms.Form):
     first_name = forms.CharField(max_length=100, label="Имя")
     last_name = forms.CharField(max_length=100, label="Фамилия")
@@ -31,9 +33,9 @@ class OrderForm(forms.Form):
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
-            if hasattr(user, 'profile'):
-                self.fields['phone'].initial = user.profile.phone
-                self.fields['address'].initial = user.profile.delivery_address
+            profile = get_or_create_profile(user)
+            self.fields['phone'].initial = profile.phone
+            self.fields['address'].initial = profile.delivery_address
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='Поиск', max_length=100, required=False)
