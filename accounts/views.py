@@ -46,7 +46,7 @@ def _send_confirmation_email(user, profile, request):
         )
         return True
     except Exception as exc:
-        logger.error('Ошибка отправки письма подтверждения email для %s: %s', user.email, exc)
+        logger.error('Ошибка отправки письма подтверждения email: %s', exc)
         return False
 
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)

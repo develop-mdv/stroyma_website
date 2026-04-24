@@ -1,0 +1,27 @@
+{% extends 'products/base.html' %}
+{% block title %}Оплата - ООО «СТРОЙМА»{% endblock %}
+{% block content %}
+
+<nav class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6 md:mb-12 flex items-center gap-2">
+  <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-900 transition-colors py-2">Главная</a>
+  <span class="text-gray-300">/</span>
+  <span class="text-gray-900 py-2">Оплата</span>
+</nav>
+
+<div class="max-w-4xl">
+  <h1 class="font-black font-display text-gray-900 leading-[1.1] tracking-tighter uppercase mb-6 break-words" style="font-size:clamp(2rem,7vw,4rem)">
+    Оплата
+  </h1>
+  <div class="space-y-6 text-gray-600 text-base md:text-lg leading-loose font-light">
+    <p>На стенде отображаются общие условия оплаты. Финальные способы оплаты необходимо подтвердить по фактическим договорам/эквайрингу.</p>
+    <ul class="space-y-3">
+      <li>— Оплата по счёту для юридических лиц (B2B).</li>
+      <li>— Оплата наличными/картой при получении (если применимо).</li>
+    </ul>
+    <p>
+      Подробные условия продажи см. в <a class="text-deep-green font-semibold hover:underline" href="{% url 'offer' %}">публичной оферте</a>.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

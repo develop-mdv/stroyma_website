@@ -54,6 +54,17 @@ def _order_notify_recipient():
 def _sanitize_mail_subject_line(value: str, max_len: int = 200) -> str:
     return ''.join(value.splitlines()).strip()[:max_len]
 
+def _mask_email_for_log(value: str) -> str:
+    if not value:
+        return ''
+    s = str(value).strip()
+    if '@' not in s:
+        return s[:2] + '***'
+    local, domain = s.split('@', 1)
+    safe_local = (local[:2] + '***') if local else '***'
+    safe_domain = (domain[:1] + '***') if domain else '***'
+    return f'{safe_local}@{safe_domain}'
+
 
 def get_or_create_cart(request):
     if not request.user.is_authenticated:
@@ -565,7 +576,7 @@ def checkout(request):
             notify = _order_notify_recipient()
             _queue_order_notification_email(
                 _sanitize_mail_subject_line(
-                    f'Новый заказ №{order.id} от {user_name} {user_lastname}'
+                    f'Новый заказ №{order.id}'
                 ),
                 plain_text,
                 html_order_summary,
@@ -598,13 +609,12 @@ def contact(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
-            name_with_email = f'{name}|email:{email}'
             message = form.cleaned_data['message']
             notify = _order_notify_recipient()
             try:
                 send_mail(
-                    _sanitize_mail_subject_line(f'Новое сообщение от {name_with_email}'),
-                    message,
+                    _sanitize_mail_subject_line('Новое сообщение с сайта Stroyma (форма контактов)'),
+                    f'Имя: {name}\nEmail: {email}\n\nСообщение:\n{message}',
                     settings.DEFAULT_FROM_EMAIL,
                     [notify],
                     fail_silently=False
@@ -730,6 +740,41 @@ def cookies_policy(request):
         'meta_title': 'Политика использования файлов cookie - ООО "СТРОЙМА"',
         'meta_description': 'Политика использования файлов cookie ООО "СТРОЙМА". Узнайте, какие файлы cookie мы используем и как они помогают улучшить работу нашего сайта.',
         'keywords': 'cookies, файлы cookie, политика cookie, куки, СтройМА, конфиденциальность',
+    })
+
+def offer(request):
+    """Публичная оферта (условия продажи товаров дистанционным способом)."""
+    return render(request, 'products/legal/offer.html', {
+        'meta_title': 'Публичная оферта - ООО "СТРОЙМА"',
+        'meta_description': 'Условия продажи товаров дистанционным способом, порядок оформления заказа, оплаты, доставки, возврата.',
+        'keywords': 'публичная оферта, условия продажи, дистанционная торговля, СтройМА',
+    })
+
+
+def payment(request):
+    """Информация об оплате."""
+    return render(request, 'products/legal/payment.html', {
+        'meta_title': 'Оплата - ООО "СТРОЙМА"',
+        'meta_description': 'Способы оплаты заказов в интернет-магазине ООО «СТРОЙМА».',
+        'keywords': 'оплата, способы оплаты, СтройМА',
+    })
+
+
+def delivery(request):
+    """Информация о доставке."""
+    return render(request, 'products/legal/delivery.html', {
+        'meta_title': 'Доставка - ООО "СТРОЙМА"',
+        'meta_description': 'Условия и сроки доставки заказов, самовывоз, стоимость доставки.',
+        'keywords': 'доставка, самовывоз, СтройМА',
+    })
+
+
+def returns(request):
+    """Информация о возврате и обмене."""
+    return render(request, 'products/legal/returns.html', {
+        'meta_title': 'Возврат и обмен - ООО "СТРОЙМА"',
+        'meta_description': 'Правила возврата и обмена товаров в соответствии с законодательством РФ.',
+        'keywords': 'возврат, обмен, защита прав потребителей, СтройМА',
     })
 
 @method_decorator(cache_page(60 * 15), name='dispatch')  # Кеширование на 15 минут

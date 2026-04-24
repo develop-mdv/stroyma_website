@@ -339,6 +339,10 @@
                         {% else %}
                         <a href="{% url 'login' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Вход / Регистрация</a>
                         {% endif %}
+                        <a href="{% url 'offer' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Публичная оферта</a>
+                        <a href="{% url 'payment' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Оплата</a>
+                        <a href="{% url 'delivery' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Доставка</a>
+                        <a href="{% url 'returns' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Возврат и обмен</a>
                         <a href="{% url 'policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика конфиденциальности</a>
                         <a href="{% url 'cookies_policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика cookie</a>
                     </nav>
@@ -378,6 +382,7 @@
                 <div class="flex items-center gap-6">
                     <a href="{% url 'policy' %}" class="text-xs text-gray-500 hover:text-white transition-colors">Конфиденциальность</a>
                     <a href="{% url 'cookies_policy' %}" class="text-xs text-gray-500 hover:text-white transition-colors">Cookie</a>
+                    <a href="{% url 'offer' %}" class="text-xs text-gray-500 hover:text-white transition-colors">Оферта</a>
                     <a href="{% url 'about' %}#company-info" class="text-xs text-gray-500 hover:text-white transition-colors">Реквизиты</a>
                 </div>
             </div>
