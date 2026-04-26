@@ -1,20 +1,23 @@
 User-agent: *
+{% if disallow_all %}
+Disallow: /
+{% else %}
 Allow: /
 
 # Запрещаем индексацию админки и приватных разделов
-Disallow: /admin/
+Disallow: {{ admin_path }}
 Disallow: /accounts/login/
 Disallow: /accounts/register/
 Disallow: /accounts/profile/
 Disallow: /checkout/
 Disallow: /cart/
 
-# Разрешаем индексацию основных разделов
+# Разрешаем индексацию основных разделов (уточняем явными allow)
 Allow: /product/
 Allow: /category/
 Allow: /services/
 Allow: /about/
 Allow: /contact/
 
-# Указываем расположение карты сайта
-Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+{% if sitemap_url %}Sitemap: {{ sitemap_url }}{% endif %}
+{% endif %}

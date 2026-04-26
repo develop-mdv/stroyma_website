@@ -19,8 +19,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
+from django.views.decorators.cache import cache_page
 from .sitemaps import sitemaps
-from django.views.generic.base import TemplateView
+from . import views
 from .admin import StroymAdminSite
 
 admin.AdminSite = StroymAdminSite
@@ -37,8 +38,8 @@ urlpatterns = [
     path('services/', include('services.urls')),
 
     # SEO URLs
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    path('sitemap.xml', cache_page(60 * 60 * 6)(sitemap), {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', cache_page(60 * 60 * 6)(views.robots_txt), name='robots_txt'),
 ]
 
 if settings.DEBUG:

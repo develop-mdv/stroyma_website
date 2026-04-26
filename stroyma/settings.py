@@ -47,6 +47,14 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
 
+# SEO / Canonical base URL (used for robots.txt Sitemap: and other absolute URLs)
+# Example: https://stroyma.ru
+SITE_URL = (config('SITE_URL', default='') or '').strip().rstrip('/')
+
+# Indexing policy: allow bots only in production-like environment.
+# Default: allow indexing only when DEBUG is False.
+ALLOW_ROBOTS_INDEXING = config('ALLOW_ROBOTS_INDEXING', default=(not DEBUG), cast=bool)
+
 # Application definition
 INSTALLED_APPS = [
     'jazzmin',  # Улучшенный интерфейс админки
