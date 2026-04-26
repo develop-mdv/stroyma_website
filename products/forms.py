@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 from accounts.models import get_or_create_profile
 
@@ -9,14 +9,8 @@ class OrderForm(forms.Form):
     last_name = forms.CharField(max_length=100, label="Фамилия")
     email = forms.EmailField(label="Email")
     phone = forms.CharField(
-        max_length=20,
-        label="Телефон",
-        validators=[
-            RegexValidator(
-                regex=r'^\+?7[\d]{10}$',
-                message="Введите номер в формате +7XXXXXXXXXX"
-            )
-        ]
+        max_length=32,
+        label="Телефон"
     )
     address = forms.CharField(max_length=255, label="Адрес доставки")
     comment = forms.CharField(
@@ -36,6 +30,23 @@ class OrderForm(forms.Form):
             profile = get_or_create_profile(user)
             self.fields['phone'].initial = profile.phone
             self.fields['address'].initial = profile.delivery_address
+
+    def clean_phone(self):
+        value = (self.cleaned_data.get('phone') or '').strip()
+        digits = ''.join(ch for ch in value if ch.isdigit())
+        if not digits:
+            raise ValidationError("Введите номер телефона.")
+
+        # Нормализация РФ: 8XXXXXXXXXX или 7XXXXXXXXXX или 10 цифр без кода.
+        if len(digits) == 10:
+            digits = '7' + digits
+        elif len(digits) == 11 and digits[0] == '8':
+            digits = '7' + digits[1:]
+
+        if len(digits) != 11 or digits[0] != '7':
+            raise ValidationError("Введите номер в формате +7XXXXXXXXXX.")
+
+        return '+' + digits
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='Поиск', max_length=100, required=False)

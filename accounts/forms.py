@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from accounts.models import UserProfile, get_or_create_profile
 
 class RegisterForm(UserCreationForm):
@@ -90,6 +91,25 @@ class CustomUserChangeForm(UserChangeForm):
         if new_password_confirm and not new_password:
             self.add_error('new_password', "Введите новый пароль.")
         return cleaned_data
+
+    def clean_phone(self):
+        value = (self.cleaned_data.get('phone') or '').strip()
+        if not value:
+            return value
+
+        digits = ''.join(ch for ch in value if ch.isdigit())
+        if not digits:
+            return ''
+
+        if len(digits) == 10:
+            digits = '7' + digits
+        elif len(digits) == 11 and digits[0] == '8':
+            digits = '7' + digits[1:]
+
+        if len(digits) != 11 or digits[0] != '7':
+            raise ValidationError("Введите номер в формате +7XXXXXXXXXX.")
+
+        return '+' + digits
 
     def save(self, commit=True):
         user = super().save(commit=False)

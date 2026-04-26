@@ -88,7 +88,8 @@
 
                     <div class="relative group">
                         <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}" value="{{ form.phone.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Телефон">
+                            inputmode="tel" autocomplete="tel"
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="+7 (___) ___-__-__">
                         <label for="{{ form.phone.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Телефон <span class="text-red-500">*</span></label>
                         {% if form.phone.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.phone.errors.0 }}</p>{% endif %}
                     </div>
