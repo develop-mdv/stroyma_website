@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<title>Конфигуратор фасада</title>
+<link rel="modulepreload" href="./vendor/three/build.three.module.js?v=45">
+<link rel="modulepreload" href="./src/app.js?v=53">
+<link rel="modulepreload" href="./src/textures.js?v=52">
+<link rel="modulepreload" href="./src/house.js?v=45">
+<link rel="modulepreload" href="./src/data.js?v=45">
+<style>
+  :root {
+    --bg: #0b0e13;
+    --panel: #14181f;
+    --panel-2: #191e26;
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.18);
+    --fg: #eef1f5;
+    --fg-dim: #8f97a5;
+    --accent: #d8b98a;
+    --accent-ink: #1a1206;
+    --r: 10px;
+    --panel-w: clamp(320px, 27vw, 400px);
+    --gap: 18px;
+    /* Inter первым — как на всём сайте. ⚠️ Виджет НИЧЕГО не грузит извне (ни CDN,
+       ни Google Fonts) — это его свойство, на нём держится работа без интернета.
+       Поэтому Inter подхватится, только если он есть в системе; иначе останется
+       системный шрифт. Нужен гарантированный Inter внутри виджета — класть
+       woff2 рядом и объявлять @font-face локально, а не ссылкой на Google. */
+    font-family: Inter, ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+  }
+  body.is-busy { cursor: progress; }
+  body.is-busy .panel, body.is-busy .picker { pointer-events: none; }
+
+  /* ---------- каркас: слева сцена 16:9, справа настройки ---------- */
+
+  .app {
+    position: relative;              /* пикер позиционируется относительно .app */
+    display: flex;
+    height: 100dvh;
+  }
+
+  .stage {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--gap);
+  }
+
+  /* Кадр 16:9. Ширина ограничена доступной высотой — пропорция держится всегда. */
+  .frame {
+    position: relative;
+    width: 100%;
+    max-width: calc((100dvh - var(--gap) * 2) * 1.7778);
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #10131a;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  }
+  #view { display: block; width: 100%; height: 100%; touch-action: none; }
+
+  /* ---------- панель настроек (компактная) ---------- */
+
+  .panel {
+    position: relative;
+    width: var(--panel-w);
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+  }
+  .panel__body {
+    flex: 1;
+    /* Колонка нужна ради `margin-top:auto` у строки заявки — см. #rowLead ниже.
+       На прокрутку не влияет: когда контент выше панели, свободного места нет,
+       auto-отступ схлопывается в ноль и всё скроллится как раньше. */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* 14px сверху — вместо отступа, который раньше давала шапка панели с заголовком.
+       Без него первый ряд («Фактура фасада») прилипал бы к верхнему краю. */
+    padding: 14px 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.16) transparent;
+  }
+  .panel__body::-webkit-scrollbar { width: 8px; }
+  .panel__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 8px; }
+
+  /* Виджет внутри длинной страницы (главная передаёт ?s=page, класс вешает app.js):
+     у панели НЕТ собственной вертикальной прокрутки. Иначе колесо над ней сначала
+     дёргает панель на пару пикселей запаса и только потом двигает страницу —
+     выглядит как рывок и залипание. Всё колесо уходит хосту, а прокручиваемым
+     остаётся только пикер «Все фактуры / Все цвета» — он отдельный оверлей.
+     ⚠️ Значит содержимое панели ОБЯЗАНО помещаться по высоте: за это отвечает
+     компактный режим (@media max-height:720px ниже). Добавишь строку в панель —
+     проверь на низком окне, что ничего не срезалось. */
+  body.is-page .panel__body { overflow-y: hidden; }
+
+  .panel__foot { display: flex; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--line); }
+
+  /* ---------- строка-настройка (единая сетка: одинаковый отступ по краям и по вертикали) ---------- */
+
+  :root { --pad: 18px; }               /* один боковой отступ для всей панели */
+
+  .row { padding: 16px var(--pad) 0; }
+  .row:last-child { padding-bottom: 16px; }
+  .row + .row { margin-top: 16px; border-top: 1px solid var(--line); }
+  .row__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .row__title { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--fg-dim); margin: 0; }
+  /* метка текущего выбора — единый отступ до ленты, слева, как у заголовка */
+  .row__val { font-size: 12px; color: var(--accent); margin: -6px 0 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row__more {
+    font-size: 11px; font-weight: 600; color: var(--fg); background: none; border: 0; cursor: pointer;
+    padding: 0; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;
+  }
+  .row__more:hover { color: var(--accent); }
+
+  /* горизонтальная лента (фактуры, цвета, мозаика) — все одинаковые.
+     margin отменяет боковой padding строки, свой padding возвращает контент ровно на --pad,
+     поэтому левый край чипов совпадает с заголовком, а лента прокручивается во всю ширину. */
+  .strip {
+    display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    /* без overflow-y:hidden браузер сам ставит overflow-y:auto — лента цветов
+       становится вертикальным скроллпортом и съедает свайп страницы в iframe. */
+    touch-action: pan-x pan-y;
+    padding: 2px var(--pad) 2px; margin: 0 calc(-1 * var(--pad));
+    scroll-padding-left: var(--pad);   /* активный образец не заезжает под левый край */
+    scrollbar-width: none;
+  }
+  .strip::-webkit-scrollbar { display: none; }
+
+  /* Фактур ровно четыре — это уже не лента, а сетка во всю ширину: прокручивать нечего,
+     и «Гладкая» больше не срезается правым краем. Фракции («Короед 2,5 мм» и прочие) —
+     по ссылке «Все фактуры ›» в заголовке строки, как у цвета и цоколя. */
+  #facadeTextures { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
+  #facadeTextures .chip { width: auto; }
+
+  /* Цвет (210 образцов) и цоколь (48) в панель не поместятся никогда — эти две ленты
+     остаются прокручиваемыми. На десктопе горизонтальная прокрутка мышью иначе
+     недоступна (только shift+колесо), поэтому ленты ещё и ТЯНУТСЯ левой кнопкой —
+     обработчик dragScroll в app.js, он же гасит клик после перетаскивания. */
+  #facadeColors, #plinthTextures { cursor: grab; }
+  #facadeColors.is-grabbing, #plinthTextures.is-grabbing { cursor: grabbing; user-select: none; }
+
+  /* чип фактуры/мозаики */
+  .chip {
+    flex: 0 0 auto;
+    display: flex; flex-direction: column; align-items: stretch; gap: 5px;
+    width: 74px; padding: 5px 5px 6px;
+    background: rgba(255,255,255,0.035); border: 1px solid transparent; border-radius: var(--r);
+    color: var(--fg); cursor: pointer; text-align: center;
+    transition: background 0.14s, border-color 0.14s, transform 0.12s;
+  }
+  .chip:hover { background: rgba(255,255,255,0.08); }
+  .chip:active { transform: scale(0.97); }
+  .chip.is-active { border-color: var(--accent); background: rgba(216,185,138,0.12); }
+  .chip__thumb { display: block; aspect-ratio: 1; border-radius: 6px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35); }
+  .chip__label { font-size: 10px; line-height: 1.2; color: var(--fg-dim); }
+  .chip.is-active .chip__label { color: var(--fg); }
+
+  /* образец цвета в ленте */
+  .sw {
+    flex: 0 0 auto;
+    width: 34px; height: 34px; border-radius: 8px; background: var(--c);
+    border: 1px solid rgba(0,0,0,0.35); cursor: pointer; padding: 0; position: relative;
+    transition: transform 0.12s;
+  }
+  .sw:hover { transform: scale(1.1); z-index: 1; }
+  .sw.is-active { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3.5px var(--accent); }
+  .strip .sw { margin: 2px 0; }
+
+  /* сегменты (участок/освещение) — в общей сетке, край на --pad как у всего остального */
+  .segs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 3px; margin: 0; background: rgba(255,255,255,0.045); border-radius: var(--r); }
+  .seg { padding: 8px 4px; font-size: 11.5px; font-family: inherit; background: transparent; border: 0; border-radius: 7px; color: var(--fg-dim); cursor: pointer; transition: background 0.14s, color 0.14s; }
+  .seg:hover { color: var(--fg); }
+  .seg.is-active { background: rgba(255,255,255,0.12); color: var(--fg); }
+
+  /* строка «получить консультацию» */
+  /* Прижата к низу панели. Настроек тут всего пять строк (~570px), а панель — во всю
+     высоту экрана, поэтому остаток высоты раньше копился ПОД заявкой: на 1920×907
+     между красной кнопкой и подвалом («Сбросить вид», «Скачать PNG», «Ссылка») зияло
+     196px пустоты, и скроллить было нечего. Теперь пустое место уходит НАД заявкой,
+     а сама она стоит вплотную к подвалу — линия-разделитель отделяет настройки
+     от действия. На телефоне панель по высоте контента, свободного места нет,
+     и правило ничего не меняет. */
+  #rowLead { margin-top: auto; }
+  .row__note { font-size: 12px; line-height: 1.5; color: var(--fg-dim); margin: -4px 0 12px; }
+  /* Красная — как все главные кнопки сайта («В корзину», «Отправить заявку» в форме).
+     Бежевый акцент оставлен подсветке выбранного образца, чтобы действие и выбор
+     не спорили друг с другом. */
+  .btnLead {
+    width: 100%; padding: 12px; font-size: 13.5px; font-weight: 700; font-family: inherit;
+    background: #e4002b; color: #fff; border: 0; border-radius: var(--r);
+    cursor: pointer; transition: background 0.14s, transform 0.12s;
+  }
+  .btnLead:hover { background: #c60026; }
+  .btnLead:active { transform: scale(0.99); }
+
+  /* кнопки низа */
+  .btn { flex: 1; padding: 10px; font-size: 11.5px; font-family: inherit; background: rgba(255,255,255,0.06); border: 1px solid var(--line); border-radius: 9px; color: var(--fg); cursor: pointer; transition: background 0.14s, border-color 0.14s; white-space: nowrap; }
+  .btn:hover { background: rgba(255,255,255,0.12); border-color: var(--line-strong); }
+
+  /* ---------- ПИКЕР: drill-down поверх панели ---------- */
+
+  .picker {
+    position: absolute; top: 0; right: 0; z-index: 12;
+    width: var(--panel-w); height: 100%;
+    display: flex; flex-direction: column;
+    background: var(--panel-2);
+    border-left: 1px solid var(--line);
+    transform: translateX(8px); opacity: 0; visibility: hidden;
+    transition: transform 0.22s ease, opacity 0.22s ease, visibility 0.22s;
+  }
+  .picker.is-open { transform: none; opacity: 1; visibility: visible; }
+
+  .picker__head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .picker__back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12.5px; font-weight: 600; font-family: inherit; color: var(--fg);
+    background: rgba(255,255,255,0.06); border: 1px solid var(--line);
+    border-radius: 9px; padding: 8px 12px; cursor: pointer; transition: background 0.14s;
+  }
+  .picker__back:hover { background: rgba(255,255,255,0.12); }
+  .picker__title { font-size: 13px; font-weight: 600; margin: 0; }
+  .picker__sub { font-size: 11px; color: var(--fg-dim); margin: 2px 0 0; }
+
+  .picker__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 14px 16px 18px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.16) transparent; }
+  .picker__body::-webkit-scrollbar { width: 8px; }
+  .picker__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 8px; }
+
+  .picker__foot { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+  .picker__confirm {
+    width: 100%; padding: 13px; font-size: 13px; font-weight: 700; font-family: inherit;
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 11px; cursor: pointer;
+    transition: filter 0.14s;
+  }
+  .picker__confirm:hover { filter: brightness(1.06); }
+
+  /* цвета в пикере: по семействам */
+  .fam { margin-bottom: 16px; }
+  .fam__name { font-size: 11px; font-weight: 600; color: var(--fg-dim); margin: 0 0 8px; letter-spacing: 0.02em; }
+  .fam__row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .pk-sw {
+    aspect-ratio: 1; border-radius: 8px; background: var(--c); border: 1px solid rgba(0,0,0,0.35);
+    cursor: pointer; padding: 0; position: relative; transition: transform 0.12s;
+  }
+  .pk-sw:hover { transform: scale(1.08); z-index: 1; }
+  .pk-sw.is-active { box-shadow: 0 0 0 2px var(--panel-2), 0 0 0 3.5px var(--accent); }
+
+  /* фактуры/мозаика в пикере: крупные плитки с крупным превью («приблизить») */
+  /* 4 плитки в ряд: на панели 320–400px это ~70px на образец — фактуру видно,
+     а весь список из десяти фракций помещается на один экран без прокрутки. */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tile {
+    display: flex; flex-direction: column; gap: 8px; padding: 8px; cursor: pointer;
+    background: rgba(255,255,255,0.035); border: 1px solid transparent; border-radius: 12px;
+    color: var(--fg); text-align: left; transition: background 0.14s, border-color 0.14s;
+  }
+  .tile:hover { background: rgba(255,255,255,0.08); }
+  .tile.is-active { border-color: var(--accent); background: rgba(216,185,138,0.12); }
+  .tile__thumb { aspect-ratio: 1; border-radius: 8px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35); }
+  .tile__name { font-size: 11px; font-weight: 600; }
+  .tile__sub { font-size: 11px; color: var(--fg-dim); }
+
+  /* подсказка внутри кадра */
+  .hint { position: absolute; left: 14px; bottom: 12px; font-size: 11.5px; color: rgba(255,255,255,0.5); text-shadow: 0 1px 6px rgba(0,0,0,0.7); pointer-events: none; line-height: 1.6; }
+  .hint b { color: rgba(255,255,255,0.78); font-weight: 500; }
+
+  /* ---------- «система думает» ---------- */
+  @keyframes cfgSpin { to { transform: rotate(360deg); } }
+  @keyframes cfgPulse { 0%, 100% { opacity: 0.30; } 50% { opacity: 0.70; } }
+
+  .spin {
+    width: 14px; height: 14px; flex: none; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.20); border-top-color: var(--accent);
+    animation: cfgSpin 0.7s linear infinite;
+  }
+
+  /* Плашка поверх кадра: видно, что идёт расчёт, а не «залипло».
+     Показывается по body.is-busy — тот же признак, что гасит клики по панели. */
+  .busyTag {
+    position: absolute; left: 14px; top: 12px; z-index: 6;
+    display: none; align-items: center; gap: 8px;
+    padding: 7px 12px 7px 10px; border-radius: 999px;
+    background: rgba(10,13,18,0.80); border: 1px solid var(--line-strong);
+    font-size: 12px; color: var(--fg); pointer-events: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  }
+  body.is-busy .busyTag { display: inline-flex; }
+
+  /* Образцы мозаики рисуются лениво: пока превью не готово — мягкая пульсация,
+     чтобы лента не выглядела набором пустых квадратов. */
+  .sw[data-pending] { background: rgba(255,255,255,0.12); animation: cfgPulse 1.2s ease-in-out infinite; }
+
+  /* загрузка */
+  #loader { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: var(--bg); font-size: 12.5px; color: var(--fg-dim); transition: opacity 0.4s; }
+  #loader.is-hidden { opacity: 0; pointer-events: none; }
+  #loader .load { display: inline-flex; align-items: center; gap: 10px; }
+
+  /* ---------- низкое окно: панель без вертикальной прокрутки ----------
+     Пять строк настроек занимают 650px (замер при любой ширине панели — высоты от неё
+     не зависят). Плюс подвал 53px: пока окно выше ~703px, всё помещается, ниже —
+     у панели появляется своя вертикальная прокрутка. На главной это ловится легко:
+     айфрейм там `min(720px,82vh)`, и при окне браузера ~800px он равен 656px.
+     Поджимаем вертикальные отступы и превью фактур: 650 → ~540, прокрутка уходит
+     вплоть до окна ~600px. Ниже она вернётся — иначе контент пришлось бы резать.
+     ⚠️ Только десктоп: на телефоне панель по высоте контента и делит её с кадром,
+     там свои значения (см. блок «ПАНЕЛЬ ЦЕЛИКОМ НА ЭКРАНЕ»). */
+  @media (min-width: 901px) and (max-height: 720px) {
+    .panel__body { padding: 8px 0 8px; }
+    .row { padding-top: 10px; }
+    .row + .row { margin-top: 9px; }
+    .row:last-child { padding-bottom: 12px; }
+    .row__head { margin-bottom: 7px; }
+    .row__val { margin: -4px 0 8px; }
+    .row__note { margin: -2px 0 8px; }
+    /* Превью фактуры — самая высокая деталь панели: квадрат во всю ширину колонки даёт
+       строке 96px. Тут снимаем квадратность и режем высоту — фактура на 54px читается,
+       а строка худеет до 86px. Ширину чипа трогать нельзя: он тянется сеткой. */
+    #facadeTextures .chip__thumb { aspect-ratio: auto; height: 54px; }
+    .seg { padding: 7px 4px; }
+    .btnLead { padding: 11px; }
+  }
+
+  /* На десктопе кадр РАСТЯГИВАЕТСЯ на всю высоту сцены.
+     Раньше он был жёстко 16:9 и по центру: панель справа сжимала ширину, кадр становился
+     низким, и сверху/снизу оставались две пустые чёрные полосы во всю ширину.
+     Пропорция кадра теперь любая — камера (FOV 38) сама подстраивается в resize(). */
+  @media (min-width: 901px) {
+    body { overflow: hidden; }
+    .stage { place-items: stretch; }
+    .frame { max-width: none; aspect-ratio: auto; height: 100%; }
+  }
+
+  /* ---------- мобильный: сверху кадр, снизу настройки, пикер — нижний лист ----------
+     ВАЖНО: .app фиксируем к высоте вьюпорта (100dvh), а панель скроллим ВНУТРИ. Иначе при
+     встраивании iframe растягивается на всю высоту контента, и пикер (position:absolute;
+     bottom:0 относительно .app) открывается в самом низу длинного iframe — за экраном,
+     будто «не работает». Со 100dvh пикер-лист садится на нижнюю кромку экрана как надо. */
+  @media (max-width: 900px) {
+    :root { --gap: 0px; }
+    .app { flex-direction: column; height: 100dvh; }
+    .stage { flex: none; background: var(--bg); }
+    .frame { max-width: none; border-radius: 0; box-shadow: none; }
+    .panel { width: 100%; flex: 1; min-height: 0; border-left: 0; border-top: 1px solid var(--line); }
+
+    /* ⚠️ Палец не должен застревать в виджете (чинили «после блока с домом сайт не листается»).
+       На телефоне iframe занимает почти весь экран. Вертикальный свайп уходит странице,
+       виджету — горизонтальный поворот и зум двумя пальцами.
+       `!important` нужен: правило OrbitControls стоит инлайном.
+       ⚠️ Эти touch-action:none / overflow:hidden — ТОЛЬКО для главной (body.is-page).
+       Попап колеровки на товаре тоже уже 900px (модалка 720px), и те же правила
+       схлопывали палитру: .app height:auto + overflow:hidden обрезали лист цветов. */
+    #view { touch-action: pan-y !important; }
+    .panel, .panel__body, .row, .chip, .sw, .btn, .btnLead, .seg, .row__more {
+      touch-action: pan-y;
+    }
+    .strip, .ckPlinthRow { overflow-x: auto; overflow-y: hidden; touch-action: pan-x pan-y; }
+    .panel__body { overflow-y: auto; overscroll-behavior: auto; }
+    .picker, .picker__body { touch-action: pan-y; }
+
+    /* пикер — нижний лист во всю ширину, кадр остаётся виден сверху */
+    .picker {
+      top: auto; left: 0; right: 0; bottom: 0;
+      width: 100%; height: min(420px, 62dvh); max-height: 62dvh;
+      border-left: 0; border-top: 1px solid var(--line-strong);
+      border-radius: 16px 16px 0 0;
+      transform: translateY(12px);
+    }
+    .picker.is-open { transform: none; }
+    .hint { display: none; }
+    /* В коллекции ровно ШЕСТЬ цветов. При 8 колонках две справа пустовали,
+       и образцы жались влево. Шесть на всю ширину — квадраты крупнее. */
+    .fam__row { grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    /* Кадр с домом — РОВНО видимая часть над листом выбора (лист лежит поверх,
+       absolute bottom). Если растянуть stage на всю высоту, камера строит кадр
+       по всему холсту, и дом уходит серединой под лист — видно одно небо. */
+    body.is-colorOnly .stage { flex: none; height: calc(100dvh - 420px); min-height: 220px; }
+    .pk-cell__n { font-size: 11px; }
+    .tiles { grid-template-columns: repeat(4, 1fr); }
+  }
+
+    /* ---------- режим «только выбор цвета» (?mode=color) ----------
+       Дом остаётся во весь кадр, справа — палитра с ценами и подтверждение. */
+    /* В режиме «только цвет» пикер открыт всегда и ЗАМЕНЯЕТ панель, поэтому саму
+       панель не показываем. Раньше она оставалась под пикером: на десктопе он её
+       перекрывал целиком, а на мобилке пикер — нижний лист, и панель просвечивала
+       сверху и снизу (список цветов дублировался, дом пропадал). */
+    body.is-colorOnly .panel{ display:none; }
+    body.is-colorOnly .panel__body{ padding-bottom:6px; }
+    body.is-colorOnly #facadeColors{ display:grid; grid-template-columns:1fr; gap:6px;
+      overflow:visible; margin:0; padding:0; max-height:none; }
+    body.is-colorOnly .cc{ display:flex; align-items:center; gap:10px; width:100%;
+      padding:7px 8px; border:1px solid transparent; border-radius:10px; background:none;
+      cursor:pointer; text-align:left; }
+    body.is-colorOnly .cc:hover{ background:rgba(255,255,255,.06); }
+    body.is-colorOnly .cc.is-active{ border-color:currentColor; background:rgba(255,255,255,.10); }
+    body.is-colorOnly .cc__sw{ width:34px; height:34px; border-radius:8px; flex:none;
+      background:var(--c); box-shadow:inset 0 0 0 1px rgba(0,0,0,.18); }
+    body.is-colorOnly .cc__t{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+    body.is-colorOnly .cc__t b{ font-size:13px; font-weight:700; }
+    body.is-colorOnly .cc__t i{ font-style:normal; font-size:12px; opacity:.75; }
+    body.is-colorOnly .cc__no{ opacity:.5; }
+    body.is-colorOnly .btn--ok{ width:100%; font-weight:800; }
+    body.is-colorOnly .panel__foot .btn:not(.btn--ok){ display:none; }
+
+    /* образец цвета с подписью (номер внутри коллекции виден) */
+    .pk-cell{ display:flex; flex-direction:column; gap:3px; align-items:stretch; text-align:center;
+      background:none; border:0; padding:0; cursor:pointer; min-width:0; }
+    .pk-cell__c{ display:block; width:100%; aspect-ratio:1/1; border-radius:7px; background:var(--c);
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.22); }
+    .pk-cell__n{ font-size:10px; line-height:1.15; color:#fff; opacity:.92; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pk-cell__p{ font-size:9px; opacity:.55; }
+    .pk-cell:hover .pk-cell__c{ transform:scale(1.05); }
+    .pk-cell.is-active .pk-cell__c{ box-shadow:0 0 0 2px var(--panel-2), 0 0 0 3.5px var(--accent); }
+    .pk-cell.is-active .pk-cell__n{ opacity:1; font-weight:700; }
+
+    /* подвал выбора цвета: что выбрано, цена и подтверждение */
+    /* Подвал: подпись слева, кнопки строго справа. justify-content:flex-end + margin-right:auto
+       у подписи держит кнопки у правого края и в одну строку, и когда подвал переносится. */
+    .ckFoot{ display:flex; align-items:center; justify-content:flex-end; gap:12px; flex-wrap:wrap; }
+    .ckPick{ display:flex; flex-direction:column; gap:2px; min-width:0; margin-right:auto; }
+    .ckPick b{ font-size:14px; font-weight:700; color:#fff; }
+    .ckPick span{ font-size:12px; opacity:.7; }
+    /* кнопки прижаты ВПРАВО и когда подвал переносится в две строки (панель узкая) */
+    .ckBtns{ display:flex; align-items:center; gap:8px; margin-left:auto; justify-content:flex-end; }
+    .ckGhost{ background:none; border:0; color:#fff; opacity:.6; font-size:12.5px; cursor:pointer; padding:8px 4px; }
+    .ckGhost:hover{ opacity:1; }
+    /* красная, как основная кнопка сайта («В корзину») */
+    .ckOk{ background:#E4002B; color:#fff; border:0; border-radius:10px; padding:11px 22px;
+      font-weight:800; font-size:13.5px; cursor:pointer; }
+    .ckOk:hover{ background:#c60026; }
+
+  /* ================= МОБИЛЬНЫЙ: ПАНЕЛЬ ЦЕЛИКОМ НА ЭКРАНЕ (правка 30.07.2026) =========
+     Симптом, который чинили: «попадаю на блок с домом и не могу с него уйти» —
+     страница-хост перестаёт листаться. Причина не в вёрстке хоста: панель имела
+     ФИКСИРОВАННУЮ высоту (flex:1) и ВНУТРЕННЮЮ вертикальную прокрутку, а её контент
+     (4 строки + заявка) в эту высоту не влезал. Вертикальный свайп на панели уходил
+     в её собственный скролл, на 3D-кадре — в OrbitControls. Палец застревал.
+     Решение: у панели больше нет своей вертикали вообще — она ровно по контенту
+     (flex:0 0 auto + overflow:visible), а кадр забирает весь остаток (flex:1).
+     Внутри виджета по вертикали нечего скроллить → любой свайп вверх/вниз листает
+     страницу. Горизонталь осталась виджету: ленты образцов и поворот дома.
+     ⚠️ .app держим на 100dvh — на этом стоит пикер (нижний лист). Растягивать iframe
+     под контент НЕЛЬЗЯ: пикер position:absolute bottom:0 уедет за экран (см. HANDOFF).
+     ⚠️ Панель и кадр делят одну высоту. Добавишь строку в панель — ровно на её высоту
+     станет ниже дом. Поэтому «Освещение» на телефоне скрыто (см. ниже).
+     ================================================================================= */
+  @media (max-width: 900px) {
+    /* Кадр 360px и «страница едет от свайпа» — только главная (s=page).
+       Попап колеровки на товаре (?mode=color) живёт в модалке <900px и должен
+       оставаться на 100dvh: дом сверху, палитра снизу, без height:auto. */
+    body.is-page { overflow: hidden; height: auto; overscroll-behavior: none; }
+    body.is-page .app { height: auto; }
+    body.is-page #view { touch-action: none !important; }
+    body.is-page .panel,
+    body.is-page .panel__body,
+    body.is-page .row,
+    body.is-page .chip,
+    body.is-page .sw,
+    body.is-page .btn,
+    body.is-page .btnLead,
+    body.is-page .seg,
+    body.is-page .row__more { touch-action: none; }
+    body.is-page .strip,
+    body.is-page .ckPlinthRow { touch-action: pan-x; }
+    body.is-page .panel__body { overflow: visible; overscroll-behavior: none; }
+    .stage { flex: 1 1 0; min-height: 168px; }
+    body.is-page .stage { flex: 0 0 360px; min-height: 360px; height: 360px; }
+    body.is-colorOnly .app { height: 100dvh; }
+    .frame { aspect-ratio: auto; height: 100%; max-width: none; }
+    /* ⚠️ height:auto ОБЯЗАТЕЛЕН. В базовых стилях у .panel стоит height:100dvh; пока
+       панель была flex:1, её flex-basis:0% это перебивал. С flex:0 0 auto базой
+       становится сам height — панель забирает всю высоту виджета, а кадр падает
+       до min-height. */
+    .panel { flex: 0 0 auto; height: auto; }
+    .panel__body { overflow: visible; overscroll-behavior: auto; }
+
+    /* Компактнее — это НЕ косметика: панель и кадр делят одну высоту, каждый
+       сэкономленный тут пиксель уходит дому. Замер: панель 487 → кадр 179 (меньше
+       прежних 211!); после поджатия панель ~400 → кадр ~265. */
+    .panel__body { padding: 10px 0 8px; }
+    .row { padding-top: 12px; }
+    .row + .row { margin-top: 8px; }
+    .row:last-child { padding-bottom: 8px; }
+    .row__head { margin-bottom: 6px; }
+    .row__val { margin: -3px 0 6px; font-size: 11.5px; }
+    .chip { width: 52px; padding: 4px 4px 5px; gap: 4px; }
+    /* ⚠️ Фактуры — сетка на 4 колонки (см. #facadeTextures). На телефоне колонка ШИРЕ
+       прежнего чипа-ленты (133px против 52), и квадратное превью раздувает строку
+       с 82 до 153px. Ровно столько же теряет 3D-кадр: замер показал 232 → 168.
+       Поэтому высоту превью здесь задаём числом, а не пропорцией. */
+    #facadeTextures .chip__thumb { aspect-ratio: auto; height: 44px; }
+    .chip__label { font-size: 9px; }
+    .sw { width: 30px; height: 30px; }
+    .panel__foot { padding: 8px 14px; }
+    .panel__foot .btn { padding: 8px; font-size: 11px; }
+
+    /* «Освещение» на телефоне скрыто — это цена за то, чтобы фактура, цвет и цоколь
+       были видны СРАЗУ и при этом дом стал крупнее. Вернуть — удалить это правило
+       (дом станет ниже примерно на 60px). На десктопе строка на месте. */
+    #rowTime { display: none; }
+
+    /* Заявка на телефоне — целиком: заголовок «Получить консультацию», пояснение и
+       красная кнопка. Раньше строку прятали, а кнопку переносили в подвал ради
+       ~50px высоты кадра; по правке 30.07.2026 вернули — без подписи человеку
+       непонятно, что именно отправляет кнопка. */
+    #rowLead { display: block; }
+    .panel__foot { padding: 10px 14px; gap: 8px; }
+  }
+
+    /* лента цоколя под палитрой — горизонтальная прокрутка, высоту окна не меняет */
+    .ckPlinth{ border-top:1px solid var(--line); padding:8px 16px 10px; flex:none; }
+    .ckPlinthHead{ display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+    .ckPlinthHead span{ font-size:11px; font-weight:600; color:var(--fg-dim); letter-spacing:.02em; }
+    .ckInfo{ width:15px; height:15px; border-radius:50%; border:1px solid currentColor; background:none;
+      color:var(--fg-dim); font-size:10px; line-height:1; font-style:italic; font-weight:700;
+      display:flex; align-items:center; justify-content:center; cursor:help; padding:0; flex:none; }
+    .ckInfo:hover{ color:#fff; }
+    .ckPlinthRow{ display:flex; gap:6px; overflow-x:auto; overflow-y:hidden; padding-bottom:2px; scrollbar-width:thin; }
+    .ckPlinthRow::-webkit-scrollbar{ height:5px; }
+    .ckPlinthRow::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16); border-radius:6px; }
+    .ckPl{ width:38px; height:38px; flex:none; border-radius:8px; border:1px solid rgba(0,0,0,.25);
+      background-size:cover; background-position:center; cursor:pointer; }
+    .ckPl.is-active{ box-shadow:0 0 0 2px var(--panel-2), 0 0 0 3.5px var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="stage">
+    <div class="frame">
+      <canvas id="view"></canvas>
+      <div class="busyTag"><span class="spin"></span><span id="busyLabel">Считаем…</span></div>
+      <div class="hint"><b>Вращение</b> — левая кнопка · <b>Приближение</b> — колесо · <b>Сдвинуть кадр</b> — правая кнопка / два пальца</div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div class="panel__body">
+
+      <!-- Вход в полный список — ссылкой в заголовке, как у цвета и цоколя. Раньше это
+           была пятая плитка в самой ленте: она занимала место образца, из-за неё лента
+           не помещалась по ширине и «Гладкая» оказывалась срезанной. -->
+      <div class="row">
+        <div class="row__head">
+          <h2 class="row__title">Фактура фасада</h2>
+          <button class="row__more" data-open="facadeTex">Все фактуры ›</button>
+        </div>
+        <div class="strip" id="facadeTextures"></div>
+      </div>
+
+      <div class="row row--color">
+        <div class="row__head">
+          <h2 class="row__title">Цвет фасада</h2>
+          <button class="row__more" data-open="facadeColor">Все цвета ›</button>
+        </div>
+        <div class="row__val" id="facadeLabel"></div>
+        <div class="strip" id="facadeColors"></div>
+      </div>
+
+      <div class="row">
+        <div class="row__head">
+          <h2 class="row__title">Цоколь — мозаика</h2>
+          <button class="row__more" data-open="plinth">Все цвета ›</button>
+        </div>
+        <div class="row__val" id="plinthLabel"></div>
+        <div class="strip" id="plinthTextures"></div>
+      </div>
+
+      <div class="row" id="rowTime">
+        <div class="row__head"><h2 class="row__title">Освещение</h2></div>
+        <div class="segs" id="timePresets"></div>
+      </div>
+
+      <!-- Заявка прямо из виджета: под настройками оставалось пустое место, а действие
+           «оставить заявку» было спрятано где-то ниже по странице. Кнопка шлёт хосту
+           сообщение facade-configurator:request — сайт сам решает, что показать. -->
+      <div class="row" id="rowLead">
+        <div class="row__head"><h2 class="row__title">Получить консультацию</h2></div>
+        <p class="row__note">Пришлём расчёт материалов и цену под выбранную отделку.</p>
+        <button class="btnLead" id="btnLead" type="button">Отправить заявку</button>
+      </div>
+
+    </div>
+
+    <div class="panel__foot">
+      <button class="btn" id="btnReset" type="button">Сбросить вид</button>
+      <button class="btn" id="btnShot" type="button">Скачать PNG</button>
+      <button class="btn" id="btnLink" type="button">Ссылка</button>
+    </div>
+  </aside>
+
+  <!-- drill-down пикер: открывается поверх панели, дом остаётся виден -->
+  <div class="picker" id="picker" aria-hidden="true">
+    <div class="picker__head">
+      <button class="picker__back" id="pickerBack" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        Назад
+      </button>
+      <div>
+        <h2 class="picker__title" id="pickerTitle"></h2>
+        <p class="picker__sub" id="pickerSub"></p>
+      </div>
+    </div>
+    <div class="picker__body" id="pickerBody"></div>
+    <div class="picker__foot">
+      <button class="picker__confirm" id="pickerConfirm" type="button">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<div id="loader"><span class="load"><span class="spin"></span>Сборка модели и генерация текстур…</span></div>
+
+<!-- Сторож загрузки работает и без поддержки модулей. Все JS-файлы локальные. -->
+<script src="./src/watchdog.js?v=1"></script>
+<!-- ?v= — обновление кеша после правки файлов виджета. -->
+<script type="module" src="./src/app.js?v=53"></script>
+
+</body>
+</html>

@@ -1,5 +1,8 @@
+import json
 import logging
+import re
 import threading
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.contrib import messages
@@ -18,13 +21,11 @@ from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
 from .filters import ProductFilter
-from .forms import ContactForm, OrderForm, SearchForm
+from .forms import ColorSelectionRequestForm, ContactForm, OrderForm, SearchForm
 from .models import (
-    BaseTexture,
     Cart,
     CartItem,
     Category,
-    FacadeColor,
     Order,
     OrderContact,
     OrderItem,
@@ -634,12 +635,74 @@ def contact(request):
         'form': form,
     })
 
+@ratelimit(key='ip', rate='20/m', method='POST', block=True)
 def color_selection(request):
-    facade_colors = FacadeColor.objects.all()
-    base_textures = BaseTexture.objects.all()
+    sent = request.GET.get('sent') == '1'
+    send_error = False
+    defaults = {'f': 'kamesh15', 'c': 'c2', 'p': 'tibet-5', 't': 'day', 'l': 'full'}
+    if request.method == 'POST':
+        try:
+            state = json.loads((request.POST.get('config_state') or '')[:500] or '{}')
+        except (ValueError, TypeError):
+            state = {}
+        if not isinstance(state, dict):
+            state = {}
+        selected = {
+            'f': state.get('facadeTexture'),
+            'c': state.get('facadeColor'),
+            'p': state.get('plinthTexture'),
+            't': state.get('time'),
+            'l': state.get('landscape'),
+        }
+    else:
+        selected = {key: request.GET.get(key) for key in defaults}
+    for key, value in selected.items():
+        if isinstance(value, str) and re.fullmatch(r'[a-z0-9-]{1,40}', value):
+            defaults[key] = value
+    widget_query = urlencode({**defaults, 's': 'page', 'v': '53'})
+
+    if request.method == 'POST':
+        form = ColorSelectionRequestForm(request.POST)
+        if form.is_valid():
+            details = form.cleaned_data
+            body = (
+                f"Имя: {details['name']}\n"
+                f"Телефон: {details['phone']}\n"
+                f"Email: {details['email'] or 'не указан'}\n\n"
+                f"Фасад: {details['facade'] or 'не выбран'}\n"
+                f"Цоколь: {details['plinth'] or 'не выбран'}\n\n"
+                f"Комментарий: {details['message'] or 'нет'}"
+            )
+            try:
+                send_mail(
+                    'Заявка на подбор цвета фасада — СтройМа',
+                    body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [_order_notify_recipient()],
+                    fail_silently=False,
+                )
+            except Exception:
+                logger.exception('Ошибка при отправке заявки на подбор цвета фасада')
+                send_error = True
+            else:
+                return redirect(f"{reverse('color_selection')}?sent=1#colorRequest")
+    else:
+        initial = {}
+        user = getattr(request, 'user', None)
+        if user and user.is_authenticated:
+            profile = getattr(user, 'profile', None)
+            initial = {
+                'name': user.get_full_name().strip()[:100],
+                'email': user.email or '',
+                'phone': profile.phone if profile and profile.phone else '',
+            }
+        form = ColorSelectionRequestForm(initial=initial)
+
     return render(request, 'products/color_selection.html', {
-        'facade_colors': facade_colors,
-        'base_textures': base_textures,
+        'form': form,
+        'sent': sent,
+        'send_error': send_error,
+        'widget_query': widget_query,
     })
 
 class CategoryDetailView(DetailView):

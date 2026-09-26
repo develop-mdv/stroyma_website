@@ -59,3 +59,25 @@ class ContactForm(forms.Form):
         label="Сообщение",
         max_length=1000,
     )
+
+
+class ColorSelectionRequestForm(forms.Form):
+    name = forms.CharField(max_length=100, label='Имя')
+    phone = forms.CharField(max_length=32, label='Телефон')
+    email = forms.EmailField(required=False, label='Электронная почта')
+    message = forms.CharField(required=False, max_length=1000, label='Комментарий')
+    facade = forms.CharField(required=False, max_length=160)
+    plinth = forms.CharField(required=False, max_length=160)
+    config_state = forms.CharField(required=False, max_length=500)
+    consent = forms.BooleanField(label='Согласие на обработку персональных данных')
+
+    def clean_phone(self):
+        value = (self.cleaned_data.get('phone') or '').strip()
+        digits = ''.join(char for char in value if char.isdigit())
+        if len(digits) == 10:
+            digits = '7' + digits
+        elif len(digits) == 11 and digits[0] == '8':
+            digits = '7' + digits[1:]
+        if len(digits) != 11 or digits[0] != '7':
+            raise ValidationError('Введите номер в формате +7XXXXXXXXXX.')
+        return '+' + digits

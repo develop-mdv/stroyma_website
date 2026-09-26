@@ -1,241 +1,79 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
+{% block title %}Подбор цвета и фактуры фасада — СтройМа{% endblock %}
+{% block meta_description %}Подберите фактуру и цвет фасада, мозаику цоколя и освещение на интерактивной 3D-модели дома.{% endblock %}
+
 {% block extra_css %}
-<style>
-    :root {
-        --house-facade: #F8F5EF;
-        --house-base: none;
-    }
-
-    /* Контейнер дома: запрет нативного тач-скролла внутри, чтобы лупа корректно работала на тач-устройствах */
-    .interactive-house-container {
-        touch-action: none;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-
-    /* На тач-устройствах подсказка — тап и удержание */
-    @media (hover: none) and (pointer: coarse) {
-        .interactive-house-container {
-            cursor: pointer;
-        }
-    }
-
-    .facade-overlay {
-        background-color: var(--house-facade);
-        transition: background-color 0.3s ease;
-    }
-
-    .base-overlay {
-        background-image: var(--house-base);
-        background-repeat: repeat;
-        background-size: 200px;
-        transition: background-image 0.3s ease;
-    }
-
-    /* Swatches Stylings */
-    .color-swatch {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid transparent;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,0.3);
-        min-width: 44px;
-        min-height: 44px;
-    }
-    @media (max-width: 640px) {
-        .color-swatch { width: 48px !important; height: 48px !important; }
-    }
-    .color-swatch:hover {
-        transform: scale(1.1);
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-    }
-    .color-swatch.selected {
-        border: 2px solid var(--bg-deep-green);
-        transform: scale(1.15);
-        box-shadow: 0 0 0 4px rgba(45, 93, 76, 0.2);
-    }
-    
-    .texture-swatch {
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-    .texture-swatch:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-    }
-    .texture-swatch.selected {
-        border-color: var(--bg-deep-green);
-        box-shadow: 0 0 0 3px rgba(45, 93, 76, 0.3);
-    }
-
-    /* Scrollbars for Swatch Containers */
-    .config-scroll {
-        max-height: 280px;
-        overflow-y: auto;
-        padding: 4px;
-        margin-right: -8px;
-        padding-right: 8px;
-    }
-    .config-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-    .config-scroll::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .config-scroll::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-    }
-    .dark .config-scroll::-webkit-scrollbar-thumb {
-        background: #475569;
-    }
-    
-    /* Configurator Glass Panel */
-    .configurator-panel {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-    }
-    .dark .configurator-panel {
-        background: rgba(30, 41, 59, 0.8);
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/color_selection.css' %}?v=4">
 {% endblock %}
 
 {% block content %}
-<div class="bg-sandy/20 min-h-screen py-10 px-4">
-    <div class="max-w-[1400px] mx-auto">
-        <!-- Заголовок -->
-        <div class="mb-8 text-center animate-fade-in relative max-w-3xl mx-auto px-2">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4 break-words">
-                Премиум-Конфигуратор
-            </h1>
-            <p class="text-base md:text-lg text-gray-600">
-                Создайте идеальный экстерьер. <span class="hidden md:inline">Наведите лупу на дом, чтобы рассмотреть текстуру в деталях.</span><span class="md:hidden">Нажмите и удерживайте палец на доме, чтобы использовать лупу.</span>
-            </p>
-        </div>
+<section class="color-selection-page">
+    <header class="color-selection-intro">
+        <p class="color-selection-eyebrow">Визуализация фасада</p>
+        <h1>Интерактивный подбор цвета фасада</h1>
+        <p>Соберите отделку на 3D-модели дома: выберите фактуру и цвет фасада, мозаику цоколя и освещение. Дом можно повернуть, приблизить и сохранить как PNG.</p>
+    </header>
 
-        <div class="flex flex-col xl:flex-row gap-8 lg:gap-12 relative items-start">
-            
-            <!-- Левая часть: HOUSE VISUALIZER (60%) -->
-            <div class="w-full xl:w-3/5 xl:sticky xl:top-24 z-10 animate-fade-in-up">
-                
-                <!-- Контейнер Дома -->
-                <!-- Убираем bg-black и фиксированную высоту, подстраиваемся под картинку -->
-                <div class="interactive-house-container relative rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 bg-gray-50 cursor-crosshair inline-block w-full" id="houseContainer">
-                    
-                    <!-- РЕАЛЬНЫЕ ВИЗУАЛЬНЫЕ ЭЛЕМЕНТЫ: Исходное фото с маской -->
-                    <div id="visualsWrapper" class="relative w-full h-auto pointer-events-none">
-                        
-                        <!-- Оверлеи снизу (картинка имеет дырки) -->
-                        <div class="facade-overlay absolute top-[20%] left-0 w-full h-[60%] pointer-events-none z-0"></div>
-                        <div class="base-overlay absolute bottom-0 left-0 w-full h-[35%] pointer-events-none z-[1]"></div>
-                        
-                        <!-- Оригинальная картинка (лежит поверх слоев с z-index) -->
-                        <img src="{% static 'images/intro_house.webp' %}" alt="Дом для визуализации" id="baseHouseImg" class="w-full h-auto block select-none pointer-events-auto relative z-10">
-                    </div>
-
-                    <!-- ЛУПА (Zoom Lens) -->
-                    <!-- Приподнятый z-index лупы -->
-                    <div id="zoomLens" class="absolute w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white/50 backdrop-blur-sm shadow-[0_0_40px_rgba(0,0,0,0.6)] pointer-events-none opacity-0 transition-opacity duration-300 overflow-hidden z-[100]">
-                        <div class="w-1 h-3 bg-white/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[110] shadow-sm"></div>
-                        <div class="w-3 h-1 bg-white/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[110] shadow-sm"></div>
-                        
-                        <!-- Клон внутренностей (JS скопирует visualsWrapper сюда) -->
-                        <div id="lensContent" class="absolute top-0 left-0 origin-top-left will-change-transform z-[105]"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Правая часть: UI CONTROLS (40%) -->
-            <div class="w-full xl:w-2/5 flex flex-col gap-8 pb-10">
-                
-                <!-- ПАНЕЛЬ ЦВЕТА ФАСАДА -->
-                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-4 gap-3 flex-wrap">
-                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">1</span>
-                            Цвет Фасада
-                        </h2>
-                        <span id="activeFacadeName" class="text-gray-500 font-medium text-sm md:text-base">Не выбран</span>
-                    </div>
-
-                    <div class="config-scroll">
-                        <div class="flex flex-wrap gap-4 pt-2 pb-4">
-                            {% for color in facade_colors %}
-                                <button type="button" class="color-swatch w-14 h-14 rounded-full relative group outline-none" 
-                                     data-target="facade" 
-                                     data-color="{{ color.hex_code }}" 
-                                     data-name="{{ color.name }}"
-                                     style="background-color: {{ color.hex_code }};" 
-                                     title="{{ color.name }}">
-                                    <!-- Иконка галочки, показывается только если selected -->
-                                    <i class="fas fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/90 opacity-0 transition-opacity drop-shadow-md check-icon text-sm"></i>
-                                    <!-- Тултип -->
-                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                        {{ color.name }}
-                                    </div>
-                                </button>
-                            {% empty %}
-                                <div class="w-full p-4 bg-red-50 text-red-500 rounded-lg text-sm">Цвета не загружены в БД.</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ПАНЕЛЬ ТЕКСТУРЫ ЦОКОЛЯ -->
-                <div class="configurator-panel p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-soft border border-white">
-                    <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-4 gap-3 flex-wrap">
-                        <h2 class="text-xl md:text-2xl font-display font-bold text-gray-900 flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-sandy text-deep-green flex items-center justify-center text-sm">2</span>
-                            Текстура Цоколя
-                        </h2>
-                        <span id="activeBaseName" class="text-gray-500 font-medium text-sm md:text-base">Не выбрана</span>
-                    </div>
-
-                    <div class="config-scroll">
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 pb-4">
-                            {% for texture in base_textures %}
-                                <button type="button" class="texture-swatch aspect-square rounded-2xl relative group overflow-hidden bg-gray-100 outline-none"
-                                     data-target="base"
-                                     data-image="{{ texture.image.url }}"
-                                     data-name="{{ texture.name }}"
-                                     title="{{ texture.name }}">
-                                    <!-- Картинка текстуры -->
-                                    <img src="{{ texture.image.url }}" class="absolute inset-0 w-full h-full object-cover">
-                                    <!-- Затемняющий градиент при наведении -->
-                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
-                                    <!-- Галочка активного -->
-                                    <div class="absolute top-2 right-2 w-6 h-6 bg-deep-green rounded-full flex items-center justify-center text-white text-xs opacity-0 transition-opacity check-icon shadow-md z-10">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <!-- Имя текстуры поверх картинки снизу -->
-                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-left">
-                                        <span class="text-white text-xs font-medium">{{ texture.name }}</span>
-                                    </div>
-                                </button>
-                            {% empty %}
-                                <div class="col-span-full p-4 bg-red-50 text-red-500 rounded-lg text-sm">Текстуры не загружены в БД.</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- КНОПКИ ДЕЙСТВИЙ -->
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <button id="resetConfigBtn" type="button" class="px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-700 font-medium hover:bg-gray-100 transition-colors w-full sm:w-1/3 flex items-center justify-center gap-2 min-h-[48px]">
-                        <i class="fas fa-undo"></i> Сбросить
-                    </button>
-                    <a href="{% url 'contact' %}" class="button bg-deep-green text-white px-6 sm:px-8 py-4 rounded-xl font-medium shadow-md hover:shadow-xl hover:-translate-y-1 transition-all w-full sm:w-2/3 text-center flex items-center justify-center gap-2 min-h-[48px]">
-                        Рассчитать проект <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-
-            </div>
-        </div>
+    <div class="color-configurator-shell">
+        <iframe id="facadeConfigurator"
+                src="{% static 'color_configurator/index.html' %}?{{ widget_query }}"
+                title="Конфигуратор фасада: 3D-модель дома, фактуры и цвета"
+                loading="eager" allow="clipboard-write"></iframe>
     </div>
-</div>
+
+    <section class="color-request" id="colorRequest" aria-labelledby="colorRequestTitle">
+        <div class="color-request__copy">
+            <p class="color-selection-eyebrow">Поможем с выбором</p>
+            <h2 id="colorRequestTitle">Получить консультацию</h2>
+            <p>Пришлём расчёт материалов и цену под выбранную отделку. Ваш выбор из конфигуратора добавится к заявке.</p>
+            <div class="color-request__selection" id="selectedFinish" aria-live="polite">{% if form.facade.value %}Фасад: {{ form.facade.value }}. Цоколь: {{ form.plinth.value|default:'не выбран' }}.{% else %}Выберите фактуру и цвета на модели дома.{% endif %}</div>
+        </div>
+
+        <form class="color-request__form" method="post" action="{% url 'color_selection' %}#colorRequest">
+            {% csrf_token %}
+            <input type="hidden" name="facade" id="selectedFacade" value="{{ form.facade.value|default_if_none:'' }}">
+            <input type="hidden" name="plinth" id="selectedPlinth" value="{{ form.plinth.value|default_if_none:'' }}">
+            <input type="hidden" name="config_state" id="selectedState" value="{{ form.config_state.value|default_if_none:'' }}">
+
+            {% if sent %}<p class="color-request__success" role="status">Заявка отправлена. Мы свяжемся с вами.</p>{% endif %}
+            {% if send_error %}<p class="color-request__error" role="alert">Не удалось отправить заявку. Попробуйте ещё раз позже.</p>{% endif %}
+            {% if form.non_field_errors %}<div class="color-request__error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+
+            <div class="color-request__fields">
+                <div>
+                    <label for="requestName">Ваше имя <span aria-hidden="true">*</span></label>
+                    <input id="requestName" name="name" type="text" value="{{ form.name.value|default_if_none:'' }}" autocomplete="name" maxlength="100" required>
+                    {% if form.name.errors %}<p class="color-request__error">{{ form.name.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label for="requestPhone">Телефон <span aria-hidden="true">*</span></label>
+                    <input id="requestPhone" name="phone" type="tel" value="{{ form.phone.value|default_if_none:'' }}" autocomplete="tel" maxlength="32" placeholder="+7 (___) ___-__-__" required>
+                    {% if form.phone.errors %}<p class="color-request__error">{{ form.phone.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label for="requestEmail">Электронная почта</label>
+                    <input id="requestEmail" name="email" type="email" value="{{ form.email.value|default_if_none:'' }}" autocomplete="email" maxlength="254" placeholder="you@example.com">
+                    {% if form.email.errors %}<p class="color-request__error">{{ form.email.errors|striptags }}</p>{% endif %}
+                </div>
+                <div class="color-request__wide">
+                    <label for="requestMessage">Комментарий</label>
+                    <textarea id="requestMessage" name="message" rows="3" maxlength="1000" placeholder="Площадь фасада, адрес объекта или вопрос">{{ form.message.value|default_if_none:'' }}</textarea>
+                    {% if form.message.errors %}<p class="color-request__error">{{ form.message.errors|striptags }}</p>{% endif %}
+                </div>
+            </div>
+            <label class="color-request__consent" for="requestConsent">
+                <input id="requestConsent" name="consent" type="checkbox" required {% if form.consent.value %}checked{% endif %}>
+                <span>Согласен на обработку <a href="{% url 'policy' %}" target="_blank" rel="noopener noreferrer">персональных данных</a></span>
+            </label>
+            {% if form.consent.errors %}<p class="color-request__error">{{ form.consent.errors|striptags }}</p>{% endif %}
+            <button class="color-request__submit" type="submit">Отправить заявку</button>
+        </form>
+    </section>
+</section>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/color_selection.js' %}?v=2.1"></script>
+<script src="{% static 'js/color_selection.js' %}?v=5"></script>
 {% endblock %}
