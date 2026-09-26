@@ -18,3 +18,10 @@ media/
 staticfiles/
 logs/
 *.log
+
+# Docker / деплой / миграции данных
+backups/
+media_backup/
+*.dump
+stroyma_db.dump
+data_dump.json

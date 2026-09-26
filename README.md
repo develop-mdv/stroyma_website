@@ -6,21 +6,64 @@ STROYMA - это веб-сайт для магазина строительны�
 
 ## Технологии
 
-- Python 3.x
+- Python 3.12+
 - Django 5.2
 - PostgreSQL
-- Bootstrap (для фронтенда)
-- Jazzmin (для улучшенного интерфейса админ-панели)
+- Redis (кеш, сессии `cached_db`, ratelimit/axes — при заданном `REDIS_URL`)
+- Docker / Docker Compose (рекомендуемый деплой)
+- Gunicorn + Nginx (внутри Compose), Caddy для HTTPS на VPS
+- Bootstrap (фронтенд)
+- Jazzmin (админ-панель)
 
 ## Установка и настройка
 
-### Требования
+### Деплой на VPS (Linux) через Docker Compose
 
-- Python 3.8 или выше
-- PostgreSQL
-- Git (для клонирования репозитория)
+**Требования:** Docker Engine + Compose plugin, Git, домен с DNS-записью на VPS и доступные порты 80/443.
 
-### Шаги по установке
+1. Клонируйте репозиторий и перейдите в каталог проекта.
+2. Скопируйте `.env.example` в `.env` и заполните как минимум: `SECRET_KEY`, `DB_*`, `EMAIL_*`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `SITE_URL=https://ваш-домен`. Домен в `SITE_URL` должен совпадать с DNS-записью и входить в `ALLOWED_HOSTS`; `CSRF_TRUSTED_ORIGINS` должен содержать его HTTPS-адрес. Сохраните `DEBUG=False`.
+3. Создайте каталоги для томов (если их ещё нет):
+   ```bash
+   mkdir -p media staticfiles logs
+   ```
+4. Запуск стека (**PostgreSQL**, **Redis**, **web** — Django + Gunicorn, **nginx** — статика и проксирование, **caddy** — публичный HTTPS и автоматический сертификат):
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+   ```
+5. Создайте суперпользователя:
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py createsuperuser
+   ```
+
+Сайт доступен по **HTTPS на порту 443**. Caddy перенаправляет HTTP с порта 80 на HTTPS; Nginx не публикуется наружу и передаёт Django исходную схему запроса. Сертификаты хранятся в томе `caddy_data`. Переменная `REDIS_URL` для сервиса `web` задаётся в `docker-compose.yml` (`redis://redis:6379/1`). Для команд Compose в этом окружении всегда указывайте оба файла через `-f`.
+
+Миграция `services.0007` удаляет записи видеороликов услуг из БД. Перед обновлением работающего сайта сделайте резервную копию; сами файлы в `media/` миграция не удаляет, а Nginx больше не отдаёт старые пути видео. После проверки бэкапа их можно убрать через dry-run и `cleanup_media --apply`.
+
+### Разработка через Docker Compose
+
+С тем же `.env` можно запустить локальный HTTP-режим: override включает `DEBUG=True`, выставляет локальные хосты и отключает индексацию. Nginx слушает только `127.0.0.1:8080` (порт можно изменить через `HTTP_PORT`).
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+Откройте `http://127.0.0.1:8080`. Для команд `exec` используйте тот же набор файлов `-f`.
+
+**Перенос данных из локального PostgreSQL** на машине разработчика в контейнер — см. [deploy/MIGRATION_HOST_TO_DOCKER.md](deploy/MIGRATION_HOST_TO_DOCKER.md).
+
+**Резервное копирование** (дамп БД + архив `media/`):
+
+```bash
+chmod +x deploy/backup.sh deploy/restore.sh
+bash deploy/backup.sh
+```
+
+Восстановление из `pg_*.sql.gz`: `bash deploy/restore.sh backups/pg_....sql.gz`
+
+### Локальная разработка без Docker
+
+**Требования:** Python 3.12+, PostgreSQL, Git. Опционально Redis (`REDIS_URL`) — иначе используется LocMemCache.
 
 1. **Клонирование репозитория**
 ```bash
@@ -28,57 +71,44 @@ git clone <URL_репозитория>
 cd stroyma_website
 ```
 
-2. **Создание виртуального окружения и установка зависимостей**
+2. **Виртуальное окружение и зависимости**
 ```bash
 python -m venv .venv
-# Для Windows:
+# Windows:
 .venv\Scripts\activate
-# Для Linux/Mac:
+# Linux/Mac:
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. **Настройка переменных окружения**
-Создайте файл `.env` в корневой директории проекта со следующим содержимым:
-```
-SECRET_KEY=ваш_секретный_ключ
-DB_NAME=имя_базы_данных
-DB_USER=пользователь_базы_данных
-DB_PASSWORD=пароль_базы_данных
-DB_HOST=хост_базы_данных
-DB_PORT=порт_базы_данных
-EMAIL_HOST_USER=ваш_email
-EMAIL_HOST_PASSWORD=пароль_от_email
-```
+3. **Переменные окружения** — скопируйте `.env.example` в `.env` и заполните `SECRET_KEY`, `DB_*`, SMTP и при необходимости `REDIS_URL=redis://127.0.0.1:6379/1`.
 
-4. **Создание базы данных**
-```bash
-# Подключитесь к PostgreSQL
-psql -U postgres
-# Создайте базу данных
-CREATE DATABASE имя_базы_данных;
-# Выйдите из PostgreSQL
-\q
-```
-
-5. **Применение миграций и создание суперпользователя**
+4. **База данных** — создайте БД и пользователя в PostgreSQL, затем:
 ```bash
 python manage.py migrate
 python manage.py createsuperuser
 ```
 
-6. **Запуск сервера разработки**
+5. **Запуск dev-сервера**
 ```bash
 python manage.py runserver
 ```
 
-Сайт будет доступен по адресу http://127.0.0.1:8000, а админ-панель по адресу http://127.0.0.1:8000/admin/
+Сайт: http://127.0.0.1:8000 , админка: http://127.0.0.1:8000/admin/ (или путь из `ADMIN_URL`).
+
+### Импорт цветов/текстур фасада и обслуживание медиа
+
+- Импорт из `ceresit_colors_textures.json`: `python manage.py import_colors_textures` (идемпотентно; обновление существующих: `--update`).
+- Удаление файлов в `media/`, на которые не ссылается ни одно поле `FileField` (сначала проверьте список в dry-run): `python manage.py cleanup_media`, затем `python manage.py cleanup_media --apply`.
+- Конвертация существующих JPG/PNG в WebP (с бэкапом в `media_backup/` при `--apply`): `python manage.py optimize_media`, затем `python manage.py optimize_media --apply`. Исходные файлы остаются до отдельной проверки и очистки через `cleanup_media`.
+
+Новые загрузки изображений в админке автоматически конвертируются в WebP (качество 90), кроме GIF.
 
 ## Структура проекта
 
 - **accounts**: Управление пользователями и профилями
 - **products**: Управление товарами, категориями, заказами и корзиной
-- **services**: Управление услугами и фотографиями/видео услуг
+- **services**: Управление услугами и фотографиями услуг
 - **templates**: Шаблоны сайта
 - **static**: Статические файлы (CSS, JS, изображения)
 - **media**: Загруженные пользователями файлы
@@ -103,7 +133,7 @@ python manage.py runserver
 ### Услуги
 
 - Каталог услуг с подробным описанием
-- Фотографии и видео примеров работ
+- Фотографии примеров работ
 - Возможность заявки на услугу
 
 ### Пользователи и личный кабинет
@@ -209,11 +239,11 @@ python manage.py runserver
    - Заполните SEO информацию
 3. Нажмите "Сохранить"
 
-#### Добавление фотографий и видео к услуге:
+#### Добавление фотографий к услуге:
 
-1. На странице редактирования услуги прокрутите до раздела фотографий или видео
-2. Нажмите "Добавить еще одно Фото услуги" или "Добавить еще одно Видео услуги"
-3. Загрузите файл, укажите название, описание и порядок отображения
+1. На странице редактирования услуги прокрутите до раздела фотографий
+2. Нажмите "Добавить еще одно Фото услуги"
+3. Загрузите фотографию, укажите название, описание и порядок отображения
 4. Нажмите "Сохранить"
 
 ### Работа с клиентами
@@ -273,4 +303,4 @@ python manage.py runserver
 ### Проблемы с отправкой email
 
 1. Проверьте настройки SMTP в файле settings.py
-2. Убедитесь, что указаны правильные учетные данные для почтового сервера 
+2. Убедитесь, что указаны правильные учетные данные для почтового сервера

@@ -3,7 +3,9 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 
-from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES, MAX_VIDEO_UPLOAD_BYTES
+from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES
+
+from products.utils import compress_image_field_if_needed
 
 class Service(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название услуги')
@@ -39,6 +41,7 @@ class Service(models.Model):
         super().clean()
 
     def save(self, *args, **kwargs):
+        compress_image_field_if_needed(self, 'image')
         if not self.slug:
             self.slug = slugify(self.title)
             
@@ -72,26 +75,9 @@ class ServicePhoto(models.Model):
         verbose_name = 'Фото услуги'
         verbose_name_plural = 'Фото услуг'
 
+    def save(self, *args, **kwargs):
+        compress_image_field_if_needed(self, 'image')
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Фото для {self.service.title} - {self.title or 'Без названия'}"
-
-class ServiceVideo(models.Model):
-    service = models.ForeignKey(Service, related_name='videos', on_delete=models.CASCADE, verbose_name='Услуга')
-    video = models.FileField(
-        upload_to='service_videos/', verbose_name='Видео примера работы',
-        validators=[
-            FileExtensionValidator(['mp4', 'webm']),
-            MaxFileSizeValidator(MAX_VIDEO_UPLOAD_BYTES, message='Максимальный размер видео — 50 МБ.'),
-        ],
-    )
-    title = models.CharField(max_length=255, blank=True, verbose_name='Название видео')
-    description = models.TextField(blank=True, verbose_name='Описание видео')
-    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
-
-    class Meta:
-        ordering = ['order', 'id']
-        verbose_name = 'Видео услуги'
-        verbose_name_plural = 'Видео услуг'
-
-    def __str__(self):
-        return f"Видео для {self.service.title} - {self.title or 'Без названия'}"

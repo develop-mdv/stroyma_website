@@ -2,9 +2,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 
-# Согласовано с DATA_UPLOAD / лимитами в settings
 MAX_IMAGE_UPLOAD_BYTES = 5 * 1024 * 1024
-MAX_VIDEO_UPLOAD_BYTES = 50 * 1024 * 1024
 
 
 @deconstructible

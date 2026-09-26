@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Service, ServicePhoto, ServiceVideo
+from .models import Service, ServicePhoto
 from django import forms
 
 
@@ -10,19 +10,13 @@ class ServicePhotoInline(admin.TabularInline):
     fields = ('image', 'title', 'description', 'order')
 
 
-class ServiceVideoInline(admin.TabularInline):
-    model = ServiceVideo
-    extra = 1
-    fields = ('video', 'title', 'description', 'order')
-
-
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('image_preview', 'title', 'photos_count', 'videos_count')
+    list_display = ('image_preview', 'title', 'photos_count')
     list_display_links = ('image_preview', 'title')
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ('title', 'short_description')
-    inlines = [ServicePhotoInline, ServiceVideoInline]
+    inlines = [ServicePhotoInline]
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'slug', 'short_description', 'description', 'image'),
@@ -60,14 +54,6 @@ class ServiceAdmin(admin.ModelAdmin):
         return format_html('<span style="opacity:0.4;">—</span>')
     photos_count.short_description = 'Фотографии'
 
-    def videos_count(self, obj):
-        count = obj.videos.count()
-        if count:
-            return format_html('<span style="font-weight:500;">{} видео</span>', count)
-        return format_html('<span style="opacity:0.4;">—</span>')
-    videos_count.short_description = 'Видео'
-
-
 @admin.register(ServicePhoto)
 class ServicePhotoAdmin(admin.ModelAdmin):
     list_display = ('image_preview', 'service', 'title', 'order')
@@ -84,11 +70,3 @@ class ServicePhotoAdmin(admin.ModelAdmin):
             )
         return '—'
     image_preview.short_description = 'Превью'
-
-
-@admin.register(ServiceVideo)
-class ServiceVideoAdmin(admin.ModelAdmin):
-    list_display = ('service', 'title', 'order')
-    list_filter = ('service',)
-    search_fields = ('title', 'description')
-    ordering = ('service', 'order', 'id')

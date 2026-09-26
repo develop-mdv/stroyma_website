@@ -1,0 +1,25 @@
+services:
+  web:
+    environment:
+      DEBUG: "False"
+      SECURE_SSL_REDIRECT: "True"
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      SITE_URL: ${SITE_URL:?Set SITE_URL to https://your-domain.ru in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

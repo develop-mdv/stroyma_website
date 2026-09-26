@@ -128,8 +128,8 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
@@ -179,9 +179,9 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False
 
-# Лимиты размера запроса (видео в админке — до 50 МБ, см. stroyma.validators)
-DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
-FILE_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+# Лимиты загрузки изображений (до 5 МБ на файл)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
 
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
@@ -274,7 +274,6 @@ JAZZMIN_SETTINGS = {
         "products.BaseTexture": "fas fa-brush",
         "services.Service": "fas fa-hard-hat",
         "services.ServicePhoto": "fas fa-images",
-        "services.ServiceVideo": "fas fa-video",
         "accounts.UserProfile": "fas fa-id-card",
     },
     "default_icon_parents": "fas fa-folder-open",
@@ -419,6 +418,9 @@ LOGGING = {
     },
 }
 
+# Опциональный Redis: кеш + (ниже) сессии cached_db
+REDIS_URL = (config('REDIS_URL', default='') or '').strip()
+
 # Настройки для кеширования
 CACHES = {
     'default': {
@@ -432,14 +434,15 @@ CACHES = {
     }
 }
 
-# Опциональный Redis-кеш: задайте REDIS_URL в .env, чтобы включить
-REDIS_URL = config('REDIS_URL', default='')
 if REDIS_URL:
     CACHES['default'] = {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': REDIS_URL,
         'TIMEOUT': 300,
     }
+    # Чтение из Redis, запись в django_session (PostgreSQL) — сессии переживают рестарт Redis
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+    SESSION_CACHE_ALIAS = 'default'
 
 # Настройки API агрегации данных для кеша
 DATA_CACHE_TIMEOUT = 60 * 30  # 30 минут для данных отчетов

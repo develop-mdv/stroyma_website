@@ -1,78 +1,121 @@
 import json
 import os
-from datetime import time
+import shutil
+import tempfile
+import time
+from pathlib import Path
 
 import requests
+from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from bs4 import BeautifulSoup
-from pathlib import Path
-from products.models import FacadeColor, BaseTexture  # ⬅️ замени 'your_app' на имя своего приложения
+
+from products.models import FacadeColor, BaseTexture
 
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+HEADERS = {
+    'User-Agent': (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+        '(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+    ),
 }
 
+
 def rgb_to_hex(rgb_str):
-    """Преобразует строку 'rgb(r, g, b)' в HEX"""
-    parts = rgb_str.strip("rgb()").split(",")
-    r, g, b = map(int, parts)
-    return "#%02x%02x%02x" % (r, g, b)
+    parts = rgb_str.strip().strip('rgb()').split(',')
+    r, g, b = (int(x.strip()) for x in parts[:3])
+    return '#%02x%02x%02x' % (r, g, b)
 
 
-def download_image(url, upload_dir='media/base_textures', retries=3):
-    os.makedirs(upload_dir, exist_ok=True)
-    filename = os.path.join(upload_dir, os.path.basename(url))
+def download_texture(url: str, dest_abs: Path, retries: int = 3):
+    dest_abs.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dest_abs.with_suffix(dest_abs.suffix + '.download')
 
     for attempt in range(retries):
         try:
-            response = requests.get(url, stream=True, timeout=10, headers=headers)
-            if response.status_code == 200:
-                with open(filename, 'wb') as f:
-                    for chunk in response.iter_content(1024):
-                        f.write(chunk)
-                return filename
-            else:
-                print(f"❌ Ошибка загрузки {url} (код {response.status_code})")
-                break
-        except (requests.exceptions.RequestException, ConnectionError) as e:
-            print(f"🔁 Попытка {attempt + 1} не удалась: {e}")
+            resp = requests.get(url, stream=True, timeout=15, headers=HEADERS)
+            if resp.status_code != 200:
+                raise RuntimeError(f'HTTP {resp.status_code}')
+            with open(tmp, 'wb') as f:
+                for chunk in resp.iter_content(65536):
+                    f.write(chunk)
+            if dest_abs.exists():
+                dest_abs.unlink()
+            shutil.move(str(tmp), str(dest_abs))
+            return dest_abs
+        except (requests.exceptions.RequestException, OSError, RuntimeError) as exc:
+            if tmp.exists():
+                tmp.unlink(missing_ok=True)
+            print(f'Попытка {attempt + 1}/{retries} для {url}: {exc}')
             time.sleep(2)
+
     return None
 
 
 class Command(BaseCommand):
-    help = 'Импортирует цвета и текстуры из JSON файла'
+    help = 'Импорт цветов и текстур из ceresit_colors_textures.json (идемпотентно).'
 
-    def handle(self, *args, **kwargs):
-        json_file = 'ceresit_colors_textures.json'  # Путь к твоему JSON-файлу
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--json-path',
+            default=str(Path(settings.BASE_DIR) / 'ceresit_colors_textures.json'),
+            help='Путь к JSON с ключами colors и textures',
+        )
+        parser.add_argument(
+            '--update',
+            action='store_true',
+            help='Обновить hex-код цветов и файлы текстур, если записи уже есть',
+        )
 
-        with open(json_file, 'r', encoding='utf-8') as f:
+    def handle(self, *args, **options):
+        json_path = Path(options['json_path']).resolve()
+        update = options['update']
+
+        if not json_path.is_file():
+            raise SystemExit(f'Не найден файл: {json_path}')
+
+        with open(json_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
-        # Цвета
-        for item in data['colors']:
+        for item in data.get('colors', []):
             name = item['name']
-            color_rgb = item['color']
-            hex_code = rgb_to_hex(color_rgb)
+            hex_code = rgb_to_hex(item['color'])
+            existing = FacadeColor.objects.filter(name=name).first()
+            if existing:
+                if update and existing.hex_code != hex_code:
+                    existing.hex_code = hex_code
+                    existing.save(update_fields=['hex_code'])
+                    self.stdout.write(f'Обновлён цвет: {name}')
+                continue
+            FacadeColor.objects.create(name=name, hex_code=hex_code)
+            self.stdout.write(f'Добавлен цвет: {name}')
 
-            FacadeColor.objects.get_or_create(
-                name=name,
-                defaults={'hex_code': hex_code}
-            )
+        # Сначала скачиваем во временный каталог. FileField сам поместит файл
+        # в MEDIA_ROOT/base_textures и не создаст лишнюю копию с суффиксом.
+        with tempfile.TemporaryDirectory(prefix='stroyma_textures_') as tmp_dir:
+            for item in data.get('textures', []):
+                name = item['name']
+                image_url = item['image_url']
+                basename = os.path.basename(image_url.split('?')[0])
+                obj = BaseTexture.objects.filter(name=name).first()
+                if obj is not None and not update:
+                    continue
 
-        # Текстуры
-        for item in data['textures']:
-            name = item['name']
-            image_url = item['image_url']
+                downloaded = download_texture(image_url, Path(tmp_dir) / basename)
+                if not downloaded or downloaded.stat().st_size == 0:
+                    self.stdout.write(
+                        self.style.ERROR(f'Не удалось скачать текстуру «{name}»: {image_url}')
+                    )
+                    continue
 
-            local_path = download_image(image_url)
+                with downloaded.open('rb') as img_file:
+                    django_file = File(img_file, name=basename)
+                    if obj:
+                        obj.image.save(basename, django_file, save=False)
+                        obj.save(update_fields=['image'])
+                        self.stdout.write(f'Обновлена текстура: {name}')
+                    else:
+                        BaseTexture.objects.create(name=name, image=django_file)
+                        self.stdout.write(f'Добавлена текстура: {name}')
 
-            with open(local_path, 'rb') as img_file:
-                BaseTexture.objects.get_or_create(
-                    name=name,
-                    defaults={'image': File(img_file, name=os.path.basename(local_path))}
-                )
-
-        self.stdout.write(self.style.SUCCESS('✅ Данные успешно импортированы'))
+        self.stdout.write(self.style.SUCCESS('Импорт завершён'))

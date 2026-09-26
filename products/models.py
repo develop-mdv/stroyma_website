@@ -11,6 +11,8 @@ from django.core.cache import cache
 
 from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES
 
+from products.utils import compress_image_field_if_needed
+
 class Category(MPTTModel):
     """
     Модель для категорий товаров с поддержкой иерархии (вложенных категорий).
@@ -63,6 +65,7 @@ class Category(MPTTModel):
         Переопределение метода save для автоматического создания уникального slug.
         Если slug уже существует, добавляет числовой суффикс.
         """
+        compress_image_field_if_needed(self, 'image')
         if not self.slug:
             self.slug = slugify(self.name)
             
@@ -149,6 +152,7 @@ class Product(models.Model):
         Переопределение метода save для автоматического создания уникального slug.
         Если slug уже существует, добавляет числовой суффикс.
         """
+        compress_image_field_if_needed(self, 'image')
         if not self.slug:
             self.slug = slugify(self.name)
             
@@ -408,6 +412,10 @@ class BaseTexture(models.Model):
         verbose_name = "Базовая текстура"
         verbose_name_plural = "Базовые текстуры"
 
+    def save(self, *args, **kwargs):
+        compress_image_field_if_needed(self, 'image')
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -431,6 +439,10 @@ class ProductImage(models.Model):
         ordering = ['order']
         verbose_name = "Фото товара"
         verbose_name_plural = "Фото товаров"
+
+    def save(self, *args, **kwargs):
+        compress_image_field_if_needed(self, 'image')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Изображение для {self.product.name}"
