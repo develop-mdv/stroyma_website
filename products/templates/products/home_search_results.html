@@ -1,0 +1,41 @@
+<div id="home-result-list" class="home-result-list">
+    {% for product in products %}
+    <article class="home-product-card">
+        <div class="home-product-visual">
+            <a class="home-product-image" href="{% url 'product_detail' slug=product.slug %}" aria-label="Открыть {{ product.name }}">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                {% else %}
+                    <i class="fa-regular fa-image" aria-hidden="true"></i>
+                {% endif %}
+            </a>
+        </div>
+        <div class="home-product-info">
+            <a class="home-product-name" href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a>
+            <p class="home-product-availability">
+                {% if product.stock > 0 %}<span class="home-stock-dot"></span>В наличии{% else %}<span class="home-stock-dot home-stock-dot-muted"></span>Под заказ{% endif %}
+            </p>
+            <button type="button" class="home-quick-view" onclick="openQuickView({{ product.pk }})" aria-label="Быстрый просмотр: {{ product.name }}"><i class="fa-regular fa-eye" aria-hidden="true"></i> Быстрый просмотр</button>
+        </div>
+        <div class="home-product-buy">
+            <div class="home-product-price">{{ product.price|floatformat:0 }} <span>₽</span></div>
+            <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="ajax-cart-form home-buy-form">
+                {% csrf_token %}
+                <div class="home-quantity" aria-label="Количество">
+                    <button type="button" class="home-quantity-button" data-step="-1" aria-label="Уменьшить количество"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+                    <input type="number" name="quantity" min="1" max="9999" value="1" aria-label="Количество {{ product.name }}">
+                    <button type="button" class="home-quantity-button" data-step="1" aria-label="Увеличить количество"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+                </div>
+                <button type="submit" class="home-add-button"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i><span>В корзину</span></button>
+            </form>
+        </div>
+    </article>
+    {% empty %}
+    <div class="home-no-results">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <h3>Товары не найдены</h3>
+        <p>Попробуйте другое название или измените фильтры.</p>
+        <a href="{% url 'product_list' %}">Смотреть все товары</a>
+    </div>
+    {% endfor %}
+</div>

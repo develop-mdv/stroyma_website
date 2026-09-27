@@ -2,6 +2,8 @@ import json
 import logging
 import re
 import threading
+from decimal import Decimal
+from math import ceil
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -10,6 +12,7 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q, Max, Min
+from django.db.models.functions import Round
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -89,11 +92,62 @@ def get_or_create_cart(request):
         request.session['cart'] = {}
     return cart
 
+def _home_cart_context(request):
+    """Compact cart data for the home page and its live preview."""
+    if request.user.is_authenticated:
+        cart = get_or_create_cart(request)
+        entries = (
+            CartItem.objects.filter(cart=cart).select_related('product')
+            if cart else []
+        )
+        rows = [
+            {'product': item.product, 'quantity': item.quantity,
+             'total_price': item.product.price * item.quantity}
+            for item in entries
+        ]
+    else:
+        quantities = {}
+        for product_id, raw_quantity in (request.session.get('cart', {}) or {}).items():
+            try:
+                quantity = int(raw_quantity)
+                if quantity > 0:
+                    quantities[int(product_id)] = quantity
+            except (TypeError, ValueError):
+                continue
+        products = Product.objects.filter(pk__in=quantities).in_bulk()
+        rows = [
+            {'product': products[product_id], 'quantity': quantity,
+             'total_price': products[product_id].price * quantity}
+            for product_id, quantity in quantities.items() if product_id in products
+        ]
+    return {
+        'cart_preview_items': rows,
+        'cart_preview_count': sum(row['quantity'] for row in rows),
+        'cart_preview_total': sum((row['total_price'] for row in rows), Decimal('0')),
+    }
+
+
+def _catalog_price_range(products, request):
+    """Get available prices before applying the price filter itself."""
+    bounds = products.aggregate(low=Min('display_price'), high=Max('display_price'))
+    minimum = int(bounds['low']) if bounds['low'] is not None else 0
+    maximum = ceil(bounds['high']) if bounds['high'] is not None else 0
+
+    raw_minimum = str(request.GET.get('price_min', minimum))
+    raw_maximum = str(request.GET.get('price_max', maximum))
+    selected_minimum = int(raw_minimum) if raw_minimum.isdigit() else minimum
+    selected_maximum = int(raw_maximum) if raw_maximum.isdigit() else maximum
+    if selected_minimum > maximum or selected_maximum < minimum or selected_minimum > selected_maximum:
+        selected_minimum, selected_maximum = minimum, maximum
+    else:
+        selected_minimum = max(minimum, selected_minimum)
+        selected_maximum = min(maximum, selected_maximum)
+    return minimum, maximum, selected_minimum, selected_maximum, bounds['low'] is not None
+
+
 def product_list(request):
     form = SearchForm(request.GET)
     products = Product.objects.all()
-    min_price = products.aggregate(Min('price'))['price__min'] or 0
-    max_price = products.aggregate(Max('price'))['price__max'] or 0
 
     # Получаем корневые категории и их потомков
     root_categories = Category.objects.filter(parent=None)
@@ -129,18 +183,17 @@ def product_list(request):
         # Применяем фильтр с использованием OR
         products = products.filter(category_filters).distinct()
 
-    price_min = str(request.GET.get('price_min', min_price))
-    price_max = str(request.GET.get('price_max', max_price))
-    if price_min and price_min.isdigit():
-        products = products.filter(price__gte=int(price_min))
-    if price_max and price_max.isdigit():
-        products = products.filter(price__lte=int(price_max))
+    products = products.annotate(display_price=Round('price'))
+    min_price, max_price, price_min, price_max, has_price_candidates = _catalog_price_range(products, request)
+    products = products.filter(display_price__gte=price_min, display_price__lte=price_max)
 
     sort_by = request.GET.get('sort_by', 'name')
     if sort_by == 'price_asc':
         products = products.order_by('price')
     elif sort_by == 'price_desc':
         products = products.order_by('-price')
+    else:
+        products = products.order_by('name')
 
     paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
@@ -149,19 +202,29 @@ def product_list(request):
     return render(request, 'products/product_list.html', {
         'page_obj': page_obj,
         'search_form': form,
-        'min_price': int(min_price),
-        'max_price': int(max_price),
+        'min_price': min_price,
+        'max_price': max_price,
+        'selected_price_min': price_min,
+        'selected_price_max': price_max,
+        'has_price_candidates': has_price_candidates,
         'sort_by': sort_by,
         'categories_tree': categories_tree,
         'selected_categories': selected_categories,
+        **_home_cart_context(request),
+    })
+
+
+def cart_preview(request):
+    context = _home_cart_context(request)
+    return JsonResponse({
+        'html': render_to_string('products/home_cart_preview.html', context, request=request),
+        'count': context['cart_preview_count'],
     })
 
 
 @ratelimit(key='ip', rate='30/m', block=True)
 def search_ajax(request):
     query = request.GET.get('query', '').lower()
-    price_min = request.GET.get('price_min', None)
-    price_max = request.GET.get('price_max', None)
     sort_by = request.GET.get('sort_by', 'name')
     page_number = request.GET.get('page', 1)
     autocomplete = request.GET.get('autocomplete', False)
@@ -189,18 +252,27 @@ def search_ajax(request):
         products = products.filter(category_filters).distinct()
 
     if autocomplete:
-        products = products[:5]
-        return JsonResponse({'products': [{'name': product.name} for product in products]})
+        products = products.order_by('name')[:6]
+        return JsonResponse({'products': [
+            {
+                'name': product.name,
+                'price': f'{product.price:,.0f}'.replace(',', ' '),
+                'image': product.image.url if product.image else '',
+                'url': product.get_absolute_url(),
+            }
+            for product in products
+        ]})
 
-    if price_min and price_min.isdigit():
-        products = products.filter(price__gte=int(price_min))
-    if price_max and price_max.isdigit():
-        products = products.filter(price__lte=int(price_max))
+    products = products.annotate(display_price=Round('price'))
+    min_price, max_price, price_min, price_max, has_price_candidates = _catalog_price_range(products, request)
+    products = products.filter(display_price__gte=price_min, display_price__lte=price_max)
 
     if sort_by == 'price_asc':
         products = products.order_by('price')
     elif sort_by == 'price_desc':
         products = products.order_by('-price')
+    else:
+        products = products.order_by('name')
 
     paginator = Paginator(products, 12)
     page = paginator.get_page(page_number)
@@ -210,10 +282,18 @@ def search_ajax(request):
         'sort_by': sort_by,
     }
 
-    results_html = render_to_string('products/search_results.html', context, request=request)
+    results_template = (
+        'products/home_search_results.html'
+        if request.GET.get('view') == 'home'
+        else 'products/search_results.html'
+    )
+    results_html = render_to_string(results_template, context, request=request)
     return JsonResponse({
         'results': results_html,
         'has_next': page.has_next(),
+        'count': paginator.count,
+        'price_bounds': {'min': min_price, 'max': max_price, 'available': has_price_candidates},
+        'selected_price': {'min': price_min, 'max': price_max},
     })
 
 def product_detail(request, slug):

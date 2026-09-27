@@ -1,6 +1,6 @@
 /* Базовые стили */
 html, body {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
 }
 body {

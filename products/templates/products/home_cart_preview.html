@@ -1,0 +1,27 @@
+{% if cart_preview_items %}
+    <div class="home-cart-items">
+        {% for item in cart_preview_items %}
+        <div class="home-cart-item">
+            <a href="{% url 'product_detail' slug=item.product.slug %}" class="home-cart-item-image" aria-label="Открыть {{ item.product.name }}">
+                {% if item.product.image %}<img src="{{ item.product.image.url }}" alt="" loading="lazy">{% else %}<i class="fa-regular fa-image" aria-hidden="true"></i>{% endif %}
+            </a>
+            <div class="home-cart-item-info">
+                <a href="{% url 'product_detail' slug=item.product.slug %}">{{ item.product.name }}</a>
+                <span>{{ item.quantity }} шт. × {{ item.product.price|floatformat:0 }} ₽</span>
+            </div>
+            <strong>{{ item.total_price|floatformat:0 }} ₽</strong>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="home-cart-delivery"><i class="fa-solid fa-truck-fast" aria-hidden="true"></i><span>Стоимость доставки уточним при оформлении</span></div>
+    <div class="home-cart-total"><span>Итого за товары</span><strong>{{ cart_preview_total|floatformat:0 }} ₽</strong></div>
+    <a href="{% url 'checkout' %}" class="home-cart-checkout">Оформить заказ <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    <a href="{% url 'view_cart' %}" class="home-cart-all">Открыть корзину</a>
+{% else %}
+    <div class="home-cart-empty">
+        <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+        <p>Корзина пока пуста</p>
+        <span>Добавьте нужные материалы из каталога — они появятся здесь.</span>
+    </div>
+    <a href="#catalog-title" class="home-cart-checkout home-cart-browse">Выбрать товары <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+{% endif %}

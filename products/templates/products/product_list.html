@@ -1,157 +1,128 @@
 {% extends 'products/base.html' %}
 {% load static %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=8">{% endblock %}
 {% block content %}
 
-<!-- Хлебные крошки -->
-<nav class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6 md:mb-10 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
-    <a href="{% url 'product_list' %}" class="text-deep-green hover:text-gray-900 transition-colors">Главная</a>
-    <span class="text-gray-300">/</span>
-    <span class="text-gray-900">Каталог товаров</span>
-</nav>
-
-<!-- Hero-Баннер -->
-<section class="relative mb-10 md:mb-16 animate-fade-in overflow-hidden">
-    <div class="relative z-10 py-10 md:py-16 lg:py-20 grid lg:grid-cols-[minmax(0,1fr)_auto] gap-10 items-center">
-        <div class="max-w-4xl">
-            <p class="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-deep-green mb-4 flex items-center gap-3">
-                <span class="w-8 h-px bg-deep-green"></span>
-                <img src="{% static 'images/logo_hero.png' %}" alt="Логотип СтройМа" class="h-7 w-auto object-contain -my-1" loading="lazy">
-                Каталог СтройМа
-            </p>
-            <h2 class="text-4xl md:text-5xl lg:text-7xl font-black font-display text-gray-900 leading-[1.05] tracking-tighter uppercase mb-6" style="font-size:clamp(2.5rem,8vw,4.5rem)">
-                Лучшие<br>строительные<br><span style="color:#2D5D4C">материалы</span>
-            </h2>
-            <p class="text-lg md:text-xl text-gray-500 font-light max-w-2xl leading-relaxed mb-8">
-                Качество, надежность и экологичность для ваших проектов. Откройте полный ассортимент товаров для строительства и ремонта.
-            </p>
-            <a href="#catalog-title" id="scroll-to-catalog" class="inline-flex items-center gap-2 bg-gray-900 text-white py-4 px-8 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors duration-300 shadow-md group">
-                Посмотреть каталог <i class="fas fa-arrow-down group-hover:translate-y-0.5 transition-transform text-xs"></i>
-            </a>
+<div class="home-page" id="home-page" data-search-url="{% url 'search_ajax' %}" data-cart-url="{% url 'cart_preview' %}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}">
+    <section class="home-hero" aria-labelledby="home-hero-title">
+        <img class="home-hero-photo" src="{% static 'images/home_materials_hero.webp' %}" alt="Стопка светлых строительных плит" fetchpriority="high">
+        <div class="home-hero-content">
+            <span class="home-eyebrow">Каталог СТРОЙМА · Курск</span>
+            <h1 id="home-hero-title">Строй<span>МА</span>териалы<br>для дела.</h1>
+            <p>Найдите нужное. Соберите заказ. Получите материалы для вашего проекта.</p>
         </div>
+    </section>
 
-        <!-- Декоративный логотип-локап СтройМа -->
-        <div class="hidden lg:flex relative items-center justify-center pr-2 xl:pr-6 select-none" aria-hidden="true">
-            <div class="absolute inset-0 bg-gradient-to-br from-deep-green/15 via-emerald-400/10 to-sandy/30 rounded-full blur-3xl animate-hero-glow"></div>
-            <div class="absolute inset-4 rounded-full border border-deep-green/10 animate-[spin_40s_linear_infinite]"></div>
-            <div class="absolute inset-10 rounded-full border border-dashed border-deep-green/20 animate-[spin_60s_linear_infinite_reverse]"></div>
-            <div class="relative z-10 animate-hero-float flex flex-col items-center gap-3 xl:gap-4">
-                <img src="{% static 'images/logo_hero.png' %}"
-                     alt="Логотип СтройМа"
-                     class="w-80 xl:w-[26rem] 2xl:w-[30rem] h-auto object-contain drop-shadow-[0_25px_45px_rgba(45,93,76,0.28)] transition-transform duration-700 ease-out hover:scale-[1.03]"
-                     loading="lazy" decoding="async">
-                <div class="flex flex-col items-center -mt-4 xl:-mt-6">
-                    <span class="font-black tracking-tight text-deep-green leading-none"
-                          style="font-size:clamp(2.4rem,4vw,3.75rem); letter-spacing:-0.02em">
-                        СтройМа
-                    </span>
-                    <span class="mt-2 flex items-center gap-3 text-[0.6rem] xl:text-[0.7rem] font-bold uppercase tracking-[0.35em] text-gray-500">
-                        <span class="w-4 h-px bg-gray-400/60"></span>
-                        Строительные материалы
-                        <span class="w-4 h-px bg-gray-400/60"></span>
-                    </span>
-                </div>
+    <section class="home-search-section" aria-label="Поиск товаров">
+        <div class="home-search-heading">
+            <div>
+                <span class="home-section-eyebrow">Быстрый поиск</span>
+                <h2>Что нужно для вашего проекта?</h2>
+            </div>
+            <p>Ищите по названию товара или слову из описания</p>
+        </div>
+        <form id="main-search-form" class="home-search-form" action="{% url 'product_list' %}" method="get" role="search" autocomplete="off">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <label class="sr-only" for="id_query">Название товара</label>
+            <input id="id_query" name="query" type="search" value="{{ request.GET.query|default:'' }}" placeholder="Например, кирпич" aria-controls="autocomplete-suggestions" aria-expanded="false" aria-autocomplete="list" autocomplete="off">
+            <button class="home-search-submit" type="submit">Найти <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+        </form>
+        <div id="autocomplete-suggestions" class="home-suggestions" role="listbox" aria-label="Подсказки товаров" hidden></div>
+    </section>
+
+    <div class="home-catalog-heading" id="catalog-title">
+        <div>
+            <span class="home-section-eyebrow">Каталог товаров</span>
+            <div class="home-catalog-title-row">
+                <h2>Подберите материалы</h2>
+                <span id="results-count" aria-live="polite">Найдено товаров: {{ page_obj.paginator.count }}</span>
             </div>
         </div>
     </div>
-    <!-- Декоративный фон -->
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-sandy/40 to-transparent pointer-events-none hidden lg:block"></div>
-    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-gray-200 via-gray-300 to-transparent"></div>
-</section>
-
-<h1 id="catalog-title" class="text-2xl md:text-3xl font-black font-display text-gray-900 uppercase tracking-tight mb-6 md:mb-8 animate-fade-in">Каталог товаров</h1>
 
 
 <!-- Кнопка переключения фильтров на мобильных устройствах -->
 <div class="block md:hidden mb-4">
-    <button id="toggle-filter" type="button" class="w-full py-3 bg-white text-deep-green font-medium rounded-xl shadow-sm border border-gray-200 transition-colors hover:bg-gray-50 flex items-center justify-center gap-2 min-h-[48px]">
-        <i class="fas fa-filter"></i> <span>Фильтры и поиск</span>
+    <button id="toggle-filter" type="button" aria-controls="search-form" aria-expanded="false" class="w-full py-3 bg-white text-deep-green font-medium rounded-xl shadow-sm border border-gray-200 transition-colors hover:bg-gray-50 flex items-center justify-center gap-2 min-h-[48px]">
+        <i class="fas fa-filter"></i> <span>Фильтры</span>
     </button>
 </div>
 
 <!-- Layout: min-w-0 у flex-ребёнка — иначе сетка товаров не сжимается и ломается рядом с сайдбаром -->
-<div class="flex flex-col md:flex-row gap-6 lg:gap-8 items-start relative">
+<div class="home-layout" id="home-layout">
 
     <!-- Сайдбар с фильтрами -->
-    <aside class="w-full md:w-1/3 lg:w-1/4 xl:w-[300px] shrink-0 md:sticky md:top-28 z-20">
-        <form id="search-form" method="get" action="{% url 'product_list' %}" class="bg-white/80 backdrop-blur-xl p-6 lg:p-8 rounded-[2rem] shadow-xl shadow-gray-200/50 border border-white/50 hidden md:block">
-            
-            <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 mb-6 border-b-2 border-gray-900 pb-3">Фильтры</h3>
+    <aside class="home-filter-panel">
+        <form id="search-form" method="get" action="{% url 'product_list' %}" class="home-filter-form hidden md:block">
+            <div class="home-filter-header">
+                <h3>Фильтры</h3>
+                <button type="button" id="reset-filters" class="home-filter-reset">Сбросить</button>
+            </div>
+            <input type="hidden" name="query" id="filter-query" value="{{ request.GET.query|default:'' }}">
 
-            <div class="flex flex-col gap-8">
-                <!-- Поле поиска -->
-                <div>
-                    <label class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Поиск</label>
-                    <div class="relative">
-                        {{ search_form.query }}
-                        <div id="autocomplete-suggestions" class="absolute z-10 w-full bg-white border border-gray-100 rounded-xl shadow-soft mt-1 max-h-60 overflow-y-auto hidden"></div>
-                    </div>
+            <div class="home-filter-section">
+                <h4 class="home-filter-label" id="price-filter-label">Цена, ₽</h4>
+                <div id="price-slider" class="home-price-range" role="group" aria-labelledby="price-filter-label">
+                    <div class="home-price-track" aria-hidden="true"><span class="home-price-track-fill"></span></div>
+                    <input type="range" id="price-range-min" min="{{ min_price }}" max="{{ max_price }}" value="{{ selected_price_min }}" aria-label="Минимальная цена">
+                    <input type="range" id="price-range-max" min="{{ min_price }}" max="{{ max_price }}" value="{{ selected_price_max }}" aria-label="Максимальная цена">
                 </div>
-
-                <!-- Диапазон цен (Ползунок) -->
-                <div>
-                    <label class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-8">Цена (₽)</label>
-                    <div id="price-slider" class="mb-6"></div>
-                    
-                    <div class="flex items-center gap-3 mt-4">
-                        <div class="flex-1">
-                            <input type="number" name="price_min" id="price_min" step="1" value="{{ request.GET.price_min|default:min_price }}"
-                                class="w-full rounded-lg border-gray-200 bg-gray-50 text-sm focus:border-deep-green focus:ring-deep-green text-center py-2 h-10">
-                        </div>
-                        <span class="text-gray-400">-</span>
-                        <div class="flex-1">
-                            <input type="number" name="price_max" id="price_max" step="1" value="{{ request.GET.price_max|default:max_price }}"
-                                class="w-full rounded-lg border-gray-200 bg-gray-50 text-sm focus:border-deep-green focus:ring-deep-green text-center py-2 h-10">
-                        </div>
-                    </div>
+                <div class="home-price-fields">
+                    <label class="home-price-field" for="price_min">
+                        <span>От</span>
+                        <span class="home-price-input"><input type="number" name="price_min" id="price_min" step="1" min="{{ min_price }}" max="{{ max_price }}" value="{% if has_price_candidates %}{{ selected_price_min }}{% endif %}" placeholder="—" inputmode="numeric" {% if not has_price_candidates %}disabled{% endif %}><span>₽</span></span>
+                    </label>
+                    <label class="home-price-field" for="price_max">
+                        <span>До</span>
+                        <span class="home-price-input"><input type="number" name="price_max" id="price_max" step="1" min="{{ min_price }}" max="{{ max_price }}" value="{% if has_price_candidates %}{{ selected_price_max }}{% endif %}" placeholder="—" inputmode="numeric" {% if not has_price_candidates %}disabled{% endif %}><span>₽</span></span>
+                    </label>
                 </div>
+            </div>
 
-                <!-- Сортировка -->
-                <div>
-                    <label for="sort_by" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Сортировка</label>
-                    <div class="relative">
-                        <select name="sort_by" id="sort-by" class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-sm focus:border-deep-green focus:ring-deep-green py-3 appearance-none font-medium text-gray-900 transition-colors cursor-pointer">
+            <div class="home-filter-section">
+                    <span class="home-filter-label" id="sort-label">Сортировка</span>
+                    <div class="home-sort-wrap">
+                        <select name="sort_by" id="sort-by" class="home-sort-native" tabindex="-1" aria-hidden="true">
                             <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
                             <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
                             <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
                         </select>
-                        <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                        <button type="button" id="sort-trigger" class="home-sort-trigger" aria-labelledby="sort-label sort-current" aria-haspopup="listbox" aria-controls="sort-options" aria-expanded="false">
+                            <span id="sort-current">{% if sort_by == 'price_asc' %}Сначала дешевые{% elif sort_by == 'price_desc' %}Сначала дорогие{% else %}По алфавиту{% endif %}</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div id="sort-options" class="home-sort-options" role="listbox" aria-labelledby="sort-label" hidden>
+                            <button type="button" class="home-sort-option" role="option" data-value="name" aria-selected="{% if sort_by == 'name' %}true{% else %}false{% endif %}"><span>По алфавиту</span><i class="fas fa-check" aria-hidden="true"></i></button>
+                            <button type="button" class="home-sort-option" role="option" data-value="price_asc" aria-selected="{% if sort_by == 'price_asc' %}true{% else %}false{% endif %}"><span>Сначала дешевые</span><i class="fas fa-check" aria-hidden="true"></i></button>
+                            <button type="button" class="home-sort-option" role="option" data-value="price_desc" aria-selected="{% if sort_by == 'price_desc' %}true{% else %}false{% endif %}"><span>Сначала дорогие</span><i class="fas fa-check" aria-hidden="true"></i></button>
+                        </div>
                     </div>
-                </div>
+            </div>
 
-                <!-- Категории -->
-                <div>
-                    <label class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-4">Категории</label>
-                    <div class="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            <div class="home-filter-section home-filter-categories">
+                    <h4 class="home-filter-label">Категории</h4>
+                    <div class="home-category-list">
                         {% for item in categories_tree %}
-                            <div class="mb-3">
-                                <div class="flex items-center space-x-3 mb-1">
-                                    <div class="relative flex items-center">
-                                        <input type="checkbox" name="category" value="{{ item.category.id }}" id="category-{{ item.category.id }}"
-                                               {% if item.category.id|stringformat:"i" in selected_categories %}checked{% endif %}
-                                               class="peer form-checkbox text-deep-green h-5 w-5 rounded border-gray-300 focus:ring-deep-green transition-shadow cursor-pointer">
-                                    </div>
-                                    <label for="category-{{ item.category.id }}" class="text-sm font-medium text-gray-700 hover:text-deep-green cursor-pointer flex-grow transition-colors">
-                                        {{ item.category.name }}
+                            <div class="home-filter-category">
+                                <div class="home-category-head">
+                                    <label class="home-category-choice" for="category-{{ item.category.id }}">
+                                        <input type="checkbox" name="category" value="{{ item.category.id }}" id="category-{{ item.category.id }}" {% if item.category.id|stringformat:"i" in selected_categories %}checked{% endif %}>
+                                        <span>{{ item.category.name }}</span>
                                     </label>
-                                    
                                     {% if item.children %}
-                                        <button type="button" class="accordion-toggle text-gray-400 hover:text-deep-green transition-transform duration-200 flex items-center justify-center rounded-lg hover:bg-gray-100" style="min-width:44px;min-height:44px" data-target="children-{{ item.category.id }}" aria-label="Раскрыть подкатегории">
-                                            <i class="fas fa-chevron-down text-xs transform transition-transform duration-200"></i>
+                                        <button type="button" class="accordion-toggle" data-target="children-{{ item.category.id }}" aria-controls="children-{{ item.category.id }}" aria-expanded="false" aria-label="Показать подкатегории: {{ item.category.name }}">
+                                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
                                         </button>
                                     {% endif %}
                                 </div>
 
                                 {% if item.children %}
-                                    <div id="children-{{ item.category.id }}" class="ml-6 mt-2 space-y-2 hidden pl-2 border-l-2 border-gray-100">
+                                    <div id="children-{{ item.category.id }}" class="home-category-children hidden">
                                         {% for child in item.children %}
-                                            <div class="flex items-center space-x-3">
-                                                <input type="checkbox" name="category" value="{{ child.id }}" id="category-{{ child.id }}"
-                                                       {% if child.id|stringformat:"i" in selected_categories %}checked{% endif %}
-                                                       class="form-checkbox text-deep-green h-4 w-4 rounded border-gray-300 focus:ring-deep-green cursor-pointer">
-                                                <label for="category-{{ child.id }}" class="text-sm text-gray-500 cursor-pointer hover:text-gray-800 transition-colors">
-                                                    {{ child.name }}
-                                                </label>
-                                            </div>
+                                            <label class="home-category-choice home-category-child" for="category-{{ child.id }}">
+                                                <input type="checkbox" name="category" value="{{ child.id }}" id="category-{{ child.id }}" {% if child.id|stringformat:"i" in selected_categories %}checked{% endif %}>
+                                                <span>{{ child.name }}</span>
+                                            </label>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
@@ -159,33 +130,34 @@
                         {% endfor %}
                     </div>
                 </div>
-            </div>
-
-            <!-- Кнопки в самом низу формы -->
-            <div class="mt-10 flex flex-col gap-3">
-                <button type="submit" class="w-full bg-gray-900 text-white font-bold uppercase tracking-[0.2em] py-4 rounded-xl shadow-lg hover:bg-deep-green transition-colors text-xs">
-                    Применить
-                </button>
-                <a href="{% url 'product_list' %}" class="w-full bg-transparent text-gray-500 font-bold uppercase tracking-widest py-3 hover:text-gray-900 transition-colors text-center text-xs">
-                    Сбросить
-                </a>
-            </div>
+            <button type="submit" class="home-filter-apply">Показать товары <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
         </form>
     </aside>
 
     <!-- Основной контент: одна сетка только в search_results.html (двойной grid ломал вёрстку — весь блок садился в 1 колонку) -->
-    <main class="w-full min-w-0 flex-1">
-        <div id="search-results" class="w-full min-w-0">
-            {% include 'products/search_results.html' with products=page_obj %}
+    <div class="home-products-panel">
+        <div id="search-results" class="w-full min-w-0" aria-live="polite">
+            {% include 'products/home_search_results.html' with products=page_obj %}
             <div class="mt-10 text-center">
                 <button id="load-more" class="hidden bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-3 px-8 rounded-xl transition-colors inline-block w-auto">
                     Показать ещё
                 </button>
             </div>
         </div>
-    </main>
+    </div>
+
+    <aside class="home-cart-panel" id="home-cart-panel" aria-label="Корзина">
+        <button type="button" class="home-cart-toggle" id="home-cart-toggle" aria-expanded="true" aria-controls="home-cart-body" title="Свернуть корзину">
+            <span class="home-cart-title"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i><span>Ваш заказ</span><span class="home-cart-badge" id="home-cart-badge">{{ cart_preview_count }}</span></span>
+            <i class="fa-solid fa-chevron-right home-cart-toggle-icon" aria-hidden="true"></i>
+        </button>
+        <div class="home-cart-body" id="home-cart-body">
+            {% include 'products/home_cart_preview.html' %}
+        </div>
+    </aside>
 
 </div> <!-- Конец Layout Контейнера -->
+</div> <!-- Конец главной -->
 
 <!-- Добавляем стили -->
 <style>
@@ -222,225 +194,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
-
-<script>
-$(document).ready(function () {
-    const searchInput = $('#id_query');
-    const priceMinInput = $('#price_min');
-    const priceMaxInput = $('#price_max');
-    const sortBySelect = $('#sort-by');
-    const categoryCheckboxes = $('input[name="category"]');
-    const resultsContainer = $('#search-results .grid');
-    const loadMoreBtn = $('#load-more');
-    const suggestionsContainer = $('#autocomplete-suggestions');
-    let currentPage = 1;
-    let isLoading = false;
-    loadResults(true);
-    
-    // Переключение видимости фильтров на мобильных
-    $('#toggle-filter').on('click', function() {
-        $('#search-form').toggleClass('mobile-filter-visible');
-        
-        // Изменяем текст кнопки
-        const $button = $(this);
-        if ($('#search-form').hasClass('mobile-filter-visible')) {
-            $button.html('<i class="fas fa-times mr-2"></i> Скрыть фильтры');
-        } else {
-            $button.html('<i class="fas fa-filter mr-2"></i> Фильтры и поиск');
-        }
-    });
-
-    // Обработка аккордеона
-    $('.accordion-toggle').on('click', function() {
-        const $button = $(this);
-        const $icon = $button.find('svg');
-        const $content = $('#' + $button.data('target'));
-        
-        $button.toggleClass('active');
-        $content.slideToggle(200);
-    });
-
-    // Показываем дочерние категории, если родительская выбрана
-    $('input[name="category"]').each(function() {
-        const $checkbox = $(this);
-        const $parent = $checkbox.closest('.mb-3, .mb-4');
-        const $children = $parent.find('.ml-5, .ml-6');
-        const $toggle = $parent.find('.accordion-toggle');
-        
-        if ($checkbox.is(':checked') && $children.length) {
-            $children.show();
-            $toggle.addClass('active');
-        }
-    });
-
-    // Обработка выбора категорий
-    categoryCheckboxes.on('change', function() {
-        const $checkbox = $(this);
-        const $parent = $checkbox.closest('.mb-3, .mb-4');
-        const $parentCheckbox = $parent.find('input[name="category"]').first();
-        const $children = $parent.find('input[name="category"]').not($parentCheckbox);
-        const $childrenContainer = $parent.find('.ml-5, .ml-6');
-        const $toggle = $parent.find('.accordion-toggle');
-
-        // Если выбрана родительская категория
-        if ($checkbox.is($parentCheckbox)) {
-            // Выбираем/снимаем выбор со всех дочерних категорий
-            $children.prop('checked', this.checked);
-            // Показываем/скрываем список дочерних категорий
-            if (this.checked) {
-                $childrenContainer.show();
-                $toggle.addClass('active');
-            } else {
-                $childrenContainer.hide();
-                $toggle.removeClass('active');
-            }
-        } else {
-            // Если выбрана дочерняя категория
-            if (this.checked) {
-                // Выбираем родительскую категорию
-                $parentCheckbox.prop('checked', true);
-                // Показываем список дочерних категорий
-                $childrenContainer.show();
-                $toggle.addClass('active');
-            } else {
-                // Проверяем, остались ли выбранные дочерние категории
-                const anyChildChecked = $children.filter(':checked').length > 0;
-                $parentCheckbox.prop('checked', anyChildChecked);
-                
-                // Если нет выбранных дочерних, скрываем список
-                if (!anyChildChecked) {
-                    $childrenContainer.hide();
-                    $toggle.removeClass('active');
-                }
-            }
-        }
-
-        currentPage = 1;
-        loadResults(true);
-    });
-
-    // Функция загрузки результатов поиска
-    function loadResults(reset = false) {
-        if (isLoading) return;
-        isLoading = true;
-
-        if (reset) {
-            currentPage = 1;
-            resultsContainer.empty();
-        }
-
-        const query = searchInput.val();
-        const priceMin = priceMinInput.val();
-        const priceMax = priceMaxInput.val();
-        const sort_by = sortBySelect.val();
-        const selectedCategories = categoryCheckboxes.filter(':checked').map(function() {
-            return this.value;
-        }).get();
-
-        // Формируем данные для запроса
-        const params = new URLSearchParams();
-        params.append('query', query);
-        params.append('price_min', priceMin);
-        params.append('price_max', priceMax);
-        params.append('sort_by', sort_by);
-        params.append('page', currentPage);
-
-        // Добавляем каждую выбранную категорию
-        selectedCategories.forEach(function(categoryId) {
-            params.append('category', categoryId);
-        });
-
-        $.ajax({
-            url: '{% url "search_ajax" %}',
-            method: 'GET',
-            data: params.toString(),
-            success: function (response) {
-                if (currentPage === 1) {
-                    resultsContainer.html($(response.results).find('> *'));
-                } else {
-                    resultsContainer.append($(response.results).find('> *'));
-                }
-
-                if (response.has_next) {
-                    loadMoreBtn.show();
-                } else {
-                    loadMoreBtn.hide();
-                }
-            },
-            error: function () {
-                alert('Ошибка при загрузке товаров.');
-            },
-            complete: function () {
-                isLoading = false;
-            }
-        });
-    }
-
-    // Обработчики событий для фильтров
-    searchInput.on('input', function() {
-        clearTimeout(window.searchTimeout);
-        window.searchTimeout = setTimeout(() => {
-            currentPage = 1;
-            loadResults(true);
-        }, 500);
-    });
-
-    priceMinInput.on('change', function() {
-        currentPage = 1;
-        loadResults(true);
-    });
-
-    priceMaxInput.on('change', function() {
-        currentPage = 1;
-        loadResults(true);
-    });
-
-    sortBySelect.on('change', function() {
-        currentPage = 1;
-        loadResults(true);
-    });
-
-    // Загрузка новых товаров
-    loadMoreBtn.on('click', function() {
-        currentPage++;
-        loadResults();
-    });
-
-    // Обработка слайдера цен
-    const slider = document.getElementById('price-slider');
-    noUiSlider.create(slider, {
-        start: [{{ request.GET.price_min|default:min_price }}, {{ request.GET.price_max|default:max_price }}],
-        connect: true,
-        range: {
-            'min': {{ min_price }},
-            'max': {{ max_price }}
-        },
-        tooltips: [true, true],
-        format: {
-            to: value => Math.round(value),
-            from: value => Number(value),
-        }
-    });
-
-    slider.noUiSlider.on('change', function (values, handle) {
-        let val = values[handle];
-        if (handle === 0) {
-            priceMinInput.val(val);
-        } else {
-            priceMaxInput.val(val);
-        }
-        currentPage = 1;
-        loadResults(true);
-    });
-
-    $('#scroll-to-catalog').on('click', function(e) {
-        e.preventDefault();
-        const target = document.getElementById('catalog-title');
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-});
-</script>
+<script src="{% static 'js/home.js' %}?v=9"></script>
 {% endblock %}

@@ -1,33 +1,25 @@
 {% extends 'products/base.html' %}
+{% load static %}
 {% block content %}
 
-<!-- STUDIO-GRADE LIGHT HERO SECTION -->
-<section class="relative bg-white min-h-[60dvh] flex flex-col justify-center overflow-hidden mb-16 md:mb-24 mt-4 md:mt-8 mx-3 sm:mx-4 lg:mx-8 w-auto rounded-[1.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100">
-    <!-- Premium Bright Abstract Background -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-[10%] -right-[5%] w-[60vw] h-[60vw] bg-deep-green/10 rounded-full blur-[100px] opacity-70"></div>
-        <div class="absolute top-[30%] -left-[10%] w-[40vw] h-[40vw] bg-emerald-200/50 rounded-full blur-[80px] opacity-60"></div>
-        <div class="absolute bottom-0 left-0 w-full h-[50%] bg-gradient-to-t from-gray-50 to-transparent z-0"></div>
-    </div>
-
-    <div class="relative z-10 w-full px-4 md:px-6 lg:px-16 pt-10 md:pt-16 pb-10 md:pb-16 lg:pt-24 flex flex-col items-center text-center">
-        <!-- Breadcrumbs -->
-        <nav class="text-xs tracking-widest uppercase text-gray-400 mb-6 md:mb-8 flex mx-auto">
-            <a href="{% url 'product_list' %}" class="hover:text-deep-green transition-colors py-1">Главная</a>
-            <span class="mx-3 opacity-30">/</span>
-            <span class="text-gray-900 py-1">О компании</span>
-        </nav>
-
-        <p class="text-deep-green font-semibold text-xs lg:text-sm tracking-[0.3em] uppercase mb-6 animate-fade-in-up">Официальный дистрибьютор</p>
-        
-        <h1 class="font-black text-gray-900 leading-[0.85] tracking-tighter mb-8 md:mb-10 font-display uppercase animate-fade-in-up w-full text-center break-words" style="font-size:clamp(2.5rem,12vw,12rem)">
-            СТРОЙ<i class="not-italic" style="color: #10b981;">МА</i>
-        </h1>
-
-        <div class="flex flex-col gap-6 items-center w-full max-w-3xl mx-auto">
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-500 leading-relaxed font-light animate-fade-in-up" style="animation-delay: 0.2s;">
-                Флагманский партнер торговых марок <strong class="text-gray-900 font-semibold">CERESIT, UNIS, ТЕХНОНИКОЛЬ</strong> в Курской области. Мы не просто продаем материалы — мы строим индустрию надежности.
-            </p>
+<section class="relative bg-white overflow-hidden mb-16 md:mb-24 mt-4 md:mt-8 rounded-[1.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100">
+    <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-sandy/30 pointer-events-none"></div>
+    <div class="relative grid lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.75fr)] items-center gap-8 lg:gap-14 px-6 sm:px-10 lg:px-16 py-10 md:py-16 lg:py-20">
+        <div>
+            <nav class="text-xs tracking-widest uppercase text-gray-400 mb-8 flex items-center">
+                <a href="{% url 'product_list' %}" class="hover:text-deep-green transition-colors py-1">Главная</a>
+                <span class="mx-3 opacity-30">/</span>
+                <span class="text-gray-900 py-1">О компании</span>
+            </nav>
+            <p class="text-deep-green font-bold text-xs tracking-[0.25em] uppercase mb-5">Официальный дистрибьютор · Курская область</p>
+            <h1 class="font-black text-gray-900 leading-[1.02] tracking-tight font-display mb-6" style="font-size:clamp(2.8rem,5vw,5.5rem)">Материалы для<br><span class="text-deep-green">надёжного дела.</span></h1>
+            <p class="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl">СТРОЙМА помогает подобрать строительные материалы для ремонта и крупных проектов. Работаем с продукцией CERESIT, UNIS и ТЕХНОНИКОЛЬ, чтобы нужное было под рукой и приходило вовремя.</p>
+        </div>
+        <div class="relative flex flex-col items-center justify-center py-8 lg:py-12 rounded-[2rem] bg-sandy/40 border border-deep-green/10 text-center">
+            <div class="absolute inset-6 rounded-full border border-deep-green/10 pointer-events-none"></div>
+            <img src="{% static 'images/logo_hero.png' %}" alt="Логотип СТРОЙМА" class="relative w-[21rem] lg:w-[25rem] max-w-full h-auto object-contain mix-blend-multiply -my-4" decoding="async">
+            <span class="relative mt-1 font-black font-display text-deep-green tracking-tight leading-none" style="font-size:clamp(2.7rem,4vw,4.5rem)">СТРОЙМА</span>
+            <span class="relative mt-3 text-xs font-bold uppercase tracking-[0.25em] text-gray-500">Строительные материалы</span>
         </div>
     </div>
 </section>
@@ -49,9 +41,9 @@
         </div>
         <!-- Stat 3 -->
         <div class="flex flex-col justify-center items-center text-center group">
-            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">13<span class="text-3xl lg:text-4xl text-deep-green align-top">+</span></div>
-            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Лет Лидерства</p>
-            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">На рынке Курска</p>
+            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">2011</div>
+            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Работаем с</p>
+            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">Для клиентов Курской области</p>
         </div>
         <!-- Stat 4 -->
         <div class="flex flex-col justify-center items-center text-center group">
@@ -113,7 +105,7 @@
             </div>
             <div class="w-full lg:w-[45%] pl-0 lg:pl-16">
                 <div class="font-black text-emerald-50 mb-2 font-display" style="font-size:clamp(3rem,8vw,6rem)">2024</div>
-                <h4 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Абсолютный Рекорд и ГОСктор</h4>
+                <h4 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Новый этап развития</h4>
                 <p class="text-gray-600 font-light leading-relaxed">Беспрецедентный рост выручки на 68%. Успешное выполнение правительственных тендеров (КГМУ) и прочное закрепление в статусе независимого дистрибьюторского лидера региона.</p>
             </div>
         </div>
@@ -126,8 +118,8 @@
         
         <!-- Large Manifesto Block -->
         <div class="md:col-span-12 lg:col-span-8 bg-gray-50 rounded-2xl md:rounded-[2.5rem] p-8 md:p-10 lg:p-14 border border-gray-200 flex flex-col justify-between group hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-gray-900 max-w-2xl leading-tight">Безупречная Репутация & Локальная Экспертиза.</h3>
-            <p class="text-gray-600 mt-6 md:mt-8 max-w-xl text-base md:text-lg font-light">Мы интегрировались в кровеносную систему строительного сектора Курска. 13 лет безупречного выполнения партнерских соглашений — без срывов сроков и компромиссов.</p>
+            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-gray-900 max-w-2xl leading-tight">Материалы и опыт рядом с вами.</h3>
+            <p class="text-gray-600 mt-6 md:mt-8 max-w-xl text-base md:text-lg font-light">С 2011 года помогаем клиентам в Курской области выбирать материалы под задачи проекта. Знаем ассортимент, отвечаем на вопросы и ценим понятные сроки поставки.</p>
         </div>
 
         <!-- Vertical Accent Green Block -->
@@ -137,7 +129,7 @@
                 <i class="fas fa-boxes text-3xl mb-6 text-emerald-200"></i>
                 <h3 class="text-xl md:text-2xl font-bold font-display">Широкий<br>Ассортимент</h3>
             </div>
-            <p class="text-emerald-100/90 font-light text-sm mt-6 md:mt-8">Собственные складские запасы гигантских масштабов. От стартовых гипсовых смесей до финишного премиального декора.</p>
+            <p class="text-emerald-100/90 font-light text-sm mt-6 md:mt-8">Решения для разных этапов строительства и ремонта: от базовых смесей до материалов для отделки.</p>
         </div>
     </div>
 </section>
@@ -153,7 +145,7 @@
         <div class="flex-1 text-center md:text-left relative">
             <i class="fas fa-quote-left text-4xl md:text-5xl text-gray-100 absolute -top-8 -left-4 md:-left-8 -z-10"></i>
             <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-900 font-display leading-[1.4] mb-6 md:mb-8 font-light">
-                В центре успеха <strong class="font-bold text-deep-green">СтройМА</strong> — наша команда. Мы работаем не для того, чтобы просто продать вам материал, а чтобы ваш коммерческий или государственный объект был сдан вовремя.
+                В центре работы <strong class="font-bold text-deep-green">СТРОЙМА</strong> — команда и задачи клиентов. Помогаем подобрать материалы, с которыми проще двигаться по проекту уверенно и в срок.
             </p>
             <h4 class="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wider">Евгений Аляев</h4>
             <span class="text-gray-400 font-mono text-sm tracking-widest uppercase mt-1 block">Генеральный директор</span>
@@ -163,7 +155,7 @@
 </section>
 
 <!-- BRIGHT LEGAL GRID SECTION -->
-<section class="max-w-[80rem] mx-auto mb-16 px-4 sm:px-6 lg:px-16 w-full pt-10 md:pt-16">
+<section id="company-info" class="max-w-[80rem] mx-auto mb-16 px-4 sm:px-6 lg:px-16 w-full pt-10 md:pt-16">
     <h3 class="text-xl md:text-2xl text-center font-display font-black text-gray-900 mb-8 md:mb-10">Реквизиты и Юридическая информация</h3>
     
     <div class="bg-gray-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-gray-200 text-sm text-gray-600 font-mono tracking-tight leading-relaxed break-words" style="overflow-wrap:anywhere">

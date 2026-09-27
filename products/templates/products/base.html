@@ -64,7 +64,7 @@
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
     <!-- Подключение кастомных стилей -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=2">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="relative font-sans text-gray-800 antialiased bg-[#fcfcfc] transition-colors duration-300">
@@ -433,7 +433,7 @@
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/base.js' %}?v=2"></script>
     <script src="{% static 'js/phone-input.js' %}"></script>
     
     <script>
@@ -491,6 +491,7 @@
                             mobileCount.textContent = data.cart_item_count;
                         }
                     }
+                    document.dispatchEvent(new CustomEvent('cart:updated'));
                     
                     setTimeout(() => {
                         if (spanEl) {
