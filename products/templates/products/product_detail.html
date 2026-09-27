@@ -1,15 +1,15 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
-{% block title %}{{ product.meta_title|default:product.name }} | СтройМа{% endblock %}
+{% block title %}{{ product.meta_title|default:product.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block meta_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
 {% block meta_keywords %}{{ product.keywords|default:"строительные материалы, стройматериалы" }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}{% endblock %}
 
-{% block og_title %}{{ product.meta_title|default:product.name }}{% endblock %}
+{% block og_title %}{{ product.meta_title|default:product.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block og_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
 {% block og_type %}product{% endblock %}
-{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endif %}{% endblock %}
+{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
@@ -45,7 +45,7 @@
   "mpn": "{{ product.id }}",
   "brand": {
     "@type": "Brand",
-    "name": "СтройМа"
+    "name": "СТРОЙМА"
   },
   "offers": {
     "@type": "Offer",

@@ -818,7 +818,7 @@ $('#btnShot').addEventListener('click', () => {
   g.textAlign = 'right';
   g.fillStyle = 'rgba(255,255,255,0.42)';
   g.font = `600 ${Math.round(22 * s)}px ui-sans-serif, Arial, sans-serif`;
-  g.fillText('СтройМа', W - pad, H + barH / 2);
+  g.fillText('СТРОЙМА', W - pad, H + barH / 2);
 
   // имя файла — реальными названиями, без запрещённых в файловой системе символов
   const safe = (v) => String(v).replace(/[\/\\:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim();

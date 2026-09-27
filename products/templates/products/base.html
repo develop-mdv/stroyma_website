@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
     <!-- Динамические мета-теги -->
-    <title>{% block title %}{{ meta_title|default:"СтройМа - Строительные материалы" }}{% endblock %}</title>
+    <title>{% block title %}{{ meta_title|default:"СТРОЙМА - Строительные материалы" }}{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России. Выгодные цены и высокое качество.' }}{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}{{ keywords|default:'строительные материалы, стройматериалы, ремонт, строительство, отделочные материалы' }}{% endblock %}">
     
@@ -14,18 +14,18 @@
     <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
     
     <!-- Open Graph мета-теги для социальных сетей -->
-    <meta property="og:title" content="{% block og_title %}{{ meta_title|default:'СтройМа - Строительные материалы' }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ meta_title|default:'СТРОЙМА - Строительные материалы' }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России.' }}{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endblock %}">
-    <meta property="og:site_name" content="СтройМа">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
+    <meta property="og:site_name" content="СТРОЙМА">
     
     <!-- Twitter карточка -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}{{ meta_title|default:'СтройМа - Строительные материалы' }}{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ meta_title|default:'СТРОЙМА - Строительные материалы' }}{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства.' }}{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
 
     <!-- Tailwind CSS (с конфигом токенов) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -61,10 +61,10 @@
     <!-- noUiSlider CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
-    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo-ma.png' %}?v=2">
+    <link rel="shortcut icon" href="{% static 'images/logo-ma.png' %}?v=2">
     <!-- Подключение кастомных стилей -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=4">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="relative font-sans text-gray-800 antialiased bg-[#fcfcfc] transition-colors duration-300">
@@ -73,10 +73,10 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "СтройМа",
+        "name": "СТРОЙМА",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
-        "description": "Компания СтройМа - ваш надежный партнер в сфере строительных материалов.",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2",
+        "description": "Компания СТРОЙМА - ваш надежный партнер в сфере строительных материалов.",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Курск",
@@ -98,186 +98,7 @@
     <!-- Текстурный фон -->
     <div class="texture-overlay"></div>
 
-    <!-- Шапка сайта (Premium Glassmorphism Navbar) -->
-    <header class="fixed top-0 left-0 w-full bg-sandy/80 backdrop-blur-xl border-b border-white/20 text-deep-green py-3.5 shadow-soft z-50 transition-all duration-300">
-        <div class="container max-w-screen-2xl mx-auto px-4 lg:px-8">
-            <div class="flex items-center justify-between">
-                
-                <!-- Логотип -->
-                <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 flex-shrink-0 group">
-                    <img src="{% static 'images/logo.png' %}" alt="Логотип СтройМа" class="h-9 md:h-10 w-auto object-contain" loading="lazy">
-                    <span class="text-lg md:text-xl font-bold font-display hidden sm:block group-hover:text-deep-green transition-colors">СтройМа</span>
-                </a>
-
-                <!-- Десктопная навигация -->
-                <nav id="nav-menu" class="hidden lg:flex items-center gap-0.5 xl:gap-1">
-                    <a href="{% url 'product_list' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        Главная
-                    </a>
-                    <a href="{% url 'catalog' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        Каталог
-                    </a>
-                    <a href="{% url 'service_list' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        Услуги
-                    </a>
-                    <a href="{% url 'color_selection' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        Выкрас фасада
-                    </a>
-                    <a href="{% url 'about' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        О компании
-                    </a>
-                    <a href="{% url 'contact' %}" class="nav-link px-3.5 py-2 text-[0.75rem] font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-900 transition-colors relative">
-                        Контакты
-                    </a>
-                </nav>
-
-                <!-- Правая часть: Actions -->
-                <div class="flex items-center gap-2 md:gap-3">
-                    <!-- Корзина -->
-                    <a href="{% url 'view_cart' %}" class="relative w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-black/5 transition-colors">
-                        <i class="fas fa-shopping-bag text-sm"></i>
-                        <span id="desktop-cart-count" class="absolute -top-0.5 -right-0.5 bg-deep-green text-white text-[0.6rem] font-bold rounded-full h-4 w-4 flex items-center justify-center {% if cart_item_count and cart_item_count > 0 %}visible{% else %}hidden{% endif %}">
-                            {{ cart_item_count|default:0 }}
-                        </span>
-                        <span id="mobile-cart-count" class="hidden">{{ cart_item_count|default:0 }}</span>
-                    </a>
-
-                    <!-- Десктоп: User Actions -->
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="hidden lg:inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors shadow-sm">
-                        <i class="fas fa-user text-[0.55rem]"></i> Профиль
-                    </a>
-                    <a href="{% url 'logout' %}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                       class="hidden lg:inline-flex items-center text-gray-400 hover:text-red-500 transition-colors px-1.5 py-2" title="Выход">
-                        <i class="fas fa-sign-out-alt text-sm"></i>
-                    </a>
-                    <form id="logout-form" method="POST" action="{% url 'logout' %}" class="hidden">
-                        {% csrf_token %}
-                        <input type="hidden">
-                    </form>
-                    {% else %}
-                    <a href="{% url 'login' %}" class="hidden lg:inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors shadow-sm">
-                        Вход
-                    </a>
-                    <a href="{% url 'register' %}" class="hidden lg:inline-flex items-center text-[0.7rem] font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-900 transition-colors px-2 py-2">
-                        Регистрация
-                    </a>
-                    {% endif %}
-
-                    <!-- Бургер (мобайл) -->
-                    <button id="menu-toggle" class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-gray-600 hover:bg-black/5 transition-colors focus:outline-none" aria-label="Открыть меню">
-                        <i class="fas fa-bars text-base"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Мобильное меню (Fullscreen Overlay) -->
-            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden lg:hidden" style="transition: opacity 0.3s ease;"></div>
-            <div id="mobile-menu" class="lg:hidden fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" style="width:100%!important;max-width:none!important;height:100dvh!important;top:0!important;left:0!important;right:0!important;bottom:0!important;">
-                
-                <!-- Шапка мобильного меню -->
-                <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-                    <a href="{% url 'product_list' %}" class="flex items-center gap-2.5">
-                        <img src="{% static 'images/logo.png' %}" alt="СтройМа" class="h-8 w-auto">
-                        <span class="text-deep-green font-bold font-display text-lg">СтройМа</span>
-                    </a>
-                    <button id="close-menu-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-all">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
-                </div>
-                
-                <!-- Навигация (центрированная, крупная) -->
-                <div class="flex-1 overflow-y-auto flex flex-col justify-center px-6 py-8">
-                    
-                    {% if user.is_authenticated %}
-                    <div class="mb-8 flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-deep-green flex items-center justify-center text-white text-base font-bold flex-shrink-0">
-                            {{ user.username|first|upper }}
-                        </div>
-                        <div>
-                            <p class="text-base font-bold text-gray-900">{{ user.username }}</p>
-                            <p class="text-xs text-gray-400">{{ user.email }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <nav class="space-y-1">
-                        <a href="{% url 'product_list' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'product_list' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-home w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Главная</span>
-                        </a>
-                        <a href="{% url 'catalog' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'catalog' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-th-large w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Каталог</span>
-                        </a>
-                        <a href="{% url 'service_list' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'service_list' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-hammer w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Услуги</span>
-                        </a>
-                        <a href="{% url 'color_selection' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'color_selection' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fa-solid fa-paint-roller w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Онлайн выкрас фасада</span>
-                        </a>
-                        <a href="{% url 'view_cart' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'view_cart' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-shopping-bag w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Корзина</span>
-                            <span class="ml-auto bg-deep-green text-white text-[0.6rem] font-bold rounded-full h-5 w-5 flex items-center justify-center">{{ cart_item_count|default:0 }}</span>
-                        </a>
-                        <a href="{% url 'about' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'about' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-building w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">О компании</span>
-                        </a>
-                        <a href="{% url 'contact' %}" class="mobile-nav-item flex items-center gap-4 py-3.5 px-4 rounded-2xl text-gray-700 hover:bg-gray-50 transition-all {% if request.resolver_match.url_name == 'contact' %}bg-gray-50 !text-gray-900 font-semibold{% endif %}">
-                            <i class="fas fa-envelope w-5 text-center text-base opacity-40"></i>
-                            <span class="text-base">Контакты</span>
-                        </a>
-                    </nav>
-                </div>
-
-                <!-- Нижняя часть -->
-                <div class="px-6 py-5 border-t border-gray-100 space-y-3">
-                    {% if user.is_authenticated %}
-                    <div class="flex gap-3">
-                        <a href="{% url 'profile' %}" class="flex-1 inline-flex items-center justify-center bg-gray-900 text-white py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider min-h-[48px]">Профиль</a>
-                        <a href="{% url 'logout' %}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                           class="w-12 min-h-[48px] flex items-center justify-center rounded-2xl border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-all">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </a>
-                    </div>
-                    {% else %}
-                    <div class="flex gap-3">
-                        <a href="{% url 'login' %}" class="flex-1 inline-flex items-center justify-center bg-gray-900 text-white py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider min-h-[48px]">Вход</a>
-                        <a href="{% url 'register' %}" class="flex-1 inline-flex items-center justify-center border border-gray-200 text-gray-700 py-3 rounded-2xl text-center text-sm font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors min-h-[48px]">Регистрация</a>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <style>
-        /* Desktop nav hover underline */
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 1.5px;
-            background: currentColor;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(-50%);
-        }
-        .nav-link:hover::after {
-            width: 60%;
-        }
-        /* Mobile menu fullscreen transition fix */
-        #mobile-menu {
-            will-change: transform;
-        }
-    </style>
+    {% include 'products/site_header.html' %}
 
     <!-- Основное содержимое -->
     <main class="container max-w-screen-2xl mx-auto px-4 lg:px-8 py-4 md:py-12 pt-20 md:pt-28">
@@ -297,8 +118,8 @@
                 <!-- Колонка 1: Бренд -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center gap-3 mb-6">
-                        <img src="{% static 'images/logo.png' %}" alt="СтройМа" class="h-10 w-auto brightness-0 invert opacity-80">
-                        <span class="text-xl font-bold font-display">СтройМа</span>
+                        <img src="{% static 'images/logo-ma.png' %}?v=2" alt="СТРОЙМА" class="h-10 w-auto brightness-0 invert opacity-80">
+                        <span class="text-xl font-bold font-display">СТРОЙМА</span>
                     </div>
                     <p class="text-gray-400 text-sm font-light leading-relaxed mb-6 max-w-xs">
                         Ваш надёжный партнёр в строительных материалах. Качество и экологичность с 2011 года.
@@ -323,7 +144,7 @@
                         <a href="{% url 'product_list' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Главная</a>
                         <a href="{% url 'catalog' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Каталог</a>
                         <a href="{% url 'service_list' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Услуги</a>
-                        <a href="{% url 'color_selection' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Онлайн выкрас фасада</a>
+                        <a href="{% url 'color_selection' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Подбор фасада</a>
                         <a href="{% url 'about' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">О компании</a>
                         <a href="{% url 'contact' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Контакты</a>
                     </nav>
@@ -433,7 +254,7 @@
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/base.js' %}?v=2"></script>
+    <script src="{% static 'js/base.js' %}?v=3"></script>
     <script src="{% static 'js/phone-input.js' %}"></script>
     
     <script>
@@ -484,12 +305,15 @@
                         const mobileCount = document.getElementById('mobile-cart-count');
                         if (desktopCount) {
                             desktopCount.textContent = data.cart_item_count;
-                            desktopCount.classList.remove('hidden');
-                            desktopCount.classList.add('visible');
+                            desktopCount.classList.toggle('is-empty', data.cart_item_count === 0);
                         }
                         if (mobileCount) {
                             mobileCount.textContent = data.cart_item_count;
                         }
+                        const cartLink = document.querySelector('.site-cart');
+                        if (cartLink) cartLink.setAttribute('aria-label', `Корзина, товаров: ${data.cart_item_count}`);
+                        const menuCount = document.querySelector('.site-mobile-count');
+                        if (menuCount) menuCount.textContent = data.cart_item_count;
                     }
                     document.dispatchEvent(new CustomEvent('cart:updated'));
                     

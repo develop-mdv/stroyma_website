@@ -872,7 +872,7 @@ def color_selection(request):
             )
             try:
                 send_mail(
-                    'Заявка на подбор цвета фасада — СтройМа',
+                    'Заявка на подбор цвета фасада — СТРОЙМА',
                     body,
                     settings.DEFAULT_FROM_EMAIL,
                     [_order_notify_recipient()],

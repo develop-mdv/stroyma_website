@@ -1,0 +1,86 @@
+{% load static %}
+<header class="site-header">
+    <div class="site-header-inner container max-w-screen-2xl mx-auto px-4 lg:px-8">
+        <a href="{% url 'product_list' %}" class="site-brand" aria-label="СТРОЙМА — на главную">
+            <img src="{% static 'images/logo-ma.png' %}?v=2" alt="" class="site-brand-mark" width="36" height="51">
+            <span class="site-brand-name">СТРОЙМА</span>
+        </a>
+
+        <nav id="nav-menu" class="site-nav" aria-label="Основная навигация">
+            <a href="{% url 'product_list' %}" class="site-nav-link {% if request.resolver_match.url_name == 'product_list' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'product_list' %}aria-current="page"{% endif %}>Главная</a>
+            <a href="{% url 'catalog' %}" class="site-nav-link {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category_detail' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'product_detail_legacy' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category_detail' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'product_detail_legacy' %}aria-current="page"{% endif %}>Каталог</a>
+            <a href="{% url 'service_list' %}" class="site-nav-link {% if request.resolver_match.url_name == 'service_list' or request.resolver_match.url_name == 'service_detail' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'service_list' or request.resolver_match.url_name == 'service_detail' %}aria-current="page"{% endif %}>Услуги</a>
+            <a href="{% url 'color_selection' %}" class="site-nav-link {% if request.resolver_match.url_name == 'color_selection' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'color_selection' %}aria-current="page"{% endif %}>Подбор фасада</a>
+            <a href="{% url 'about' %}" class="site-nav-link {% if request.resolver_match.url_name == 'about' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>О компании</a>
+            <a href="{% url 'contact' %}" class="site-nav-link {% if request.resolver_match.url_name == 'contact' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>Контакты</a>
+        </nav>
+
+        <div class="site-header-actions">
+            <a href="{% url 'view_cart' %}" class="site-cart {% if request.resolver_match.url_name == 'view_cart' or request.resolver_match.url_name == 'checkout' or request.resolver_match.url_name == 'checkout_success' %}is-active{% endif %}" aria-label="Корзина, товаров: {{ cart_item_count|default:0 }}" {% if request.resolver_match.url_name == 'view_cart' %}aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h16l-1.3 11H5.3L4 9Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+                <span class="site-cart-label">Корзина</span>
+                <span id="desktop-cart-count" class="site-cart-count {% if not cart_item_count %}is-empty{% endif %}">{{ cart_item_count|default:0 }}</span>
+                <span id="mobile-cart-count" class="hidden">{{ cart_item_count|default:0 }}</span>
+            </a>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="site-account" aria-label="Личный кабинет">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.4-3.4 2.7-5.2 6.5-5.2s6.1 1.8 6.5 5.2"/></svg>
+                <span>Кабинет</span>
+            </a>
+            <form id="logout-form" method="POST" action="{% url 'logout' %}" class="site-logout-form">
+                {% csrf_token %}
+                <button type="submit" class="site-logout" aria-label="Выйти из аккаунта" title="Выйти из аккаунта">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5v16h5"/><path d="M13 8l4 4-4 4M8 12h9"/></svg>
+                </button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}" class="site-account">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.4-3.4 2.7-5.2 6.5-5.2s6.1 1.8 6.5 5.2"/></svg>
+                <span>Войти</span>
+            </a>
+            {% endif %}
+
+            <button id="menu-toggle" class="site-menu-toggle" type="button" aria-label="Открыть меню" aria-controls="mobile-menu" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu-overlay" class="site-menu-overlay" aria-hidden="true"></div>
+    <div id="mobile-menu" class="site-mobile-menu" role="dialog" aria-modal="true" aria-label="Меню сайта" aria-hidden="true" inert>
+        <div class="site-mobile-head">
+            <a href="{% url 'product_list' %}" class="site-brand" aria-label="СТРОЙМА — на главную">
+                <img src="{% static 'images/logo-ma.png' %}?v=2" alt="" class="site-brand-mark" width="36" height="51">
+                <span class="site-brand-name">СТРОЙМА</span>
+            </a>
+            <button id="close-menu-btn" class="site-menu-close" type="button" aria-label="Закрыть меню">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+            </button>
+        </div>
+
+        <div class="site-mobile-body">
+            <p class="site-mobile-kicker">Разделы сайта</p>
+            <nav class="site-mobile-nav" aria-label="Мобильная навигация">
+                <a href="{% url 'product_list' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'product_list' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'product_list' %}aria-current="page"{% endif %}><i class="fa-solid fa-house" aria-hidden="true"></i><span>Главная</span></a>
+                <a href="{% url 'catalog' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category_detail' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'product_detail_legacy' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category_detail' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'product_detail_legacy' %}aria-current="page"{% endif %}><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Каталог товаров</span></a>
+                <a href="{% url 'service_list' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'service_list' or request.resolver_match.url_name == 'service_detail' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'service_list' or request.resolver_match.url_name == 'service_detail' %}aria-current="page"{% endif %}><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>Услуги</span></a>
+                <a href="{% url 'color_selection' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'color_selection' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'color_selection' %}aria-current="page"{% endif %}><i class="fa-solid fa-palette" aria-hidden="true"></i><span>Подбор фасада</span></a>
+                <a href="{% url 'about' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'about' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}><i class="fa-regular fa-building" aria-hidden="true"></i><span>О компании</span></a>
+                <a href="{% url 'contact' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'contact' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Контакты</span></a>
+            </nav>
+            <p class="site-mobile-kicker site-mobile-kicker-secondary">Покупки</p>
+            <a href="{% url 'view_cart' %}" class="site-mobile-link {% if request.resolver_match.url_name == 'view_cart' or request.resolver_match.url_name == 'checkout' or request.resolver_match.url_name == 'checkout_success' %}is-active{% endif %}" {% if request.resolver_match.url_name == 'view_cart' %}aria-current="page"{% endif %}><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i><span>Корзина</span><span class="site-mobile-count">{{ cart_item_count|default:0 }}</span></a>
+        </div>
+
+        <div class="site-mobile-footer">
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="site-mobile-primary">Личный кабинет</a>
+            <button type="submit" form="logout-form" class="site-mobile-secondary">Выйти</button>
+            {% else %}
+            <a href="{% url 'login' %}" class="site-mobile-primary">Войти</a>
+            <a href="{% url 'register' %}" class="site-mobile-secondary">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+</header>

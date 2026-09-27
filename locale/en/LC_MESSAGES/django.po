@@ -18,16 +18,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: .\products\templates\products\base.html:8
-msgid "СтройМа - Строительные материалы"
+msgid "СТРОЙМА - Строительные материалы"
 msgstr ""
 
 #: .\products\templates\products\base.html:31
-msgid "Логотип СтройМа"
-msgstr "Logo СтройМа"
+msgid "Логотип СТРОЙМА"
+msgstr "Logo СТРОЙМА"
 
 #: .\products\templates\products\base.html:32
-msgid "СтройМа"
-msgstr "СтройМа"
+msgid "СТРОЙМА"
+msgstr "СТРОЙМА"
 
 #: .\products\templates\products\base.html:37
 msgid "Переключить тему"
@@ -74,9 +74,9 @@ msgstr "Registration"
 
 #: .\products\templates\products\base.html:130
 msgid ""
-"© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены."
+"© 2025 СТРОЙМА - Ваш Партнер в Строительных Материалах. Все права защищены."
 msgstr ""
-"© 2025 СтройМа - Ваш Партнер в Строительных Материалах. Все права защищены."
+"© 2025 СТРОЙМА - Ваш Партнер в Строительных Материалах. Все права защищены."
 
 #: .\products\templates\products\base.html:133
 msgid "Связаться с нами"

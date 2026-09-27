@@ -1,12 +1,12 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
-{% block title %}{{ category.meta_title|default:category.name }} | СтройМа{% endblock %}
-{% block meta_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа. Широкий выбор, доступные цены, быстрая доставка.'|truncatechars:160 }}{% endblock %}
+{% block title %}{{ category.meta_title|default:category.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
+{% block meta_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СТРОЙМА. Широкий выбор, доступные цены, быстрая доставка.'|truncatechars:160 }}{% endblock %}
 {% block meta_keywords %}{{ category.name }}, строительные материалы, купить {{ category.name }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ category.get_absolute_url }}{% endblock %}
-{% block og_title %}{{ category.meta_title|default:category.name }}{% endblock %}
-{% block og_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа.'|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ category.meta_title|default:category.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
+{% block og_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СТРОЙМА.'|truncatechars:160 }}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}?v=8">
 <link rel="stylesheet" href="{% static 'css/catalog.css' %}?v=3">
@@ -18,7 +18,7 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "{{ category.name|escapejs }}",
-  "description": "{{ category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СтройМа.'|escapejs }}",
+  "description": "{{ category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СТРОЙМА.'|escapejs }}",
   "url": "{{ request.scheme }}://{{ request.get_host }}{{ category.get_absolute_url }}",
   "mainEntity": {
     "@type": "ItemList",
@@ -40,7 +40,7 @@
     </nav>
 
     <header class="catalog-intro">
-        <span class="home-section-eyebrow">Каталог СтройМа</span>
+        <span class="home-section-eyebrow">Каталог СТРОЙМА</span>
         <h1>{{ category.name }}</h1>
         {% if category.description %}<p>{{ category.description|linebreaksbr }}</p>{% endif %}
     </header>

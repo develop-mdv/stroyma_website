@@ -5,32 +5,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
     const closeMenuBtn = document.getElementById('close-menu-btn');
 
-    // Функция для открытия меню
     function openMobileMenu() {
         if (!mobileMenu || !mobileMenuOverlay) return;
-        mobileMenu.classList.remove('translate-x-full');
-        mobileMenuOverlay.classList.remove('hidden');
+        mobileMenu.inert = false;
+        mobileMenu.setAttribute('aria-hidden', 'false');
+        mobileMenu.classList.add('is-open');
+        mobileMenuOverlay.classList.add('is-open');
         document.body.style.overflow = 'hidden';
-
-        if (menuToggle) menuToggle.innerHTML = '<i class="fas fa-times text-base"></i>';
-
-        setTimeout(() => {
-            mobileMenuOverlay.style.opacity = '1';
-        }, 10);
+        menuToggle.setAttribute('aria-expanded', 'true');
+        menuToggle.setAttribute('aria-label', 'Закрыть меню');
+        closeMenuBtn.focus();
     }
 
-    // Функция для закрытия меню
     function closeMobileMenu() {
         if (!mobileMenu || !mobileMenuOverlay) return;
-        mobileMenu.classList.add('translate-x-full');
-        mobileMenuOverlay.style.opacity = '0';
+        const wasOpen = mobileMenu.classList.contains('is-open');
+        mobileMenu.classList.remove('is-open');
+        mobileMenuOverlay.classList.remove('is-open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        mobileMenu.inert = true;
         document.body.style.overflow = '';
-
-        if (menuToggle) menuToggle.innerHTML = '<i class="fas fa-bars text-base"></i>';
-
-        setTimeout(() => {
-            mobileMenuOverlay.classList.add('hidden');
-        }, 300);
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Открыть меню');
+        if (wasOpen && window.innerWidth < 1200) menuToggle.focus();
     }
 
     if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
@@ -39,27 +36,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обработка клавиши Escape для закрытия меню
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+        if (event.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('is-open')) {
             closeMobileMenu();
+        }
+        if (event.key === 'Tab' && mobileMenu && mobileMenu.classList.contains('is-open')) {
+            const focusable = [...mobileMenu.querySelectorAll('a, button')].filter(el => !el.disabled);
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
         }
     });
 
-    // Закрытие меню при изменении ширины выше lg (≥1024)
-    let lastWidth = window.innerWidth;
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024 && lastWidth < 1024) {
+        if (window.innerWidth >= 1200 && mobileMenu.classList.contains('is-open')) {
             closeMobileMenu();
         }
-        lastWidth = window.innerWidth;
-    });
-
-    highlightActiveMenuItem();
-
-    const menuLinks = document.querySelectorAll('#mobile-menu a');
-    menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            setTimeout(closeMobileMenu, 150);
-        });
     });
 
     // Cookie consent (UI-only; используется для скрытия баннера и будущей категоризации).
@@ -114,22 +111,6 @@ function initCookieConsent() {
             }
         });
     }
-}
-
-// Функция для подсветки активного пункта меню
-function highlightActiveMenuItem() {
-    const currentPath = window.location.pathname;
-    const menuLinks = document.querySelectorAll('#mobile-menu a');
-
-    menuLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        if (linkPath) {
-            if (currentPath === linkPath ||
-                (linkPath !== '/' && currentPath.startsWith(linkPath))) {
-                link.classList.add('bg-gray-50', 'font-medium');
-            }
-        }
-    });
 }
 
 // Кнопка "Наверх"

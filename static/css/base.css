@@ -219,6 +219,261 @@ button:hover, a.button:hover {
     animation: fadeIn 0.5s ease forwards;
 }
 
+/* Основная шапка: общий язык с карточками, типографикой и цветами сайта. */
+.site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: 78px;
+    background: rgba(252, 251, 247, .97);
+    border-bottom: 1px solid #e5e7df;
+    box-shadow: 0 8px 26px rgba(20, 38, 29, .055);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    color: #193c2c;
+}
+.site-header-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2vw, 32px);
+}
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    gap: 11px;
+    color: #193c2c;
+    text-decoration: none;
+}
+.site-brand-mark {
+    display: block;
+    width: 36px;
+    height: 51px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(19%) sepia(30%) saturate(780%) hue-rotate(91deg) brightness(87%);
+}
+.about-brand-mark {
+    filter: brightness(0) saturate(100%) invert(19%) sepia(30%) saturate(780%) hue-rotate(91deg) brightness(87%);
+}
+.site-brand-name {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: .055em;
+}
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    gap: 7px;
+    min-width: 0;
+}
+.site-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 clamp(9px, 1vw, 15px);
+    border-radius: 11px;
+    color: #59665e;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color .2s ease, background-color .2s ease;
+}
+.site-nav-link:hover, .site-nav-link.is-active {
+    color: #193c2c;
+    background: #e9efe9;
+}
+.site-nav-link.is-active { font-weight: 700; }
+.site-header-actions { display: flex; align-items: center; flex: none; gap: 13px; }
+.site-cart, .site-account, .site-logout, .site-menu-toggle, .site-menu-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.site-cart {
+    position: relative;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid #dfe6de;
+    border-radius: 12px;
+    color: #193c2c;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    transition: border-color .2s ease, background-color .2s ease;
+}
+.site-cart:hover, .site-cart.is-active { border-color: #a8bdaa; background: #f4f8f3; }
+.site-cart svg, .site-account svg, .site-logout svg, .site-menu-toggle svg, .site-menu-close svg { width: 19px; height: 19px; flex: none; }
+.site-cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    color: #fff;
+    background: #193c2c;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+.site-cart-count.is-empty { display: none; }
+.site-account {
+    gap: 8px;
+    padding: 0 16px;
+    border-radius: 12px;
+    color: #fff;
+    background: #193c2c;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background-color .2s ease, box-shadow .2s ease;
+}
+.site-account:hover { color: #fff; background: #2d5d4c; box-shadow: 0 5px 14px rgba(25,60,44,.18); }
+.site-logout-form { margin: 0; }
+.site-logout, .site-menu-toggle, .site-menu-close {
+    width: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    color: #607268;
+    background: transparent;
+    box-shadow: none;
+}
+.site-logout:hover, .site-menu-toggle:hover, .site-menu-close:hover {
+    color: #193c2c;
+    background: #e9efe9;
+    transform: none;
+    box-shadow: none;
+}
+.site-menu-toggle { display: none; }
+.site-menu-overlay { display: none; }
+.site-mobile-menu { display: none; }
+
+@media (max-width: 1199px) {
+    .site-header { height: 72px; }
+    .site-nav, .site-account, .site-logout-form { display: none; }
+    .site-header-inner { justify-content: space-between; }
+    .site-menu-toggle { display: inline-flex; }
+    .site-menu-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 51;
+        background: rgba(11, 25, 17, .48);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .25s ease, visibility .25s ease;
+    }
+    .site-menu-overlay.is-open { opacity: 1; visibility: visible; }
+    .site-mobile-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0 0 0 auto;
+        z-index: 52;
+        width: min(440px, 100vw) !important;
+        max-width: none !important;
+        height: 100dvh;
+        color: #193c2c;
+        background: #fcfbf7;
+        box-shadow: -20px 0 50px rgba(11, 25, 17, .16);
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform .28s ease, visibility .28s ease;
+    }
+    .site-mobile-menu.is-open { transform: translateX(0); visibility: visible; }
+    .site-mobile-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 78px;
+        padding: 10px 22px;
+        border-bottom: 1px solid #e5e7df;
+    }
+    .site-mobile-body { flex: 1 1 auto; overflow-y: auto; padding: 23px 20px; }
+    .site-mobile-kicker {
+        margin: 0 12px 10px;
+        color: #829086;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .17em;
+        text-transform: uppercase;
+    }
+    .site-mobile-kicker-secondary { margin-top: 23px; }
+    .site-mobile-nav { display: grid; gap: 4px; }
+    .site-mobile-link {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 52px;
+        padding: 9px 13px;
+        border-radius: 13px;
+        color: #344a3d;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color .2s ease, color .2s ease;
+    }
+    .site-mobile-link i { width: 21px; color: #688674; font-size: 16px; text-align: center; }
+    .site-mobile-link:hover, .site-mobile-link.is-active { color: #193c2c; background: #e9efe9; }
+    .site-mobile-link.is-active { font-weight: 800; }
+    .site-mobile-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 24px;
+        margin-left: auto;
+        padding: 0 6px;
+        border-radius: 999px;
+        color: #fff;
+        background: #193c2c;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .site-mobile-footer { display: flex; gap: 10px; padding: 16px 20px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid #e5e7df; }
+    .site-mobile-primary, .site-mobile-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 1 0;
+        min-height: 48px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 750;
+        text-decoration: none;
+    }
+    .site-mobile-primary { color: #fff; background: #193c2c; }
+    .site-mobile-primary:hover { color: #fff; background: #2d5d4c; }
+    .site-mobile-secondary { color: #193c2c; background: #fff; border: 1px solid #dfe6de; }
+    .site-mobile-secondary:hover { background: #e9efe9; transform: none; box-shadow: none; }
+    #mobile-menu a:after, #mobile-menu button:after { content: none; }
+}
+@media (max-width: 620px) {
+    .site-brand-name { font-size: 19px; }
+    .site-cart { width: 44px; padding: 0; }
+    .site-cart-label { display: none; }
+    .site-cart-count { position: absolute; top: -6px; right: -6px; border: 2px solid #fcfbf7; min-width: 21px; height: 21px; }
+    .site-mobile-menu { width: 100vw !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .site-menu-overlay, .site-mobile-menu { transition: none; }
+}
+
 /* Плавающая анимация для hero-логотипа */
 @keyframes heroLogoFloat {
     0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -327,11 +582,6 @@ button:focus, a:focus {
         padding-right: 1rem;
     }
 
-    /* Мобильное меню — fullscreen */
-    #mobile-menu {
-        width: 100% !important;
-        max-width: none !important;
-    }
 }
 
 /* Планшеты и маленькие ноутбуки */
@@ -404,54 +654,6 @@ button:focus, a:focus {
     .noUi-target {
         height: 6px;
     }
-}
-
-/* Улучшенные стили для мобильного меню (fullscreen) */
-#mobile-menu {
-    opacity: 1;
-    -webkit-overflow-scrolling: touch;
-    width: 100% !important;
-    max-width: none !important;
-}
-
-#mobile-menu-overlay {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(2px);
-}
-
-/* Улучшенные переходы для мобильного меню */
-#mobile-menu a, #mobile-menu button {
-    position: relative;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-#mobile-menu a:after, #mobile-menu button:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--text-deep-green);
-    transition: width 0.3s ease;
-}
-
-#mobile-menu a:hover:after, #mobile-menu button:hover:after,
-#mobile-menu a.bg-gray-50:after {
-    width: 4px;
-}
-
-/* Активное состояние пункта меню */
-.menu-active {
-    background-color: rgba(45, 93, 76, 0.1);
-    font-weight: 500;
-}
-
-/* Анимации для мобильного меню */
-@keyframes slideInRight {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
 }
 
 @keyframes fadeIn {
