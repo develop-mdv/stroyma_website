@@ -1,0 +1,27 @@
+<section class="catalog-browser-shell" id="catalog-browser" data-search-url="{% url 'search_ajax' %}" data-scope="{{ scope_category_id }}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}">
+    <div class="catalog-results-heading" id="catalog-results-title">
+        <div>
+            <span class="home-section-eyebrow">Подбор товаров</span>
+            <h2>{% if category %}Товары категории{% else %}Все товары{% endif %}</h2>
+        </div>
+        <span id="results-count" aria-live="polite">Найдено товаров: {{ products.paginator.count }}</span>
+    </div>
+
+    <button id="toggle-filter" type="button" class="catalog-filter-toggle" aria-controls="search-form" aria-expanded="false">
+        <i class="fas fa-filter" aria-hidden="true"></i><span>Фильтры</span>
+    </button>
+
+    <div class="catalog-browser-layout">
+        <aside class="home-filter-panel catalog-filter-panel">
+            {% include 'products/catalog_filter_panel.html' %}
+        </aside>
+        <main class="catalog-products-panel">
+            <div id="products-grid" aria-live="polite">
+                {% include 'products/search_results.html' with products=products %}
+            </div>
+            <div id="products-pagination">
+                {% include 'products/catalog_pagination.html' %}
+            </div>
+        </main>
+    </div>
+</section>

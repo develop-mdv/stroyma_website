@@ -1,0 +1,59 @@
+<form id="search-form" method="get" action="{{ browser_path }}" class="home-filter-form catalog-filter-form hidden md:block">
+    <div class="home-filter-header">
+        <h3>Фильтры</h3>
+        <button type="button" id="reset-filters" class="home-filter-reset">Сбросить</button>
+    </div>
+    <input type="hidden" name="query" id="filter-query" value="{{ search_query }}">
+
+    <div class="home-filter-section">
+        <h4 class="home-filter-label" id="price-filter-label">Цена, ₽</h4>
+        <div id="price-slider" class="home-price-range" role="group" aria-labelledby="price-filter-label">
+            <div class="home-price-track" aria-hidden="true"><span class="home-price-track-fill"></span></div>
+            <input type="range" id="price-range-min" min="{{ min_price }}" max="{{ max_price }}" value="{{ selected_price_min }}" aria-label="Минимальная цена">
+            <input type="range" id="price-range-max" min="{{ min_price }}" max="{{ max_price }}" value="{{ selected_price_max }}" aria-label="Максимальная цена">
+        </div>
+        <div class="home-price-fields">
+            <label class="home-price-field" for="price_min">
+                <span>От</span>
+                <span class="home-price-input"><input type="number" name="price_min" id="price_min" step="1" min="{{ min_price }}" max="{{ max_price }}" value="{% if has_price_candidates %}{{ selected_price_min }}{% endif %}" placeholder="—" inputmode="numeric" {% if not has_price_candidates %}disabled{% endif %}><span>₽</span></span>
+            </label>
+            <label class="home-price-field" for="price_max">
+                <span>До</span>
+                <span class="home-price-input"><input type="number" name="price_max" id="price_max" step="1" min="{{ min_price }}" max="{{ max_price }}" value="{% if has_price_candidates %}{{ selected_price_max }}{% endif %}" placeholder="—" inputmode="numeric" {% if not has_price_candidates %}disabled{% endif %}><span>₽</span></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="home-filter-section">
+        <span class="home-filter-label" id="sort-label">Сортировка</span>
+        <div class="home-sort-wrap">
+            <select name="sort_by" id="sort-by" class="home-sort-native" tabindex="-1" aria-hidden="true">
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По алфавиту</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сначала дешевые</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
+            </select>
+            <button type="button" id="sort-trigger" class="home-sort-trigger" aria-labelledby="sort-label sort-current" aria-haspopup="listbox" aria-controls="sort-options" aria-expanded="false">
+                <span id="sort-current">{% if sort_by == 'price_asc' %}Сначала дешевые{% elif sort_by == 'price_desc' %}Сначала дорогие{% else %}По алфавиту{% endif %}</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div id="sort-options" class="home-sort-options" role="listbox" aria-labelledby="sort-label" hidden>
+                <button type="button" class="home-sort-option" role="option" data-value="name" aria-selected="{% if sort_by == 'name' %}true{% else %}false{% endif %}"><span>По алфавиту</span><i class="fas fa-check" aria-hidden="true"></i></button>
+                <button type="button" class="home-sort-option" role="option" data-value="price_asc" aria-selected="{% if sort_by == 'price_asc' %}true{% else %}false{% endif %}"><span>Сначала дешевые</span><i class="fas fa-check" aria-hidden="true"></i></button>
+                <button type="button" class="home-sort-option" role="option" data-value="price_desc" aria-selected="{% if sort_by == 'price_desc' %}true{% else %}false{% endif %}"><span>Сначала дорогие</span><i class="fas fa-check" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    {% if categories_tree %}
+    <div class="home-filter-section home-filter-categories">
+        <h4 class="home-filter-label">{% if category %}Подкатегории{% else %}Категории{% endif %}</h4>
+        <p class="catalog-category-hint">Галочка выбирает раздел с вложенными, название открывает его</p>
+        <div class="home-category-list">
+            {% for node in categories_tree %}
+                {% include 'products/catalog_category_node.html' with node=node %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <button type="submit" class="home-filter-apply">Показать товары <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+</form>

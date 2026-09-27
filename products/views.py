@@ -18,12 +18,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
-from .filters import ProductFilter
 from .forms import ColorSelectionRequestForm, ContactForm, OrderForm, SearchForm
 from .models import (
     Cart,
@@ -145,6 +142,85 @@ def _catalog_price_range(products, request):
     return minimum, maximum, selected_minimum, selected_maximum, bounds['low'] is not None
 
 
+def _browser_candidates(request, scope=None):
+    """Products matching search and categories, before the price facet."""
+    products = Product.objects.all()
+    if scope is not None:
+        products = products.filter(categories__in=scope.get_descendants(include_self=True))
+
+    query = (request.GET.get('query') or request.GET.get('name') or '').strip()
+    if query:
+        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+    selected_ids = [int(value) for value in request.GET.getlist('category') if value.isdigit()]
+    categories = Category.objects.filter(pk__in=selected_ids)
+    if scope is not None:
+        categories = categories.filter(pk__in=scope.get_descendants().values('pk'))
+    selected_categories = []
+    category_ids = set()
+    for category in categories:
+        selected_categories.append(str(category.pk))
+        category_ids.update(category.get_descendants(include_self=True).values_list('pk', flat=True))
+    if category_ids:
+        products = products.filter(categories__pk__in=category_ids)
+    return products.distinct(), query, selected_categories
+
+
+def _browser_page_context(request, scope=None, page_size=12):
+    products, query, selected_categories = _browser_candidates(request, scope)
+    products = products.annotate(display_price=Round('price'))
+    minimum, maximum, selected_minimum, selected_maximum, available = _catalog_price_range(products, request)
+    products = products.filter(display_price__gte=selected_minimum, display_price__lte=selected_maximum)
+
+    sort_by = request.GET.get('sort_by', 'name')
+    if sort_by == 'price_asc':
+        products = products.order_by('price', 'pk')
+    elif sort_by == 'price_desc':
+        products = products.order_by('-price', 'pk')
+    else:
+        sort_by = 'name'
+        products = products.order_by('name', 'pk')
+
+    paginator = Paginator(products, page_size)
+    page = paginator.get_page(request.GET.get('page'))
+    page_path = scope.get_absolute_url() if scope is not None else reverse('catalog')
+
+    def page_url(number):
+        params = request.GET.copy()
+        for key in ('view', 'scope', 'autocomplete', 'name', 'page'):
+            params.pop(key, None)
+        if query:
+            params['query'] = query
+        if number > 1:
+            params['page'] = number
+        encoded = params.urlencode()
+        return f'{page_path}?{encoded}' if encoded else page_path
+
+    pagination_pages = [
+        {'number': number, 'url': page_url(number) if isinstance(number, int) else None,
+         'current': number == page.number}
+        for number in paginator.get_elided_page_range(page.number, on_each_side=1, on_ends=1)
+    ]
+    categories_tree = Category.objects.filter(parent=scope).order_by('tree_id', 'lft')
+    return {
+        'products': page,
+        'search_query': query,
+        'selected_categories': selected_categories,
+        'sort_by': sort_by,
+        'min_price': minimum,
+        'max_price': maximum,
+        'selected_price_min': selected_minimum,
+        'selected_price_max': selected_maximum,
+        'has_price_candidates': available,
+        'categories_tree': categories_tree,
+        'scope_category_id': scope.pk if scope is not None else '',
+        'browser_path': page_path,
+        'pagination_pages': pagination_pages,
+        'pagination_previous_url': page_url(page.previous_page_number()) if page.has_previous() else None,
+        'pagination_next_url': page_url(page.next_page_number()) if page.has_next() else None,
+    }
+
+
 def product_list(request):
     form = SearchForm(request.GET)
     products = Product.objects.all()
@@ -224,6 +300,47 @@ def cart_preview(request):
 
 @ratelimit(key='ip', rate='30/m', block=True)
 def search_ajax(request):
+    if request.GET.get('view') == 'grid':
+        scope_id = request.GET.get('scope', '')
+        scope = get_object_or_404(Category, pk=scope_id) if scope_id.isdigit() else None
+        if request.GET.get('autocomplete'):
+            candidates, query, _ = _browser_candidates(request, scope)
+            matching_categories = Category.objects.filter(name__icontains=query).select_related('parent')
+            if scope is not None:
+                matching_categories = matching_categories.filter(
+                    pk__in=scope.get_descendants().values('pk')
+                )
+            return JsonResponse({'categories': [
+                {
+                    'name': match.name,
+                    'url': match.get_absolute_url(),
+                    'parent_name': match.parent.name if match.parent else '',
+                }
+                for match in matching_categories.order_by('level', 'name')[:6]
+            ], 'products': [
+                {
+                    'name': product.name,
+                    'price': f'{product.price:,.0f}'.replace(',', ' '),
+                    'image': product.image.url if product.image else '',
+                    'url': product.get_absolute_url(),
+                }
+                for product in candidates.order_by('name')[:6]
+            ]})
+
+        context = _browser_page_context(request, scope)
+        return JsonResponse({
+            'results': render_to_string('products/search_results.html', context, request=request),
+            'pagination': render_to_string('products/catalog_pagination.html', context, request=request),
+            'count': context['products'].paginator.count,
+            'price_bounds': {
+                'min': context['min_price'], 'max': context['max_price'],
+                'available': context['has_price_candidates'],
+            },
+            'selected_price': {
+                'min': context['selected_price_min'], 'max': context['selected_price_max'],
+            },
+        })
+
     query = request.GET.get('query', '').lower()
     sort_by = request.GET.get('sort_by', 'name')
     page_number = request.GET.get('page', 1)
@@ -795,51 +912,13 @@ class CategoryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         category = self.get_object()
         
-        # Получаем все товары из текущей категории и её подкатегорий
-        products = Product.objects.filter(
-            Q(categories=category) | 
-            Q(categories__in=category.get_descendants())
-        ).distinct()
-
-        # Глобальные min/max цены для слайдера (до применения фильтров)
-        price_range = products.aggregate(Min('price'), Max('price'))
-        min_price = int(price_range.get('price__min') or 0)
-        max_price = int(price_range.get('price__max') or 0)
-
-        # Применяем фильтры
-        self.filterset = ProductFilter(self.request.GET, queryset=products)
-        products = self.filterset.qs
-
-        # Сортировка
-        sort_by = self.request.GET.get('sort_by', 'name')
-        if sort_by == 'price_asc':
-            products = products.order_by('price')
-        elif sort_by == 'price_desc':
-            products = products.order_by('-price')
-        else:
-            products = products.order_by('name')
-
-        # Добавляем пагинацию
-        paginator = Paginator(products, self.paginate_by)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        
-        # Получаем выбранные категории
-        selected_categories = self.request.GET.getlist('category')
-        
-        # Добавляем метаданные для SEO
         context.update({
-            'products': page_obj,
-            'filter': self.filterset,
             'meta_title': f'{category.name} - Каталог товаров',
             'meta_description': category.description or f'Товары категории {category.name}',
             'og_description': f'Просмотрите товары категории {category.name}. {category.description or ""}',
             'subcategories': category.get_children(),
             'breadcrumbs': self.get_breadcrumbs(category),
-            'selected_categories': selected_categories,
-            'min_price': min_price,
-            'max_price': max_price,
-            'sort_by': sort_by,
+            **_browser_page_context(self.request, category, self.paginate_by),
         })
         return context
     
@@ -920,7 +999,6 @@ def returns(request):
         'keywords': 'возврат, обмен, защита прав потребителей, СтройМА',
     })
 
-@method_decorator(cache_page(60 * 15), name='dispatch')  # Кеширование на 15 минут
 class CatalogView(TemplateView):
     """
     Представление для отображения каталога категорий.
@@ -939,5 +1017,6 @@ class CatalogView(TemplateView):
             'meta_title': 'Каталог товаров - Строительные материалы',
             'meta_description': 'Полный каталог строительных материалов с удобной навигацией по категориям',
             'og_description': 'Изучите наш каталог строительных материалов. Удобная навигация по категориям с визуальным представлением.',
+            **_browser_page_context(self.request),
         })
         return context

@@ -1,0 +1,22 @@
+<div class="catalog-category-node">
+    {% with children=node.get_children %}
+    <div class="catalog-category-row">
+        <label class="catalog-category-check" for="category-{{ node.id }}" title="Фильтровать товары: {{ node.name }}">
+            <input type="checkbox" name="category" value="{{ node.id }}" id="category-{{ node.id }}" aria-label="Фильтровать товары: {{ node.name }}" {% if node.id|stringformat:"i" in selected_categories %}checked{% endif %}>
+        </label>
+        <a class="catalog-category-link" href="{{ node.get_absolute_url }}" title="Открыть раздел {{ node.name }}">{{ node.name }}</a>
+        {% if children %}
+        <button type="button" class="accordion-toggle" data-target="children-{{ node.id }}" aria-controls="children-{{ node.id }}" aria-expanded="false" aria-label="Показать подкатегории: {{ node.name }}">
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+    </div>
+    {% if children %}
+    <div id="children-{{ node.id }}" class="home-category-children catalog-category-children hidden">
+        {% for child in children %}
+            {% include 'products/catalog_category_node.html' with node=child %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>

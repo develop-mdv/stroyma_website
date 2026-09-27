@@ -1,0 +1,16 @@
+<section class="home-search-section catalog-search" aria-label="Поиск товаров">
+    <div class="home-search-heading">
+        <div>
+            <span class="home-section-eyebrow">Быстрый поиск</span>
+            <h2>{% if category %}Поиск в категории{% else %}Что нужно для вашего проекта?{% endif %}</h2>
+        </div>
+        <p>Ищите товары и разделы каталога по названию</p>
+    </div>
+    <form id="main-search-form" class="home-search-form" action="{{ browser_path }}" method="get" role="search" autocomplete="off">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <label class="sr-only" for="id_query">Товар или категория</label>
+        <input id="id_query" name="query" type="search" value="{{ search_query }}" placeholder="Например, кирпич или керамика" aria-controls="autocomplete-suggestions" aria-expanded="false" aria-autocomplete="list" autocomplete="off">
+        <button class="home-search-submit" type="submit">Найти <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+    </form>
+    <div id="autocomplete-suggestions" class="home-suggestions" role="listbox" aria-label="Подсказки категорий и товаров" hidden></div>
+</section>

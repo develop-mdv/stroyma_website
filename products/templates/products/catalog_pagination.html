@@ -1,0 +1,12 @@
+{% if products.has_other_pages %}
+<nav class="catalog-pagination" aria-label="Страницы товаров">
+    {% if pagination_previous_url %}<a href="{{ pagination_previous_url }}" class="catalog-page-link" aria-label="Предыдущая страница"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>{% endif %}
+    {% for item in pagination_pages %}
+        {% if item.url %}
+            {% if item.current %}<span class="catalog-page-link is-current" aria-current="page">{{ item.number }}</span>
+            {% else %}<a href="{{ item.url }}" class="catalog-page-link">{{ item.number }}</a>{% endif %}
+        {% else %}<span class="catalog-page-ellipsis" aria-hidden="true">…</span>{% endif %}
+    {% endfor %}
+    {% if pagination_next_url %}<a href="{{ pagination_next_url }}" class="catalog-page-link" aria-label="Следующая страница"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>{% endif %}
+</nav>
+{% endif %}

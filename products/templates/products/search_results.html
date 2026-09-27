@@ -9,7 +9,7 @@
 </style>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 md:gap-10">
     {% for product in products %}
-    <div class="group relative bg-transparent rounded-3xl overflow-hidden flex flex-col transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+    <div class="catalog-product-card group relative bg-transparent rounded-3xl overflow-hidden flex flex-col transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
         <!-- Изображение товара -->
         <div class="relative w-full aspect-[4/5] overflow-hidden bg-white rounded-3xl">
             <a href="{% url 'product_detail' slug=product.slug %}" class="block absolute inset-0 z-0">
@@ -34,8 +34,8 @@
 
             <!-- Всплывающие кнопки (Glassmorphism Toolbar) -->
             <div class="product-actions absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-20 flex gap-2">
-                <button type="button" onclick="openQuickView({{ product.pk }}); return false;" class="flex-1 bg-white/85 backdrop-blur-md text-gray-900 border border-white/40 text-[0.65rem] font-bold uppercase tracking-widest py-3 rounded-2xl text-center hover:bg-white transition-colors shadow-lg min-h-[44px]">
-                    Просм.
+                <button type="button" onclick="openQuickView({{ product.pk }}); return false;" aria-label="Быстрый просмотр: {{ product.name }}" class="flex-1 bg-white/85 backdrop-blur-md text-gray-900 border border-white/40 text-[0.65rem] font-bold uppercase tracking-widest py-3 rounded-2xl text-center hover:bg-white transition-colors shadow-lg min-h-[44px]">
+                    Просмотр
                 </button>
                 <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="flex-1 ajax-cart-form">
                     {% csrf_token %}
@@ -75,7 +75,7 @@
             </div>
             <h3 class="text-2xl font-black font-display text-gray-900 uppercase tracking-tight mb-3">Ничего не найдено</h3>
             <p class="text-gray-400 font-light max-w-md mx-auto mb-8">Попробуйте изменить параметры поиска или сбросить фильтры для просмотра всех товаров.</p>
-            <a href="{% url 'product_list' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white py-3.5 px-8 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors shadow-md">
+            <a href="{% if browser_path %}{{ browser_path }}{% else %}{% url 'product_list' %}{% endif %}" class="inline-flex items-center gap-2 bg-gray-900 text-white py-3.5 px-8 rounded-full text-[0.65rem] font-bold uppercase tracking-widest hover:bg-deep-green hover:text-white transition-colors shadow-md">
                 <i class="fas fa-times text-xs"></i> Сбросить поиск
             </a>
         </div>
