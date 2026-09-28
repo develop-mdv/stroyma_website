@@ -2,7 +2,7 @@
 {% block title %}Оформление заказа | СТРОЙМА{% endblock %}
 
 {% block content %}
-<div class="bg-[#F8F5EF] min-h-screen pb-16 md:pb-24 px-4 sm:px-8 xl:px-16 pt-8 md:pt-16 lg:pt-20">
+<div class="checkout-page bg-[#F8F5EF] min-h-screen pb-16 md:pb-24 px-4 sm:px-8 xl:px-16 pt-8 md:pt-16 lg:pt-20">
     <!-- Заголовок -->
     <div class="max-w-[120rem] mx-auto mb-10 md:mb-16 relative">
         <div class="absolute left-0 top-2 md:top-4 bottom-2 md:bottom-4 w-1.5 md:w-2 rounded-full bg-deep-green"></div>
@@ -18,6 +18,8 @@
             <div class="lg:sticky lg:top-28 bg-white/60 backdrop-blur-3xl border border-white/40 rounded-[1.5rem] md:rounded-[2.5rem] lg:rounded-[3rem] p-6 md:p-8 lg:p-12 shadow-2xl shadow-deep-green/5">
                 <h2 class="text-xl md:text-2xl font-black font-display uppercase tracking-widest text-gray-900 mb-6 md:mb-8 border-b-2 border-gray-900/10 pb-4 md:pb-6">Ваш заказ</h2>
                 
+                <details id="checkout-items" class="checkout-items" open>
+                    <summary><span class="checkout-items-show">Показать товары ({{ cart_items|length }})</span><span class="checkout-items-hide">Скрыть товары</span></summary>
                 <div class="space-y-6 mb-8 max-h-[45dvh] lg:max-h-[50dvh] overflow-y-auto pr-4 custom-scrollbar">
                     {% for item in cart_items %}
                     <div class="flex gap-6 group">
@@ -36,6 +38,7 @@
                     </div>
                     {% endfor %}
                 </div>
+                </details>
                 
                 <div class="pt-6 border-t-2 border-gray-900/10">
                     <div class="flex items-end justify-between">
@@ -153,4 +156,13 @@
     background: rgba(107, 114, 128, 0.8); 
 }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const items = document.getElementById('checkout-items');
+    if (!items) return;
+    const sync = () => { if (window.matchMedia('(min-width: 1024px)').matches) items.open = true; };
+    if (window.matchMedia('(max-width: 1023px)').matches) items.open = false;
+    window.addEventListener('resize', sync);
+});
+</script>
 {% endblock %}

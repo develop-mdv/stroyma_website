@@ -11,6 +11,7 @@
     const pagination = document.getElementById('products-pagination');
     const resultCount = document.getElementById('results-count');
     const filterToggle = document.getElementById('toggle-filter');
+    const filterClose = filterForm.querySelector('.mobile-filter-close');
     const resetFilters = document.getElementById('reset-filters');
     const priceMin = document.getElementById('price_min');
     const priceMax = document.getElementById('price_max');
@@ -435,13 +436,18 @@
     filterToggle.addEventListener('click', () => {
         const open = !filterForm.classList.contains('mobile-filter-visible');
         setMobileFiltersOpen(open);
-        if (open) filterForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (open) filterToggle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    filterClose.addEventListener('click', () => {
+        setMobileFiltersOpen(false);
+        filterToggle.focus({ preventScroll: true });
+        filterToggle.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     filterForm.addEventListener('submit', event => {
         event.preventDefault();
         commitPriceField('min', false);
         applyFilters();
-        if (window.matchMedia('(max-width: 767px)').matches) {
+        if (window.matchMedia('(max-width: 900px)').matches) {
             setMobileFiltersOpen(false);
             document.getElementById('catalog-results-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }

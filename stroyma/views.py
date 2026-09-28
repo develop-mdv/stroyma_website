@@ -2,8 +2,24 @@
 from urllib.parse import urljoin
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.response import TemplateResponse
+
+
+def pwa_manifest(request):
+    content = (settings.BASE_DIR / 'static' / 'pwa' / 'manifest.webmanifest').read_bytes()
+    response = HttpResponse(content, content_type='application/manifest+json; charset=utf-8')
+    response['Cache-Control'] = 'public, max-age=3600'
+    return response
+
+
+def service_worker(request):
+    content = (settings.BASE_DIR / 'static' / 'js' / 'service-worker.js').read_bytes()
+    response = HttpResponse(content, content_type='text/javascript; charset=utf-8')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Service-Worker-Allowed'] = '/'
+    return response
 
 
 def handler404(request, exception=None):

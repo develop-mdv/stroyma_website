@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#193c2c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="СТРОЙМА">
+    <link rel="manifest" href="{% url 'pwa_manifest' %}">
+    <link rel="apple-touch-icon" href="{% static 'pwa/icon-192.png' %}">
+    {% if not user.is_authenticated %}<meta name="pwa-cache" content="public">{% endif %}
     
     <!-- Динамические мета-теги -->
     <title>{% block title %}{{ meta_title|default:"СТРОЙМА - Строительные материалы" }}{% endblock %}</title>
@@ -27,45 +34,20 @@
     <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства.' }}{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
 
-    <!-- Tailwind CSS (с конфигом токенов) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'deep-green': '#1a3628', /* Углубляем зеленый для премиальности */
-                        'sandy': '#f4ebd8',      /* Мягкий песочный/молочный фон */
-                        'gold-accent': '#d4af37',
-                        'input-bg': '#374151',
-                        'input-border': '#4B5563',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'lift': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}?v=1">
 
-    <!-- Google Fonts: Inter и Outfit (вместо старых) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'vendor/fonts/inter/wght.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'vendor/fonts/outfit/wght.css' %}?v=1">
     
     <!-- Font Awesome для иконок -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- noUiSlider CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}?v=1">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/logo-ma.png' %}?v=2">
     <link rel="shortcut icon" href="{% static 'images/logo-ma.png' %}?v=2">
     <!-- Подключение кастомных стилей -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}?v=5">
     {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=9">
 </head>
 <body class="relative font-sans text-gray-800 antialiased bg-[#fcfcfc] transition-colors duration-300">
     <!-- Микроразметка Schema.org - Организация -->
@@ -253,8 +235,8 @@
     </div>
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/base.js' %}?v=3"></script>
+    <script src="{% static 'js/pwa.js' %}?v=3" defer></script>
     <script src="{% static 'js/phone-input.js' %}?v=6" defer></script>
     
     <script>

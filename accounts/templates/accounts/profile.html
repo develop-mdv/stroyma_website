@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- STUDIO-GRADE HERO SECTION -->
-<section class="relative bg-white min-h-[30dvh] flex flex-col justify-center overflow-hidden mb-8 md:mb-12 mt-4 md:mt-8 mx-3 sm:mx-4 lg:mx-8 w-auto rounded-[1.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100">
+<section class="profile-hero relative bg-white min-h-[30dvh] flex flex-col justify-center overflow-hidden mb-8 md:mb-12 mt-4 md:mt-8 mx-3 sm:mx-4 lg:mx-8 w-auto rounded-[1.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100">
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-[10%] -right-[5%] w-[40vw] h-[40vw] bg-deep-green/5 rounded-full blur-[100px] opacity-70"></div>
         <div class="absolute bottom-0 left-0 w-full h-[50%] bg-gradient-to-t from-gray-50 to-transparent z-0"></div>
@@ -22,6 +22,7 @@
         <h1 class="font-black text-gray-900 leading-[0.85] tracking-tighter font-display uppercase animate-fade-in-up break-words" style="font-size:clamp(2.5rem,10vw,8rem)">
             КАБИНЕТ
         </h1>
+        <a href="#orders" class="profile-mobile-orders">К истории заказов ↓</a>
     </div>
 </section>
 
@@ -91,7 +92,7 @@
         </div>
 
         <!-- RIGHT COLUMN: ORDER HISTORY -->
-        <div class="w-full lg:w-2/3 xl:w-3/4">
+        <div id="orders" class="w-full lg:w-2/3 xl:w-3/4">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 md:mb-10 pb-6 border-b border-gray-200">
                 <div>
                     <p class="text-xs font-bold text-deep-green uppercase tracking-[0.2em] mb-2">Архив операций</p>

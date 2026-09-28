@@ -6,7 +6,7 @@
     <div class="flex flex-col lg:flex-row w-full bg-white overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 rounded-[1.5rem] md:rounded-[3rem]">
 
         <!-- LEFT PANEL: PRESENTATION / TYPOGRAPHY -->
-        <div class="relative w-full lg:w-1/2 bg-gray-50 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100">
+        <div class="auth-intro relative w-full lg:w-1/2 bg-gray-50 p-8 md:p-12 lg:p-20 overflow-hidden flex flex-col justify-center items-start border-b lg:border-b-0 lg:border-r border-gray-100">
             <!-- Background effects -->
             <div class="absolute -top-[10%] -left-[10%] w-[40vw] h-[40vw] bg-deep-green/5 rounded-full blur-[100px] opacity-70 pointer-events-none"></div>
             
@@ -18,12 +18,12 @@
 
             <p class="text-deep-green font-semibold text-xs lg:text-sm tracking-[0.3em] uppercase mb-4 relative z-10">Новый Партнер</p>
             
-            <h2 class="font-black text-gray-900 leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words w-full" style="font-size:clamp(2.5rem,10vw,6rem)">
+            <h2 class="register-title font-black text-gray-900 leading-[0.85] tracking-tighter mb-6 md:mb-8 font-display uppercase relative z-10 break-words w-full" style="font-size:clamp(2.5rem,10vw,6rem)">
                 РЕГИСТРАЦИЯ
             </h2>
 
             <!-- Premium Features list -->
-            <ul class="space-y-6 mt-8 relative z-10 w-full max-w-md">
+            <ul class="auth-perks space-y-6 mt-8 relative z-10 w-full max-w-md">
                 <li class="flex items-start opacity-70 hover:opacity-100 transition-opacity">
                     <i class="fas fa-hammer text-deep-green mt-1 mr-4"></i>
                     <div>
@@ -42,12 +42,13 @@
         </div>
 
         <!-- RIGHT PANEL: PREMIUM MINIMALIST FORM -->
-        <div class="w-full lg:w-1/2 p-8 md:p-12 lg:p-24 flex flex-col justify-center relative">
+        <div class="auth-form-panel w-full lg:w-1/2 p-8 md:p-12 lg:p-24 flex flex-col justify-center relative">
 
             <h3 id="form-title" class="text-2xl md:text-3xl font-display font-medium text-gray-900 mb-8 md:mb-10">Создать аккаунт</h3>
 
             <form method="post" id="register-form" class="w-full flex-grow flex flex-col justify-between max-w-lg">
                 {% csrf_token %}
+                <p id="register-error" class="hidden mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-700" role="alert"></p>
                 
                 <div class="space-y-6 flex-grow">
                     <!-- Underline Input: Username -->
@@ -155,43 +156,44 @@
 
 {% block scripts %}
 <script>
-    $(document).ready(function () {
-        $('#register-form').on('submit', function (e) {
-            e.preventDefault();
-            const formData = $(this).serialize();
-            
-            // Add a loading state to button
-            const $btn = $(this).find('button[type="submit"]');
-            const originalText = $btn.html();
-            $btn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Отправка...').prop('disabled', true);
-
-            $.ajax({
-                url: '{% url "register" %}',
-                method: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        $('#register-form').fadeOut(300, function() {
-                            $('#form-title').hide();
-                            $('#email-confirmation-message').removeClass('hidden').hide().fadeIn(400);
-                        });
-                        
-                        setTimeout(function() {
-                            window.location.href = "{% url 'product_list' %}";
-                        }, 5000);
-                    } else {
-                        // Reset button
-                        $btn.html(originalText).prop('disabled', false);
-                        alert(response.message || "Ошибка при регистрации, проверьте данные.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $btn.html(originalText).prop('disabled', false);
-                    alert("Произошла ошибка при регистрации. Сервер временно недоступен.");
-                    console.error("AJAX Error:", status, error);
-                }
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('register-form');
+    const errorBox = document.getElementById('register-error');
+    if (!form) return;
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        const button = form.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+        button.textContent = 'Отправка...';
+        button.disabled = true;
+        errorBox.classList.add('hidden');
+        try {
+            const response = await fetch(form.action || '{% url "register" %}', {
+                method: 'POST', body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
             });
-        });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                let message = 'Проверьте данные формы и попробуйте ещё раз.';
+                try {
+                    const errors = JSON.parse(data.message);
+                    const first = Object.values(errors)[0];
+                    if (Array.isArray(first) && first[0]?.message) message = first[0].message;
+                } catch (_) { if (data.message) message = data.message; }
+                throw new Error(message);
+            }
+            form.classList.add('hidden');
+            document.getElementById('form-title')?.classList.add('hidden');
+            document.getElementById('email-confirmation-message')?.classList.remove('hidden');
+            setTimeout(() => { window.location.href = "{% url 'product_list' %}"; }, 5000);
+        } catch (error) {
+            errorBox.textContent = error.message || 'Не удалось отправить форму. Проверьте подключение.';
+            errorBox.classList.remove('hidden');
+            button.innerHTML = originalText;
+            button.disabled = false;
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     });
+});
 </script>
 {% endblock %}

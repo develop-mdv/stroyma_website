@@ -17,6 +17,7 @@
     const priceSlider = document.getElementById('price-slider');
     const resetFilters = document.getElementById('reset-filters');
     const filterToggle = document.getElementById('toggle-filter');
+    const filterClose = filterForm.querySelector('.mobile-filter-close');
     let priceFloor = Number(page.dataset.priceMin);
     let priceCeiling = Number(page.dataset.priceMax);
     const sortSelect = document.getElementById('sort-by');
@@ -385,7 +386,7 @@
         event.preventDefault();
         commitPriceField('min', false);
         applyFilters();
-        if (window.matchMedia('(max-width: 767px)').matches) {
+        if (window.matchMedia('(max-width: 900px)').matches) {
             setMobileFiltersOpen(false);
             document.querySelector('.home-products-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -445,9 +446,14 @@
         page.classList.toggle('filters-open', open);
         filterToggle.querySelector('span').textContent = open ? 'Скрыть фильтры' : 'Фильтры';
         filterToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        if (open && window.matchMedia('(max-width: 767px)').matches) setCartCollapsed(true, false);
+        if (open && window.matchMedia('(max-width: 900px)').matches) setCartCollapsed(true, false);
     }
     filterToggle.addEventListener('click', () => setMobileFiltersOpen(!filterForm.classList.contains('mobile-filter-visible')));
+    filterClose.addEventListener('click', () => {
+        setMobileFiltersOpen(false);
+        filterToggle.focus({ preventScroll: true });
+        filterToggle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     loadMoreButton.addEventListener('click', () => { resultPage += 1; loadResults(false); });
     resultList.addEventListener('click', event => {
         const button = event.target.closest('.home-quantity-button');

@@ -42,9 +42,9 @@
 
 
 <!-- Кнопка переключения фильтров на мобильных устройствах -->
-<div class="block md:hidden mb-4">
+<div class="mobile-filter-toggle-wrap">
     <button id="toggle-filter" type="button" aria-controls="search-form" aria-expanded="false" class="w-full py-3 bg-white text-deep-green font-medium rounded-xl shadow-sm border border-gray-200 transition-colors hover:bg-gray-50 flex items-center justify-center gap-2 min-h-[48px]">
-        <i class="fas fa-filter"></i> <span>Фильтры</span>
+        <i class="fas fa-filter" aria-hidden="true"></i> <span>Фильтры</span><i class="fas fa-chevron-down mobile-filter-chevron" aria-hidden="true"></i>
     </button>
 </div>
 
@@ -131,6 +131,7 @@
                     </div>
                 </div>
             <button type="submit" class="home-filter-apply">Показать товары <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+            <button type="button" class="mobile-filter-close" aria-controls="search-form"><i class="fas fa-chevron-up" aria-hidden="true"></i> Свернуть фильтры</button>
         </form>
     </aside>
 
@@ -180,7 +181,7 @@
     background: #cbd5e1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     #search-form {
         display: none;
     }
@@ -194,5 +195,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/home.js' %}?v=10"></script>
+<script src="{% static 'js/home.js' %}?v=12"></script>
 {% endblock %}

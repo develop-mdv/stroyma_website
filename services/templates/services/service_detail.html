@@ -208,7 +208,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация Fancybox для галереи фотографий
-    Fancybox.bind("[data-fancybox='gallery']", {
+    if (window.Fancybox) Fancybox.bind("[data-fancybox='gallery']", {
         Image: {
             zoom: true,
         },

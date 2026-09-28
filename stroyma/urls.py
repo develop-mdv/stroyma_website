@@ -32,6 +32,8 @@ handler500 = 'stroyma.views.handler500'
 handler403 = 'stroyma.views.handler403'
 
 urlpatterns = [
+    path('manifest.webmanifest', views.pwa_manifest, name='pwa_manifest'),
+    path('sw.js', views.service_worker, name='service_worker'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('', include('products.urls')),
     path('accounts/', include('accounts.urls')),

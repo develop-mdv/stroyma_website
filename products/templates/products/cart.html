@@ -134,106 +134,79 @@
 
 {% block scripts %}
 <script>
-$(document).ready(function () {
-    // Вспомогательная функция для подсветки обновления цены
-    function flashPrice(selector) {
-        const $el = $(selector);
-        $el.css('color', '#41f2a3'); // яркий зеленый
-        $el.css('transform', 'scale(1.05)');
-        setTimeout(() => {
-            $el.css('color', '');
-            $el.css('transform', '');
-        }, 300);
+document.addEventListener('DOMContentLoaded', () => {
+    function flashPrice(element) {
+        if (!element) return;
+        element.style.color = '#41f2a3';
+        element.style.transform = 'scale(1.05)';
+        setTimeout(() => { element.style.color = ''; element.style.transform = ''; }, 300);
     }
 
-    // Обработка изменения количества товара
-    $('.update-cart-quantity').on('change', function () {
-        updateCartItem($(this));
-    });
-    
-    // Обработчики для кнопок увеличения/уменьшения количества
-    $('.decrease-quantity').on('click', function() {
-        const productId = $(this).data('product-id');
-        const inputElement = $('#quantity-' + productId);
-        const currentValue = parseInt(inputElement.val());
-        
-        if (currentValue > 1) {
-            inputElement.val(currentValue - 1);
-            updateCartItem(inputElement);
-        }
-    });
-    
-    $('.increase-quantity').on('click', function() {
-        const productId = $(this).data('product-id');
-        const inputElement = $('#quantity-' + productId);
-        const currentValue = parseInt(inputElement.val());
-        const maxValue = parseInt(inputElement.attr('max'), 10) || 9999;
-
-        if (currentValue < maxValue) {
-            inputElement.val(currentValue + 1);
-            updateCartItem(inputElement);
-        }
-    });
-    
-    // Функция обновления элемента корзины
-    function updateCartItem($input) {
-        var productId = $input.data('product-id');
-        var quantity = parseInt($input.val());
-        var maxQuantity = parseInt($input.attr('max'));
-
-        if (isNaN(quantity) || quantity < 1) {
-            alert('Пожалуйста, введите количество не менее 1.');
-            $input.val(1);
-            return;
-        }
-        if (quantity > maxQuantity) {
-            alert(`Доступно только ${maxQuantity} шт.`);
-            $input.val(maxQuantity);
+    async function updateCartItem(input) {
+        if (input.dataset.pending === '1') return;
+        const quantity = Number.parseInt(input.value, 10);
+        const maxQuantity = Number.parseInt(input.max, 10) || 9999;
+        if (!Number.isInteger(quantity) || quantity < 1 || quantity > maxQuantity) {
+            input.value = Math.min(Math.max(quantity || 1, 1), maxQuantity);
+            input.reportValidity();
             return;
         }
 
-        // Parent form/card interaction
-        const $card = $('#cart-item-row-' + productId);
-        $card.css('opacity', '0.7'); // индикация загрузки
+        const form = input.closest('form');
+        const card = input.closest('[id^="cart-item-row-"]');
+        const previousValue = input.dataset.savedValue || input.defaultValue;
+        input.dataset.pending = '1';
+        if (card) card.style.opacity = '0.7';
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST', body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            });
+            if (!response.ok) throw new Error('Не удалось обновить корзину');
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message || 'Не удалось обновить корзину');
 
-        $.ajax({
-            url: `/cart/update/${productId}/`,
-            method: 'POST',
-            data: {
-                quantity: quantity,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $card.css('opacity', '1');
-                if (response.success) {
-                    
-                    // Обновление цен БЕЗ префиксного текста "Общая цена: "
-                    $('#item-total-' + productId).text(response.item_total_price.toFixed(2) + ' руб.');
-                    $('#total-price').text(response.total_price.toFixed(2) + ' руб.');
-                    
-                    // Подсветка обновления
-                    flashPrice('#item-total-' + productId);
-                    flashPrice('#total-price');
+            input.dataset.savedValue = String(quantity);
+            input.defaultValue = String(quantity);
+            const itemTotal = document.getElementById(`item-total-${input.dataset.productId}`);
+            const cartTotal = document.getElementById('total-price');
+            if (itemTotal) itemTotal.textContent = `${data.item_total_price.toFixed(2)} руб.`;
+            if (cartTotal) cartTotal.textContent = `${data.total_price.toFixed(2)} руб.`;
+            flashPrice(itemTotal);
+            flashPrice(cartTotal);
 
-                    // Обновление счетчиков в шапке
-                    if ($("#mobile-cart-count").length) {
-                        $("#mobile-cart-count").text(response.cart_item_count);
-                    }
-                    if ($("#desktop-cart-count").length) {
-                        $("#desktop-cart-count").text(response.cart_item_count);
-                        $("#desktop-cart-count").removeClass("hidden");
-                    }
-                } else {
-                    alert(response.message);
-                    $input.val(response.current_quantity);
-                }
-            },
-            error: function () {
-                $card.css('opacity', '1');
-                alert('Произошла ошибка при обновлении корзины.');
+            const count = data.cart_item_count;
+            for (const id of ['mobile-cart-count', 'desktop-cart-count']) {
+                const badge = document.getElementById(id);
+                if (badge) { badge.textContent = count; badge.classList.toggle('is-empty', count === 0); }
             }
-        });
+            const menuCount = document.querySelector('.site-mobile-count');
+            if (menuCount) menuCount.textContent = count;
+            const cartLink = document.querySelector('.site-cart');
+            if (cartLink) cartLink.setAttribute('aria-label', `Корзина, товаров: ${count}`);
+        } catch (error) {
+            input.value = previousValue;
+            alert(error.message || 'Не удалось обновить корзину. Проверьте подключение.');
+        } finally {
+            input.dataset.pending = '0';
+            if (card) card.style.opacity = '';
+        }
     }
+
+    document.querySelectorAll('.update-cart-quantity').forEach(input => {
+        input.dataset.savedValue = input.value;
+        input.addEventListener('change', () => updateCartItem(input));
+    });
+    document.querySelectorAll('.decrease-quantity, .increase-quantity').forEach(button => {
+        button.addEventListener('click', () => {
+            const input = document.getElementById(`quantity-${button.dataset.productId}`);
+            if (!input || input.dataset.pending === '1') return;
+            const delta = button.classList.contains('increase-quantity') ? 1 : -1;
+            const current = Number.parseInt(input.value, 10) || 1;
+            const next = Math.min(Math.max(current + delta, 1), Number.parseInt(input.max, 10) || 9999);
+            if (next !== current) { input.value = next; updateCartItem(input); }
+        });
+    });
 });
 </script>
 {% endblock %}

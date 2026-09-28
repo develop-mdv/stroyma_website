@@ -102,7 +102,7 @@
         <h3 class="text-xl md:text-2xl font-display font-black text-gray-900 mb-6 md:mb-8">Состав заказа</h3>
         
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[600px]">
+            <table class="order-items-table w-full text-left border-collapse min-w-[600px]">
                 <thead>
                     <tr class="border-b-2 border-gray-900">
                         <th class="py-4 px-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold text-gray-900 w-2/5">Товар</th>
@@ -115,7 +115,7 @@
                     {% for item in order.items.all %}
                         <tr class="group hover:bg-gray-50 transition-colors">
                             <!-- Product Name & Image -->
-                            <td class="py-6 px-2 align-middle">
+                            <td data-label="Товар" class="py-6 px-2 align-middle">
                                 <div class="flex items-center gap-4">
                                     {% if item.product.image %}
                                         <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
@@ -130,15 +130,15 @@
                                 </div>
                             </td>
                             <!-- Price -->
-                            <td class="py-6 px-2 align-middle text-right font-light text-gray-500 whitespace-nowrap">
+                            <td data-label="Цена" class="py-6 px-2 align-middle text-right font-light text-gray-500 whitespace-nowrap">
                                 {{ item.product.price|floatformat:2 }} ₽
                             </td>
                             <!-- Quantity -->
-                            <td class="py-6 px-2 align-middle text-center font-bold text-gray-900">
+                            <td data-label="Количество" class="py-6 px-2 align-middle text-center font-bold text-gray-900">
                                 {{ item.quantity }}
                             </td>
                             <!-- Subtotal -->
-                            <td class="py-6 px-2 align-middle text-right font-bold text-gray-900 whitespace-nowrap text-lg">
+                            <td data-label="Сумма" class="py-6 px-2 align-middle text-right font-bold text-gray-900 whitespace-nowrap text-lg">
                                 {{ item.total_price|floatformat:2 }} ₽
                             </td>
                         </tr>

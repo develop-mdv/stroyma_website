@@ -74,6 +74,8 @@
         </div>
 
         <div class="site-mobile-footer">
+            <button id="pwa-install" type="button" class="site-mobile-install" hidden><i class="fa-solid fa-download" aria-hidden="true"></i> Установить приложение</button>
+            <p id="pwa-install-ios" class="site-mobile-install-hint" hidden>Чтобы установить сайт, нажмите «Поделиться» и выберите «На экран Домой».</p>
             {% if user.is_authenticated %}
             <a href="{% url 'profile' %}" class="site-mobile-primary">Личный кабинет</a>
             <button type="submit" form="logout-form" class="site-mobile-secondary">Выйти</button>
