@@ -126,12 +126,12 @@
                                             <i class="fas fa-image"></i>
                                         </div>
                                     {% endif %}
-                                    <span class="font-bold text-gray-900 text-sm md:text-base group-hover:text-deep-green transition-colors">{{ item.product.name }}</span>
+                                    <span class="font-bold text-gray-900 text-sm md:text-base group-hover:text-deep-green transition-colors">{{ item.product_name }}</span>
                                 </div>
                             </td>
                             <!-- Price -->
                             <td data-label="Цена" class="py-6 px-2 align-middle text-right font-light text-gray-500 whitespace-nowrap">
-                                {{ item.product.price|floatformat:2 }} ₽
+                                {{ item.unit_price|floatformat:2 }} ₽
                             </td>
                             <!-- Quantity -->
                             <td data-label="Количество" class="py-6 px-2 align-middle text-center font-bold text-gray-900">

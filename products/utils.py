@@ -127,7 +127,7 @@ def export_orders_to_pdf(queryset):
     table_data = [['ID', 'Пользователь', 'Статус', 'Дата создания', 'Товары', 'Сумма']]
 
     for order in queryset:
-        items_list = ', '.join([f'{item.product.name} (x{item.quantity})' for item in order.items.all()])
+        items_list = ', '.join([f'{item.product_name} (x{item.quantity})' for item in order.items.all()])
 
         table_data.append([
             str(order.id),
@@ -176,7 +176,7 @@ def export_orders_csv(queryset):
     writer.writerow(['ID', 'Пользователь', 'Статус', 'Дата создания', 'Товары', 'Сумма'])
 
     for order in queryset:
-        items_list = ', '.join([f'{item.product.name} (x{item.quantity})' for item in order.items.all()])
+        items_list = ', '.join([f'{item.product_name} (x{item.quantity})' for item in order.items.all()])
         writer.writerow([
             order.id,
             order.user.username if order.user else 'Гость',

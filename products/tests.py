@@ -1,5 +1,7 @@
 from io import BytesIO, StringIO
 import json
+from decimal import Decimal
+from datetime import timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
@@ -7,14 +9,17 @@ from unittest.mock import patch
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
+from django.db import DatabaseError
+from django.db.models.deletion import ProtectedError
 from django.http import HttpResponse
-from django.test import SimpleTestCase, TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, TransactionTestCase, override_settings
 from django.test import RequestFactory
+from django.utils import timezone
 from PIL import Image
 
 from accounts.models import UserProfile
 from products.forms import ColorSelectionRequestForm
-from products.models import BaseTexture, Product, ProductImage
+from products.models import BaseTexture, Order, OrderNotification, Product, ProductImage
 from products.utils import compress_image_field_if_needed
 from products.views import color_selection
 
@@ -196,3 +201,90 @@ class ColorSelectionProfilePrefillTests(TestCase):
         self.assertEqual(form['name'].value(), 'Другое имя')
         self.assertEqual(form['email'].value(), 'other@example.com')
         self.assertEqual(form['phone'].value(), 'invalid')
+
+
+class CheckoutPersistenceTests(TransactionTestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            name='Краска', description='Тестовый товар', price=Decimal('125.50'),
+            stock=2, image='products/test.webp',
+        )
+        self.contact = {
+            'first_name': 'Иван', 'last_name': 'Иванов',
+            'email': 'ivan@example.com', 'phone': '+79991234567',
+            'address': 'Курск, Ленина, 1',
+        }
+
+    def set_cart(self, quantity):
+        session = self.client.session
+        session['cart'] = {str(self.product.pk): quantity}
+        session.save()
+
+    def test_order_keeps_price_and_name_after_catalog_change(self):
+        self.set_cart(2)
+        response = self.client.post('/checkout/', self.contact)
+        self.assertRedirects(response, '/checkout/success/', fetch_redirect_response=False)
+
+        order = Order.objects.get()
+        item = order.items.get()
+        self.assertEqual(item.unit_price, Decimal('125.50'))
+        self.assertEqual(item.product_name, 'Краска')
+        self.assertEqual(order.total_cost, Decimal('251.00'))
+        with self.assertRaises(ProtectedError):
+            self.product.delete()
+        self.assertEqual(OrderNotification.objects.get(order=order).attempts, 0)
+
+        self.product.price = Decimal('999.00')
+        self.product.name = 'Новое название'
+        self.product.save()
+        item.refresh_from_db()
+        self.assertEqual(item.total_price, Decimal('251.00'))
+        self.assertEqual(item.product_name, 'Краска')
+        self.assertEqual(order.total_cost, Decimal('251.00'))
+
+    def test_insufficient_stock_rolls_back_order_and_keeps_cart(self):
+        self.set_cart(3)
+        response = self.client.post('/checkout/', self.contact)
+        self.assertRedirects(response, '/cart/', fetch_redirect_response=False)
+        self.assertFalse(Order.objects.exists())
+        self.assertFalse(OrderNotification.objects.exists())
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 2)
+        self.assertEqual(self.client.session['cart'][str(self.product.pk)], 3)
+
+    def test_database_write_failure_shows_error_and_keeps_cart(self):
+        self.set_cart(1)
+        with patch('products.views.OrderNotification.objects.create', side_effect=DatabaseError('write failed')):
+            response = self.client.post('/checkout/', self.contact)
+
+        self.assertEqual(response.status_code, 503)
+        self.assertContains(response, 'Не удалось подтвердить заказ', status_code=503)
+        self.assertFalse(Order.objects.exists())
+        self.assertFalse(OrderNotification.objects.exists())
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 2)
+        self.assertEqual(self.client.session['cart'][str(self.product.pk)], 1)
+        self.assertNotIn('last_order_id', self.client.session)
+
+    def test_failed_notification_retries_from_database(self):
+        self.set_cart(1)
+        self.client.post('/checkout/', self.contact)
+        notification = OrderNotification.objects.get()
+        with patch('products.management.commands.process_order_notifications.send_mail', side_effect=OSError('SMTP down')), patch('products.management.commands.process_order_notifications.logger'):
+            call_command('process_order_notifications', stdout=StringIO())
+        notification.refresh_from_db()
+        self.assertIsNone(notification.sent_at)
+        self.assertEqual(notification.attempts, 1)
+        notification.next_attempt_at = timezone.now() - timedelta(seconds=1)
+        notification.save(update_fields=['next_attempt_at'])
+        self.product.price = Decimal('999.00')
+        self.product.save(update_fields=['price'])
+
+        with patch('products.management.commands.process_order_notifications.send_mail', return_value=1) as send_mail_mock:
+            call_command('process_order_notifications', stdout=StringIO())
+            call_command('process_order_notifications', stdout=StringIO())
+        notification.refresh_from_db()
+        self.assertIsNotNone(notification.sent_at)
+        self.assertEqual(notification.attempts, 2)
+        self.assertEqual(send_mail_mock.call_count, 1)
+        self.assertIn('125,50', send_mail_mock.call_args.kwargs['html_message'])

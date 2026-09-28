@@ -7,7 +7,7 @@ STROYMA - это веб-сайт для магазина строительны�
 ## Технологии
 
 - Python 3.12+
-- Django 5.2
+- Django 5.2.17 (LTS)
 - PostgreSQL
 - Redis (кеш, сессии `cached_db`, ratelimit/axes — при заданном `REDIS_URL`)
 - Docker / Docker Compose (рекомендуемый деплой)
@@ -19,26 +19,11 @@ STROYMA - это веб-сайт для магазина строительны�
 
 ### Деплой на VPS (Linux) через Docker Compose
 
-**Требования:** Docker Engine + Compose plugin, Git, домен с DNS-записью на VPS и доступные порты 80/443.
+Полная пошаговая инструкция с командами установки Docker, настройки DNS и `.env`, переноса локальной PostgreSQL 17 и `media/`, запуска, проверок, бэкапов, восстановления и обновления: **[deploy/DEPLOY_VPS.md](deploy/DEPLOY_VPS.md)**.
 
-1. Клонируйте репозиторий и перейдите в каталог проекта.
-2. Скопируйте `.env.example` в `.env` и заполните как минимум: `SECRET_KEY`, `DB_*`, `EMAIL_*`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `SITE_URL=https://ваш-домен`. Домен в `SITE_URL` должен совпадать с DNS-записью и входить в `ALLOWED_HOSTS`; `CSRF_TRUSTED_ORIGINS` должен содержать его HTTPS-адрес. Сохраните `DEBUG=False`.
-3. Создайте каталоги для томов (если их ещё нет):
-   ```bash
-   mkdir -p media staticfiles logs
-   ```
-4. Запуск стека (**PostgreSQL**, **Redis**, **web** — Django + Gunicorn, **nginx** — статика и проксирование, **caddy** — публичный HTTPS и автоматический сертификат):
-   ```bash
-   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-   ```
-5. Создайте суперпользователя:
-   ```bash
-   docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py createsuperuser
-   ```
+Продакшен-стек: PostgreSQL 17, Redis, Django/Gunicorn, отдельный worker для уведомлений о заказах, Nginx и Caddy для HTTPS. `web` автоматически запускает миграции и `collectstatic`. Заказ фиксирует цену и название товара на момент оформления и проверяет остаток в транзакции. Онлайн-оплата на сайте не предусмотрена: менеджер подтверждает заказ и согласует расчёт.
 
-Сайт доступен по **HTTPS на порту 443**. Caddy перенаправляет HTTP с порта 80 на HTTPS; Nginx не публикуется наружу и передаёт Django исходную схему запроса. Сертификаты хранятся в томе `caddy_data`. Переменная `REDIS_URL` для сервиса `web` задаётся в `docker-compose.yml` (`redis://redis:6379/1`). Для команд Compose в этом окружении всегда указывайте оба файла через `-f`.
-
-Миграция `services.0007` удаляет записи видеороликов услуг из БД. Перед обновлением работающего сайта сделайте резервную копию; сами файлы в `media/` миграция не удаляет, а Nginx больше не отдаёт старые пути видео. После проверки бэкапа их можно убрать через dry-run и `cleanup_media --apply`.
+Миграция `products.0016` заполняет цену старых позиций текущей ценой товара: историческая цена до этой миграции в БД не хранилась. Перед обновлением действующего сайта сделайте бэкап. Миграция `services.0007` удаляет записи видеороликов услуг из БД; файлы остаются в `media/` до отдельной проверки и очистки.
 
 ### Разработка через Docker Compose
 
@@ -50,16 +35,18 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 Откройте `http://127.0.0.1:8080`. Для команд `exec` используйте тот же набор файлов `-f`.
 
-**Перенос данных из локального PostgreSQL** на машине разработчика в контейнер — см. [deploy/MIGRATION_HOST_TO_DOCKER.md](deploy/MIGRATION_HOST_TO_DOCKER.md).
+При локальном запуске без продакшен-Compose отдельно запустите worker: `python manage.py process_order_notifications --loop`. Без него заказы сохраняются, а письма остаются в очереди БД до запуска команды.
 
-**Резервное копирование** (дамп БД + архив `media/`):
+**Перенос данных из локального PostgreSQL** на VPS вместе с `media/` — см. [шаг 4 инструкции VPS](deploy/DEPLOY_VPS.md#4-данные-выберите-один-вариант).
+
+**Резервное копирование на VPS** (дамп БД + архив `media/`):
 
 ```bash
 chmod +x deploy/backup.sh deploy/restore.sh
 bash deploy/backup.sh
 ```
 
-Восстановление из `pg_*.sql.gz`: `bash deploy/restore.sh backups/pg_....sql.gz`
+Восстановление БД из `pg_*.sql.gz`: `bash deploy/restore.sh backups/pg_....sql.gz`; соответствующий архив `media_*.tgz` распаковывается отдельно. Порядок остановки сайта и восстановления описан в [инструкции VPS](deploy/DEPLOY_VPS.md#6-бэкапы-и-восстановление).
 
 ### Локальная разработка без Docker
 

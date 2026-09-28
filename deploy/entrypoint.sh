@@ -3,6 +3,10 @@ set -e
 
 cd /app
 
+if [ "$#" -gt 0 ]; then
+    exec "$@"
+fi
+
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 

@@ -99,15 +99,15 @@
             <tbody>
                 {% for item in items %}
                 <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td class="number">{{ item.product.price|floatformat:2 }} ₽</td>
+                    <td>{{ item.product_name }}</td>
+                    <td class="number">{{ item.unit_price|floatformat:2 }} ₽</td>
                     <td class="number">{{ item.quantity }}</td>
                     <td class="number">{{ item.total_price|floatformat:2 }} ₽</td>
                 </tr>
                 {% empty %}<tr><td colspan="4">В заказе нет товаров.</td></tr>{% endfor %}
             </tbody>
         </table>
-        <div class="total"><span>Итого к оплате</span><span>{{ order.total_cost|floatformat:2 }} ₽</span></div>
+        <div class="total"><span>Итого по заказу</span><span>{{ order.total_cost|floatformat:2 }} ₽</span></div>
         <p class="footnote">СТРОЙМА · Документ по заказу №{{ order.id }}</p>
     </main>
     {% if auto_print %}<script>window.addEventListener('load', function () { window.print(); });</script>{% endif %}

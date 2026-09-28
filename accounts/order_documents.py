@@ -127,8 +127,8 @@ def build_order_pdf(order):
     ]]
     for item in order.items.all():
         rows.append([
-            Paragraph(_text(item.product.name), body),
-            Paragraph(_money(item.product.price), right),
+            Paragraph(_text(item.product_name), body),
+            Paragraph(_money(item.unit_price), right),
             Paragraph(str(item.quantity), center),
             Paragraph(_money(item.total_price), right_bold),
         ])

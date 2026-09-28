@@ -152,7 +152,7 @@ def profile_view(request):
         .prefetch_related('items__product')
         .annotate(
             items_count=Count('items'),
-            total_sum=Sum(F('items__quantity') * F('items__product__price')),
+            total_sum=Sum(F('items__quantity') * F('items__unit_price')),
         )
         .order_by('-created_at')
     )

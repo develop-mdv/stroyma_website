@@ -252,7 +252,7 @@ class Order(models.Model):
         Вычисляет общую стоимость заказа, суммируя цены всех входящих товаров
         с учетом их количества.
         """
-        return sum(item.product.price * item.quantity for item in self.items.all())
+        return sum((item.total_price for item in self.items.all()), 0)
         
     def save(self, *args, **kwargs):
         """
@@ -288,7 +288,9 @@ class OrderItem(models.Model):
     и указывает его количество.
     """
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, verbose_name='Заказ')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name='Товар')
+    product_name = models.CharField(max_length=255, verbose_name='Название на момент заказа')
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена на момент заказа')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
     class Meta:
@@ -297,10 +299,28 @@ class OrderItem(models.Model):
 
     @property
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.unit_price
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            self.product_name = self.product.name
+            self.unit_price = self.product.price
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.product.name} ({self.quantity} шт.)"
+        return f"{self.product_name} ({self.quantity} шт.)"
+
+
+class OrderNotification(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='notification')
+    attempts = models.PositiveIntegerField(default=0)
+    next_attempt_at = models.DateTimeField(default=now, db_index=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    last_error = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = 'Уведомление о заказе'
+        verbose_name_plural = 'Уведомления о заказах'
 
 class OrderContact(models.Model):
     """

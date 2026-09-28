@@ -1,6 +1,6 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
-from .models import Product, Category, Order, OrderItem, Cart, CartItem, FacadeColor, BaseTexture, ProductImage
+from .models import Product, Category, Order, OrderItem, OrderNotification, Cart, CartItem, FacadeColor, BaseTexture, ProductImage
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.utils.html import format_html
@@ -261,17 +261,38 @@ class OrderItemInline(admin.TabularInline):
     """
     model = OrderItem
     extra = 0
-    readonly_fields = ('product', 'quantity', 'get_price', 'get_total')
+    can_delete = False
+    fields = ('product', 'product_name', 'quantity', 'get_price', 'get_total')
+    readonly_fields = ('product', 'product_name', 'quantity', 'get_price', 'get_total')
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
     def get_price(self, obj):
         """Возвращает цену единицы товара"""
-        return obj.product.price
+        return obj.unit_price
     get_price.short_description = 'Цена'
 
     def get_total(self, obj):
         """Рассчитывает общую стоимость позиции заказа (цена × количество)"""
-        return obj.product.price * obj.quantity
+        return obj.total_price
     get_total.short_description = 'Сумма'
+
+@admin.register(OrderNotification)
+class OrderNotificationAdmin(admin.ModelAdmin):
+    list_display = ('order', 'sent_at', 'attempts', 'next_attempt_at', 'last_error')
+    list_filter = ('sent_at',)
+    readonly_fields = ('order', 'sent_at', 'attempts', 'next_attempt_at', 'last_error')
+    search_fields = ('order__id',)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 @admin.register(Order)
 class OrderAdmin(ImportExportModelAdmin):
@@ -482,7 +503,7 @@ class OrderAdmin(ImportExportModelAdmin):
                 OrderItem.objects
                 .filter(order__created_at__gte=period_start)
                 .values('product__name')
-                .annotate(total_sales=Sum(F('quantity') * F('product__price')))
+                .annotate(total_sales=Sum(F('quantity') * F('unit_price')))
                 .annotate(quantity=Sum('quantity'))
                 .order_by('-total_sales')[:10]
             )

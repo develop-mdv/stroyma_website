@@ -18,7 +18,7 @@
 <ul style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
     {% for item in items %}
     <li>
-        {{ item.product.name }} - {{ item.quantity }} шт. × {{ item.product.price }} руб. = {{ item.total_price }} руб.
+        {{ item.product_name }} - {{ item.quantity }} шт. × {{ item.unit_price }} руб. = {{ item.total_price }} руб.
     </li>
     {% endfor %}
 </ul>

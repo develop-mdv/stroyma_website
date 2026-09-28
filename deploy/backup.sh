@@ -2,22 +2,16 @@
 # Резервная копия PostgreSQL (из контейнера db) и архив каталога media/.
 # Запускать из корня проекта на VPS: bash deploy/backup.sh
 set -euo pipefail
+umask 077
 
 cd "$(dirname "$0")/.."
-
-if [[ -f .env ]]; then
-  # shellcheck disable=SC1091
-  set -a && source .env && set +a
-fi
-
-: "${DB_USER:?Задайте DB_USER в .env}"
-: "${DB_NAME:?Задайте DB_NAME в .env}"
 
 BACKUP_ROOT="${BACKUP_ROOT:-./backups}"
 mkdir -p "$BACKUP_ROOT"
 TS="$(date +%Y%m%d_%H%M%S)"
 
-docker compose exec -T db pg_dump -U "$DB_USER" --clean --if-exists "$DB_NAME" \
+docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T db \
+  sh -c 'pg_dump -U "$POSTGRES_USER" --clean --if-exists "$POSTGRES_DB"' \
   | gzip > "${BACKUP_ROOT}/pg_${TS}.sql.gz"
 
 tar czf "${BACKUP_ROOT}/media_${TS}.tgz" media/

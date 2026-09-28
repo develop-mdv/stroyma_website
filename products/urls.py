@@ -18,7 +18,6 @@ urlpatterns = [
     path('policy/', views.policy, name='policy'),
     path('cookies-policy/', views.cookies_policy, name='cookies_policy'),
     path('offer/', views.offer, name='offer'),
-    path('payment/', views.payment, name='payment'),
     path('delivery/', views.delivery, name='delivery'),
     path('returns/', views.returns, name='returns'),
     path('search-ajax/', views.search_ajax, name='search_ajax'),

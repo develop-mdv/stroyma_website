@@ -4,6 +4,26 @@ services:
       DEBUG: "False"
       SECURE_SSL_REDIRECT: "True"
 
+  worker:
+    build: .
+    env_file: .env
+    environment:
+      DEBUG: "False"
+      DB_HOST: db
+      REDIS_URL: redis://redis:6379/1
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    command:
+      - sh
+      - -c
+      - until python manage.py migrate --check >/dev/null 2>&1; do sleep 5; done; exec python manage.py process_order_notifications --loop
+    restart: unless-stopped
+
   caddy:
     image: caddy:2-alpine
     environment:

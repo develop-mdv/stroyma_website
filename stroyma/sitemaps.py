@@ -56,7 +56,6 @@ class StaticViewSitemap(Sitemap):
             'policy',
             'cookies_policy',
             'offer',
-            'payment',
             'delivery',
             'returns',
         ]
@@ -70,4 +69,4 @@ sitemaps = {
     'categories': CategorySitemap,
     'services': ServiceSitemap,
     'static': StaticViewSitemap,
-} 
+}

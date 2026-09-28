@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import threading
 from decimal import Decimal
 from math import ceil
 from urllib.parse import urlencode
@@ -10,14 +9,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.db import transaction
+from django.db import DatabaseError, transaction
 from django.db.models import Q, Max, Min
 from django.db.models.functions import Round
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.html import strip_tags
 from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
@@ -29,6 +27,7 @@ from .models import (
     Order,
     OrderContact,
     OrderItem,
+    OrderNotification,
     Product,
 )
 
@@ -625,23 +624,8 @@ def _build_checkout_lines_for_post(request):
     return out if out else None
 
 
-def _queue_order_notification_email(
-    subject, plain_text, html_message, from_email, notify, order_id
-):
-    def _run():
-        try:
-            send_mail(
-                subject,
-                plain_text,
-                from_email,
-                [notify],
-                html_message=html_message,
-                fail_silently=False,
-            )
-        except Exception as e:
-            logger.error('Ошибка при отправке email о заказе #%s: %s', order_id, e)
-
-    threading.Thread(target=_run, daemon=True).start()
+class InsufficientStock(Exception):
+    pass
 
 
 @ratelimit(key='ip', rate='20/m', method='POST', block=True)
@@ -739,49 +723,31 @@ def checkout(request):
                     )
                     for product_id, qty in sorted(lines, key=lambda t: t[0]):
                         product = Product.objects.select_for_update().get(pk=product_id)
+                        if product.stock < qty:
+                            raise InsufficientStock(product.name)
                         OrderItem.objects.create(order=order, product=product, quantity=qty)
-                        product.stock = max(0, product.stock - qty)
+                        product.stock -= qty
                         product.save(update_fields=['stock'])
+                    OrderNotification.objects.create(order=order)
                     if request.user.is_authenticated:
                         CartItem.objects.filter(cart__user=request.user).delete()
-                    else:
-                        request.session['cart'] = {}
-                        request.session.modified = True
             except Product.DoesNotExist:
                 messages.error(request, 'В корзине указан несуществующий товар. Обновите корзину.')
                 return redirect('view_cart')
+            except InsufficientStock as exc:
+                messages.error(request, f'Недостаточно товара «{exc}» на складе. Измените количество в корзине.')
+                return redirect('view_cart')
+            except DatabaseError:
+                logger.exception('Не удалось сохранить заказ')
+                return HttpResponse(
+                    render_to_string('products/checkout_error.html'),
+                    status=503,
+                )
 
+            if not request.user.is_authenticated:
+                request.session['cart'] = {}
+                request.session.modified = True
             request.session['last_order_id'] = order.id
-            email_items = [
-                {
-                    'product': oi.product,
-                    'quantity': oi.quantity,
-                    'total_price': oi.total_price,
-                }
-                for oi in order.items.select_related('product').all()
-            ]
-            html_order_summary = render_to_string('products/order_email_template.html', {
-                'items': email_items,
-                'total_price': order.total_cost,
-                'user_name': user_name,
-                'user_lastname': user_lastname,
-                'user_email': user_email,
-                'user_phone': user_phone,
-                'delivery_address': delivery_address,
-                'order': order,
-            })
-            plain_text = strip_tags(html_order_summary)
-            notify = _order_notify_recipient()
-            _queue_order_notification_email(
-                _sanitize_mail_subject_line(
-                    f'Новый заказ №{order.id}'
-                ),
-                plain_text,
-                html_order_summary,
-                settings.DEFAULT_FROM_EMAIL,
-                notify,
-                order.id,
-            )
             return redirect('checkout_success')
         messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
@@ -972,14 +938,6 @@ def offer(request):
         'keywords': 'публичная оферта, условия продажи, дистанционная торговля, СтройМА',
     })
 
-
-def payment(request):
-    """Информация об оплате."""
-    return render(request, 'products/legal/payment.html', {
-        'meta_title': 'Оплата - ООО "СТРОЙМА"',
-        'meta_description': 'Способы оплаты заказов в интернет-магазине ООО «СТРОЙМА».',
-        'keywords': 'оплата, способы оплаты, СтройМА',
-    })
 
 
 def delivery(request):
