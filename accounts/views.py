@@ -3,7 +3,7 @@ from uuid import UUID
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.db import transaction
@@ -26,6 +26,10 @@ from .forms import CustomPasswordResetForm, CustomSetPasswordForm, CustomUserCha
 from .models import UserProfile, get_or_create_profile
 
 logger = logging.getLogger(__name__)
+
+
+def _posted_email_rate_key(group, request):
+    return (request.POST.get('email') or '').strip().casefold()
 
 
 def _send_confirmation_email(user, profile, request):
@@ -51,8 +55,13 @@ def _send_confirmation_email(user, profile, request):
         logger.error('Ошибка отправки письма подтверждения email: %s', exc)
         return False
 
-@ratelimit(key='ip', rate='5/m', method='POST', block=True)
+@ratelimit(key='ip', rate='90/h', method='POST', block=True)
+@ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def register_view(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            return JsonResponse({'success': False, 'message': 'Вы уже авторизованы.'}, status=403)
+        return redirect('profile')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -139,6 +148,7 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 @custom_login_required
+@require_POST
 def logout_view(request):
     merge_session_cart_to_user_cart(request)
     logout(request)
@@ -203,19 +213,31 @@ def order_pdf_view(request, order_id):
     return response
 
 @custom_login_required
+@ratelimit(key='user', rate='10/h', method='POST', block=True)
 def edit_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Данные профиля успешно обновлены!')
+            user = form.save()
+            if form.cleaned_data.get('new_password'):
+                update_session_auth_hash(request, user)
+            if form.email_changed:
+                profile = get_or_create_profile(user)
+                if user.email and _send_confirmation_email(user, profile, request):
+                    messages.success(request, 'Данные сохранены. Подтвердите новый email по ссылке из письма.')
+                else:
+                    messages.warning(request, 'Данные сохранены. Письмо не отправлено — запросите его повторно в кабинете.')
+            else:
+                messages.success(request, 'Данные профиля успешно обновлены!')
             return redirect('profile')
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'accounts/edit_profile.html', {'form': form})
 
 @custom_login_required
-@ratelimit(key='ip', rate='3/m', block=True)
+@require_POST
+@ratelimit(key='user', rate='10/h', method='POST', block=True)
+@ratelimit(key='ip', rate='3/m', method='POST', block=True)
 def resend_confirmation(request):
     profile = get_or_create_profile(request.user)
     if profile.email_confirmed:
@@ -294,6 +316,8 @@ def reorder_view(request, order_id):
 from django.contrib.auth import views as auth_views  # noqa: E402
 
 
+@method_decorator(ratelimit(key=_posted_email_rate_key, rate='3/h', method='POST', block=True), name='dispatch')
+@method_decorator(ratelimit(key='ip', rate='20/h', method='POST', block=True), name='dispatch')
 @method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True), name='dispatch')
 class RateLimitedPasswordResetView(auth_views.PasswordResetView):
     template_name = 'accounts/password_reset.html'

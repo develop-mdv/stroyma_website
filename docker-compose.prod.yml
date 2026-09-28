@@ -3,6 +3,7 @@ services:
     environment:
       DEBUG: "False"
       SECURE_SSL_REDIRECT: "True"
+      TRUST_PROXY_CLIENT_IP: "True"
 
   worker:
     build: .

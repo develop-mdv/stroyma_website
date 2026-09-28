@@ -1,4 +1,4 @@
-const VERSION = 'stroyma-pwa-v11';
+const VERSION = 'stroyma-pwa-v12';
 const SHELL_CACHE = `${VERSION}-shell`;
 const PUBLIC_CACHE = `${VERSION}-public`;
 const MEDIA_CACHE = `${VERSION}-media`;
@@ -68,10 +68,13 @@ self.addEventListener('fetch', event => {
             try {
                 const response = await fetch(request);
                 if (canCache && response.ok && response.type === 'basic' &&
-                    response.headers.get('content-type')?.includes('text/html')) {
+                    response.headers.get('content-type')?.includes('text/html') &&
+                    !response.headers.get('cache-control')?.includes('no-store')) {
                     try {
-                        const isAnonymous = (await response.clone().text()).includes('<meta name="pwa-cache" content="public">');
-                        if (isAnonymous) {
+                        const html = await response.clone().text();
+                        const isPublic = html.includes('<meta name="pwa-cache" content="public">') &&
+                            !html.includes('name="csrfmiddlewaretoken"');
+                        if (isPublic) {
                             const cache = await caches.open(PUBLIC_CACHE);
                             await cache.put(request, response.clone());
                         }

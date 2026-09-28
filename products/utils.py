@@ -163,6 +163,14 @@ def export_orders_to_pdf(queryset):
     return pdf
 
 
+def _safe_csv_cell(value):
+    """Keep spreadsheet applications from evaluating user-controlled text."""
+    text = str(value)
+    if text.lstrip().startswith(('=', '+', '-', '@')):
+        return "'" + text
+    return text
+
+
 def export_orders_csv(queryset):
     """Экспортирует заказы в CSV (UTF-8 с BOM для Excel)."""
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -179,10 +187,10 @@ def export_orders_csv(queryset):
         items_list = ', '.join([f'{item.product_name} (x{item.quantity})' for item in order.items.all()])
         writer.writerow([
             order.id,
-            order.user.username if order.user else 'Гость',
-            order.get_status_display(),
+            _safe_csv_cell(order.user.username if order.user else 'Гость'),
+            _safe_csv_cell(order.get_status_display()),
             timezone.localtime(order.created_at).strftime('%Y-%m-%d %H:%M:%S'),
-            items_list,
+            _safe_csv_cell(items_list),
             order.total_cost
         ])
 

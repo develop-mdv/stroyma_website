@@ -6,9 +6,7 @@ Allow: /
 
 # Запрещаем индексацию админки и приватных разделов
 Disallow: {{ admin_path }}
-Disallow: /accounts/login/
-Disallow: /accounts/register/
-Disallow: /accounts/profile/
+Disallow: /accounts/
 Disallow: /checkout/
 Disallow: /cart/
 

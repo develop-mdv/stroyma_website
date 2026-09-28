@@ -22,9 +22,21 @@ from colorfield.widgets import ColorWidget
 from accounts.models import UserProfile
 from django.core.cache import cache
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
+from functools import wraps
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class RestrictedImportExportModelAdmin(ImportExportModelAdmin):
+    """Apply model permissions to third-party import/export URLs."""
+
+    def has_import_permission(self, request):
+        return self.has_add_permission(request) and self.has_change_permission(request)
+
+    def has_export_permission(self, request):
+        return self.has_view_permission(request)
 
 # Ресурсы для импорта/экспорта
 class ProductResource(resources.ModelResource):
@@ -121,7 +133,7 @@ class CategoryFilter(admin.SimpleListFilter):
         return queryset
 
 @admin.register(Product)
-class ProductAdmin(ImportExportModelAdmin):
+class ProductAdmin(RestrictedImportExportModelAdmin):
     resource_classes = [ProductResource]
     list_display = ('image_preview', 'name', 'formatted_price', 'stock_status', 'rating', 'created_at')
     list_filter = (CategoryFilter, 'rating', 'created_at')
@@ -295,7 +307,7 @@ class OrderNotificationAdmin(admin.ModelAdmin):
         return False
 
 @admin.register(Order)
-class OrderAdmin(ImportExportModelAdmin):
+class OrderAdmin(RestrictedImportExportModelAdmin):
     resource_classes = [OrderResource]
     list_display = ('order_number', 'user', 'colored_status', 'created_at', 'formatted_total', 'get_items_count')
     list_filter = ('status', 'created_at')
@@ -370,13 +382,30 @@ class OrderAdmin(ImportExportModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('export-csv/', self.admin_site.admin_view(self.export_csv_view), name='order_export_csv'),
-            path('export-pdf/', self.admin_site.admin_view(self.export_pdf_view), name='order_export_pdf'),
-            path('sales-report/', self.admin_site.admin_view(self.sales_report_view), name='sales_report'),
-            path('sales-chart-data/', self.admin_site.admin_view(self.sales_chart_data), name='sales_chart_data'),
-            path('popular-products/', self.admin_site.admin_view(self.popular_products_view), name='popular_products'),
+            path('export-csv/', self._order_view(self.export_csv_view), name='order_export_csv'),
+            path('export-pdf/', self._order_view(self.export_pdf_view), name='order_export_pdf'),
+            path('sales-report/', self._order_view(self.sales_report_view), name='sales_report'),
+            path('sales-chart-data/', self._order_view(self.sales_chart_data), name='sales_chart_data'),
+            path('popular-products/', self._order_view(self.popular_products_view), name='popular_products'),
         ]
         return custom_urls + urls
+
+    def _order_view(self, view):
+        @wraps(view)
+        def restricted(request, *args, **kwargs):
+            if not self.has_view_permission(request):
+                raise PermissionDenied
+            return view(request, *args, **kwargs)
+
+        return self.admin_site.admin_view(restricted)
+
+    @staticmethod
+    def _report_days(request):
+        try:
+            days = int(request.GET.get('days', 30))
+        except (TypeError, ValueError):
+            days = 30
+        return max(1, min(days, 365))
 
     def export_csv_view(self, request):
         """Экспортирует все заказы в CSV"""
@@ -433,7 +462,7 @@ class OrderAdmin(ImportExportModelAdmin):
         Для оптимизации производительности используется кеширование результатов.
         """
         # Получение периода из GET-параметра или установка значения по умолчанию
-        days = int(request.GET.get('days', 30))
+        days = self._report_days(request)
         period_start = timezone.now() - timedelta(days=days)
         
         context = dict(
@@ -546,7 +575,7 @@ class OrderAdmin(ImportExportModelAdmin):
         Для оптимизации используется кеширование результатов.
         """
         try:
-            days = int(request.GET.get('days', 30))
+            days = self._report_days(request)
             
             # Кеширование данных для графика
             cache_key = f'sales_chart_data_{days}'
@@ -612,7 +641,6 @@ class OrderAdmin(ImportExportModelAdmin):
             logger.exception('Ошибка в sales_chart_data: %s', e)
             return JsonResponse({
                 'error': 'Произошла ошибка при получении данных графика продаж',
-                'details': str(e),
                 'dates': [],
                 'sales': [],
                 'counts': [],
@@ -737,7 +765,7 @@ class OrderAdmin(ImportExportModelAdmin):
     def popular_products_view(self, request):
         """API для получения данных о популярных товарах"""
         try:
-            days = int(request.GET.get('days', 30))
+            days = self._report_days(request)
             
             # Проверяем кеш
             cache_key = f'popular_products_view_{days}'
@@ -784,7 +812,6 @@ class OrderAdmin(ImportExportModelAdmin):
             logger.exception('Ошибка в popular_products_view: %s', e)
             return JsonResponse({
                 'error': 'Произошла ошибка при получении данных о популярных товарах',
-                'details': str(e),
                 'labels': [],
                 'quantities': [],
                 'sales': [],

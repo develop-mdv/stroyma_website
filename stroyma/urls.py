@@ -30,6 +30,7 @@ admin.site.__class__ = StroymAdminSite
 handler404 = 'stroyma.views.handler404'
 handler500 = 'stroyma.views.handler500'
 handler403 = 'stroyma.views.handler403'
+handler400 = 'stroyma.views.handler400'
 
 urlpatterns = [
     path('manifest.webmanifest', views.pwa_manifest, name='pwa_manifest'),

@@ -13,8 +13,9 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from csp.constants import NONE, SELF, UNSAFE_EVAL, UNSAFE_INLINE
+from csp.constants import NONE, SELF, UNSAFE_INLINE
 from decouple import config, Csv
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,11 @@ SECRET_KEY_FALLBACKS = [k for k in config('SECRET_KEY_FALLBACKS', default='', ca
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
+
+if not DEBUG:
+    signing_keys = [SECRET_KEY, *SECRET_KEY_FALLBACKS]
+    if any(len(key) < 50 or len(set(key)) < 5 or key.startswith('django-insecure-') for key in signing_keys):
+        raise ImproperlyConfigured('Production requires a long random SECRET_KEY and no weak SECRET_KEY_FALLBACKS.')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
@@ -88,10 +94,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'csp.middleware.CSPMiddleware',
+    'stroyma.middleware.PrivateResponseMiddleware',
+    'stroyma.middleware.RateLimitResponseMiddleware',
     'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'stroyma.urls'
+CSRF_FAILURE_VIEW = 'stroyma.views.csrf_failure'
 
 # Аутентификация: django-axes (брутфорс) + стандартный backend
 AUTHENTICATION_BACKENDS = [
@@ -338,13 +347,13 @@ else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
 
-# Content-Security-Policy (публичный фронт: Tailwind CDN, Google Fonts, cdnjs)
+# Content-Security-Policy публичного фронта
 _csp_admin_prefix = '/' + ADMIN_URL.rstrip('/').lstrip('/') + '/'
 CONTENT_SECURITY_POLICY = {
     'EXCLUDE_URL_PREFIXES': [_csp_admin_prefix],
     'DIRECTIVES': {
         'default-src': [SELF],
-        'script-src': [SELF, 'https://cdn.tailwindcss.com', UNSAFE_INLINE, UNSAFE_EVAL],
+        'script-src': [SELF, UNSAFE_INLINE],
         'style-src': [
             SELF,
             UNSAFE_INLINE,
@@ -373,6 +382,9 @@ AXES_LOCKOUT_PARAMETERS = [['username', 'ip_address']]
 
 # django-ratelimit использует default cache
 RATELIMIT_USE_CACHE = 'default'
+TRUST_PROXY_CLIENT_IP = config('TRUST_PROXY_CLIENT_IP', default=False, cast=bool)
+RATELIMIT_IP_META_KEY = 'stroyma.security.client_ip'
+AXES_CLIENT_IP_CALLABLE = 'stroyma.security.client_ip'
 
 LOGGING = {
     'version': 1,

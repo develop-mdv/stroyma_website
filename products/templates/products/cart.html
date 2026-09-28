@@ -15,9 +15,12 @@
                 <div class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-soft border border-gray-100 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative group transition-transform hover:-translate-y-1 duration-300" id="cart-item-row-{{ item.product.pk }}">
                     
                     <!-- Удалить (Только Иконка) -->
-                    <a href="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-3 right-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all z-10 opacity-80 group-hover:opacity-100 flex items-center justify-center" style="min-width:44px;min-height:44px" title="Удалить из корзины" aria-label="Удалить из корзины">
-                        <i class="fas fa-trash-alt text-base"></i>
-                    </a>
+                    <form method="post" action="{% url 'remove_from_cart' pk=item.product.pk %}" class="absolute top-3 right-3 z-10">
+                        {% csrf_token %}
+                        <button type="submit" class="text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all opacity-80 group-hover:opacity-100 flex items-center justify-center" style="min-width:44px;min-height:44px" title="Удалить из корзины" aria-label="Удалить из корзины">
+                            <i class="fas fa-trash-alt text-base"></i>
+                        </button>
+                    </form>
 
                     <!-- Фото -->
                     <div class="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 rounded-2xl p-3 flex items-center justify-center">

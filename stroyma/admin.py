@@ -11,6 +11,9 @@ class StroymaDashboardMixin:
         from products.models import Product, Order, OrderItem
 
         extra_context = extra_context or {}
+        extra_context['can_view_orders'] = request.user.has_perms(('products.view_order',)) or request.user.has_perms(('products.change_order',))
+        if not extra_context['can_view_orders']:
+            return super().index(request, extra_context=extra_context)
         now = timezone.now()
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         week_ago = now - timedelta(days=7)

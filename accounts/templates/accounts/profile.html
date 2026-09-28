@@ -80,9 +80,10 @@
                         <div>
                             <h4 class="text-xs uppercase tracking-widest font-bold text-red-800 mb-2">Аккаунт не подтвержден</h4>
                             <p class="text-xs text-red-600 font-light leading-relaxed mb-3">Для полного доступа ко всем функциям сайта необходимо подтвердить email.</p>
-                            <a href="{% url 'resend_confirmation' %}" class="text-xs uppercase tracking-widest font-bold text-red-600 hover:text-red-800 border-b border-red-200 pb-1 transition-colors">
-                                Отправить письмо повторно
-                            </a>
+                            <form method="post" action="{% url 'resend_confirmation' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs uppercase tracking-widest font-bold text-red-600 hover:text-red-800 border-b border-red-200 pb-1 transition-colors">Отправить письмо повторно</button>
+                            </form>
                         </div>
                     </div>
                 </div>

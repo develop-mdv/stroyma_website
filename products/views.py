@@ -16,6 +16,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
@@ -131,8 +132,8 @@ def _catalog_price_range(products, request):
 
     raw_minimum = str(request.GET.get('price_min', minimum))
     raw_maximum = str(request.GET.get('price_max', maximum))
-    selected_minimum = int(raw_minimum) if raw_minimum.isdigit() else minimum
-    selected_maximum = int(raw_maximum) if raw_maximum.isdigit() else maximum
+    selected_minimum = int(raw_minimum) if raw_minimum.isascii() and raw_minimum.isdecimal() and len(raw_minimum) <= 12 else minimum
+    selected_maximum = int(raw_maximum) if raw_maximum.isascii() and raw_maximum.isdecimal() and len(raw_maximum) <= 12 else maximum
     if selected_minimum > maximum or selected_maximum < minimum or selected_minimum > selected_maximum:
         selected_minimum, selected_maximum = minimum, maximum
     else:
@@ -141,17 +142,21 @@ def _catalog_price_range(products, request):
     return minimum, maximum, selected_minimum, selected_maximum, bounds['low'] is not None
 
 
+def _safe_category_ids(values):
+    return [int(value) for value in values[:20] if value.isascii() and value.isdecimal() and len(value) <= 18]
+
+
 def _browser_candidates(request, scope=None):
     """Products matching search and categories, before the price facet."""
     products = Product.objects.all()
     if scope is not None:
         products = products.filter(categories__in=scope.get_descendants(include_self=True))
 
-    query = (request.GET.get('query') or request.GET.get('name') or '').strip()
+    query = (request.GET.get('query') or request.GET.get('name') or '').strip()[:100]
     if query:
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
-    selected_ids = [int(value) for value in request.GET.getlist('category') if value.isdigit()]
+    selected_ids = _safe_category_ids(request.GET.getlist('category'))
     categories = Category.objects.filter(pk__in=selected_ids)
     if scope is not None:
         categories = categories.filter(pk__in=scope.get_descendants().values('pk'))
@@ -297,11 +302,12 @@ def cart_preview(request):
     })
 
 
-@ratelimit(key='ip', rate='30/m', block=True)
+@ratelimit(key='ip', rate='600/h', block=True)
+@ratelimit(key='ip', rate='120/m', block=True)
 def search_ajax(request):
     if request.GET.get('view') == 'grid':
         scope_id = request.GET.get('scope', '')
-        scope = get_object_or_404(Category, pk=scope_id) if scope_id.isdigit() else None
+        scope = get_object_or_404(Category, pk=scope_id) if scope_id.isascii() and scope_id.isdecimal() and len(scope_id) <= 18 else None
         if request.GET.get('autocomplete'):
             candidates, query, _ = _browser_candidates(request, scope)
             matching_categories = Category.objects.filter(name__icontains=query).select_related('parent')
@@ -340,12 +346,12 @@ def search_ajax(request):
             },
         })
 
-    query = request.GET.get('query', '').lower()
+    query = request.GET.get('query', '')[:100].lower()
     sort_by = request.GET.get('sort_by', 'name')
     page_number = request.GET.get('page', 1)
     autocomplete = request.GET.get('autocomplete', False)
     
-    selected_categories = request.GET.getlist('category')
+    selected_categories = _safe_category_ids(request.GET.getlist('category'))
 
     products = Product.objects.all()
 
@@ -353,19 +359,9 @@ def search_ajax(request):
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
     if selected_categories:
-        categories_to_filter = []
-        for category_id in selected_categories:
-            try:
-                category = Category.objects.get(id=category_id)
-                categories_to_filter.append(category)
-            except Category.DoesNotExist:
-                continue
-
-        category_filters = Q()
-        for category in categories_to_filter:
-            category_filters |= Q(categories=category)
-
-        products = products.filter(category_filters).distinct()
+        categories_to_filter = Category.objects.filter(pk__in=selected_categories)
+        if categories_to_filter.exists():
+            products = products.filter(categories__in=categories_to_filter).distinct()
 
     if autocomplete:
         products = products.order_by('name')[:6]
@@ -432,7 +428,8 @@ def quick_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/quick_view.html', {'product': product})
 
-@ratelimit(key='ip', rate='30/m', method='POST', block=True)
+@ratelimit(key='ip', rate='300/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/m', method='POST', block=True)
 def add_to_cart(request, pk):
     is_ajax = (
         request.headers.get('x-requested-with') == 'XMLHttpRequest'
@@ -480,7 +477,8 @@ def add_to_cart(request, pk):
     messages.success(request, f'{product.name} добавлен в корзину')
     return redirect('view_cart')
 
-@ratelimit(key='ip', rate='30/m', method='POST', block=True)
+@ratelimit(key='ip', rate='300/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/m', method='POST', block=True)
 def update_cart(request, pk):
     if request.method != 'POST':
         return redirect('view_cart')
@@ -565,6 +563,9 @@ def view_cart(request):
     }
     return render(request, 'products/cart.html', context)
 
+@require_POST
+@ratelimit(key='ip', rate='300/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/m', method='POST', block=True)
 def remove_from_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -628,7 +629,8 @@ class InsufficientStock(Exception):
     pass
 
 
-@ratelimit(key='ip', rate='20/m', method='POST', block=True)
+@ratelimit(key='ip', rate='90/h', method='POST', block=True)
+@ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def checkout(request):
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
@@ -759,14 +761,18 @@ def checkout(request):
         'total_price': total_price,
     })
 
+@require_GET
 def checkout_success(request):
-    order = None
     order_id = request.session.pop('last_order_id', None)
-    if order_id:
-        order = Order.objects.filter(pk=order_id).first()
+    if not order_id:
+        return redirect('view_cart')
+    order = Order.objects.filter(pk=order_id).first()
+    if order is None or (order.user_id is not None and order.user_id != request.user.pk):
+        return redirect('view_cart')
     return render(request, 'products/checkout_success.html', {'order': order})
 
-@ratelimit(key='ip', rate='20/m', method='POST', block=True)
+@ratelimit(key='ip', rate='90/h', method='POST', block=True)
+@ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -798,7 +804,8 @@ def contact(request):
         'form': form,
     })
 
-@ratelimit(key='ip', rate='20/m', method='POST', block=True)
+@ratelimit(key='ip', rate='90/h', method='POST', block=True)
+@ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def color_selection(request):
     sent = request.GET.get('sent') == '1'
     send_error = False

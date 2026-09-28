@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from accounts.models import UserProfile, get_or_create_profile
 
 class RegisterForm(UserCreationForm):
@@ -15,6 +17,12 @@ class RegisterForm(UserCreationForm):
         super(RegisterForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError('Этот email уже используется.')
+        return email
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -59,6 +67,8 @@ class CustomUserChangeForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+        self.original_email = self.instance.email
+        self.email_changed = False
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green  '
         # Заполняем начальные значения для полей phone и delivery_address
@@ -81,16 +91,27 @@ class CustomUserChangeForm(UserChangeForm):
         current_password = cleaned_data.get('current_password')
         new_password = cleaned_data.get('new_password')
         new_password_confirm = cleaned_data.get('new_password_confirm')
+        email_changed = 'email' in cleaned_data and cleaned_data['email'] != self.original_email
 
-        # Проверка текущего пароля только если меняется пароль
-        if new_password:
+        if new_password or email_changed:
             if not current_password or not self.instance.check_password(current_password):
                 self.add_error('current_password', "Неверный текущий пароль.")
+        if new_password:
             if new_password != new_password_confirm:
                 self.add_error('new_password_confirm', "Пароли не совпадают.")
+            try:
+                validate_password(new_password, self.instance)
+            except ValidationError as exc:
+                self.add_error('new_password', exc)
         if new_password_confirm and not new_password:
             self.add_error('new_password', "Введите новый пароль.")
         return cleaned_data
+
+    def clean_email(self):
+        email = (self.cleaned_data.get('email') or '').strip()
+        if email != self.original_email and email and User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Этот email уже используется.')
+        return email
 
     def clean_phone(self):
         value = (self.cleaned_data.get('phone') or '').strip()
@@ -121,13 +142,17 @@ class CustomUserChangeForm(UserChangeForm):
         if new_password:
             user.set_password(new_password)
 
+        self.email_changed = user.email != self.original_email
         if commit:
-            user.save()
-            # Сохраняем или обновляем профиль
-            profile, created = UserProfile.objects.get_or_create(user=user)
-            profile.phone = phone
-            profile.delivery_address = delivery_address
-            profile.save()
+            with transaction.atomic():
+                user.save()
+                profile, _created = UserProfile.objects.get_or_create(user=user)
+                profile.phone = phone
+                profile.delivery_address = delivery_address
+                if self.email_changed:
+                    profile.email_confirmed = False
+                    profile.rotate_confirmation_token(save=False)
+                profile.save()
 
         return user
 

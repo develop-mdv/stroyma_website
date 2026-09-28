@@ -300,23 +300,32 @@
 <div class="dashboard-subtitle">Обзор ключевых показателей вашего магазина</div>
 
 <div class="quick-actions">
+    {% if perms.products.add_product %}
     <a href="{% url 'admin:products_product_add' %}" class="quick-action-btn">
         <i class="fas fa-plus-circle"></i> Добавить товар
     </a>
+    {% endif %}
+    {% if can_view_orders %}
     <a href="{% url 'admin:products_order_changelist' %}" class="quick-action-btn">
         <i class="fas fa-file-invoice-dollar"></i> Все заказы
     </a>
     <a href="{% url 'admin:sales_report' %}" class="quick-action-btn">
         <i class="fas fa-chart-line"></i> Отчёт по продажам
     </a>
+    {% endif %}
+    {% if perms.products.view_category or perms.products.change_category %}
     <a href="{% url 'admin:products_category_changelist' %}" class="quick-action-btn">
         <i class="fas fa-sitemap"></i> Категории
     </a>
+    {% endif %}
+    {% if perms.products.view_product or perms.products.change_product %}
     <a href="{% url 'admin:products_product_changelist' %}" class="quick-action-btn">
         <i class="fas fa-box-open"></i> Все товары
     </a>
+    {% endif %}
 </div>
 
+{% if can_view_orders %}
 <div class="dashboard-grid">
     <div class="kpi-card accent-blue">
         <div class="kpi-icon"><i class="fas fa-shopping-bag"></i></div>
@@ -407,4 +416,7 @@
         </div>
     </div>
 </div>
+{% else %}
+<div class="panel-card"><div class="panel-body dashboard-empty">Откройте доступный раздел через меню.</div></div>
+{% endif %}
 {% endblock %}

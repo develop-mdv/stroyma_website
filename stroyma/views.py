@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.template.loader import get_template
 from django.template.response import TemplateResponse
 
 
@@ -22,16 +22,33 @@ def service_worker(request):
     return response
 
 
+def error_response(status):
+    # Keep error pages independent of database-backed context processors.
+    response = HttpResponse(get_template(f'{status}.html').render(), status=status)
+    response['Cache-Control'] = 'no-store, private'
+    response['X-Robots-Tag'] = 'noindex, nofollow, noarchive'
+    response['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    return response
+
+
+def handler400(request, exception=None):
+    return error_response(400)
+
+
 def handler404(request, exception=None):
-    return render(request, '404.html', status=404)
+    return error_response(404)
 
 
 def handler500(request):
-    return render(request, '500.html', status=500)
+    return error_response(500)
 
 
 def handler403(request, exception=None):
-    return render(request, '403.html', status=403)
+    return error_response(403)
+
+
+def csrf_failure(request, reason=''):
+    return error_response(403)
 
 
 def robots_txt(request):
