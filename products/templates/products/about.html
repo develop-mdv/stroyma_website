@@ -1,199 +1,124 @@
 {% extends 'products/base.html' %}
 {% load static %}
+
+{% block title %}О компании СТРОЙМА — строительные материалы в Курске{% endblock %}
+{% block meta_description %}ООО «СТРОЙМА»: строительные материалы в Курске с 2011 года. Информация о компании, истории и реквизитах.{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/about.css' %}?v=1">{% endblock %}
+
 {% block content %}
-
-<section class="relative bg-white overflow-hidden mb-16 md:mb-24 mt-4 md:mt-8 rounded-[1.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100">
-    <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-sandy/30 pointer-events-none"></div>
-    <div class="relative grid lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.75fr)] items-center gap-8 lg:gap-14 px-6 sm:px-10 lg:px-16 py-10 md:py-16 lg:py-20">
-        <div>
-            <nav class="text-xs tracking-widest uppercase text-gray-400 mb-8 flex items-center">
-                <a href="{% url 'product_list' %}" class="hover:text-deep-green transition-colors py-1">Главная</a>
-                <span class="mx-3 opacity-30">/</span>
-                <span class="text-gray-900 py-1">О компании</span>
+<div class="about-page">
+    <section class="about-hero" aria-labelledby="about-title">
+        <div class="about-hero__copy">
+            <nav class="about-breadcrumb" aria-label="Хлебные крошки">
+                <a href="{% url 'product_list' %}">Главная</a><span aria-hidden="true">/</span><span aria-current="page">О компании</span>
             </nav>
-            <p class="text-deep-green font-bold text-xs tracking-[0.25em] uppercase mb-5">Официальный дистрибьютор · Курская область</p>
-            <h1 class="font-black text-gray-900 leading-[1.02] tracking-tight font-display mb-6" style="font-size:clamp(2.8rem,5vw,5.5rem)">Материалы для<br><span class="text-deep-green">надёжного дела.</span></h1>
-            <p class="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl">СТРОЙМА помогает подобрать строительные материалы для ремонта и крупных проектов. Работаем с продукцией CERESIT, UNIS и ТЕХНОНИКОЛЬ, чтобы нужное было под рукой и приходило вовремя.</p>
-        </div>
-        <div class="relative flex flex-col items-center justify-center min-h-[21rem] py-9 lg:py-12 rounded-[2rem] bg-sandy/40 border border-deep-green/10 text-center">
-            <div class="absolute inset-6 rounded-full border border-deep-green/10 pointer-events-none"></div>
-            <img src="{% static 'images/logo-ma.png' %}?v=2" alt="" class="about-brand-mark relative h-[9.5rem] w-auto object-contain" decoding="async">
-            <span class="relative mt-5 font-black font-display text-deep-green tracking-tight leading-none" style="font-size:clamp(2.7rem,4vw,4.5rem)">СТРОЙМА</span>
-            <span class="relative mt-3 text-xs font-bold uppercase tracking-[0.25em] text-gray-500">Строительные материалы</span>
-        </div>
-    </div>
-</section>
-
-<!-- MINIMALIST STATS LIGHT (Full Width Typographic approach) -->
-<section class="max-w-[120rem] mx-auto mb-20 md:mb-32 px-4 md:px-6 lg:px-16 w-full">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-0 lg:divide-x divide-gray-200">
-        <!-- Stat 1 -->
-        <div class="flex flex-col justify-center items-center text-center group">
-            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">68%</div>
-            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Рост Выручки</p>
-            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">Рекорд 2024</p>
-        </div>
-        <!-- Stat 2 -->
-        <div class="flex flex-col justify-center items-center text-center group">
-            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">ГОС</div>
-            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Тендеры</p>
-            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">Мед Университет</p>
-        </div>
-        <!-- Stat 3 -->
-        <div class="flex flex-col justify-center items-center text-center group">
-            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">2011</div>
-            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Работаем с</p>
-            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">Для клиентов Курской области</p>
-        </div>
-        <!-- Stat 4 -->
-        <div class="flex flex-col justify-center items-center text-center group">
-            <div class="font-light text-gray-900 mb-2 tracking-tighter group-hover:text-deep-green transition-colors font-display" style="font-size:clamp(2.5rem,7vw,4.5rem)">500<span class="text-3xl lg:text-4xl text-deep-green align-top">+</span></div>
-            <p class="text-xs lg:text-sm font-bold text-gray-900 uppercase tracking-widest">Товаров</p>
-            <p class="text-xs text-gray-400 uppercase tracking-wide mt-2">В каталоге</p>
-        </div>
-    </div>
-</section>
-
-<!-- WIDE ALTERNATING TIMELINE (Images Integrated) -->
-<section class="relative w-full max-w-[120rem] mx-auto mb-20 md:mb-32 px-4 sm:px-6 lg:px-16 overflow-hidden">
-    <!-- Section Title -->
-    <div class="text-center mb-14 md:mb-24">
-        <p class="text-deep-green font-semibold text-xs tracking-widest uppercase mb-4">Развитие</p>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-display tracking-tight">Хронология Успеха</h2>
-    </div>
-
-    <!-- Timeline Layout -->
-    <div class="relative w-full">
-        <!-- Thin architectural center line -->
-        <div class="absolute left-4 lg:left-1/2 top-0 bottom-0 w-[2px] bg-gray-100 -translate-x-1/2"></div>
-        
-        <!-- Timeline Item 1 -->
-        <div class="relative flex flex-col lg:flex-row items-center justify-between w-full mb-16 lg:mb-32 pl-12 lg:pl-0 group">
-            <div class="absolute left-4 lg:left-1/2 w-4 h-4 bg-white border-4 border-gray-200 rounded-full -translate-x-1/2 group-hover:border-deep-green transition-all duration-300 z-10"></div>
-            <!-- Left Side (Image) -->
-            <div class="w-full lg:w-[45%] text-right pr-0 lg:pr-16 mb-8 lg:mb-0 transition-all duration-700">
-                <img src="/static/images/timeline_2011.png" alt="Склад 2011" class="w-full xl:w-[90%] ml-auto h-64 lg:h-80 object-cover rounded-[2rem] shadow-xl border border-gray-100 hover:scale-105 transition-transform duration-500">
-            </div>
-            <!-- Right Side (Content) -->
-            <div class="w-full lg:w-[45%] pl-0 lg:pl-16">
-                <div class="font-black text-gray-100 mb-2 font-display" style="font-size:clamp(3rem,8vw,6rem)">2011</div>
-                <h4 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Основание компании</h4>
-                <p class="text-gray-600 font-light leading-relaxed">Смелый старт. Организация первого локального склада и старт оптовых поставок сухих строительных смесей. Формирование базового ассортимента и принципов прозрачного сервиса.</p>
+            <p class="about-eyebrow">Строительные материалы · Курск</p>
+            <h1 id="about-title">Материалы для <span>надёжного дела.</span></h1>
+            <p class="about-hero__lead">СТРОЙМА помогает подобрать материалы для ремонта и строительства. Мы знаем, как важно получить понятный ответ, подходящий товар и уверенность в каждом этапе проекта.</p>
+            <div class="about-hero__actions">
+                <a class="about-button about-button--primary" href="{% url 'catalog' %}">Смотреть каталог <span aria-hidden="true">↗</span></a>
+                <a class="about-button about-button--text" href="{% url 'contact' %}">Связаться с нами <span aria-hidden="true">→</span></a>
             </div>
         </div>
-
-        <!-- Timeline Item 2 -->
-        <div class="relative flex flex-col lg:flex-row-reverse items-center justify-between w-full mb-16 lg:mb-32 pl-12 lg:pl-0 group">
-            <div class="absolute left-4 lg:left-1/2 w-4 h-4 bg-white border-4 border-gray-200 rounded-full -translate-x-1/2 group-hover:border-deep-green transition-all duration-300 z-10"></div>
-            <!-- Right Side (Image) -->
-            <div class="w-full lg:w-[45%] text-left pl-0 lg:pl-16 mb-8 lg:mb-0 transition-all duration-700">
-                <img src="/static/images/timeline_2016.png" alt="Офис 2016" class="w-full xl:w-[90%] mr-auto h-64 lg:h-80 object-cover rounded-[2rem] shadow-xl border border-gray-100 hover:scale-105 transition-transform duration-500">
+        <div class="about-hero__visual" aria-label="СТРОЙМА — строительные материалы">
+            <div class="about-hero__ring about-hero__ring--outer" aria-hidden="true"></div>
+            <div class="about-hero__ring about-hero__ring--inner" aria-hidden="true"></div>
+            <div class="about-hero__brand">
+                <img src="{% static 'images/logo-ma.png' %}?v=2" alt="" width="150" height="150" decoding="async">
+                <strong>СТРОЙМА</strong>
+                <span>Строительные материалы</span>
             </div>
-            <!-- Left Side (Content) -->
-            <div class="w-full lg:w-[45%] pr-0 lg:pr-16 lg:text-right">
-                <div class="font-black text-gray-100 mb-2 font-display" style="font-size:clamp(3rem,8vw,6rem)">2016</div>
-                <h4 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Новая глава масштабирования</h4>
-                <p class="text-gray-600 font-light leading-relaxed">Вступление Евгения Аляева в должность генерального директора. Агрессивное расширение портфеля брендов, подписание эксклюзивных дилерских контрактов с Cereseit и Технониколь.</p>
-            </div>
+            <span class="about-hero__seal" aria-hidden="true">Курск<br>с 2011</span>
         </div>
+    </section>
 
-        <!-- Timeline Item 3 -->
-        <div class="relative flex flex-col lg:flex-row items-center justify-between w-full mb-16 lg:mb-32 pl-12 lg:pl-0 group">
-            <div class="absolute left-4 lg:left-1/2 w-4 h-4 bg-deep-green border-4 border-emerald-100 rounded-full -translate-x-1/2 shadow-[0_0_15px_rgba(27,94,32,0.4)] z-10"></div>
-            <div class="hidden lg:block w-full lg:w-[45%] text-right pr-0 lg:pr-16 mb-8 lg:mb-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                 <div class="w-full xl:w-[90%] ml-auto h-64 lg:h-80 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-[2rem] flex items-center justify-center border border-emerald-100"><i class="fas fa-university text-6xl text-emerald-300"></i></div>
-            </div>
-            <div class="w-full lg:w-[45%] pl-0 lg:pl-16">
-                <div class="font-black text-emerald-50 mb-2 font-display" style="font-size:clamp(3rem,8vw,6rem)">2024</div>
-                <h4 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Новый этап развития</h4>
-                <p class="text-gray-600 font-light leading-relaxed">Беспрецедентный рост выручки на 68%. Успешное выполнение правительственных тендеров (КГМУ) и прочное закрепление в статусе независимого дистрибьюторского лидера региона.</p>
-            </div>
+    <section class="about-facts" aria-label="Компания в цифрах">
+        <div class="about-fact about-reveal" style="--reveal-delay:0ms">
+            <span class="about-fact__number">2011</span>
+            <span class="about-fact__label">год регистрации</span>
+            <span class="about-fact__detail">18 января · Курск</span>
         </div>
-    </div>
-</section>
-
-<!-- STUDIO BENTO GRID PRESTIGE LIGHT -->
-<section class="max-w-[120rem] mx-auto mb-20 md:mb-32 px-4 sm:px-6 lg:px-16 w-full">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 auto-rows-[minmax(300px,auto)]">
-        
-        <!-- Large Manifesto Block -->
-        <div class="md:col-span-12 lg:col-span-8 bg-gray-50 rounded-2xl md:rounded-[2.5rem] p-8 md:p-10 lg:p-14 border border-gray-200 flex flex-col justify-between group hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-gray-900 max-w-2xl leading-tight">Материалы и опыт рядом с вами.</h3>
-            <p class="text-gray-600 mt-6 md:mt-8 max-w-xl text-base md:text-lg font-light">С 2011 года помогаем клиентам в Курской области выбирать материалы под задачи проекта. Знаем ассортимент, отвечаем на вопросы и ценим понятные сроки поставки.</p>
+        <div class="about-fact about-reveal" style="--reveal-delay:100ms">
+            <span class="about-fact__number">43,5 <small>млн ₽</small></span>
+            <span class="about-fact__label">выручка за 2025 год</span>
+            <span class="about-fact__detail">по данным бухгалтерской отчётности</span>
         </div>
+        <div class="about-fact about-reveal" style="--reveal-delay:200ms">
+            <span class="about-fact__number">46.73</span>
+            <span class="about-fact__label">основной код ОКВЭД</span>
+            <span class="about-fact__detail">оптовая торговля стройматериалами</span>
+        </div>
+    </section>
 
-        <!-- Vertical Accent Green Block -->
-        <div class="md:col-span-12 lg:col-span-4 bg-gradient-to-br from-deep-green to-emerald-900 text-white rounded-2xl md:rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between overflow-hidden relative shadow-xl">
-            <div class="absolute -right-6 -top-6 text-8xl md:text-9xl opacity-10 font-bold"><i class="fas fa-box-open"></i></div>
+    <section class="about-story" aria-labelledby="about-story-title">
+        <div class="about-section-heading about-reveal">
+            <p class="about-eyebrow">История компании</p>
+            <h2 id="about-story-title">Ключевые даты</h2>
+            <p>Проверяемые этапы из открытой карточки компании.</p>
+        </div>
+        <div class="about-timeline">
+            <article class="about-milestone about-reveal" style="--reveal-delay:0ms">
+                <div class="about-milestone__date">2011</div>
+                <div class="about-milestone__content">
+                    <span class="about-milestone__index">01 / Начало</span>
+                    <h3>Регистрация в Курске</h3>
+                    <p>18 января зарегистрировано ООО «СТРОЙМА». Основной вид деятельности — оптовая торговля строительными материалами.</p>
+                </div>
+            </article>
+            <article class="about-milestone about-reveal" style="--reveal-delay:100ms">
+                <div class="about-milestone__date">2016</div>
+                <div class="about-milestone__content">
+                    <span class="about-milestone__index">02 / Развитие</span>
+                    <h3>В реестре МСП</h3>
+                    <p>С 1 августа компания входит в единый реестр субъектов малого и среднего предпринимательства.</p>
+                </div>
+            </article>
+            <article class="about-milestone about-reveal" style="--reveal-delay:200ms">
+                <div class="about-milestone__date">2026</div>
+                <div class="about-milestone__content">
+                    <span class="about-milestone__index">03 / Сегодня</span>
+                    <h3>Новый руководитель</h3>
+                    <p>С 6 февраля генеральный директор ООО «СТРОЙМА» — Светлана Николаевна Макарова.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="about-values" aria-label="Как мы работаем">
+        <div class="about-values__main about-reveal">
+            <p class="about-eyebrow">Для вашего проекта</p>
+            <h2>Материалы и опыт рядом с вами.</h2>
+            <p>Помогаем ориентироваться в ассортименте и выбирать материалы под конкретную задачу. Для нас важны ясные условия и удобный путь от выбора до заказа.</p>
+            <a class="about-button about-button--text" href="{% url 'catalog' %}">Перейти в каталог <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="about-values__aside about-reveal" style="--reveal-delay:120ms">
+            <span class="about-values__symbol" aria-hidden="true">↗</span>
             <div>
-                <i class="fas fa-boxes text-3xl mb-6 text-emerald-200"></i>
-                <h3 class="text-xl md:text-2xl font-bold font-display">Широкий<br>Ассортимент</h3>
+                <span class="about-values__kicker">СТРОЙМА</span>
+                <h3>Строим планы вместе</h3>
+                <p>От первой идеи до нужного материала — мы на связи, когда появляется вопрос.</p>
             </div>
-            <p class="text-emerald-100/90 font-light text-sm mt-6 md:mt-8">Решения для разных этапов строительства и ремонта: от базовых смесей до материалов для отделки.</p>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- CEO TEXTBLOCK W/ PORTRAIT -->
-<section class="max-w-[80rem] mx-auto mb-16 md:mb-20 px-4 sm:px-6 lg:px-16 w-full">
-    <div class="bg-white border border-gray-100 rounded-2xl md:rounded-[3rem] p-8 md:p-12 lg:p-20 shadow-[0_15px_40px_rgba(0,0,0,0.03)] flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-20">
-        
-        <div class="w-40 h-40 md:w-48 md:h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden shrink-0 border-8 border-gray-50 shadow-inner">
-            <img src="/static/images/ceo_portrait.png" alt="Генеральный директор" class="w-full h-full object-cover">
+    <section id="company-info" class="about-details" aria-labelledby="about-details-title">
+        <div class="about-section-heading about-reveal">
+            <p class="about-eyebrow">Документы</p>
+            <h2 id="about-details-title">Реквизиты компании</h2>
         </div>
-        
-        <div class="flex-1 text-center md:text-left relative">
-            <i class="fas fa-quote-left text-4xl md:text-5xl text-gray-100 absolute -top-8 -left-4 md:-left-8 -z-10"></i>
-            <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-900 font-display leading-[1.4] mb-6 md:mb-8 font-light">
-                В центре работы <strong class="font-bold text-deep-green">СТРОЙМА</strong> — команда и задачи клиентов. Помогаем подобрать материалы, с которыми проще двигаться по проекту уверенно и в срок.
-            </p>
-            <h4 class="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wider">Евгений Аляев</h4>
-            <span class="text-gray-400 font-mono text-sm tracking-widest uppercase mt-1 block">Генеральный директор</span>
-        </div>
-
-    </div>
-</section>
-
-<!-- BRIGHT LEGAL GRID SECTION -->
-<section id="company-info" class="max-w-[80rem] mx-auto mb-16 px-4 sm:px-6 lg:px-16 w-full pt-10 md:pt-16">
-    <h3 class="text-xl md:text-2xl text-center font-display font-black text-gray-900 mb-8 md:mb-10">Реквизиты и Юридическая информация</h3>
-    
-    <div class="bg-gray-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-gray-200 text-sm text-gray-600 font-mono tracking-tight leading-relaxed break-words" style="overflow-wrap:anywhere">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8 border-b border-gray-200 pb-6 md:pb-8">
-            <div>
-                <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest">Наименование</p>
-                <p class="text-gray-900 font-medium">ООО «СТРОЙМА»</p>
-                
-                <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest mt-6">Руководитель</p>
-                <p class="text-gray-900 font-medium">Аляев Евгений Васильевич</p>
-            </div>
-            
-            <div>
-                <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest">Идентификация</p>
-                <p class="font-medium text-gray-900">ИНН: <span class="text-gray-500">4632128411</span></p>
-                <p class="font-medium text-gray-900 mt-1">КПП: <span class="text-gray-500">463201001</span></p>
-                <p class="font-medium text-gray-900 mt-1">ОГРН: <span class="text-gray-500">1114632000339</span></p>
-            </div>
-            
-            <div>
-                <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest">Банк</p>
-                <p class="font-medium text-gray-900">АО «РАЙФФАЙЗЕНБАНК»</p>
-                <p class="text-gray-500 mt-1">БИК: 044525700</p>
-                <p class="text-gray-500 mt-1">ОКПО: 68275470</p>
-            </div>
-            
-            <div>
-                <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest">Адрес</p>
-                <p class="text-gray-900 font-medium leading-[1.6]">305004, г. Курск, ул. Ленина, д. 90/2, офис 215В</p>
-                <p class="mt-4"><a href="tel:+79102114041" class="text-deep-green font-bold hover:underline">+7 (910) 211-40-41</a></p>
+        <div class="about-details__card about-reveal">
+            <div class="about-details__grid">
+                <div class="about-details__item"><span>Наименование</span><strong>ООО «СТРОЙМА»</strong></div>
+                <div class="about-details__item"><span>Генеральный директор</span><strong>Макарова Светлана Николаевна</strong><small>с 6 февраля 2026 года</small></div>
+                <div class="about-details__item"><span>ИНН / КПП</span><strong>4632128411 / 463201001</strong></div>
+                <div class="about-details__item"><span>ОГРН / ОКПО</span><strong>1114632000339 / 68275470</strong></div>
+                <div class="about-details__item about-details__item--wide"><span>Юридический адрес</span><strong>305004, Курская область, г. Курск, ул. Ленина, д. 90/2, офис 215В</strong></div>
+                <div class="about-details__item"><span>Основной ОКВЭД</span><strong>46.73</strong><small>Оптовая торговля лесоматериалами, строительными материалами и санитарно-техническим оборудованием</small></div>
+                <div class="about-details__item"><span>Контактный телефон</span><a href="tel:+79102114041">+7 (910) 211-40-41</a></div>
             </div>
         </div>
-        
-        <div class="opacity-70">
-            <p class="mb-2 text-gray-400 uppercase text-xs tracking-widest font-bold">Коды ОКВЭД</p>
-            <p class="leading-relaxed break-words" style="overflow-wrap:anywhere">46.69, 73.1, 77.3, 77.11, 68.2, 68.1, 64.9, 64.1, 46.73, 52.29, 33.12, 49.3, 43.31, 43.29, 47.5, 43.22, 43.99.1, 43.21, 47.9, 46.7, 47.99, 46.4, 47.52, 46.3, 47.19, 46.1, 46.74, 43.3, 46.49, 43.2, 46.14, 414.2, 46.90, 43.12, 46.69.5, 23.32, 46.51, 16.23, 16.2</p>
-        </div>
-    </div>
-</section>
-
+    </section>
+</div>
 {% endblock %}
+
+{% block scripts %}<script src="{% static 'js/about.js' %}?v=1" defer></script>{% endblock %}
