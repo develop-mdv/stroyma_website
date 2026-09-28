@@ -56,6 +56,8 @@
 .home-price-range { position: relative; height: 38px; margin: 0 2px 9px; }
 .home-price-track { position: absolute; top: 17px; right: 10px; left: 10px; height: 5px; border-radius: 99px; background: #e4eae3; }
 .home-price-track-fill { position: absolute; top: 0; bottom: 0; left: var(--range-start, 0%); right: calc(100% - var(--range-end, 100%)); border-radius: inherit; background: #2d5d4c; }
+.home-price-range.is-single-price input[type="range"] { visibility: hidden; }
+.home-price-range.is-single-price .home-price-track::after { content: ''; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; border: 3px solid #2d5d4c; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(20,50,32,.17); transform: translate(-50%, -50%); }
 .home-price-range input[type="range"] { position: absolute; inset: 0; width: 100%; height: 38px; margin: 0; padding: 0; border: 0; background: none; appearance: none; pointer-events: none; }
 #price-range-min { z-index: 2; }
 #price-range-max { z-index: 3; }

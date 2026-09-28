@@ -67,10 +67,10 @@
                         </div>
                         <div>
                             <label for="{{ form.phone.id_for_label }}" class="block text-[0.65rem] font-bold uppercase tracking-widest text-gray-500 mb-2">Телефон</label>
-                            <input type="text" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}"
+                            <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.id_for_label }}" autocomplete="tel" aria-describedby="{{ form.phone.id_for_label }}-hint" maxlength="32"
                                    value="{{ form.phone.value|default_if_none:'' }}"
-                                   placeholder="+7 (___) ___-__-__"
                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-deep-green/30 focus:border-deep-green transition-all">
+                            <p id="{{ form.phone.id_for_label }}-hint" class="text-xs text-gray-500 mt-2">Введите 10 цифр после +7. Полный номер можно вставить с 8 или +7.</p>
                             {% if form.phone.errors %}<p class="text-red-500 text-sm mt-2 font-medium">{{ form.phone.errors }}</p>{% endif %}
                         </div>
                     </div>

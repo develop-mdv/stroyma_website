@@ -664,3 +664,10 @@ button:focus, a:focus {
 .animate-fade-in {
     animation: fadeIn 0.5s ease forwards;
 }
+.phone-mask-error {
+    color: #b91c1c !important;
+}
+
+input[type="tel"][aria-invalid="true"] {
+    border-color: #b91c1c !important;
+}

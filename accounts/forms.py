@@ -22,7 +22,7 @@ class LoginForm(AuthenticationForm):
 
 class CustomUserChangeForm(UserChangeForm):
     phone = forms.CharField(
-        max_length=20,
+        max_length=32,
         label="Телефон",
         required=False,
         widget=forms.TextInput,
@@ -99,7 +99,7 @@ class CustomUserChangeForm(UserChangeForm):
 
         digits = ''.join(ch for ch in value if ch.isdigit())
         if not digits:
-            return ''
+            raise ValidationError("Введите номер телефона цифрами.")
 
         if len(digits) == 10:
             digits = '7' + digits
@@ -107,7 +107,7 @@ class CustomUserChangeForm(UserChangeForm):
             digits = '7' + digits[1:]
 
         if len(digits) != 11 or digits[0] != '7':
-            raise ValidationError("Введите номер в формате +7XXXXXXXXXX.")
+            raise ValidationError("Введите российский номер: 10 цифр без кода страны либо номер с 8 или +7.")
 
         return '+' + digits
 

@@ -5,7 +5,7 @@
 {% block meta_description %}Подберите фактуру и цвет фасада, мозаику цоколя и освещение на интерактивной 3D-модели дома.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/color_selection.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/color_selection.css' %}?v=5">
 {% endblock %}
 
 {% block content %}
@@ -49,7 +49,8 @@
                 </div>
                 <div>
                     <label for="requestPhone">Телефон <span aria-hidden="true">*</span></label>
-                    <input id="requestPhone" name="phone" type="tel" value="{{ form.phone.value|default_if_none:'' }}" autocomplete="tel" maxlength="32" placeholder="+7 (___) ___-__-__" required>
+                    <input id="requestPhone" name="phone" type="tel" value="{{ form.phone.value|default_if_none:'' }}" autocomplete="tel" aria-describedby="requestPhoneHint" maxlength="32" required>
+                    <p id="requestPhoneHint" class="color-request__hint">Введите 10 цифр после +7. Полный номер можно вставить с 8 или +7.</p>
                     {% if form.phone.errors %}<p class="color-request__error">{{ form.phone.errors|striptags }}</p>{% endif %}
                 </div>
                 <div>

@@ -22,6 +22,7 @@
 .color-request__submit { display: block; width: 100%; min-height: 48px; border: 0; border-radius: 10px; background: #1a3628; color: #fff; cursor: pointer; font-size: 15px; font-weight: 700; transition: background .2s; }
 .color-request__submit:hover { background: #28543e; }
 .color-request__error { color: #b3263e; font-size: 13px; margin: 6px 0 0; }
+.color-request__hint { color: #68766c; font-size: 13px; margin: 6px 0 0; }
 .color-request__success { color: #205536; background: #eaf6ed; border-radius: 8px; font-size: 14px; margin: 0 0 16px; padding: 12px 14px; }
 @media (max-width: 900px) {
     .color-request { grid-template-columns: 1fr; margin-top: 32px; }

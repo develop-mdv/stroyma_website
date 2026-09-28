@@ -44,7 +44,7 @@ class OrderForm(forms.Form):
             digits = '7' + digits[1:]
 
         if len(digits) != 11 or digits[0] != '7':
-            raise ValidationError("Введите номер в формате +7XXXXXXXXXX.")
+            raise ValidationError("Введите российский номер: 10 цифр без кода страны либо номер с 8 или +7.")
 
         return '+' + digits
 
@@ -79,5 +79,5 @@ class ColorSelectionRequestForm(forms.Form):
         elif len(digits) == 11 and digits[0] == '8':
             digits = '7' + digits[1:]
         if len(digits) != 11 or digits[0] != '7':
-            raise ValidationError('Введите номер в формате +7XXXXXXXXXX.')
+            raise ValidationError('Введите российский номер: 10 цифр без кода страны либо номер с 8 или +7.')
         return '+' + digits

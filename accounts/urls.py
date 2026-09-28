@@ -10,6 +10,8 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('order/<int:order_id>/print/', views.order_print_view, name='order_print'),
+    path('order/<int:order_id>/pdf/', views.order_pdf_view, name='order_pdf'),
     path('order/<int:order_id>/reorder/', views.reorder_view, name='reorder'),
 
     path('confirm-email/<str:token>/', views.confirm_email_view, name='confirm_email'),

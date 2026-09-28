@@ -1,6 +1,6 @@
 {% extends 'products/base.html' %}
 {% load static %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=8">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=9">{% endblock %}
 {% block content %}
 
 <div class="home-page" id="home-page" data-search-url="{% url 'search_ajax' %}" data-cart-url="{% url 'cart_preview' %}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}">
@@ -194,5 +194,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/home.js' %}?v=9"></script>
+<script src="{% static 'js/home.js' %}?v=10"></script>
 {% endblock %}

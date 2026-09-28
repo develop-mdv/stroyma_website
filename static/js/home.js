@@ -246,12 +246,14 @@
             input.min = priceFloor;
             input.max = priceCeiling;
         });
-        const singlePrice = !available || priceCeiling <= priceFloor;
-        priceSlider.hidden = singlePrice;
-        priceMin.disabled = singlePrice;
-        priceMax.disabled = singlePrice;
-        rangeMin.disabled = singlePrice;
-        rangeMax.disabled = singlePrice;
+        const singlePrice = available && priceCeiling <= priceFloor;
+        const priceUnavailable = !available || singlePrice;
+        priceSlider.hidden = !available;
+        priceSlider.classList.toggle('is-single-price', singlePrice);
+        priceMin.disabled = priceUnavailable;
+        priceMax.disabled = priceUnavailable;
+        rangeMin.disabled = priceUnavailable;
+        rangeMax.disabled = priceUnavailable;
         setPrices(Number(selectedMinimum), Number(selectedMaximum));
         if (!available) {
             priceMin.value = '';
@@ -288,7 +290,7 @@
         input.addEventListener('change', applyFilters);
     });
     priceSlider.addEventListener('pointerdown', event => {
-        if (event.target.matches('input')) return;
+        if (rangeMin.disabled || event.target.matches('input')) return;
         const track = priceSlider.querySelector('.home-price-track').getBoundingClientRect();
         const progress = Math.max(0, Math.min(1, (event.clientX - track.left) / track.width));
         const value = Math.round(priceFloor + progress * (priceCeiling - priceFloor));

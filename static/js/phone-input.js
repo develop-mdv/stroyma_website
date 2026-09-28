@@ -1,193 +1,158 @@
 (function () {
-  function countDigits(str) {
-    let n = 0;
-    for (let i = 0; i < str.length; i++) if (str[i] >= '0' && str[i] <= '9') n++;
-    return n;
+  'use strict';
+
+  const DEFAULT_HINT = 'Введите 10 цифр после +7. Полный номер можно вставить с 8 или +7.';
+  const INCOMPLETE_HINT = 'Введите все 10 цифр номера после +7.';
+
+  function digitsOnly(value) {
+    return (value || '').replace(/\D/g, '');
   }
 
-  function digitsOnly(str) {
-    return (str || '').replace(/\D/g, '');
+  function nationalDigits(value) {
+    const digits = digitsOnly(value);
+    const hasCountryPrefix = /^\s*\+7/.test(value) ||
+      (digits.length === 11 && /^[78]/.test(digits)) ||
+      (digits.length === 1 && /^[78]/.test(digits));
+    return (hasCountryPrefix ? digits.slice(1) : digits).slice(0, 10);
   }
 
-  function normalizeDigits(d) {
-    if (!d) return '';
-
-    // If user types 10 digits (without 7/8), assume Russia.
-    if (d.length === 10 && d[0] !== '7' && d[0] !== '8') return '7' + d;
-
-    // If starts with 8 (common "8..." format) -> immediately convert to 7.
-    // Do it early (not only on full length), otherwise input feels "broken"
-    // while user types and when they delete characters.
-    if (d[0] === '8') d = '7' + d.slice(1);
-
-    // If starts with 9 and user continues (common case) — prepend 7.
-    if (d.length > 0 && d[0] === '9') d = '7' + d;
-
-    // Limit to 11 digits (7 + 10).
-    return d.slice(0, 11);
+  function format(digits) {
+    if (!digits) return '+7';
+    let value = '+7 (' + digits.slice(0, 3);
+    if (digits.length >= 3) value += ')';
+    if (digits.length > 3) value += ' ' + digits.slice(3, 6);
+    if (digits.length > 6) value += '-' + digits.slice(6, 8);
+    if (digits.length > 8) value += '-' + digits.slice(8, 10);
+    return value;
   }
 
-  function formatRuPhone(d) {
-    const nd = normalizeDigits(d);
-    if (!nd) return '';
-
-    const a = nd.slice(0, 1); // 7
-    const b = nd.slice(1, 4);
-    const c = nd.slice(4, 7);
-    const e = nd.slice(7, 9);
-    const f = nd.slice(9, 11);
-
-    let out = '+' + a;
-    if (b) out += ' (' + b;
-    if (b.length === 3) out += ')';
-    if (c) out += ' ' + c;
-    if (e) out += '-' + e;
-    if (f) out += '-' + f;
-    return out;
+  function indexAt(value, position) {
+    return Math.max(0, digitsOnly(value.slice(0, position)).length - 1);
   }
 
-  function caretPosForDigitIndex(formatted, digitIndex) {
-    // digitIndex: how many digits should be before caret
-    if (digitIndex <= 0) return 0;
-    let seen = 0;
-    for (let i = 0; i < formatted.length; i++) {
-      const ch = formatted[i];
-      if (ch >= '0' && ch <= '9') {
-        seen++;
-        if (seen >= digitIndex) return i + 1;
-      }
+  function positionAt(value, digitIndex) {
+    const opening = value.indexOf('(');
+    if (opening < 0) return value.length;
+    const positions = [];
+    for (let i = opening + 1; i < value.length; i++) {
+      if (/\d/.test(value[i])) positions.push(i);
     }
-    return formatted.length;
+    if (!positions.length) return value.length;
+    return digitIndex >= positions.length ? value.length : positions[digitIndex];
   }
 
   function attach(input) {
-    if (!input || input.dataset.phoneMaskInit === '1') return;
+    if (input.dataset.phoneMaskInit) return;
     input.dataset.phoneMaskInit = '1';
+    input.inputMode = 'numeric';
 
-    input.setAttribute('inputmode', 'tel');
-    if (!input.getAttribute('autocomplete')) input.setAttribute('autocomplete', 'tel');
+    const hintId = input.getAttribute('aria-describedby');
+    const hint = hintId ? document.getElementById(hintId.split(/\s+/)[0]) : null;
+    const originalHint = hint ? hint.textContent : DEFAULT_HINT;
 
-    let lastValue = input.value || '';
+    function validate(showError) {
+      const count = nationalDigits(input.value).length;
+      const emptyRequired = input.required && count === 0;
+      const incomplete = count > 0 && count < 10;
+      const message = emptyRequired ? 'Введите номер телефона.' :
+        (incomplete ? INCOMPLETE_HINT : '');
+      input.setCustomValidity(message);
+      const visibleError = showError && !!message;
+      input.setAttribute('aria-invalid', visibleError ? 'true' : 'false');
+      if (hint) {
+        hint.textContent = visibleError ? message : originalHint;
+        hint.classList.toggle('phone-mask-error', visibleError);
+      }
+    }
+
+    function setValue(digits, caretIndex) {
+      input.value = format(digits.slice(0, 10));
+      const position = positionAt(input.value, caretIndex);
+      input.setSelectionRange(position, position);
+      validate(false);
+    }
 
     function reformat() {
-      const raw = input.value || '';
-      const selStart = input.selectionStart ?? raw.length;
-      const digitsBefore = countDigits(raw.slice(0, selStart));
-
-      const formatted = formatRuPhone(digitsOnly(raw));
-      input.value = formatted;
-
-      const newPos = caretPosForDigitIndex(formatted, digitsBefore);
-      try {
-        input.setSelectionRange(newPos, newPos);
-      } catch (_e) {
-        // Some inputs/browsers may block selection range.
-      }
-
-      lastValue = formatted;
+      const raw = input.value;
+      const caret = input.selectionStart == null ? raw.length : input.selectionStart;
+      const allDigits = digitsOnly(raw);
+      const prefixed = /^\s*\+7/.test(raw) ||
+        (allDigits.length === 11 && /^[78]/.test(allDigits)) ||
+        (allDigits.length === 1 && /^[78]/.test(allDigits));
+      const digitsBefore = digitsOnly(raw.slice(0, caret)).length - (prefixed ? 1 : 0);
+      setValue(nationalDigits(raw), Math.max(0, digitsBefore));
     }
 
-    function deleteDigitAt(digits, idx) {
-      if (idx < 0 || idx >= digits.length) return digits;
-      return digits.slice(0, idx) + digits.slice(idx + 1);
-    }
+    input.addEventListener('beforeinput', function (event) {
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      if (start == null || end == null) return;
 
-    input.addEventListener('keydown', function (e) {
-      if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+      const digits = nationalDigits(input.value);
+      const from = indexAt(input.value, start);
+      const to = indexAt(input.value, end);
 
-      const raw = input.value || '';
-      const start = input.selectionStart ?? raw.length;
-      const end = input.selectionEnd ?? start;
-
-      const digitsRaw = normalizeDigits(digitsOnly(raw));
-      if (!digitsRaw) return; // allow default behavior on empty
-
-      const startDigit = countDigits(raw.slice(0, start));
-      const endDigit = countDigits(raw.slice(0, end));
-
-      let digits = digitsRaw;
-      let newDigitCaret = startDigit;
-
-      // If selection exists: remove selected digits range
-      if (endDigit > startDigit) {
-        digits = digits.slice(0, startDigit) + digits.slice(endDigit);
-        newDigitCaret = startDigit;
-      } else if (e.key === 'Backspace') {
-        // Remove previous digit
-        const removeAt = startDigit - 1;
-        if (removeAt >= 0) {
-          digits = deleteDigitAt(digits, removeAt);
-          newDigitCaret = Math.max(0, startDigit - 1);
-        } else {
-          return; // nothing to delete
+      if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+        event.preventDefault();
+        if (to > from) {
+          setValue(digits.slice(0, from) + digits.slice(to), from);
+        } else if (event.inputType === 'deleteContentBackward' && from > 0) {
+          setValue(digits.slice(0, from - 1) + digits.slice(from), from - 1);
+        } else if (event.inputType === 'deleteContentForward' && from < digits.length) {
+          setValue(digits.slice(0, from) + digits.slice(from + 1), from);
         }
-      } else {
-        // Delete: remove next digit
-        const removeAt = startDigit;
-        if (removeAt < digits.length) {
-          digits = deleteDigitAt(digits, removeAt);
-          newDigitCaret = startDigit;
-        } else {
-          return; // nothing to delete
-        }
-      }
-
-      // If user deletes down to just "7" (country code) — clear completely.
-      if (!digits || digits === '7') {
-        e.preventDefault();
-        input.value = '';
-        lastValue = '';
-        try {
-          input.setSelectionRange(0, 0);
-        } catch (_e) {}
         return;
       }
 
-      e.preventDefault();
-      const formatted = formatRuPhone(digits);
-      input.value = formatted;
-      lastValue = formatted;
-
-      const newPos = caretPosForDigitIndex(formatted, newDigitCaret);
-      try {
-        input.setSelectionRange(newPos, newPos);
-      } catch (_e) {}
+      if (event.inputType === 'insertText' && event.data) {
+        event.preventDefault();
+        if (!/^\d+$/.test(event.data)) return;
+        if (digits.length === 10 && from === to) return;
+        setValue(digits.slice(0, from) + event.data + digits.slice(to), from + event.data.length);
+      }
     });
 
     input.addEventListener('input', reformat);
-    input.addEventListener('blur', function () {
-      // Cleanup: if only "+7" or "+7 (" left — clear to avoid confusing partial values.
-      const d = normalizeDigits(digitsOnly(input.value));
-      if (!d || d === '7') {
-        input.value = '';
-        lastValue = '';
-        return;
-      }
-      input.value = formatRuPhone(d);
-      lastValue = input.value;
+    input.addEventListener('change', function () {
+      if (input.value && !/^\+7 \(/.test(input.value)) reformat();
     });
 
-    // Init formatting for prefilled values.
-    if (input.value) {
-      const formatted = formatRuPhone(digitsOnly(input.value));
-      input.value = formatted;
-      lastValue = formatted;
+    input.addEventListener('paste', function (event) {
+      const text = event.clipboardData && event.clipboardData.getData('text');
+      if (!text) return;
+      const pasted = digitsOnly(text);
+      if (!pasted) return;
+      event.preventDefault();
+
+      const number = (/^\s*\+7/.test(text) || pasted.length === 11 && /^[78]/.test(pasted))
+        ? pasted.slice(1) : pasted;
+      if (number.length >= 10) {
+        setValue(number.slice(0, 10), 10);
+        return;
+      }
+
+      const current = nationalDigits(input.value);
+      const from = indexAt(input.value, input.selectionStart || 0);
+      const to = indexAt(input.value, input.selectionEnd || 0);
+      setValue(current.slice(0, from) + number + current.slice(to), from + number.length);
+    });
+
+    input.addEventListener('blur', function () {
+      validate(true);
+    });
+
+    if (input.form && !input.required) {
+      input.form.addEventListener('submit', function () {
+        if (!nationalDigits(input.value)) input.value = '';
+      });
     }
 
-    // If browser auto-fills later, keep it formatted (cheap polling for a short time).
-    let checks = 0;
-    const t = window.setInterval(function () {
-      checks++;
-      if (input.value !== lastValue) reformat();
-      if (checks > 20) window.clearInterval(t);
-    }, 250);
+    input.value = format(nationalDigits(input.value));
+    validate(false);
   }
 
   function init() {
-    const inputs = document.querySelectorAll(
-      'input[type="tel"], input[name*="phone" i], input[id*="phone" i]'
-    );
-    inputs.forEach(attach);
+    document.querySelectorAll('input[type="tel"][name="phone"]').forEach(attach);
   }
 
   if (document.readyState === 'loading') {
@@ -196,4 +161,3 @@
     init();
   }
 })();
-

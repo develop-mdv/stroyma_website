@@ -8,17 +8,19 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.db import transaction
 from django.db.models import Count, F, Sum
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
 
 from products.models import Cart, CartItem, Order
 from products.views import merge_session_cart_to_user_cart
 
+from .order_documents import build_order_pdf
 from .decorators import custom_login_required
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm, CustomUserChangeForm, LoginForm, RegisterForm
 from .models import UserProfile, get_or_create_profile
@@ -163,7 +165,7 @@ def profile_view(request):
 
 @custom_login_required
 def order_detail_view(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order = _get_owned_order(request, order_id)
     context = {
         'order': order,
         'items': order.items.all(),
@@ -171,6 +173,34 @@ def order_detail_view(request, order_id):
         'total_items': order.total_items_count,
     }
     return render(request, 'accounts/order_detail.html', context)
+
+
+def _get_owned_order(request, order_id):
+    return get_object_or_404(
+        Order.objects.select_related('contact').prefetch_related('items__product'),
+        id=order_id,
+        user=request.user,
+    )
+
+
+@custom_login_required
+@never_cache
+def order_print_view(request, order_id):
+    order = _get_owned_order(request, order_id)
+    return render(request, 'accounts/order_print.html', {
+        'order': order,
+        'items': order.items.all(),
+        'auto_print': request.GET.get('print') == '1',
+    })
+
+
+@custom_login_required
+@never_cache
+def order_pdf_view(request, order_id):
+    order = _get_owned_order(request, order_id)
+    response = HttpResponse(build_order_pdf(order), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="stroyma-order-{order.id}.pdf"'
+    return response
 
 @custom_login_required
 def edit_profile(request):
