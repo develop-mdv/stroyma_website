@@ -9,6 +9,7 @@
     const suggestions = document.getElementById('autocomplete-suggestions');
     const resultsGrid = document.getElementById('products-grid');
     const pagination = document.getElementById('products-pagination');
+    const loadSentinel = document.getElementById('catalog-load-sentinel');
     const resultCount = document.getElementById('results-count');
     const filterToggle = document.getElementById('toggle-filter');
     const filterClose = filterForm.querySelector('.mobile-filter-close');
@@ -26,6 +27,9 @@
     let priceFloor = Number(browser.dataset.priceMin);
     let priceCeiling = Number(browser.dataset.priceMax);
     let resultRequest = null;
+    let resultPage = Number(loadSentinel.dataset.initialPage) || 1;
+    let hasNextPage = loadSentinel.dataset.hasNext === 'true';
+    let loadingMore = false;
     let suggestionRequest = null;
     let suggestionTimer = null;
     let resultTimer = null;
@@ -55,11 +59,16 @@
         window.history.replaceState(null, '', url);
     }
 
-    async function loadResults(pageNumber = 1) {
+    async function loadResults(append = false) {
+        if (append && (loadingMore || !hasNextPage)) return;
+        const pageNumber = append ? resultPage + 1 : 1;
         if (resultRequest) resultRequest.abort();
         const controller = new AbortController();
         resultRequest = controller;
+        loadingMore = true;
+        loadSentinel.textContent = 'Загружаем товары…';
         resultsGrid.setAttribute('aria-busy', 'true');
+        let succeeded = false;
         try {
             const response = await fetch(`${browser.dataset.searchUrl}?${searchParams(pageNumber)}`, { signal: controller.signal });
             if (!response.ok) throw new Error('Search failed');
@@ -69,15 +78,31 @@
                 appliedPriceRange = `${priceMin.value}:${priceMax.value}`;
                 updateAddress();
             }
-            resultsGrid.innerHTML = data.results;
-            pagination.innerHTML = data.pagination;
+            if (append) {
+                const nextPage = new DOMParser().parseFromString(data.results, 'text/html');
+                const nextGrid = nextPage.querySelector('.grid');
+                const currentGrid = resultsGrid.querySelector('.grid');
+                if (!nextGrid || !currentGrid) throw new Error('Search results missing');
+                currentGrid.append(...nextGrid.children);
+            } else {
+                resultsGrid.innerHTML = data.results;
+                document.getElementById('catalog-category-results').outerHTML = data.categories;
+            }
+            resultPage = pageNumber;
+            hasNextPage = data.has_next;
+            succeeded = true;
             resultCount.textContent = `Найдено товаров: ${data.count}`;
         } catch (error) {
-            if (error.name !== 'AbortError') resultCount.textContent = 'Не удалось загрузить товары';
+            if (error.name !== 'AbortError') loadSentinel.textContent = 'Не удалось загрузить товары. Прокрутите страницу, чтобы повторить.';
         } finally {
             if (resultRequest === controller) {
                 resultRequest = null;
+                loadingMore = false;
+                if (succeeded) loadSentinel.textContent = '';
                 resultsGrid.removeAttribute('aria-busy');
+                if (succeeded && hasNextPage && loadSentinel.getBoundingClientRect().top < window.innerHeight + 400) {
+                    setTimeout(() => loadResults(true), 0);
+                }
             }
         }
     }
@@ -461,4 +486,9 @@
         filterForm.querySelectorAll('input[name="category"]').forEach(input => { input.checked = false; input.indeterminate = false; });
         applyFilters();
     });
+    pagination.hidden = true;
+    const loadObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasNextPage) loadResults(true);
+    }, { rootMargin: '400px 0px' });
+    loadObserver.observe(loadSentinel);
 })();

@@ -14,13 +14,13 @@
             <a class="home-product-name" href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a>
             {% if product.is_illustration %}<small class="text-gray-500">Иллюстрация товара</small>{% endif %}
             <p class="home-product-availability">
-                {% if product.max_order_quantity %}<span class="home-stock-dot"></span>В наличии{% else %}<span class="home-stock-dot home-stock-dot-muted"></span>Под заказ{% endif %}
+                {% if product.stock %}<span class="home-stock-dot"></span>В наличии{% else %}<span class="home-stock-dot home-stock-dot-muted"></span>Под заказ{% endif %}
             </p>
             <button type="button" class="home-quick-view" onclick="openQuickView({{ product.pk }})" aria-label="Быстрый просмотр: {{ product.name }}"><i class="fa-regular fa-eye" aria-hidden="true"></i> Быстрый просмотр</button>
         </div>
         <div class="home-product-buy">
             <div class="home-product-price">{% if product.has_price %}{{ product.price|floatformat:-2 }} <span>₽ / {{ product.unit }}{% if product.source_key %} · опт{% endif %}</span>{% else %}Цена уточняется{% endif %}</div>
-            {% if product.has_price and product.max_order_quantity %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="ajax-cart-form home-buy-form">
+            {% if product.has_price %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="ajax-cart-form home-buy-form">
                 {% csrf_token %}
                 <div class="home-quantity" aria-label="Количество">
                     <button type="button" class="home-quantity-button" data-step="-1" aria-label="Уменьшить количество"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>

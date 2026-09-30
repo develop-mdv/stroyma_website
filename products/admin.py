@@ -25,6 +25,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 import logging
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +133,17 @@ class CategoryFilter(admin.SimpleListFilter):
             return queryset.filter(categories__id=self.value())
         return queryset
 
+class ProductAdminForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+        widgets = {'slug': forms.TextInput(attrs={'class': 'slug-field'})}
+
+    def clean_stock(self):
+        value = self.cleaned_data.get('stock')
+        return Decimal('0') if value is None else value
+
+
 @admin.register(Product)
 class ProductAdmin(RestrictedImportExportModelAdmin):
     resource_classes = [ProductResource]
@@ -163,13 +175,7 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
         }),
     )
 
-    form = forms.modelform_factory(
-        Product,
-        fields='__all__',
-        widgets={
-            'slug': forms.TextInput(attrs={'class': 'slug-field'}),
-        }
-    )
+    form = ProductAdminForm
 
     def image_preview(self, obj):
         if obj.image:
@@ -192,8 +198,10 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
     formatted_price.admin_order_field = 'price'
 
     def stock_status(self, obj):
+        if obj.stock is None:
+            return format_html('<span class="admin-stock-critical">Не указан</span>')
         if obj.stock == 0:
-            return format_html('<span class="admin-stock-critical">Нет в наличии</span>')
+            return format_html('<span class="admin-stock-critical">Под заказ</span>')
         elif obj.stock <= 5:
             return format_html('<span class="admin-stock-low">{} {}</span>', obj.stock.normalize(), obj.unit)
         return format_html('<span class="admin-stock-ok">{} {}</span>', obj.stock.normalize(), obj.unit)

@@ -43,7 +43,7 @@
     "priceCurrency": "RUB",
     "price": "{{ product.price|unlocalize }}",
     "priceValidUntil": "{% now 'Y' %}-12-31",
-    "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "availability": "{% if product.stock %}https://schema.org/InStock{% else %}https://schema.org/BackOrder{% endif %}",
     "itemCondition": "https://schema.org/NewCondition"
   }{% endif %}
   {% if product.rating %}
@@ -136,7 +136,7 @@
                     </div>
 
                     <!-- Форма заказа -->
-                    {% if product.has_price and product.max_order_quantity %}<form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="w-full xl:w-4/5">
+                    {% if product.has_price %}<form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="w-full xl:w-4/5">
                         {% csrf_token %}
                         
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 md:mb-8">
@@ -157,12 +157,12 @@
                         
                     </form>{% endif %}
                     <div class="flex items-center gap-3">
-                        {% if product.stock > 0 %}
+                        {% if product.stock %}
                             <div class="w-2 h-2 rounded-full bg-deep-green"></div>
                             <span class="text-xs uppercase tracking-widest font-bold text-gray-900">В наличии ({{ product.stock|floatformat:"-3" }} {{ product.unit }})</span>
                         {% else %}
                             <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                            <span class="text-xs uppercase tracking-widest font-bold text-gray-900">Ожидается поставка</span>
+                            <span class="text-xs uppercase tracking-widest font-bold text-gray-900">Под заказ</span>
                         {% endif %}
                     </div>
 
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const quantityInput = document.getElementById('quantity');
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
-    const maxStock = parseInt('{{ product.max_order_quantity }}', 10);
+    const maxQuantity = parseInt('{{ product.max_order_quantity }}', 10);
     
     if (decreaseBtn && increaseBtn && quantityInput) {
         decreaseBtn.addEventListener('click', function() {
@@ -241,16 +241,16 @@ document.addEventListener('DOMContentLoaded', function () {
         
         increaseBtn.addEventListener('click', function() {
             const currentValue = parseInt(quantityInput.value);
-            if (currentValue < maxStock) {
+            if (currentValue < maxQuantity) {
                 quantityInput.value = currentValue + 1;
             }
         });
         
-        // Предотвращение ручного ввода больше чем есть на складе
+        // Ограничение количества в одном заказе
         quantityInput.addEventListener('change', function() {
             let val = parseInt(this.value);
             if(isNaN(val) || val < 1) val = 1;
-            if(val > maxStock) val = maxStock;
+            if(val > maxQuantity) val = maxQuantity;
             this.value = val;
         });
     }

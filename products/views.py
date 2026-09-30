@@ -208,6 +208,9 @@ def _browser_page_context(request, scope=None, page_size=12):
         for number in paginator.get_elided_page_range(page.number, on_each_side=1, on_ends=1)
     ]
     categories_tree = Category.objects.filter(parent=scope).order_by('tree_id', 'lft')
+    visible_categories = Category.objects.filter(name__icontains=query) if query else categories_tree
+    if scope is not None and query:
+        visible_categories = visible_categories.filter(pk__in=scope.get_descendants().values('pk'))
     return {
         'products': page,
         'search_query': query,
@@ -219,6 +222,8 @@ def _browser_page_context(request, scope=None, page_size=12):
         'selected_price_max': selected_maximum,
         'has_price_candidates': available,
         'categories_tree': categories_tree,
+        'visible_categories': visible_categories.order_by('tree_id', 'lft'),
+        'category': scope,
         'scope_category_id': scope.pk if scope is not None else '',
         'browser_path': page_path,
         'pagination_pages': pagination_pages,
@@ -340,7 +345,9 @@ def search_ajax(request):
         context = _browser_page_context(request, scope)
         return JsonResponse({
             'results': render_to_string('products/search_results.html', context, request=request),
+            'categories': render_to_string('products/catalog_category_results.html', context, request=request),
             'pagination': render_to_string('products/catalog_pagination.html', context, request=request),
+            'has_next': context['products'].has_next(),
             'count': context['products'].paginator.count,
             'price_bounds': {
                 'min': context['min_price'], 'max': context['max_price'],
@@ -351,7 +358,7 @@ def search_ajax(request):
             },
         })
 
-    query = request.GET.get('query', '')[:100].lower()
+    query = request.GET.get('query', '').strip()[:100]
     sort_by = request.GET.get('sort_by', 'name')
     page_number = request.GET.get('page', 1)
     autocomplete = request.GET.get('autocomplete', False)
@@ -370,7 +377,12 @@ def search_ajax(request):
 
     if autocomplete:
         products = products.order_by('name')[:6]
-        return JsonResponse({'products': [
+        matching_categories = Category.objects.filter(name__icontains=query).select_related('parent').order_by('level', 'name')[:6] if query else []
+        return JsonResponse({'categories': [
+            {'name': category.name, 'url': category.get_absolute_url(),
+             'parent_name': category.parent.name if category.parent else ''}
+            for category in matching_categories
+        ], 'products': [
             {
                 'name': product.name,
                 'price': f'{product.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',') if product.has_price else 'Цена уточняется',
@@ -473,8 +485,8 @@ def add_to_cart(request, pk):
             key = str(product.pk)
             desired_quantity = int(session_cart.get(key, 0) or 0) + quantity
 
-        if product.stock < desired_quantity:
-            message = 'Недостаточно товара на складе.'
+        if desired_quantity > product.max_order_quantity:
+            message = f'В корзине может быть не более {product.max_order_quantity} единиц товара.'
             if is_ajax:
                 return JsonResponse({'success': False, 'message': message}, status=400)
             messages.error(request, message)
@@ -521,7 +533,7 @@ def update_cart(request, pk):
         })
     with transaction.atomic():
         product = Product.objects.select_for_update().get(pk=pk)
-        if not product.has_price or product.stock < quantity:
+        if not product.has_price or quantity > product.max_order_quantity:
             return JsonResponse({'success': False, 'message': 'Товар недоступен в указанном количестве.',
                                  'current_quantity': 1}, status=400)
         if request.user.is_authenticated:
@@ -651,7 +663,7 @@ def _build_checkout_lines_for_post(request):
     return out if out else None
 
 
-class InsufficientStock(Exception):
+class InvalidCartQuantity(Exception):
     pass
 
 
@@ -755,19 +767,20 @@ def checkout(request):
                         product = Product.objects.select_for_update().get(pk=product_id)
                         if not product.has_price:
                             raise PriceUnavailable(product.name)
-                        if product.stock < qty:
-                            raise InsufficientStock(product.name)
+                        if qty < 1 or qty > product.max_order_quantity:
+                            raise InvalidCartQuantity(product.name)
                         OrderItem.objects.create(order=order, product=product, quantity=qty)
-                        product.stock -= qty
-                        product.save(update_fields=['stock'])
+                        if product.stock is not None and product.stock > 0:
+                            product.stock = max(Decimal('0'), product.stock - qty)
+                            product.save(update_fields=['stock'])
                     OrderNotification.objects.create(order=order)
                     if request.user.is_authenticated:
                         CartItem.objects.filter(cart__user=request.user).delete()
             except Product.DoesNotExist:
                 messages.error(request, 'В корзине указан несуществующий товар. Обновите корзину.')
                 return redirect('view_cart')
-            except InsufficientStock as exc:
-                messages.error(request, f'Недостаточно товара «{exc}» на складе. Измените количество в корзине.')
+            except InvalidCartQuantity as exc:
+                messages.error(request, f'Некорректное количество товара «{exc}». Измените количество в корзине.')
                 return redirect('view_cart')
             except PriceUnavailable as exc:
                 messages.error(request, f'Цена товара «{exc}» уточняется. Удалите его из корзины.')
@@ -922,7 +935,6 @@ class CategoryDetailView(DetailView):
             'meta_title': f'{category.name} - Каталог товаров',
             'meta_description': category.description or f'Товары категории {category.name}',
             'og_description': f'Просмотрите товары категории {category.name}. {category.description or ""}',
-            'subcategories': category.get_children(),
             'breadcrumbs': self.get_breadcrumbs(category),
             **_browser_page_context(self.request, category, self.paginate_by),
         })
@@ -1006,12 +1018,8 @@ class CatalogView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Получаем только корневые категории
-        categories = Category.objects.filter(parent=None).order_by('tree_id', 'lft')
-        
         # Добавляем метаданные для SEO
         context.update({
-            'categories': categories,
             'meta_title': 'Каталог товаров - Строительные материалы',
             'meta_description': 'Полный каталог строительных материалов с удобной навигацией по категориям',
             'og_description': 'Изучите наш каталог строительных материалов. Удобная навигация по категориям с визуальным представлением.',

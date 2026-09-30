@@ -84,6 +84,15 @@ class Category(MPTTModel):
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 
+    @property
+    def display_image(self):
+        """Category photo, or the first photographed product in its subtree."""
+        if self.image:
+            return self.image
+        product = (Product.objects.filter(categories__in=self.get_descendants(include_self=True))
+                   .exclude(image='').filter(image__isnull=False).order_by('pk').first())
+        return product.image if product else None
+
     def get_total_products_count(self):
         """
         Возвращает общее количество товаров в данной категории 
@@ -113,8 +122,11 @@ class Product(models.Model):
             MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
         ],
     )
-    stock = models.DecimalField(max_digits=12, decimal_places=3, default=0,
-                                validators=[MinValueValidator(Decimal('0'))], verbose_name='Остаток на складе')
+    stock = models.DecimalField(
+        max_digits=12, decimal_places=3, blank=True, default=0,
+        validators=[MinValueValidator(Decimal('0'))], verbose_name='Остаток на складе',
+        help_text='Необязательно. Пустое поле означает 0; товар всё равно можно заказать.',
+    )
     unit = models.CharField(max_length=20, default='шт', verbose_name='Единица измерения')
     source_key = models.CharField(max_length=64, unique=True, null=True, blank=True,
                                   verbose_name='Ключ товара в исходной выгрузке')
@@ -159,6 +171,8 @@ class Product(models.Model):
         Переопределение метода save для автоматического создания уникального slug.
         Если slug уже существует, добавляет числовой суффикс.
         """
+        if self.stock is None:
+            self.stock = Decimal('0')
         compress_image_field_if_needed(self, 'image')
         if not self.slug:
             self.slug = slugify(self.name)
@@ -189,8 +203,8 @@ class Product(models.Model):
 
     @property
     def max_order_quantity(self):
-        """The cart currently accepts whole units, including for ml and m² goods."""
-        return max(0, int(self.stock))
+        """Cart safety limit; stock does not restrict orders."""
+        return 9999
 
     def add_categories_with_parents(self, categories):
         """

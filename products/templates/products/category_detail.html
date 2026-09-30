@@ -8,8 +8,8 @@
 {% block og_title %}{{ category.meta_title|default:category.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block og_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СТРОЙМА.'|truncatechars:160 }}{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}?v=9">
-<link rel="stylesheet" href="{% static 'css/catalog.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=10">
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}?v=4">
 {% endblock %}
 
 {% block content %}
@@ -47,22 +47,7 @@
 
     {% include 'products/catalog_search.html' %}
 
-    {% if subcategories %}
-    <section class="catalog-subcategories" aria-label="Подкатегории">
-        <div class="catalog-subcategories-heading">
-            <h2>Подкатегории</h2>
-            <p>Откройте раздел или отметьте его в фильтрах, чтобы уточнить подбор.</p>
-        </div>
-        {% for subcategory in subcategories %}
-        <a href="{{ subcategory.get_absolute_url }}" class="catalog-subcategory-link">
-            {% if subcategory.image %}<img src="{{ subcategory.image.url }}" alt="" loading="lazy">
-            {% else %}<span class="catalog-subcategory-placeholder"><i class="fas fa-folder" aria-hidden="true"></i></span>{% endif %}
-            <span class="catalog-subcategory-text"><strong>{{ subcategory.name }}</strong><small>Товаров: {{ subcategory.get_total_products_count }}</small></span>
-            <i class="fas fa-arrow-right catalog-subcategory-arrow" aria-hidden="true"></i>
-        </a>
-        {% endfor %}
-    </section>
-    {% endif %}
+    {% include 'products/catalog_category_results.html' %}
 
     {% include 'products/catalog_browser.html' %}
 </div>
@@ -70,5 +55,5 @@
 
 {% block scripts %}
 {{ block.super }}
-<script src="{% static 'js/catalog.js' %}?v=5"></script>
+<script src="{% static 'js/catalog.js' %}?v=6"></script>
 {% endblock %}

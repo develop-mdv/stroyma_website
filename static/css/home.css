@@ -36,6 +36,9 @@
 .home-suggestion-name { min-width: 0; flex: 1; font-size: .86rem; line-height: 1.35; }
 .home-suggestion-price { flex: none; font-size: .88rem; font-weight: 800; white-space: nowrap; }
 .home-suggestions-empty { padding: 16px; color: #67736a; font-size: .9rem; }
+.catalog-suggestion-heading { padding: 10px 12px 5px; color: #748477; font-size: .66rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.catalog-suggestion-icon { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; flex: none; border-radius: 9px; background: #eaf2e9; color: #2d5d4c; }
+.catalog-load-sentinel { min-height: 36px; margin-top: 22px; text-align: center; color: #637167; font-size: .84rem; }
 
 .home-catalog-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 0 0 20px; }
 .home-catalog-title-row { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 16px; row-gap: 4px; }

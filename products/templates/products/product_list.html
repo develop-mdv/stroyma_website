@@ -1,9 +1,9 @@
 {% extends 'products/base.html' %}
 {% load static %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=9">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=10">{% endblock %}
 {% block content %}
 
-<div class="home-page" id="home-page" data-search-url="{% url 'search_ajax' %}" data-cart-url="{% url 'cart_preview' %}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}">
+<div class="home-page" id="home-page" data-search-url="{% url 'search_ajax' %}" data-cart-url="{% url 'cart_preview' %}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}" data-initial-page="{{ page_obj.number }}" data-has-next="{{ page_obj.has_next|yesno:'true,false' }}">
     <section class="home-hero" aria-labelledby="home-hero-title">
         <img class="home-hero-photo" src="{% static 'images/home_materials_hero.webp' %}" alt="Стопка светлых строительных плит" fetchpriority="high">
         <div class="home-hero-content">
@@ -19,15 +19,15 @@
                 <span class="home-section-eyebrow">Быстрый поиск</span>
                 <h2>Что нужно для вашего проекта?</h2>
             </div>
-            <p>Ищите по названию товара или слову из описания</p>
+            <p>Ищите товары и разделы каталога по названию</p>
         </div>
         <form id="main-search-form" class="home-search-form" action="{% url 'product_list' %}" method="get" role="search" autocomplete="off">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <label class="sr-only" for="id_query">Название товара</label>
+            <label class="sr-only" for="id_query">Товар или категория</label>
             <input id="id_query" name="query" type="search" value="{{ request.GET.query|default:'' }}" placeholder="Например, кирпич" aria-controls="autocomplete-suggestions" aria-expanded="false" aria-autocomplete="list" autocomplete="off">
             <button class="home-search-submit" type="submit">Найти <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
         </form>
-        <div id="autocomplete-suggestions" class="home-suggestions" role="listbox" aria-label="Подсказки товаров" hidden></div>
+        <div id="autocomplete-suggestions" class="home-suggestions" role="listbox" aria-label="Подсказки категорий и товаров" hidden></div>
     </section>
 
     <div class="home-catalog-heading" id="catalog-title">
@@ -139,11 +139,7 @@
     <div class="home-products-panel">
         <div id="search-results" class="w-full min-w-0" aria-live="polite">
             {% include 'products/home_search_results.html' with products=page_obj %}
-            <div class="mt-10 text-center">
-                <button id="load-more" class="hidden bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-3 px-8 rounded-xl transition-colors inline-block w-auto">
-                    Показать ещё
-                </button>
-            </div>
+            <div id="home-load-sentinel" class="catalog-load-sentinel" aria-live="polite"></div>
         </div>
     </div>
 
@@ -195,5 +191,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/home.js' %}?v=12"></script>
+<script src="{% static 'js/home.js' %}?v=13"></script>
 {% endblock %}

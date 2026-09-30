@@ -266,15 +266,25 @@ class CheckoutPersistenceTests(TransactionTestCase):
         self.assertEqual(item.product_name, 'Краска')
         self.assertEqual(order.total_cost, Decimal('251.00'))
 
-    def test_insufficient_stock_rolls_back_order_and_keeps_cart(self):
+    def test_checkout_accepts_quantity_above_stock(self):
         self.set_cart(3)
         response = self.client.post('/checkout/', self.contact)
-        self.assertRedirects(response, '/cart/', fetch_redirect_response=False)
-        self.assertFalse(Order.objects.exists())
-        self.assertFalse(OrderNotification.objects.exists())
+        self.assertRedirects(response, '/checkout/success/', fetch_redirect_response=False)
+        self.assertEqual(Order.objects.get().items.get().quantity, 3)
+        self.assertTrue(OrderNotification.objects.exists())
         self.product.refresh_from_db()
-        self.assertEqual(self.product.stock, 2)
-        self.assertEqual(self.client.session['cart'][str(self.product.pk)], 3)
+        self.assertEqual(self.product.stock, 0)
+        self.assertEqual(self.client.session['cart'], {})
+
+    def test_checkout_accepts_zero_stock_product(self):
+        self.product.stock = 0
+        self.product.save(update_fields=['stock'])
+        self.set_cart(1)
+        response = self.client.post('/checkout/', self.contact)
+        self.assertRedirects(response, '/checkout/success/', fetch_redirect_response=False)
+        self.assertEqual(Order.objects.get().items.get().quantity, 1)
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 0)
 
     def test_database_write_failure_shows_error_and_keeps_cart(self):
         self.set_cart(1)

@@ -46,7 +46,7 @@
         </div>
 
         <!-- Форма добавления в корзину -->
-        {% if product.has_price and product.max_order_quantity %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
+        {% if product.has_price %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
             {% csrf_token %}
             <div class="flex items-center justify-between border-2 border-gray-900 rounded-2xl p-2 mb-4">
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-2 sm:ml-4">Кол-во</span>

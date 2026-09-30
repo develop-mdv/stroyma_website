@@ -9,7 +9,7 @@
     const suggestions = document.getElementById('autocomplete-suggestions');
     const resultList = document.getElementById('home-result-list');
     const resultCount = document.getElementById('results-count');
-    const loadMoreButton = document.getElementById('load-more');
+    const loadSentinel = document.getElementById('home-load-sentinel');
     const priceMin = document.getElementById('price_min');
     const priceMax = document.getElementById('price_max');
     const rangeMin = document.getElementById('price-range-min');
@@ -29,7 +29,8 @@
     const cartToggle = document.getElementById('home-cart-toggle');
     const cartBody = document.getElementById('home-cart-body');
     const cartBadge = document.getElementById('home-cart-badge');
-    let resultPage = 1;
+    let resultPage = Number(page.dataset.initialPage) || 1;
+    let hasNextPage = page.dataset.hasNext === 'true';
     let resultRequest = null;
     let suggestionRequest = null;
     let suggestionTimer = null;
@@ -66,16 +67,18 @@
         if (reset) {
             resultPage = 1;
             if (resultRequest) resultRequest.abort();
-        } else if (loadingMore) {
+        } else if (loadingMore || !hasNextPage) {
             return;
         }
+        const requestedPage = reset ? 1 : resultPage + 1;
         const controller = new AbortController();
         resultRequest = controller;
         loadingMore = true;
-        loadMoreButton.disabled = true;
+        loadSentinel.textContent = 'Загружаем товары…';
         resultList.setAttribute('aria-busy', 'true');
+        let succeeded = false;
         try {
-            const response = await fetch(`${page.dataset.searchUrl}?${searchParams(resultPage)}`, { signal: controller.signal });
+            const response = await fetch(`${page.dataset.searchUrl}?${searchParams(requestedPage)}`, { signal: controller.signal });
             if (!response.ok) throw new Error('Search failed');
             const data = await response.json();
             const documentFragment = new DOMParser().parseFromString(data.results, 'text/html');
@@ -88,19 +91,24 @@
             }
             if (reset) resultList.replaceChildren(...newList.children);
             else resultList.append(...newList.children);
+            resultPage = requestedPage;
+            hasNextPage = data.has_next;
+            succeeded = true;
             resultCount.textContent = `Найдено товаров: ${data.count}`;
-            loadMoreButton.classList.toggle('hidden', !data.has_next);
         } catch (error) {
             if (error.name !== 'AbortError') {
-                resultCount.textContent = 'Не удалось загрузить товары';
-                loadMoreButton.classList.add('hidden');
+                loadSentinel.textContent = 'Не удалось загрузить товары. Прокрутите страницу, чтобы повторить.';
             }
         } finally {
             if (resultRequest === controller) {
                 resultRequest = null;
                 loadingMore = false;
-                loadMoreButton.disabled = false;
+                if (hasNextPage && !loadSentinel.textContent.startsWith('Не удалось')) loadSentinel.textContent = '';
+                if (!hasNextPage) loadSentinel.textContent = '';
                 resultList.removeAttribute('aria-busy');
+                if (succeeded && hasNextPage && loadSentinel.getBoundingClientRect().top < window.innerHeight + 400) {
+                    setTimeout(() => loadResults(false), 0);
+                }
             }
         }
     }
@@ -124,18 +132,44 @@
         else searchInput.removeAttribute('aria-activedescendant');
     }
 
-    function showSuggestions(products) {
+    function showSuggestions(categories, products) {
         suggestions.replaceChildren();
-        if (!products.length) {
+        if (!categories.length && !products.length) {
             const empty = document.createElement('div');
             empty.className = 'home-suggestions-empty';
-            empty.textContent = 'Подходящих товаров пока нет. Попробуйте другой запрос.';
+            empty.textContent = 'Подходящих разделов и товаров пока нет. Попробуйте другой запрос.';
             suggestions.append(empty);
         }
-        products.forEach((product, index) => {
+        function addHeading(label) {
+            const heading = document.createElement('div');
+            heading.className = 'catalog-suggestion-heading';
+            heading.setAttribute('role', 'presentation');
+            heading.textContent = label;
+            suggestions.append(heading);
+        }
+        let index = 0;
+        if (categories.length) addHeading('Категории');
+        categories.forEach(category => {
+            const link = document.createElement('a');
+            link.className = 'home-suggestion catalog-category-suggestion';
+            link.id = `home-suggestion-${index++}`;
+            link.href = category.url;
+            link.setAttribute('role', 'option');
+            link.setAttribute('aria-selected', 'false');
+            const icon = document.createElement('span');
+            icon.className = 'catalog-suggestion-icon';
+            icon.innerHTML = '<i class="fas fa-folder-open" aria-hidden="true"></i>';
+            const name = document.createElement('span');
+            name.className = 'home-suggestion-name';
+            name.textContent = category.parent_name ? `${category.name} · ${category.parent_name}` : category.name;
+            link.append(icon, name);
+            suggestions.append(link);
+        });
+        if (products.length) addHeading('Товары');
+        products.forEach(product => {
             const link = document.createElement('a');
             link.className = 'home-suggestion';
-            link.id = `home-suggestion-${index}`;
+            link.id = `home-suggestion-${index++}`;
             link.href = product.url;
             link.setAttribute('role', 'option');
             link.setAttribute('aria-selected', 'false');
@@ -177,7 +211,7 @@
             const response = await fetch(url, { signal: controller.signal });
             if (!response.ok) throw new Error('Suggestions failed');
             const data = await response.json();
-            if (searchInput.value.trim() === query && document.activeElement === searchInput) showSuggestions(data.products);
+            if (searchInput.value.trim() === query && document.activeElement === searchInput) showSuggestions(data.categories || [], data.products || []);
         } catch (error) {
             if (error.name !== 'AbortError') hideSuggestions();
         }
@@ -454,7 +488,10 @@
         filterToggle.focus({ preventScroll: true });
         filterToggle.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    loadMoreButton.addEventListener('click', () => { resultPage += 1; loadResults(false); });
+    const loadObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasNextPage) loadResults(false);
+    }, { rootMargin: '400px 0px' });
+    loadObserver.observe(loadSentinel);
     resultList.addEventListener('click', event => {
         const button = event.target.closest('.home-quantity-button');
         if (!button) return;
