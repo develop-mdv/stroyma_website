@@ -5,9 +5,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from accounts.models import UserProfile, get_or_create_profile
+from stroyma.legal import document_version_field
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
+    privacy_policy = forms.BooleanField(label='Согласие на обработку персональных данных',
+                                        error_messages={'required': 'Подтвердите отдельное согласие на обработку данных для личного кабинета.'})
+    document_version = document_version_field()
 
     class Meta:
         model = User
@@ -21,7 +25,7 @@ class RegisterForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email'].strip()
         if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError('Этот email уже используется.')
+            raise ValidationError('Этот адрес электронной почты уже используется.')
         return email
 
 class LoginForm(AuthenticationForm):
@@ -110,7 +114,7 @@ class CustomUserChangeForm(UserChangeForm):
     def clean_email(self):
         email = (self.cleaned_data.get('email') or '').strip()
         if email != self.original_email and email and User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
-            raise ValidationError('Этот email уже используется.')
+            raise ValidationError('Этот адрес электронной почты уже используется.')
         return email
 
     def clean_phone(self):
@@ -158,7 +162,7 @@ class CustomUserChangeForm(UserChangeForm):
 
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
-        label="Email",
+        label="Электронная почта",
         max_length=254,
         widget=forms.EmailInput(attrs={'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green'})
     )

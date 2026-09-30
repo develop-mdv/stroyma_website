@@ -3,7 +3,7 @@
     <strong class="font-medium">Имя или название организации:</strong> {{ customer_name }}
 </p>
 <p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
-    <strong class="font-medium">Email:</strong> {{ user_email }}
+    <strong class="font-medium">Электронная почта:</strong> {{ user_email }}
 </p>
 <p style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
     <strong class="font-medium">Телефон:</strong> {{ user_phone }}
@@ -18,11 +18,12 @@
 <ul style="font-family: 'Manrope', sans-serif; color: var(--text-gray);">
     {% for item in items %}
     <li>
-        {{ item.product_name }} - {{ item.quantity }} шт. × {{ item.unit_price }} руб. = {{ item.total_price }} руб.
+        {{ item.product_name }} - {{ item.quantity }} {{ item.product_unit }} × {{ item.unit_price }} руб. = {{ item.total_price }} руб.
     </li>
     {% endfor %}
 </ul>
 
 <h4 style="color: var(--text-deep-green); font-family: 'Manrope', sans-serif;">
-    <strong class="font-medium">Итого:</strong> {{ total_price|floatformat:2 }} руб.
+    <strong class="font-medium">Стоимость товаров:</strong> {{ total_price|floatformat:2 }} руб.
 </h4>
+<p>Доставка и дополнительные услуги согласуются отдельно. Оплата через сайт не принимается.</p>

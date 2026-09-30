@@ -11,7 +11,7 @@
 {% block og_image %}{% if service.image %}{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endif %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
+<link rel="stylesheet" href="{% static 'css/gallery.css' %}?v=1">
 <style>
     .service-card {
         transition: transform 0.3s ease;
@@ -138,7 +138,8 @@
                 <!-- Галерея работ: Modern Horizontal Snap Track -->
                 {% if service.photos.exists %}
                 <div class="mb-16 xl:mb-24">
-                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 mb-8 border-b-2 border-gray-900 pb-3 inline-block">Примеры наших работ</h3>
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-900 mb-4 border-b-2 border-gray-900 pb-3 inline-block">Иллюстрации услуги</h3>
+                    <p class="text-sm text-gray-500 mb-8">Изображения носят иллюстративный характер. Фактические условия и возможности выполнения уточняются при согласовании услуги.</p>
                     
                     <div class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-12 -mx-4 px-4 sm:-mx-8 sm:px-8 xl:mx-0 xl:px-0">
                         
@@ -164,7 +165,7 @@
                     <div class="absolute inset-0 bg-gradient-to-br from-deep-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     <div class="relative z-10">
                         <h2 class="text-2xl sm:text-3xl md:text-5xl font-display font-black mb-4 md:mb-6 tracking-tight uppercase break-words">Готовы обсудить?</h2>
-                        <p class="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto font-light">Свяжитесь с нами для получения подробной консультации и точного расчета стоимости вашей задачи.</p>
+                        <p class="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto font-light">Уточните возможность выполнения, состав, стоимость и срок услуги. Платные работы и дополнительные услуги выполняются после отдельного согласования. Обращение через форму не подключает платные услуги автоматически.</p>
                         <a href="{% url 'contact' %}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-white text-gray-900 rounded-full font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:text-white hover:shadow-2xl hover:shadow-deep-green/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[48px]">
                             Оставить заявку
                         </a>
@@ -178,13 +179,14 @@
                 <div class="xl:sticky xl:top-28 flex flex-col gap-6">
                     {% if service.image %}
                         <div class="aspect-video xl:aspect-square 2xl:aspect-[4/3] rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl shadow-gray-200/50 group block">
-                            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
+                            <img src="{{ service.image.url }}" alt="Иллюстрация: {{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
                         </div>
+                        <p class="text-xs text-gray-500">Иллюстрация услуги</p>
                     {% endif %}
 
                     <div class="bg-white/80 backdrop-blur-2xl p-6 md:p-10 xl:p-12 rounded-[1.5rem] md:rounded-[3rem] shadow-xl shadow-gray-200/50 border border-white/50">
                         <h3 class="text-xl md:text-2xl lg:text-3xl font-display font-black text-gray-900 mb-4 uppercase tracking-tighter">Начать работу</h3>
-                        <p class="text-sm md:text-base text-gray-500 mb-8 md:mb-10 font-light leading-relaxed">Наши специалисты всегда готовы помочь вам на любом этапе вашего ремонта или строительства.</p>
+                        <p class="text-sm md:text-base text-gray-500 mb-8 md:mb-10 font-light leading-relaxed">Опишите задачу и исходные данные. Мы уточним условия и предложим следующий шаг.</p>
 
                         <a href="{% url 'contact' %}" class="flex items-center justify-center px-6 md:px-8 py-4 md:py-5 bg-gray-900 text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-xs hover:bg-deep-green hover:shadow-2xl hover:shadow-deep-green/20 transition-all duration-300 transform hover:-translate-y-1 w-full text-center min-h-[48px]">
                             Оформить заявку
@@ -203,27 +205,6 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация Fancybox для галереи фотографий
-    if (window.Fancybox) Fancybox.bind("[data-fancybox='gallery']", {
-        Image: {
-            zoom: true,
-        },
-        Toolbar: {
-            display: [
-                { id: "prev", position: "center" },
-                { id: "counter", position: "center" },
-                { id: "next", position: "center" },
-                "zoom",
-                "slideshow",
-                "fullscreen",
-                "close",
-            ],
-        }
-    });
-});
-</script>
+{% block scripts %}
+<script src="{% static 'js/gallery.js' %}?v=1" defer></script>
 {% endblock %}

@@ -21,6 +21,7 @@ from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
 from .forms import ColorSelectionRequestForm, ContactForm, OrderForm, SearchForm
+from stroyma.legal import CONSENTS, record_acceptance
 from .models import (
     Cart,
     CartItem,
@@ -777,6 +778,8 @@ def checkout(request):
                             product.stock = max(Decimal('0'), product.stock - qty)
                             product.save(update_fields=['stock'])
                     OrderNotification.objects.create(order=order)
+                    record_acceptance(request, 'sale', order=order, subject=user_email,
+                                      user=request.user if request.user.is_authenticated else None)
                     if request.user.is_authenticated:
                         CartItem.objects.filter(cart__user=request.user).delete()
             except Product.DoesNotExist:
@@ -831,9 +834,10 @@ def contact(request):
             message = form.cleaned_data['message']
             notify = _order_notify_recipient()
             try:
+                receipt = record_acceptance(request, 'contact', subject=email)
                 send_mail(
                     _sanitize_mail_subject_line('Новое сообщение с сайта Stroyma (форма контактов)'),
-                    f'Имя: {name}\nEmail: {email}\n\nСообщение:\n{message}',
+                    f'Имя: {name}\nEmail: {email}\nСогласие №{receipt.pk}, редакция {receipt.version}\n\nСообщение:\n{message}',
                     settings.DEFAULT_FROM_EMAIL,
                     [notify],
                     fail_silently=False
@@ -893,6 +897,8 @@ def color_selection(request):
                 f"Комментарий: {details['message'] or 'нет'}"
             )
             try:
+                receipt = record_acceptance(request, 'color_selection', subject=details['email'] or details['phone'])
+                body += f'\n\nСогласие №{receipt.pk}, редакция {receipt.version}'
                 send_mail(
                     'Заявка на подбор цвета фасада — СТРОЙМА',
                     body,
@@ -972,6 +978,7 @@ def about(request):
 def policy(request):
     """Отображение страницы политики конфиденциальности"""
     return render(request, 'products/policy.html', {
+        'legal_title': 'Политика обработки персональных данных',
         'meta_title': 'Политика конфиденциальности - ООО "СТРОЙМА"',
         'meta_description': 'Политика конфиденциальности ООО "СТРОЙМА". Узнайте, какие персональные данные мы собираем и как обрабатываем их на нашем сайте.',
         'keywords': 'политика конфиденциальности, защита персональных данных, обработка данных, СтройМА',
@@ -980,14 +987,27 @@ def policy(request):
 def cookies_policy(request):
     """Отображение страницы политики использования файлов cookie"""
     return render(request, 'products/cookies_policy.html', {
+        'legal_title': 'Cookie и данные браузера',
         'meta_title': 'Политика использования файлов cookie - ООО "СТРОЙМА"',
         'meta_description': 'Политика использования файлов cookie ООО "СТРОЙМА". Узнайте, какие файлы cookie мы используем и как они помогают улучшить работу нашего сайта.',
         'keywords': 'cookies, файлы cookie, политика cookie, куки, СтройМА, конфиденциальность',
     })
 
+
+@require_GET
+def consent(request, purpose):
+    if purpose not in CONSENTS:
+        from django.http import Http404
+        raise Http404
+    return render(request, 'products/legal/consent.html', {
+        'consent': CONSENTS[purpose],
+        'legal_title': 'Согласие на обработку персональных данных',
+    })
+
 def offer(request):
     """Публичная оферта (условия продажи товаров дистанционным способом)."""
     return render(request, 'products/legal/offer.html', {
+        'legal_title': 'Условия продажи и публичная оферта',
         'meta_title': 'Публичная оферта - ООО "СТРОЙМА"',
         'meta_description': 'Условия продажи товаров дистанционным способом, порядок оформления заказа, оплаты, доставки, возврата.',
         'keywords': 'публичная оферта, условия продажи, дистанционная торговля, СтройМА',
@@ -998,6 +1018,7 @@ def offer(request):
 def delivery(request):
     """Информация о доставке."""
     return render(request, 'products/legal/delivery.html', {
+        'legal_title': 'Доставка и самовывоз',
         'meta_title': 'Доставка - ООО "СТРОЙМА"',
         'meta_description': 'Условия и сроки доставки заказов, самовывоз, стоимость доставки.',
         'keywords': 'доставка, самовывоз, СтройМА',
@@ -1007,6 +1028,7 @@ def delivery(request):
 def returns(request):
     """Информация о возврате и обмене."""
     return render(request, 'products/legal/returns.html', {
+        'legal_title': 'Возврат и обмен',
         'meta_title': 'Возврат и обмен - ООО "СТРОЙМА"',
         'meta_description': 'Правила возврата и обмена товаров в соответствии с законодательством РФ.',
         'keywords': 'возврат, обмен, защита прав потребителей, СтройМА',

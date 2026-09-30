@@ -2,7 +2,9 @@
 
 Инструкция для **чистого VPS с Ubuntu 24.04 LTS**, одним доменом и Docker Compose. Примерный путь проекта — `/opt/stroyma/stroyma_website`. Команды для VPS выполняются в Bash; команды переноса с текущего Windows-компьютера — в PowerShell. Замените `shop.example.ru`, `user` и `VPS_IP` своими значениями. Код с этими изменениями должен быть закоммичен и отправлен в `origin` **до** клонирования на VPS.
 
-Сайт принимает заказы как заявки на подтверждение менеджером. Онлайн-оплаты нет. PostgreSQL и `media/` содержат рабочие данные; Git их не содержит. Для новой установки используется PostgreSQL 17, как у текущей локальной базы. **Не меняйте тег PostgreSQL на уже существующем томе `pgdata` без отдельной процедуры обновления кластера.**
+Сайт принимает дистанционные заказы; менеджер согласует исполнение, получение и расчёт. Онлайн-оплаты нет. PostgreSQL и `media/` содержат рабочие данные; Git их не содержит. Для новой установки используется PostgreSQL 17, как у текущей локальной базы. **Не меняйте тег PostgreSQL на уже существующем томе `pgdata` без отдельной процедуры обновления кластера.**
+
+До публичного запуска закрыть пункты [правового аудита](../LEGAL_AUDIT_RU.md) и организовать [работу с данными, товарами и возвратами](LEGAL_OPERATIONS_RU.md). Уведомление РКН, расположение БД/почты/копий, права на фото, документы товара, ККТ и фактические условия магазина нельзя проверить одной командой деплоя.
 
 ## 1. Домен и VPS
 
@@ -125,6 +127,7 @@ sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --bui
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py check --deploy
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py createsuperuser
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py audit_legal_readiness
 ```
 
 `web` сам выполняет `migrate` и `collectstatic`; отдельно эти команды при обычном запуске не нужны. `worker` постоянно проверяет запись уведомлений в PostgreSQL и повторяет неудачную отправку. При сбое SMTP заказ остаётся в БД, письмо будет повторено через 1, 2, 4… минуты, максимум раз в час. SMTP не даёт гарантии строго однократной доставки: при аварии непосредственно после отправки возможно повторное письмо с тем же номером заказа.

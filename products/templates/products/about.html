@@ -39,46 +39,46 @@
             <span class="about-fact__detail">18 января · Курск</span>
         </div>
         <div class="about-fact about-reveal" style="--reveal-delay:100ms">
-            <span class="about-fact__number">43,5 <small>млн ₽</small></span>
-            <span class="about-fact__label">выручка за 2025 год</span>
-            <span class="about-fact__detail">по данным бухгалтерской отчётности</span>
+            <span class="about-fact__number">Курск</span>
+            <span class="about-fact__label">офис и самовывоз</span>
+            <span class="about-fact__detail">адреса и контакты ниже</span>
         </div>
         <div class="about-fact about-reveal" style="--reveal-delay:200ms">
-            <span class="about-fact__number">46.73</span>
-            <span class="about-fact__label">основной код ОКВЭД</span>
-            <span class="about-fact__detail">оптовая торговля стройматериалами</span>
+            <span class="about-fact__number">Онлайн</span>
+            <span class="about-fact__label">каталог и заказ</span>
+            <span class="about-fact__detail">регистрация необязательна</span>
         </div>
     </section>
 
     <section class="about-story" aria-labelledby="about-story-title">
         <div class="about-section-heading about-reveal">
-            <p class="about-eyebrow">История компании</p>
-            <h2 id="about-story-title">Ключевые даты</h2>
-            <p>Проверяемые этапы из открытой карточки компании.</p>
+            <p class="about-eyebrow">От выбора до получения</p>
+            <h2 id="about-story-title">Как оформить заказ</h2>
+            <p>Каталог, условия покупки и контакты доступны без регистрации.</p>
         </div>
         <div class="about-timeline">
             <article class="about-milestone about-reveal" style="--reveal-delay:0ms">
-                <div class="about-milestone__date">2011</div>
+                <div class="about-milestone__date">01</div>
                 <div class="about-milestone__content">
-                    <span class="about-milestone__index">01 / Начало</span>
-                    <h3>Регистрация в Курске</h3>
-                    <p>18 января зарегистрировано ООО «СТРОЙМА». Основной вид деятельности — оптовая торговля строительными материалами.</p>
+                    <span class="about-milestone__index">01 / Выбор</span>
+                    <h3>Найдите материалы</h3>
+                    <p>Посмотрите характеристики, единицу продажи и цену в карточке. Если нужна помощь с подбором, свяжитесь с нами.</p>
                 </div>
             </article>
             <article class="about-milestone about-reveal" style="--reveal-delay:100ms">
-                <div class="about-milestone__date">2016</div>
+                <div class="about-milestone__date">02</div>
                 <div class="about-milestone__content">
-                    <span class="about-milestone__index">02 / Развитие</span>
-                    <h3>В реестре МСП</h3>
-                    <p>С 1 августа компания входит в единый реестр субъектов малого и среднего предпринимательства.</p>
+                    <span class="about-milestone__index">02 / Заказ</span>
+                    <h3>Оформите заказ</h3>
+                    <p>Добавьте товары в корзину, проверьте количество и условия продажи, укажите контакты. Номер заказа появится после отправки.</p>
                 </div>
             </article>
             <article class="about-milestone about-reveal" style="--reveal-delay:200ms">
-                <div class="about-milestone__date">2026</div>
+                <div class="about-milestone__date">03</div>
                 <div class="about-milestone__content">
-                    <span class="about-milestone__index">03 / Сегодня</span>
-                    <h3>Новый руководитель</h3>
-                    <p>С 6 февраля генеральный директор ООО «СТРОЙМА» — Светлана Николаевна Макарова.</p>
+                    <span class="about-milestone__index">03 / Получение</span>
+                    <h3>Согласуйте получение</h3>
+                    <p>Менеджер уточнит срок, доставку или самовывоз и способ расчёта. Дополнительные услуги и их стоимость согласуются отдельно.</p>
                 </div>
             </article>
         </div>
@@ -108,13 +108,14 @@
         </div>
         <div class="about-details__card about-reveal">
             <div class="about-details__grid">
-                <div class="about-details__item"><span>Наименование</span><strong>ООО «СТРОЙМА»</strong></div>
-                <div class="about-details__item"><span>Генеральный директор</span><strong>Макарова Светлана Николаевна</strong><small>с 6 февраля 2026 года</small></div>
-                <div class="about-details__item"><span>ИНН / КПП</span><strong>4632128411 / 463201001</strong></div>
-                <div class="about-details__item"><span>ОГРН / ОКПО</span><strong>1114632000339 / 68275470</strong></div>
-                <div class="about-details__item about-details__item--wide"><span>Юридический адрес</span><strong>305004, Курская область, г. Курск, ул. Ленина, д. 90/2, офис 215В</strong></div>
-                <div class="about-details__item"><span>Основной ОКВЭД</span><strong>46.73</strong><small>Оптовая торговля лесоматериалами, строительными материалами и санитарно-техническим оборудованием</small></div>
-                <div class="about-details__item"><span>Контактный телефон</span><a href="tel:+79102114041">+7 (910) 211-40-41</a></div>
+                <div class="about-details__item"><span>Наименование</span><strong>{{ company.full_name }}</strong></div>
+                <div class="about-details__item"><span>ИНН / КПП</span><strong>{{ company.inn }} / {{ company.kpp }}</strong></div>
+                <div class="about-details__item"><span>ОГРН</span><strong>{{ company.ogrn }}</strong></div>
+                <div class="about-details__item about-details__item--wide"><span>Юридический адрес</span><strong>{{ company.address }}</strong></div>
+                <div class="about-details__item"><span>Контактный телефон</span><a href="tel:{{ company.phone_link }}">{{ company.phone }}</a></div>
+                <div class="about-details__item"><span>Электронная почта</span><a href="mailto:{{ company.email }}">{{ company.email }}</a></div>
+                <div class="about-details__item"><span>Часы работы офиса</span><strong>{{ company.office_hours }}</strong></div>
+                <div class="about-details__item about-details__item--wide"><span>Самовывоз</span><strong>{{ company.warehouse }}</strong><small>Время выдачи и готовность заказа согласуйте по телефону.</small></div>
             </div>
         </div>
     </section>

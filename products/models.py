@@ -124,6 +124,13 @@ class Product(models.Model):
     published = PublishedProductManager()
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField(verbose_name='Описание')
+    manufacturer_info = models.TextField(blank=True, verbose_name='Изготовитель и его адрес',
+        help_text='Сведения из маркировки или документации изготовителя; не подставляйте адрес продавца.')
+    origin = models.CharField(max_length=255, blank=True, verbose_name='Место изготовления')
+    safety_info = models.TextField(blank=True, verbose_name='Применение, хранение и безопасность',
+        help_text='Основные правила безопасного применения и хранения, сведения об обязательном подтверждении соответствия, если применимо.')
+    warranty_info = models.TextField(blank=True, verbose_name='Гарантия, срок службы и срок годности',
+        help_text='Укажите установленные изготовителем сроки и условия. Если конкретный срок не установлен, укажите это по документации.')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', help_text='0 — цена уточняется, заказ через корзину недоступен')
     image = models.ImageField(
         upload_to='products/', verbose_name='Изображение', blank=True,
@@ -327,6 +334,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, verbose_name='Заказ')
     product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name='Товар')
     product_name = models.CharField(max_length=255, verbose_name='Название на момент заказа')
+    product_unit = models.CharField(max_length=20, default='шт', verbose_name='Единица на момент заказа')
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена на момент заказа')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
@@ -341,6 +349,7 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         if self._state.adding:
             self.product_name = self.product.name
+            self.product_unit = self.product.unit
             self.unit_price = self.product.price
         super().save(*args, **kwargs)
 

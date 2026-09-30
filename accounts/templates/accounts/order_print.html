@@ -63,6 +63,7 @@
         <header>
             <div>
                 <div class="brand">СТРОЙМА</div>
+                <p class="subtle">{{ company.full_name }}<br>ИНН {{ company.inn }} · ОГРН {{ company.ogrn }}<br>{{ company.address }}</p>
                 <h1>Заказ №{{ order.id }}</h1>
                 <div class="subtle">Оформлен {{ order.created_at|date:'d.m.Y в H:i' }}</div>
             </div>
@@ -80,7 +81,7 @@
             </section>
             <section class="detail">
                 <span class="label">Доставка</span>
-                <p>{% if order.contact and order.contact.address %}{{ order.contact.address }}{% else %}Самовывоз / не указан{% endif %}</p>
+                <p>{% if order.contact and order.contact.address %}{{ order.contact.address }}{% else %}Способ получения не указан{% endif %}</p>
             </section>
         </div>
 
@@ -101,14 +102,17 @@
                 <tr>
                     <td>{{ item.product_name }}</td>
                     <td class="number">{{ item.unit_price|floatformat:2 }} ₽</td>
-                    <td class="number">{{ item.quantity }}</td>
+                    <td class="number">{{ item.quantity }} {{ item.product_unit }}</td>
                     <td class="number">{{ item.total_price|floatformat:2 }} ₽</td>
                 </tr>
                 {% empty %}<tr><td colspan="4">В заказе нет товаров.</td></tr>{% endfor %}
             </tbody>
         </table>
-        <div class="total"><span>Итого по заказу</span><span>{{ order.total_cost|floatformat:2 }} ₽</span></div>
-        <p class="footnote">СТРОЙМА · Документ по заказу №{{ order.id }}</p>
+        <div class="total"><span>Стоимость товаров</span><span>{{ order.total_cost|floatformat:2 }} ₽</span></div>
+        <p class="footnote">Доставка и дополнительные услуги согласуются и рассчитываются отдельно. Оплата через сайт не принимается. Документ по заказу №{{ order.id }} не является кассовым чеком.</p>
+        <section class="footnote" style="font-size:12px;line-height:1.65">
+            {% include 'products/legal/returns_document.html' %}
+        </section>
     </main>
     {% if auto_print %}<script>window.addEventListener('load', function () { window.print(); });</script>{% endif %}
 </body>

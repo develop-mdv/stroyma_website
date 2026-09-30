@@ -3,10 +3,14 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from accounts.models import get_or_create_profile
+from stroyma.legal import document_version_field
 
 class OrderForm(forms.Form):
+    sales_terms = forms.BooleanField(label='Условия продажи',
+                                     error_messages={'required': 'Ознакомьтесь с условиями продажи и подтвердите их принятие.'})
+    document_version = document_version_field()
     name = forms.CharField(max_length=255, label="Имя или название организации")
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="Электронная почта")
     phone = forms.CharField(
         max_length=32,
         label="Телефон"
@@ -52,8 +56,11 @@ class SearchForm(forms.Form):
     query = forms.CharField(label='Поиск', max_length=100, required=False)
 
 class ContactForm(forms.Form):
+    consent = forms.BooleanField(label='Согласие на обработку персональных данных',
+                                 error_messages={'required': 'Подтвердите согласие на обработку данных для ответа на обращение.'})
+    document_version = document_version_field()
     name = forms.CharField(max_length=100, label="Имя")
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="Электронная почта")
     message = forms.CharField(
         widget=forms.Textarea,
         label="Сообщение",
@@ -62,6 +69,7 @@ class ContactForm(forms.Form):
 
 
 class ColorSelectionRequestForm(forms.Form):
+    document_version = document_version_field()
     name = forms.CharField(max_length=100, label='Имя')
     phone = forms.CharField(max_length=32, label='Телефон')
     email = forms.EmailField(required=False, label='Электронная почта')

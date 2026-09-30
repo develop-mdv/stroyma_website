@@ -16,6 +16,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
     path('policy/', views.policy, name='policy'),
+    path('consent/<slug:purpose>/', views.consent, name='consent'),
     path('cookies-policy/', views.cookies_policy, name='cookies_policy'),
     path('offer/', views.offer, name='offer'),
     path('delivery/', views.delivery, name='delivery'),

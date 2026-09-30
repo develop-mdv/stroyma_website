@@ -22,6 +22,7 @@ from products.forms import ColorSelectionRequestForm, OrderForm
 from products.models import BaseTexture, Order, OrderNotification, Product, ProductImage
 from products.utils import compress_image_field_if_needed
 from products.views import color_selection
+from stroyma.legal import DOCUMENT_VERSION
 
 
 def image_bytes(format='JPEG'):
@@ -101,7 +102,7 @@ class ImportTextureTests(TestCase):
 
 class ColorSelectionRequestTests(SimpleTestCase):
     def test_phone_is_normalized_and_consent_required(self):
-        data = {'name': 'Анна', 'phone': '8 (999) 123-45-67', 'consent': 'on'}
+        data = {'name': 'Анна', 'phone': '8 (999) 123-45-67', 'consent': 'on', 'document_version': DOCUMENT_VERSION}
         form = ColorSelectionRequestForm(data)
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data['phone'], '+79991234567')
@@ -109,8 +110,9 @@ class ColorSelectionRequestTests(SimpleTestCase):
         data.pop('consent')
         self.assertFalse(ColorSelectionRequestForm(data).is_valid())
 
+    @patch('products.views.record_acceptance')
     @patch('products.views.send_mail')
-    def test_selection_is_in_email(self, send_mail_mock):
+    def test_selection_is_in_email(self, send_mail_mock, acceptance_mock):
         request = RequestFactory().post('/color-selection/', {
             'name': 'Анна',
             'phone': '+79991234567',
@@ -118,7 +120,7 @@ class ColorSelectionRequestTests(SimpleTestCase):
             'message': 'Площадь 120 м²',
             'facade': 'Камешковая 1,5 мм, Sahara 1 (#F3F2DE)',
             'plinth': 'Мозаичная штукатурка, Tibet 5',
-            'consent': 'on',
+            'consent': 'on', 'document_version': DOCUMENT_VERSION,
         })
         with override_settings(ORDER_NOTIFY_EMAIL='orders@example.com'), patch(
             'products.views.render'
@@ -136,7 +138,7 @@ class ColorSelectionRequestTests(SimpleTestCase):
         request = RequestFactory().post('/color-selection/', {
             'name': 'Анна',
             'phone': 'abc',
-            'consent': 'on',
+            'consent': 'on', 'document_version': DOCUMENT_VERSION,
             'config_state': json.dumps({
                 'facadeTexture': 'koroed3',
                 'facadeColor': 'c2',
@@ -194,7 +196,7 @@ class ColorSelectionProfilePrefillTests(TestCase):
             'name': 'Другое имя',
             'email': 'other@example.com',
             'phone': 'invalid',
-            'consent': 'on',
+            'consent': 'on', 'document_version': DOCUMENT_VERSION,
         })
         self.assertEqual(response.status_code, 200)
         form = response.context['form']
@@ -210,6 +212,7 @@ class CheckoutPersistenceTests(TransactionTestCase):
             stock=2, image='products/test.webp',
         )
         self.contact = {
+            'sales_terms': 'on', 'document_version': DOCUMENT_VERSION,
             'name': 'Иван Иванов',
             'email': 'ivan@example.com', 'phone': '+79991234567',
             'address': 'Курск, Ленина, 1',

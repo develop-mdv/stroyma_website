@@ -1,12 +1,12 @@
-{% autoescape off %}
-Здравствуйте, {{ user.username }}!
-
-Спасибо за регистрацию на сайте Stroyma. Для подтверждения вашего email адреса, пожалуйста, перейдите по следующей ссылке:
-
-{{ protocol }}://{{ domain }}{% url 'confirm_email' token=token %}
-
-Если вы не регистрировались на нашем сайте, пожалуйста, проигнорируйте это письмо.
-
-С уважением,
-Команда Stroyma
-{% endautoescape %} 
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Подтверждение электронной почты — СТРОЙМА</title></head>
+<body style="font-family:Arial,sans-serif;color:#1f2937;line-height:1.6">
+<h1 style="font-size:22px">Подтвердите электронную почту</h1>
+<p>Здравствуйте, {{ user.username }}!</p>
+<p>Вы зарегистрировали личный кабинет на сайте СТРОЙМА. Чтобы подтвердить адрес электронной почты, откройте ссылку:</p>
+<p><a href="{{ protocol }}://{{ domain }}{% url 'confirm_email' token=token %}">{{ protocol }}://{{ domain }}{% url 'confirm_email' token=token %}</a></p>
+<p>Ссылка действует 72 часа. Если вы не регистрировались, проигнорируйте письмо.</p>
+<p>СТРОЙМА</p>
+</body>
+</html>

@@ -121,6 +121,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',  # Добавлен для поддержки переводов в шаблонах
                 'products.context_processors.cart_info',  # Глобальный счётчик корзины
+                'stroyma.legal.legal_context',
             ],
         },
     },
@@ -175,7 +176,7 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True  # Включено для поддержки интернационализации
 USE_L10N = True  # Включено для локализованных форматов (даты, числа и т.д.)
@@ -354,21 +355,11 @@ CONTENT_SECURITY_POLICY = {
     'DIRECTIVES': {
         'default-src': [SELF],
         'script-src': [SELF, UNSAFE_INLINE],
-        'style-src': [
-            SELF,
-            UNSAFE_INLINE,
-            'https://fonts.googleapis.com',
-            'https://cdnjs.cloudflare.com',
-        ],
-        'font-src': [SELF, 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
-        'img-src': [SELF, 'data:', 'https:'],
+        'style-src': [SELF, UNSAFE_INLINE],
+        'font-src': [SELF],
+        'img-src': [SELF, 'data:'],
         'connect-src': [SELF],
-        # Виджеты Яндекс.Карт (iframe на contact.html и др.); без frame-src падает в default-src 'self'
-        'frame-src': [
-            SELF,
-            'https://yandex.ru',
-            'https://yandex.com',
-        ],
+        'frame-src': [SELF],
         'frame-ancestors': [NONE],
         'form-action': [SELF],
         'base-uri': [SELF],

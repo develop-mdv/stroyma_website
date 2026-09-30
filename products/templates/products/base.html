@@ -14,7 +14,7 @@
     
     <!-- Динамические мета-теги -->
     <title>{% block title %}{{ meta_title|default:"СТРОЙМА - Строительные материалы" }}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России. Выгодные цены и высокое качество.' }}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка и самовывоз по согласованию. Выгодные цены и высокое качество.' }}{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}{{ keywords|default:'строительные материалы, стройматериалы, ремонт, строительство, отделочные материалы' }}{% endblock %}">
     
     <!-- Канонический URL -->
@@ -22,7 +22,7 @@
     
     <!-- Open Graph мета-теги для социальных сетей -->
     <meta property="og:title" content="{% block og_title %}{{ meta_title|default:'СТРОЙМА - Строительные материалы' }}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка по всей России.' }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка и самовывоз по согласованию.' }}{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
@@ -108,13 +108,13 @@
                         Ваш надёжный партнёр в строительных материалах. Качество и экологичность с 2011 года.
                     </p>
                     <div class="flex items-center gap-4">
-                        <a href="https://vk.com/club179330232" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="ВКонтакте">
+                        <a href="https://vk.com/club179330232" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="ВКонтакте">
                             <i class="fab fa-vk text-sm"></i>
                         </a>
-                        <a href="https://wa.me/79102114041" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="WhatsApp">
+                        <a href="https://wa.me/79102114041" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="WhatsApp">
                             <i class="fab fa-whatsapp text-sm"></i>
                         </a>
-                        <a href="mailto:mvv@stroyma.ru" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Email">
+                        <a href="mailto:mvv@stroyma.ru" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Написать письмо">
                             <i class="fas fa-envelope text-sm"></i>
                         </a>
                     </div>
@@ -146,7 +146,7 @@
                         <a href="{% url 'offer' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Публичная оферта</a>
                         <a href="{% url 'delivery' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Доставка</a>
                         <a href="{% url 'returns' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Возврат и обмен</a>
-                        <a href="{% url 'policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика конфиденциальности</a>
+                        <a href="{% url 'policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Обработка персональных данных</a>
                         <a href="{% url 'cookies_policy' %}" class="block text-sm text-gray-400 hover:text-white transition-colors">Политика cookie</a>
                     </nav>
                 </div>
@@ -231,23 +231,20 @@
                     <i class="fas fa-cookie-bite text-amber-400 text-sm"></i>
                 </div>
                 <p class="text-sm text-gray-300 font-light leading-relaxed">
-                    Мы используем cookie для улучшения работы сайта.
+                    Технические cookie нужны для корзины, входа и защиты форм.
                     <a href="{% url 'cookies_policy' %}" class="text-white underline underline-offset-2 hover:text-emerald-400 transition-colors font-medium">Подробнее</a>
                 </p>
             </div>
             <div class="flex items-center gap-3 flex-shrink-0 ml-auto">
-                <button id="cookie-settings" class="px-5 py-2.5 rounded-full border border-white/20 text-white text-[0.65rem] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
-                    Настроить
-                </button>
                 <button id="cookie-accept" class="px-5 py-2.5 rounded-full bg-white text-gray-900 text-[0.65rem] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-colors shadow-md">
-                    Принять
+                    Понятно
                 </button>
             </div>
         </div>
     </div>
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
-    <script src="{% static 'js/base.js' %}?v=3"></script>
+    <script src="{% static 'js/base.js' %}?v=4"></script>
     <script src="{% static 'js/pwa.js' %}?v=3" defer></script>
     <script src="{% static 'js/phone-input.js' %}?v=6" defer></script>
     

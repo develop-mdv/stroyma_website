@@ -5,13 +5,31 @@ from django.contrib.auth.models import Permission
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Q
-from .models import UserProfile
+from .models import LegalAcceptance, UserProfile
 from django.utils.html import format_html, format_html_join
 from django.urls import reverse
 
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
+
+
+@admin.register(LegalAcceptance)
+class LegalAcceptanceAdmin(admin.ModelAdmin):
+    list_display = ('kind', 'version', 'accepted_at', 'source_path', 'user', 'order')
+    list_filter = ('kind', 'version')
+    search_fields = ('subject', 'user__username')
+    readonly_fields = ('kind', 'version', 'document_snapshot', 'accepted_at', 'source_path',
+                       'subject', 'user', 'order')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser and super().has_delete_permission(request, obj)
 
 
 COMMON_ROLE_MODELS = (

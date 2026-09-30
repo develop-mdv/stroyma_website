@@ -1,0 +1,15 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/legal.css' %}?v=1">{% endblock %}
+{% block content %}
+<article class="legal-page">
+    <nav class="legal-breadcrumb" aria-label="Хлебные крошки"><a href="{% url 'product_list' %}">Главная</a> / {{ legal_title }}</nav>
+    <h1>{{ legal_title }}</h1>
+    <p class="legal-date">Редакция от 30 сентября 2026 года</p>
+    {% block legal_content %}{% endblock %}
+    <footer class="legal-contact">
+        <p><strong>{{ company.full_name }}</strong><br>ИНН {{ company.inn }} · ОГРН {{ company.ogrn }}<br>{{ company.address }}</p>
+        <p><a href="mailto:{{ company.email }}">{{ company.email }}</a> · <a href="tel:{{ company.phone_link }}">{{ company.phone }}</a></p>
+    </footer>
+</article>
+{% endblock %}

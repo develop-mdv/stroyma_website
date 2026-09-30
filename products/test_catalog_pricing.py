@@ -1,3 +1,4 @@
+from stroyma.legal import DOCUMENT_VERSION
 """Guard catalogue pricing and ordering of goods with no recorded stock."""
 
 from decimal import Decimal
@@ -95,7 +96,7 @@ class CatalogPricingTests(TestCase):
         session.save()
         response = self.client.post(reverse("checkout"), {
             "name": "Покупатель", "email": "buyer@example.com", "phone": "+79990000000",
-            "address": "Москва", "comment": "",
+            "address": "Москва", "comment": "", "sales_terms": "on", "document_version": DOCUMENT_VERSION,
         })
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Order.objects.count(), 0)

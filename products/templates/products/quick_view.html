@@ -19,6 +19,7 @@
             {% endif %}
 
             <div class="quick-view-price">
+                <a href="{% url 'product_detail' slug=product.slug %}" class="quick-view-read-more">Сведения о товаре и условия покупки</a>
                 <span class="quick-view-price-label">Стоимость</span>
                 {% if product.has_price %}
                 <p>{{ product.price|floatformat:"-2" }} <span>₽ / {{ product.unit }}</span></p>

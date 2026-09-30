@@ -17,7 +17,7 @@ def run():
         for i, img_path in enumerate(gallery_images):
             if os.path.exists(img_path):
                 with open(img_path, 'rb') as f:
-                    photo = ServicePhoto(service=service, title=f"Пример работы {i+1}")
+                    photo = ServicePhoto(service=service, title=f"Иллюстрация услуги {i+1}")
                     photo.image.save(f'gallery_kolirovka_{i+1}.png', File(f), save=True)
                 print(f"Добавлено фото в галерею!")
             else:

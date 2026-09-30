@@ -1,4 +1,4 @@
-const VERSION = 'stroyma-pwa-v12';
+const VERSION = 'stroyma-pwa-v13';
 const SHELL_CACHE = `${VERSION}-shell`;
 const PUBLIC_CACHE = `${VERSION}-public`;
 const MEDIA_CACHE = `${VERSION}-media`;
@@ -15,19 +15,18 @@ const SHELL_URLS = [
     '/static/vendor/fontawesome/webfonts/fa-solid-900.woff2',
     '/static/vendor/fontawesome/webfonts/fa-regular-400.woff2',
     '/static/vendor/fontawesome/webfonts/fa-brands-400.woff2',
-    '/static/js/base.js?v=3', '/static/js/pwa.js?v=3', '/static/js/phone-input.js?v=6',
+    '/static/js/base.js?v=4', '/static/js/pwa.js?v=3', '/static/js/phone-input.js?v=6',
     '/static/js/home.js?v=12', '/static/js/catalog.js?v=5',
     '/static/images/concrete_texture.jpg', '/static/images/home_materials_hero.webp',
     '/static/images/logo-ma.png?v=2'
 ];
-const EXTERNAL_ASSET_HOSTS = new Set(['cdn.jsdelivr.net']);
 
 // Only informational pages are kept for reading offline. Orders, account,
 // cart, forms and search responses must always come from the server.
 const PUBLIC_PATHS = [
     /^\/catalog\/$/, /^\/category\/[^/]+\/$/, /^\/product\/[^/]+\/$/,
     /^\/$/, /^\/services\/$/, /^\/services\/[^/]+\/$/, /^\/about\/$/, /^\/contact\/$/,
-    /^\/(?:policy|cookies-policy|offer|payment|delivery|returns)\/$/
+    /^\/(?:policy|cookies-policy|offer|delivery|returns)\/$/
 ];
 
 self.addEventListener('install', event => {
@@ -45,22 +44,7 @@ self.addEventListener('fetch', event => {
     const request = event.request;
     if (request.method !== 'GET') return;
     const url = new URL(request.url);
-    if (url.origin !== self.location.origin) {
-        if (!EXTERNAL_ASSET_HOSTS.has(url.hostname)) return;
-        event.respondWith((async () => {
-            const saved = await caches.match(request);
-            if (saved) return saved;
-            const response = await fetch(request);
-            if (response.ok || response.type === 'opaque') {
-                try {
-                    const cache = await caches.open(SHELL_CACHE);
-                    await cache.put(request, response.clone());
-                } catch (_) { /* A full cache must not hide a successful response. */ }
-            }
-            return response;
-        })());
-        return;
-    }
+    if (url.origin !== self.location.origin) return;
 
     if (request.mode === 'navigate') {
         event.respondWith((async () => {

@@ -168,6 +168,10 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
             'fields': ('price', 'stock', 'unit'),
             'description': 'Цена 0 означает «уточняется». Остаток не ограничивает оформление заказа.'
         }),
+        ('Информация для покупателя', {
+            'fields': ('manufacturer_info', 'origin', 'safety_info', 'warranty_info'),
+            'description': 'Заполните по маркировке и документации изготовителя до продажи. Не заменяйте фактические сведения общими обещаниями.'
+        }),
         ('Категории', {
             'fields': ('categories',),
             'description': 'Выберите одну или несколько категорий. Родительские категории добавятся автоматически.'

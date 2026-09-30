@@ -59,17 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Cookie consent (UI-only; используется для скрытия баннера и будущей категоризации).
+    // Информационное уведомление о технических cookie, без аналитики и рекламы.
     // Важно: обязательные cookie (sessionid/csrftoken) выставляет Django и они не зависят от согласия.
-    initCookieConsent();
+    initCookieNotice();
 });
 
-function initCookieConsent() {
+function initCookieNotice() {
     const banner = document.getElementById('cookie-notification');
     if (!banner) return;
 
     const acceptBtn = document.getElementById('cookie-accept');
-    const settingsBtn = document.getElementById('cookie-settings');
 
     const STORAGE_KEY = 'cookie_accepted';
     const accepted = (() => {
@@ -84,7 +83,7 @@ function initCookieConsent() {
         banner.classList.remove('hidden');
     }
 
-    function acceptAll() {
+    function dismissNotice() {
         try {
             window.localStorage.setItem(STORAGE_KEY, '1');
         } catch (_e) {
@@ -96,21 +95,10 @@ function initCookieConsent() {
     if (acceptBtn) {
         acceptBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            acceptAll();
+            dismissNotice();
         });
     }
 
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', function(e) {
-            // Простой и безопасный вариант: ведём на страницу политики cookie.
-            // Если появятся категории аналитики/маркетинга — сюда можно добавить модальное окно настроек.
-            e.preventDefault();
-            const link = banner.querySelector('a[href]');
-            if (link && link.getAttribute('href')) {
-                window.location.href = link.getAttribute('href');
-            }
-        });
-    }
 }
 
 // Кнопка "Наверх"

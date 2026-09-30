@@ -65,3 +65,31 @@ def get_or_create_profile(user):
     """
     profile, _created = UserProfile.objects.get_or_create(user=user)
     return profile
+
+
+class LegalAcceptance(models.Model):
+    """A document snapshot, not a marketing permission or an identity check."""
+
+    KIND_CHOICES = (
+        ('registration', 'Согласие: личный кабинет'),
+        ('contact', 'Согласие: обратная связь'),
+        ('color_selection', 'Согласие: подбор цвета'),
+        ('sale', 'Принятие условий продажи'),
+    )
+    kind = models.CharField(max_length=32, choices=KIND_CHOICES, verbose_name='Документ')
+    version = models.CharField(max_length=32, verbose_name='Редакция')
+    document_snapshot = models.TextField(verbose_name='Сохранённый текст документа')
+    accepted_at = models.DateTimeField(default=timezone.now, db_index=True, verbose_name='Дата подтверждения')
+    source_path = models.CharField(max_length=255, verbose_name='Адрес формы')
+    subject = models.CharField(max_length=254, verbose_name='Email или телефон заявителя')
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Пользователь')
+    order = models.OneToOneField('products.Order', null=True, blank=True, on_delete=models.SET_NULL,
+                                related_name='legal_acceptance', verbose_name='Заказ')
+
+    class Meta:
+        ordering = ['-accepted_at']
+        verbose_name = 'Подтверждение документа'
+        verbose_name_plural = 'Подтверждения документов'
+
+    def __str__(self):
+        return f'{self.get_kind_display()} · {self.version} · {self.pk}'

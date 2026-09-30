@@ -19,7 +19,7 @@
             </a>
             {% if order.contact.email %}
             <a href="mailto:{{ order.contact.email }}?subject=Заказ%20№{{ order.id }}" class="bg-transparent border border-gray-300 text-gray-700 py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:border-deep-green hover:text-deep-green transition-colors text-xs flex items-center group min-h-[44px]">
-                <i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Email
+                <i class="fas fa-envelope mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i> Отправить на почту
             </a>
             {% endif %}
             <button type="button" id="reorder-btn" data-reorder-url="{% url 'reorder' order_id=order.id %}" class="bg-deep-green border border-deep-green text-white py-3 px-5 md:px-6 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-colors text-xs flex items-center group relative overflow-hidden shadow-md min-h-[44px]">
@@ -63,7 +63,7 @@
                     {% if order.contact and order.contact.address %}
                         {{ order.contact.address }}
                     {% else %}
-                        Самовывоз / Не указан
+                        Не указан — способ получения уточняется
                     {% endif %}
                 </p>
             </div>
@@ -135,7 +135,7 @@
                             </td>
                             <!-- Quantity -->
                             <td data-label="Количество" class="py-6 px-2 align-middle text-center font-bold text-gray-900">
-                                {{ item.quantity }}
+                                {{ item.quantity }} {{ item.product_unit }}
                             </td>
                             <!-- Subtotal -->
                             <td data-label="Сумма" class="py-6 px-2 align-middle text-right font-bold text-gray-900 whitespace-nowrap text-lg">
@@ -154,12 +154,12 @@
         <!-- TOTALS AREA -->
         <div class="mt-10 md:mt-16 border-t border-gray-200 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
             <div class="w-full md:w-1/2 text-sm text-gray-400 font-light">
-                <p>Документ сгенерирован автоматически из Личного Кабинета СтройМА.</p>
-                <p class="mt-2 text-xs">При возникновении вопросов свяжитесь с поддержкой.</p>
+                <p>Стоимость доставки и дополнительных услуг согласуется отдельно. Оплата через сайт не принимается.</p>
+                <p class="mt-2 text-xs">Сведения о заказе не заменяют кассовый чек. Условия возврата: <a href="{% url 'returns' %}" class="underline">возврат и обмен</a>.</p>
             </div>
             
             <div class="w-full md:w-1/2 text-left md:text-right">
-                <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Общая сумма заказа</span>
+                <span class="block text-xs uppercase tracking-widest text-deep-green font-bold mb-2">Стоимость товаров</span>
                 <span class="font-black font-display text-gray-900 leading-none tracking-tighter block" style="font-size:clamp(2.25rem,7vw,4rem)">
                     {{ order.total_cost|floatformat:2 }} <span class="text-[0.6em] text-gray-300">₽</span>
                 </span>

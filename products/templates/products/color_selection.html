@@ -14,6 +14,7 @@
         <p class="color-selection-eyebrow">Визуализация фасада</p>
         <h1>Интерактивный подбор цвета фасада</h1>
         <p>Соберите отделку на 3D-модели дома: выберите фактуру и цвет фасада, мозаику цоколя и освещение. Дом можно повернуть, приблизить и сохранить как PNG.</p>
+        <p>Изображение служит ориентиром. Цвет на экране зависит от устройства и освещения; перед покупкой сверяйте оттенок и фактуру с физическим образцом материала.</p>
     </header>
 
     <div class="color-configurator-shell">
@@ -66,9 +67,12 @@
             </div>
             <label class="color-request__consent" for="requestConsent">
                 <input id="requestConsent" name="consent" type="checkbox" required {% if form.consent.value %}checked{% endif %}>
-                <span>Согласен на обработку <a href="{% url 'policy' %}" target="_blank" rel="noopener noreferrer">персональных данных</a></span>
+                <span>Даю <a href="{% url 'consent' 'color_selection' %}" target="_blank" rel="noopener noreferrer">согласие на обработку данных для подбора цвета</a></span>
             </label>
             {% if form.consent.errors %}<p class="color-request__error">{{ form.consent.errors|striptags }}</p>{% endif %}
+            {{ form.document_version }}
+            {% if form.document_version.errors %}<p class="color-request__error">{{ form.document_version.errors|striptags }}</p>{% endif %}
+            <p class="text-sm text-gray-500"><a href="{% url 'policy' %}" class="underline">Политика обработки персональных данных</a></p>
             <button class="color-request__submit" type="submit">Отправить заявку</button>
         </form>
     </section>

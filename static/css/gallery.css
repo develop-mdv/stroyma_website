@@ -1,0 +1,12 @@
+#product-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+#product-gallery .f-carousel__slide { flex-shrink: 0; scroll-snap-align: start; }
+.image-gallery-dialog { border: 0; border-radius: 20px; background: #15231c; color: #fff; padding: 56px 20px 20px; max-width: 94vw; width: 1000px; max-height: 94dvh; }
+.image-gallery-dialog::backdrop { background: #000b; }
+.image-gallery-dialog figure { margin: 0; text-align: center; }
+.image-gallery-dialog img { margin: auto; max-width: 100%; max-height: 65dvh; object-fit: contain; }
+.image-gallery-dialog figcaption { padding: 12px 0; font-size: 14px; }
+.image-gallery-dialog button { min-width: 44px; min-height: 44px; border: 1px solid #ffffff55; border-radius: 12px; color: #fff; background: transparent; font-size: 24px; cursor: pointer; }
+.image-gallery-dialog button:focus-visible { outline: 3px solid #8ed8af; outline-offset: 3px; }
+.image-gallery-close { position: absolute; right: 12px; top: 8px; }
+.image-gallery-controls { display: flex; justify-content: center; gap: 20px; }
+.image-gallery-dialog button:disabled { opacity: .3; cursor: default; }

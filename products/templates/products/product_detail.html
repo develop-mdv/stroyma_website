@@ -12,8 +12,7 @@
 {% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endif %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.css" />
+<link rel="stylesheet" href="{% static 'css/gallery.css' %}?v=1">
 <style>
     /* Слайды карусели — адаптивно через aspect-ratio */
     #product-gallery .f-carousel__slide {
@@ -108,6 +107,15 @@
                     </p>
 
                     <!-- Архитектурный разделитель -->
+                    {% if product.manufacturer_info or product.origin or product.safety_info or product.warranty_info %}
+                    <dl class="text-sm text-gray-600 space-y-4 mb-8">
+                        {% if product.manufacturer_info %}<div><dt class="font-bold text-gray-900">Изготовитель</dt><dd>{{ product.manufacturer_info|linebreaksbr }}</dd></div>{% endif %}
+                        {% if product.origin %}<div><dt class="font-bold text-gray-900">Место изготовления</dt><dd>{{ product.origin }}</dd></div>{% endif %}
+                        {% if product.safety_info %}<div><dt class="font-bold text-gray-900">Применение, хранение и безопасность</dt><dd>{{ product.safety_info|linebreaksbr }}</dd></div>{% endif %}
+                        {% if product.warranty_info %}<div><dt class="font-bold text-gray-900">Гарантия и сроки</dt><dd>{{ product.warranty_info|linebreaksbr }}</dd></div>{% endif %}
+                    </dl>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 mb-6"><a href="{% url 'delivery' %}" class="underline">Доставка и самовывоз</a> · <a href="{% url 'returns' %}" class="underline">Возврат и обмен</a> · <a href="{% url 'offer' %}" class="underline">Условия продажи</a></p>
                     <hr class="border-t-2 border-gray-900 w-24 mb-8 md:mb-12">
 
                     <!-- Блок Цены -->
@@ -181,36 +189,9 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel/carousel.umd.js"></script>
+<script src="{% static 'js/gallery.js' %}?v=1" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    if (window.Carousel) {
-        new Carousel(document.getElementById("product-gallery"), {
-            Dots: false,
-            Navigation: true,
-            breakpoints: {
-              '(min-width: 768px)': {
-                slidesPerPage: 2,
-              },
-              '(min-width: 1024px)': {
-                slidesPerPage: 3,
-              },
-            },
-        });
-    }
-
-    if (window.Fancybox) Fancybox.bind('[data-fancybox="gallery"]', {
-        Thumbs: false,
-        Toolbar: {
-            display: {
-                left: ["infobar"],
-                middle: [],
-                right: ["close"],
-            },
-        },
-    });
-    
     // Обработчики количества
     const quantityInput = document.getElementById('quantity');
     const decreaseBtn = document.getElementById('decrease-quantity');

@@ -77,8 +77,8 @@
 
                     <div class="relative group">
                         <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Email">
-                        <label for="{{ form.email.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Email <span class="text-red-500">*</span></label>
+                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Электронная почта">
+                        <label for="{{ form.email.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Электронная почта <span class="text-red-500">*</span></label>
                         {% if form.email.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.email.errors.0 }}</p>{% endif %}
                     </div>
 
@@ -113,11 +113,11 @@
                     
                     <label class="flex items-start gap-4 cursor-pointer group w-full sm:w-1/2 cursor-pointer">
                         <div class="relative flex items-center justify-center mt-1">
-                            <input type="checkbox" name="privacy_policy" required class="peer appearance-none w-6 h-6 border-2 border-gray-300 rounded bg-transparent checked:bg-deep-green checked:border-transparent transition-colors focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <input type="checkbox" name="sales_terms" required {% if form.sales_terms.value %}checked{% endif %} class="peer appearance-none w-6 h-6 border-2 border-gray-300 rounded bg-transparent checked:bg-deep-green checked:border-transparent transition-colors focus:ring-0 focus:ring-offset-0 cursor-pointer">
                             <i class="fas fa-check absolute text-white text-xs opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
                         </div>
                         <div class="flex-1 text-sm text-gray-500">
-                            Я согласен с <a href="{% url 'policy' %}" target="_blank" class="text-gray-900 font-bold underline hover:text-deep-green transition-colors">политикой конфиденциальности</a> и даю согласие на обработку данных.
+                            Принимаю <a href="{% url 'offer' %}" target="_blank" rel="noopener noreferrer" class="text-gray-900 font-bold underline hover:text-deep-green transition-colors">условия продажи</a>, включая <a href="{% url 'delivery' %}" class="underline" target="_blank" rel="noopener noreferrer">доставку</a> и <a href="{% url 'returns' %}" class="underline" target="_blank" rel="noopener noreferrer">возврат</a>.
                         </div>
                     </label>
 
@@ -127,6 +127,10 @@
                     </button>
                     
                 </div>
+                {{ form.document_version }}
+                {% if form.sales_terms.errors %}<p class="text-red-500 text-sm mt-4">{{ form.sales_terms.errors|striptags }}</p>{% endif %}
+                {% if form.document_version.errors %}<p class="text-red-500 text-sm mt-4">{{ form.document_version.errors|striptags }}</p>{% endif %}
+                <p class="text-sm text-gray-500 mt-6">Данные используются для заключения и исполнения договора по <a href="{% url 'policy' %}" class="underline">политике обработки персональных данных</a>. Оплата через сайт не принимается. В сумму входят товары; стоимость и срок доставки согласуются отдельно до оплаты и отгрузки.</p>
             </form>
         </div>
         

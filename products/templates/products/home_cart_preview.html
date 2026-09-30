@@ -14,7 +14,7 @@
         {% endfor %}
     </div>
     <div class="home-cart-delivery"><i class="fa-solid fa-truck-fast" aria-hidden="true"></i><span>Стоимость доставки уточним при оформлении</span></div>
-    <div class="home-cart-total"><span>Итого за товары</span><strong>{{ cart_preview_total|floatformat:0 }} ₽</strong></div>
+    <div class="home-cart-total"><span>Итого за товары</span><strong>{{ cart_preview_total|floatformat:-2 }} ₽</strong></div>
     <a href="{% url 'checkout' %}" class="home-cart-checkout">Оформить заказ <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
     <a href="{% url 'view_cart' %}" class="home-cart-all">Открыть корзину</a>
 {% else %}
