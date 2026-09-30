@@ -7,9 +7,9 @@
             </a>
             <div class="home-cart-item-info">
                 <a href="{% url 'product_detail' slug=item.product.slug %}">{{ item.product.name }}</a>
-                <span>{{ item.quantity }} шт. × {{ item.product.price|floatformat:0 }} ₽</span>
+                <span>{{ item.quantity }} {{ item.product.unit }} × {% if item.product.has_price %}{{ item.product.price|floatformat:-2 }} ₽{% else %}Цена уточняется{% endif %}</span>
             </div>
-            <strong>{{ item.total_price|floatformat:0 }} ₽</strong>
+            <strong>{{ item.total_price|floatformat:-2 }} ₽</strong>
         </div>
         {% endfor %}
     </div>

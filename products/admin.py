@@ -43,7 +43,7 @@ class ProductResource(resources.ModelResource):
     """Ресурс для импорта/экспорта товаров через админку"""
     class Meta:
         model = Product
-        fields = ('id', 'name', 'price', 'stock', 'rating', 'created_at')
+        fields = ('id', 'source_key', 'name', 'price', 'stock', 'unit', 'rating', 'created_at')
 
 class OrderResource(resources.ModelResource):
     """Ресурс для импорта/экспорта заказов через админку"""
@@ -137,7 +137,7 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
     resource_classes = [ProductResource]
     list_display = ('image_preview', 'name', 'formatted_price', 'stock_status', 'rating', 'created_at')
     list_filter = (CategoryFilter, 'rating', 'created_at')
-    search_fields = ('name', 'description')
+    search_fields = ('name', 'description', 'source_key')
     filter_horizontal = ('categories',)
     inlines = [ProductImageInline]
     list_display_links = ('image_preview', 'name')
@@ -145,7 +145,7 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
     readonly_fields = ('created_at', 'updated_at', 'image_preview', 'product_popularity')
     fieldsets = (
         ('Основная информация', {
-            'fields': ('name', 'slug', 'description', 'price', 'stock', 'rating', 'categories', 'product_popularity'),
+            'fields': ('name', 'slug', 'source_key', 'description', 'price', 'stock', 'unit', 'rating', 'categories', 'product_popularity'),
             'description': 'Заполните основные данные о товаре. Поле URL-имя заполнится автоматически.'
         }),
         ('Изображение', {
@@ -182,9 +182,11 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
     image_preview.short_description = 'Фото'
 
     def formatted_price(self, obj):
+        if not obj.has_price:
+            return 'Уточняется'
         return format_html(
             '<span style="font-weight:600; font-size:14px;">{} ₽</span>',
-            f'{obj.price:,.0f}'.replace(',', ' ')
+            f'{obj.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',')
         )
     formatted_price.short_description = 'Цена'
     formatted_price.admin_order_field = 'price'
@@ -193,8 +195,8 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
         if obj.stock == 0:
             return format_html('<span class="admin-stock-critical">Нет в наличии</span>')
         elif obj.stock <= 5:
-            return format_html('<span class="admin-stock-low">{} шт.</span>', obj.stock)
-        return format_html('<span class="admin-stock-ok">{} шт.</span>', obj.stock)
+            return format_html('<span class="admin-stock-low">{} {}</span>', obj.stock.normalize(), obj.unit)
+        return format_html('<span class="admin-stock-ok">{} {}</span>', obj.stock.normalize(), obj.unit)
     stock_status.short_description = 'Остаток'
     stock_status.admin_order_field = 'stock'
     

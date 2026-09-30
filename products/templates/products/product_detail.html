@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-{% load static %}
+{% load static l10n %}
 
 {% block title %}{{ product.meta_title|default:product.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block meta_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
@@ -33,29 +33,19 @@
 {
   "@context": "https://schema.org/",
   "@type": "Product",
-  "name": "{{ product.name }}",
-  "image": [
-    "{{ request.scheme }}://{{ request.get_host }}{% if product.image %}{{ product.image.url }}{% endif %}"
-    {% for image in product.images.all %}
-    ,"{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"
-    {% endfor %}
-  ],
-  "description": "{{ product.description|striptags|truncatechars:1000 }}",
-  "sku": "{{ product.id }}",
-  "mpn": "{{ product.id }}",
-  "brand": {
-    "@type": "Brand",
-    "name": "СТРОЙМА"
-  },
+  "name": "{{ product.name|escapejs }}",
+  "image": [{% if product.image %}"{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"{% endif %}{% for image in product.images.all %}{% if product.image or not forloop.first %},{% endif %}"{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"{% endfor %}],
+  "description": "{{ product.description|striptags|truncatechars:1000|escapejs }}",
+  "sku": "{{ product.source_key|default:product.id }}"{% if product.has_price %},
   "offers": {
     "@type": "Offer",
     "url": "{{ request.build_absolute_uri }}",
     "priceCurrency": "RUB",
-    "price": "{{ product.price }}",
+    "price": "{{ product.price|unlocalize }}",
     "priceValidUntil": "{% now 'Y' %}-12-31",
     "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
     "itemCondition": "https://schema.org/NewCondition"
-  }
+  }{% endif %}
   {% if product.rating %}
   ,"aggregateRating": {
     "@type": "AggregateRating",
@@ -103,7 +93,7 @@
             <div class="w-full lg:w-1/2 flex flex-col justify-center">
                 <div class="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-white rounded-[1.5rem] md:rounded-[3rem] lg:rounded-[4rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-deep-green/10">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
+                        <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="absolute inset-0 w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[2000ms] group-hover:scale-105">
                     {% else %}
                         <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100">
                             <span class="text-gray-400 font-display font-medium text-2xl tracking-widest uppercase">НЕТ ФОТО</span>
@@ -111,10 +101,10 @@
                     {% endif %}
                     
                     <!-- Бейдж Рейтинга Абсолютный сверху -->
-                    <div class="absolute top-4 md:top-8 left-4 md:left-8 bg-white/80 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 shadow-lg">
+                    {% if product.rating %}<div class="absolute top-4 md:top-8 left-4 md:left-8 bg-white/80 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 shadow-lg">
                         <span class="text-yellow-500 text-base md:text-lg">★</span>
-                        <span class="font-bold text-gray-900 text-xs md:text-sm">{{ product.rating|default:"5" }}.0</span>
-                    </div>
+                        <span class="font-bold text-gray-900 text-xs md:text-sm">{{ product.rating }}.0</span>
+                    </div>{% endif %}
                 </div>
             </div>
 
@@ -125,6 +115,7 @@
                     <h1 class="font-black text-gray-900 leading-[1.1] tracking-tight font-display mb-6 md:mb-8 uppercase break-words" style="font-size:clamp(1.75rem,5vw,4.5rem)">
                         {{ product.name }}
                     </h1>
+                    {% if product.is_illustration %}<p class="text-sm text-gray-500 -mt-4 mb-6">Изображение товара — иллюстрация</p>{% endif %}
 
                     <p class="text-base md:text-xl text-gray-500 font-light leading-relaxed max-w-2xl mb-8 md:mb-12">
                         {{ product.description|linebreaksbr }}
@@ -135,24 +126,24 @@
 
                     <!-- Блок Цены -->
                     <div class="mb-8 md:mb-12">
-                        <span class="block text-xs font-bold uppercase tracking-widest text-deep-green mb-2">Стоимость</span>
+                        <span class="block text-xs font-bold uppercase tracking-widest text-deep-green mb-2">{% if product.source_key %}Цена по прайсу (опт){% else %}Стоимость{% endif %}</span>
                         <div class="flex items-baseline gap-2 flex-wrap">
                             <span class="clamp-price font-black font-display text-gray-900 leading-none tracking-tighter">
-                                {{ product.price|floatformat:"0" }}
+                                {% if product.has_price %}{{ product.price|floatformat:"-2" }}{% else %}<span class="text-2xl">Цена уточняется</span>{% endif %}
                             </span>
-                            <span class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-400">₽</span>
+                            {% if product.has_price %}<span class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-400">₽ / {{ product.unit }}</span>{% endif %}
                         </div>
                     </div>
 
                     <!-- Форма заказа -->
-                    <form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="w-full xl:w-4/5">
+                    {% if product.has_price and product.max_order_quantity %}<form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="w-full xl:w-4/5">
                         {% csrf_token %}
                         
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 md:mb-8">
                             <!-- Элегантный выбор количества -->
                             <div class="flex items-center min-w-[160px] border-b-2 border-gray-900 pb-3">
                                 <button type="button" id="decrease-quantity" aria-label="Уменьшить количество" class="text-gray-400 hover:text-gray-900 text-2xl transition-colors flex items-center justify-start" style="min-width:44px;min-height:44px">−</button>
-                                <input type="number" name="quantity" id="quantity" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
+                                <input type="number" name="quantity" id="quantity" min="1" max="{{ product.max_order_quantity }}" value="1"
                                     class="flex-1 text-center bg-transparent text-2xl font-bold text-gray-900 border-0 p-0 focus:ring-0">
                                 <button type="button" id="increase-quantity" aria-label="Увеличить количество" class="text-gray-400 hover:text-gray-900 text-2xl transition-colors flex items-center justify-end" style="min-width:44px;min-height:44px">+</button>
                             </div>
@@ -164,18 +155,16 @@
                             </button>
                         </div>
                         
-                        <!-- Вывод наличия в минималистичном стиле -->
-                        <div class="flex items-center gap-3">
-                            {% if product.stock > 0 %}
-                                <div class="w-2 h-2 rounded-full bg-deep-green"></div>
-                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900">В наличии ({{ product.stock }})</span>
-                            {% else %}
-                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                <span class="text-xs uppercase tracking-widest font-bold text-gray-900">Ожидается поставка</span>
-                            {% endif %}
-                        </div>
-
-                    </form>
+                    </form>{% endif %}
+                    <div class="flex items-center gap-3">
+                        {% if product.stock > 0 %}
+                            <div class="w-2 h-2 rounded-full bg-deep-green"></div>
+                            <span class="text-xs uppercase tracking-widest font-bold text-gray-900">В наличии ({{ product.stock|floatformat:"-3" }} {{ product.unit }})</span>
+                        {% else %}
+                            <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                            <span class="text-xs uppercase tracking-widest font-bold text-gray-900">Ожидается поставка</span>
+                        {% endif %}
+                    </div>
 
                 </div>
             </div>
@@ -240,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const quantityInput = document.getElementById('quantity');
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
-    const maxStock = parseInt('{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}', 10);
+    const maxStock = parseInt('{{ product.max_order_quantity }}', 10);
     
     if (decreaseBtn && increaseBtn && quantityInput) {
         decreaseBtn.addEventListener('click', function() {

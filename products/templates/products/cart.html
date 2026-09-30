@@ -40,7 +40,7 @@
                         <a href="{% url 'product_detail' slug=item.product.slug %}" class="text-lg font-bold text-gray-900 hover:text-deep-green transition-colors pr-6 line-clamp-2 leading-tight">
                             {{ item.product.name }}
                         </a>
-                        <p class="text-sm text-gray-500 mt-2 mb-4 font-medium">{{ item.product.price|floatformat:2 }} руб. / шт</p>
+                        <p class="text-sm text-gray-500 mt-2 mb-4 font-medium">{% if item.product.has_price %}{{ item.product.price|floatformat:2 }} руб. / {{ item.product.unit }}{% else %}Цена уточняется{% endif %}</p>
 
                         <div class="flex items-center justify-between mt-auto gap-3 flex-wrap">
                             <!-- Управление количеством (Pill form) -->
@@ -51,7 +51,7 @@
                                         <i class="fas fa-minus text-xs"></i>
                                     </button>
 
-                                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="9999" value="{{ item.quantity }}"
+                                    <input type="number" name="quantity" id="quantity-{{ item.product.pk }}" min="1" max="{{ item.product.max_order_quantity }}" value="{{ item.quantity }}"
                                            class="w-12 text-center bg-transparent border-none focus:ring-0 focus:outline-none update-cart-quantity font-bold text-gray-900 p-0 m-0"
                                            data-product-id="{{ item.product.pk }}">
 

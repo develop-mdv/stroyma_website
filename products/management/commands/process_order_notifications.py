@@ -61,8 +61,7 @@ class Command(BaseCommand):
                     html = render_to_string('products/order_email_template.html', {
                         'items': order.items.all(),
                         'total_price': order.total_cost,
-                        'user_name': contact.first_name,
-                        'user_lastname': contact.last_name,
+                        'customer_name': contact.name,
                         'user_email': contact.email,
                         'user_phone': contact.phone,
                         'delivery_address': contact.address,

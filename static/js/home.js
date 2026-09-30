@@ -155,7 +155,7 @@
             name.textContent = product.name;
             const price = document.createElement('strong');
             price.className = 'home-suggestion-price';
-            price.textContent = `${product.price} ₽`;
+            price.textContent = product.price === "Цена уточняется" ? product.price : `${product.price} ₽ / ${product.unit || 'шт'}`;
             link.append(name, price);
             suggestions.append(link);
         });

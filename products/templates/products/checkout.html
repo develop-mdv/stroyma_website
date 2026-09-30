@@ -33,7 +33,7 @@
                         </div>
                         <div class="flex flex-col justify-center">
                             <h3 class="text-sm font-bold uppercase tracking-wide text-gray-900 mb-1 line-clamp-2">{{ item.product.name }}</h3>
-                            <span class="text-deep-green font-bold whitespace-nowrap">{{ item.product.price|floatformat:"0" }} ₽ / шт</span>
+                            <span class="text-deep-green font-bold whitespace-nowrap">{% if item.product.has_price %}{{ item.product.price|floatformat:"-2" }} ₽ / {{ item.product.unit }}{% else %}Цена уточняется{% endif %}</span>
                         </div>
                     </div>
                     {% endfor %}
@@ -44,7 +44,7 @@
                     <div class="flex items-end justify-between">
                         <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Итого по заказу</span>
                         <div class="flex items-baseline gap-2 text-right">
-                            <span class="text-4xl md:text-5xl font-black font-display tracking-tighter text-gray-900 leading-none">{{ total_price|floatformat:"0" }}</span>
+                            <span class="text-4xl md:text-5xl font-black font-display tracking-tighter text-gray-900 leading-none">{{ total_price|floatformat:"-2" }}</span>
                             <span class="text-2xl font-light text-gray-500">₽</span>
                         </div>
                     </div>
@@ -68,18 +68,11 @@
                     </div>
 
                     <!-- Инпуты -->
-                    <div class="relative group">
-                        <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Имя">
-                        <label for="{{ form.first_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Имя <span class="text-red-500">*</span></label>
-                        {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.first_name.errors.0 }}</p>{% endif %}
-                    </div>
-                    
-                    <div class="relative group">
-                        <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default_if_none:'' }}" required
-                            class="peer w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors placeholder-transparent" placeholder="Фамилия">
-                        <label for="{{ form.last_name.id_for_label }}" class="absolute left-0 -top-4 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all peer-placeholder-shown:text-lg peer-placeholder-shown:top-4 peer-placeholder-shown:font-normal peer-focus:-top-4 peer-focus:text-xs peer-focus:font-bold peer-focus:text-deep-green cursor-text">Фамилия <span class="text-red-500">*</span></label>
-                        {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.last_name.errors.0 }}</p>{% endif %}
+                    <div class="md:col-span-2 relative group">
+                        <label for="{{ form.name.id_for_label }}" class="block text-xs font-bold uppercase tracking-wide sm:tracking-widest text-gray-400 mb-2">Имя или название организации <span class="text-red-500">*</span></label>
+                        <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default_if_none:'' }}" maxlength="255" autocomplete="name" required
+                            class="w-full bg-transparent border-0 border-b-2 border-gray-300 py-4 text-xl font-medium text-gray-900 focus:border-deep-green focus:ring-0 transition-colors" placeholder="Иван Иванов или ООО «Компания»">
+                        {% if form.name.errors %}<p class="text-red-500 text-xs mt-2 absolute bottom--6">{{ form.name.errors.0 }}</p>{% endif %}
                     </div>
 
                     <div class="relative group">

@@ -18,7 +18,7 @@ from django.utils import timezone
 from PIL import Image
 
 from accounts.models import UserProfile
-from products.forms import ColorSelectionRequestForm
+from products.forms import ColorSelectionRequestForm, OrderForm
 from products.models import BaseTexture, Order, OrderNotification, Product, ProductImage
 from products.utils import compress_image_field_if_needed
 from products.views import color_selection
@@ -210,7 +210,7 @@ class CheckoutPersistenceTests(TransactionTestCase):
             stock=2, image='products/test.webp',
         )
         self.contact = {
-            'first_name': 'Иван', 'last_name': 'Иванов',
+            'name': 'Иван Иванов',
             'email': 'ivan@example.com', 'phone': '+79991234567',
             'address': 'Курск, Ленина, 1',
         }
@@ -219,6 +219,30 @@ class CheckoutPersistenceTests(TransactionTestCase):
         session = self.client.session
         session['cart'] = {str(self.product.pk): quantity}
         session.save()
+
+    def test_checkout_accepts_organization_name(self):
+        self.set_cart(1)
+        organization = 'ООО «Строительные материалы Курск»'
+        response = self.client.post('/checkout/', {**self.contact, 'name': organization})
+        self.assertRedirects(response, '/checkout/success/', fetch_redirect_response=False)
+        self.assertEqual(Order.objects.get().contact.name, organization)
+        with patch('products.management.commands.process_order_notifications.send_mail', return_value=1) as send_mail_mock:
+            call_command('process_order_notifications', stdout=StringIO())
+        self.assertIn(organization, send_mail_mock.call_args.kwargs['html_message'])
+
+    def test_checkout_requires_name(self):
+        self.set_cart(1)
+        response = self.client.post('/checkout/', {**self.contact, 'name': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('name', response.context['form'].errors)
+        self.assertFalse(Order.objects.exists())
+
+    def test_checkout_prefills_full_name_from_account(self):
+        user = User.objects.create_user(
+            username='buyer', first_name='Иван', last_name='Иванов', password='password',
+        )
+        form = OrderForm(user=user)
+        self.assertEqual(form['name'].value(), 'Иван Иванов')
 
     def test_order_keeps_price_and_name_after_catalog_change(self):
         self.set_cart(2)

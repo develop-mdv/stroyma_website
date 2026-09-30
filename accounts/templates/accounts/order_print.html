@@ -73,7 +73,7 @@
             <section class="detail">
                 <span class="label">Покупатель</span>
                 {% if order.contact %}
-                <p><strong>{{ order.contact.first_name }} {{ order.contact.last_name }}</strong></p>
+                <p><strong>{{ order.contact.name }}</strong></p>
                 <p>{{ order.contact.phone }}</p>
                 <p>{{ order.contact.email }}</p>
                 {% else %}<p>Не указан</p>{% endif %}

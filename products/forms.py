@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 from accounts.models import get_or_create_profile
 
 class OrderForm(forms.Form):
-    first_name = forms.CharField(max_length=100, label="Имя")
-    last_name = forms.CharField(max_length=100, label="Фамилия")
+    name = forms.CharField(max_length=255, label="Имя или название организации")
     email = forms.EmailField(label="Email")
     phone = forms.CharField(
         max_length=32,
@@ -24,8 +23,9 @@ class OrderForm(forms.Form):
         user = kwargs.pop('user', None)
         super(OrderForm, self).__init__(*args, **kwargs)
         if user and user.is_authenticated:
-            self.fields['first_name'].initial = user.first_name
-            self.fields['last_name'].initial = user.last_name
+            self.fields['name'].initial = ' '.join(
+                part for part in (user.first_name, user.last_name) if part
+            )
             self.fields['email'].initial = user.email
             profile = get_or_create_profile(user)
             self.fields['phone'].initial = profile.phone

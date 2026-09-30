@@ -1,0 +1,2495 @@
+{
+  "source": {
+    "stock": "Остатки на склад 2.xlsx",
+    "price": "прайс.xls",
+    "stock_date": "2026-09-29",
+    "price_type": "Опт"
+  },
+  "categories": {
+    "Строительная химия": [
+      "Жидкое стекло",
+      "Грунтовки",
+      "Герметики",
+      "Очистители",
+      "Монтажные клеи"
+    ],
+    "Гидроизоляция": [
+      "Обмазочная гидроизоляция",
+      "Гидроизоляционные ленты"
+    ],
+    "Сухие строительные смеси": [
+      "Штукатурки",
+      "Шпатлевки",
+      "Наливные полы",
+      "Пескобетон и цементные смеси",
+      "Гипс, глина и мел"
+    ],
+    "Плитка и облицовка": [
+      "Плиточные клеи",
+      "Цементные затирки",
+      "Эпоксидные затирки",
+      "Силиконовые затирки",
+      "Керамогранит"
+    ],
+    "Клеи": [
+      "Клей для обоев"
+    ],
+    "Лакокрасочные материалы": [
+      "Фасадные краски",
+      "Колеровочные пигменты"
+    ],
+    "Тепло- и пароизоляция": [
+      "Минеральная вата",
+      "Экструдированный пенополистирол",
+      "Изоляционные пленки",
+      "Подложки"
+    ],
+    "Профили и комплектующие": [
+      "Профили для гипсокартона",
+      "Подвесы",
+      "Армирующие ленты и сетки",
+      "Фасадные профили"
+    ],
+    "Фасадные материалы": [
+      "Декоративные штукатурки",
+      "Фасадные сетки"
+    ],
+    "Инженерное оборудование": [
+      "Датчики",
+      "Силиконовые патрубки",
+      "Распылители"
+    ]
+  },
+  "products": [
+    {
+      "source_key": "1abdd91d-739d-11f1-80e8-a0369f091857",
+      "stock_row": 9,
+      "price_row": 3,
+      "name": "Жидкое стекло 3 кг ДИАНА",
+      "description": "Жидкое стекло 3 кг ДИАНА. Жидкое стекло для строительных и ремонтных работ. Единица продажи: шт.",
+      "price": "280.00",
+      "stock": "25.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Жидкое стекло"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "dc8c1633-6fc3-11f1-80e8-a0369f091857",
+      "stock_row": 10,
+      "price_row": 4,
+      "name": "Штукатурка гипсовая светло-серая креп (30кг)",
+      "description": "Штукатурка гипсовая светло-серая креп (30кг). Штукатурная смесь для выравнивания поверхностей. Единица продажи: шт.",
+      "price": "325.00",
+      "stock": "21.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "",
+      "photo_url": "https://kreps.ru/i/goods/gsh-kreps-30-kg.jpg",
+      "photo_page": "https://kreps.ru/production/shtukaturka/gsh-kreps-30-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "b48d8a7b-4a87-11f0-80e0-a0369f091857",
+      "stock_row": 11,
+      "price_row": 5,
+      "name": "CL51/1,4 кг Церезит Эластичная гидроизоляционная мастика под плиточные облицовки",
+      "description": "CL51/1,4 кг Церезит Эластичная гидроизоляционная мастика под плиточные облицовки. Готовая эластичная полимерная гидроизоляция для защиты основания перед укладкой плитки во влажных помещениях. Наносится кистью, валиком или шпателем.",
+      "price": "722.00",
+      "stock": "9.000",
+      "unit": "шт",
+      "category": [
+        "Гидроизоляция",
+        "Обмазочная гидроизоляция"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/waterproofing-for-tiling",
+      "photo_url": "https://zv.market/upload/iblock/f92/yszw4gg25xe899ppmj4szg1ebhf6q3rc/tserezit_cl_51_elastichnaya_gidroizolyatsionnaya_mastika_pod_plitochnye_oblitsovki_1_4_kg.jpg",
+      "photo_page": "https://zv.market/catalog/stroitelnye-materialy/gidroizolyatsiya/zhidkie-gidroizolyatsionnye-materialy/tserezit-cl-51-elastichnaya-gidroizolyatsionnaya-mastika-pod-plitochnye-oblitsovki-1-4-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "8f548805-4a87-11f0-80e0-a0369f091857",
+      "stock_row": 12,
+      "price_row": 6,
+      "name": "CL51/5 кг Церезит Эластичная гидроизоляционная мастика под плиточные облицовки",
+      "description": "CL51/5 кг Церезит Эластичная гидроизоляционная мастика под плиточные облицовки. Готовая эластичная полимерная гидроизоляция для защиты основания перед укладкой плитки во влажных помещениях. Наносится кистью, валиком или шпателем.",
+      "price": "2335.00",
+      "stock": "5.000",
+      "unit": "шт",
+      "category": [
+        "Гидроизоляция",
+        "Обмазочная гидроизоляция"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/waterproofing-for-tiling",
+      "photo_url": "https://cdn.stroyparkdiy.ru/sites/default/files/CL_51_5kg_0.jpg",
+      "photo_page": "https://stroyparkdiy.ru/good/10904101",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "c6f98221-9f52-11f0-80e2-a0369f091857",
+      "stock_row": 13,
+      "price_row": 7,
+      "name": "UNIBAND10 Гидроизоляционная лента 10 м",
+      "description": "UNIBAND10 Гидроизоляционная лента 10 м. Эластичная лента UNIS UNIBAND 10 для герметизации примыканий, угловых и деформационных швов. Длина рулона 10 м.",
+      "price": "1320.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Гидроизоляция",
+        "Гидроизоляционные ленты"
+      ],
+      "info_source": "https://unistrom.ru/catalog/gidroizolyatsiya/gidroizolyatsionnaya-lenta-unis-uniband-10/",
+      "photo_url": "https://unistrom.ru/uploads/images/catalog/gidroizolyatsiya/uniband_10.jpg",
+      "photo_page": "https://unistrom.ru/catalog/gidroizolyatsiya/gidroizolyatsionnaya-lenta-unis-uniband-10/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "6e0b56b7-94af-11f1-80e8-a0369f091857",
+      "stock_row": 14,
+      "price_row": 8,
+      "name": "UP-18 грунт глубокого проникновения 10 л ведро",
+      "description": "UP-18 грунт глубокого проникновения 10 л ведро. Грунтовочный состав для подготовки основания. Единица продажи: шт.",
+      "price": "1165.00",
+      "stock": "4.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "",
+      "photo_url": "https://unistrom.ru/upload/iblock/e58/339tjwlum8bplm08dk6cdd4khr25owm2.jpg",
+      "photo_page": "https://unistrom.ru/catalog/grunty/up-18-grunt-kontsentrat-glubokogo-proniknoveniya/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "770e1366-78c3-11ee-80d6-a0369f091857",
+      "stock_row": 15,
+      "price_row": 9,
+      "name": "Герметик акриловый Профиль 270мл.",
+      "description": "Герметик акриловый Профиль 270мл.. Герметизирующий состав для заполнения швов и стыков. Единица продажи: шт.",
+      "price": "133.00",
+      "stock": "17.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/1546056/560x504/155150195.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/akrilovyj-germetik-profil-belyj-270-ml-122951-1546056/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "ee348f89-9f52-11f0-80e2-a0369f091857",
+      "stock_row": 16,
+      "price_row": 10,
+      "name": "Герметик силик.UNIS UN-80 белый универ.С01 300 мл",
+      "description": "Герметик силик.UNIS UN-80 белый универ.С01 300 мл. Нейтральный силиконовый герметик UNIS UN-80 для швов и стыков внутри и снаружи помещений, в том числе во влажных зонах. Фасовка 300 мл; цвет белый C01.",
+      "price": "456.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "https://unistrom.ru/catalog/zatirki-i-germetiki/unis-un-80/",
+      "photo_url": "https://unistrom.ru/upload/iblock/2e6/o79iakuxqzw4sj22alrabddwl2g032te.jpg",
+      "photo_page": "https://unistrom.ru/catalog/zatirki-i-germetiki/unis-un-80/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "08c4ff1e-9f53-11f0-80e2-a0369f091857",
+      "stock_row": 17,
+      "price_row": 11,
+      "name": "Герметик силик.UNIS UN-80 прозрачный универ.С00 300 мл",
+      "description": "Герметик силик.UNIS UN-80 прозрачный универ.С00 300 мл. Нейтральный силиконовый герметик UNIS UN-80 для швов и стыков внутри и снаружи помещений, в том числе во влажных зонах. Фасовка 300 мл; цвет прозрачный C00.",
+      "price": "456.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "https://unistrom.ru/catalog/zatirki-i-germetiki/unis-un-80/",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "9110cead-78c1-11ee-80d6-a0369f091857",
+      "stock_row": 18,
+      "price_row": 12,
+      "name": "Герметик силик.санит.белый Профиль 270мл",
+      "description": "Герметик силик.санит.белый Профиль 270мл. Герметизирующий состав для заполнения швов и стыков. Единица продажи: шт.",
+      "price": "210.00",
+      "stock": "8.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "b738b512-78c4-11ee-80d6-a0369f091857",
+      "stock_row": 19,
+      "price_row": 13,
+      "name": "Герметик СОУДАФЛЕКС 40 ФС БЕЛЫЙ 600 МЛ.",
+      "description": "Герметик СОУДАФЛЕКС 40 ФС БЕЛЫЙ 600 МЛ.. Герметизирующий состав для заполнения швов и стыков. Единица продажи: шт.",
+      "price": "550.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/1581134/2400x1600/131269748.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/poliuretanovyj-klej-germetik-soudal-soudafleks-40-fs-belyj-600-ml-146686-1581134/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "7d9df77f-78c4-11ee-80d6-a0369f091857",
+      "stock_row": 20,
+      "price_row": 14,
+      "name": "Герметик Соудафлекс 40 ФС Серый 600 мл.",
+      "description": "Герметик Соудафлекс 40 ФС Серый 600 мл.. Герметизирующий состав для заполнения швов и стыков. Единица продажи: шт.",
+      "price": "550.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Герметики"
+      ],
+      "info_source": "",
+      "photo_url": "https://snab.tv/upload/iblock/b30/b30f98ab1cd44389372d708cb62b2a75.png",
+      "photo_page": "https://snab.tv/catalog/02_otdelochnye_materialy/lakokrasochnye_materialy_stroyzakazchik/germetiki/germetik_soudal_soudafleks_40_fs_seryy_12_600_ml_134715_/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "745908cb-1a09-11ed-80d4-a0369f091857",
+      "stock_row": 21,
+      "price_row": 15,
+      "name": "Гидроизоляция Ceresit CR65/20кг",
+      "description": "Гидроизоляция Ceresit CR65/20кг. Цементная обмазочная гидроизоляция для недеформирующихся минеральных оснований. Применяется внутри и снаружи зданий, в том числе под плиточную облицовку.",
+      "price": "1395.00",
+      "stock": "4.000",
+      "unit": "шт",
+      "category": [
+        "Гидроизоляция",
+        "Обмазочная гидроизоляция"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/waterproofing/waterproofing-materials/cr_65_waterproof",
+      "photo_url": "https://vashdom24.ru/upload/p_img/product/big/00565801.jpg",
+      "photo_page": "https://vashdom24.ru/catalog/gidroizolyatsiya/gidroizolyatsiya_ceresit_cr65_waterproof_20kg_54sht/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "aeb1e3df-f83c-11ef-80de-a0369f091857",
+      "stock_row": 22,
+      "price_row": 16,
+      "name": "Гидроизоляция Ceresit CR65/5кг",
+      "description": "Гидроизоляция Ceresit CR65/5кг. Цементная обмазочная гидроизоляция для недеформирующихся минеральных оснований. Применяется внутри и снаружи зданий, в том числе под плиточную облицовку.",
+      "price": "402.00",
+      "stock": "6.000",
+      "unit": "шт",
+      "category": [
+        "Гидроизоляция",
+        "Обмазочная гидроизоляция"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/waterproofing/waterproofing-materials/cr_65_waterproof",
+      "photo_url": "https://vashdom24.ru/upload/p_img/product/big/00102602_2.jpg",
+      "photo_page": "https://vashdom24.ru/catalog/gidroizolyatsiya/gidroizolyatsiya_ceresit_cr65_waterproof_5kg_4_144/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "a6245fe4-adcc-11f1-80e9-a0369f091857",
+      "stock_row": 23,
+      "price_row": 17,
+      "name": "Гипс строительный Г-5, 1 кг (30)",
+      "description": "Гипс строительный Г-5, 1 кг (30). Минеральный материал для строительных и отделочных работ. Единица продажи: шт.",
+      "price": "40.00",
+      "stock": "20.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Гипс, глина и мел"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "3dd930cc-adcc-11f1-80e9-a0369f091857",
+      "stock_row": 24,
+      "price_row": 18,
+      "name": "Гипс строительный Г-5, 2 кг (15)",
+      "description": "Гипс строительный Г-5, 2 кг (15). Минеральный материал для строительных и отделочных работ. Единица продажи: шт.",
+      "price": "60.00",
+      "stock": "60.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Гипс, глина и мел"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "358a75e6-739d-11f1-80e8-a0369f091857",
+      "stock_row": 25,
+      "price_row": 19,
+      "name": "Глина шамотная (огнеупорная) 5кг \"Диана\"",
+      "description": "Глина шамотная (огнеупорная) 5кг \"Диана\". Минеральный материал для строительных и отделочных работ. Единица продажи: шт.",
+      "price": "152.00",
+      "stock": "20.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Гипс, глина и мел"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "86fc382f-3e70-11e9-9cbb-3052cb7d9fde",
+      "stock_row": 26,
+      "price_row": 20,
+      "name": "Грунт Ceresit СТ 17 10л",
+      "description": "Грунт Ceresit СТ 17 10л. Грунтовка Ceresit CT 17 глубокого проникновения для укрепления и обеспыливания впитывающих оснований перед последующими отделочными работами.",
+      "price": "1170.00",
+      "stock": "72.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/primers",
+      "photo_url": "https://optostroy.com/files/products/gruntovka_cerezit_ct_17_optostroy_1.800x600.jpg",
+      "photo_page": "https://optostroy.com/products/gruntovka-tserezit-st-17-10l-glubokogo-proniknoveniya/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "81242bbb-1f9a-11ec-80d0-a0369f091857",
+      "stock_row": 27,
+      "price_row": 21,
+      "name": "Грунт CT 16/10 п/тонк штукат белый Ceresit Россия",
+      "description": "Грунт CT 16/10 п/тонк штукат белый Ceresit Россия. Грунтовка Ceresit для подготовки основания перед нанесением отделочных материалов. Модель и фасовка указаны в названии.",
+      "price": "2112.00",
+      "stock": "13.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/primers",
+      "photo_url": "https://banapal.ru/image/cache/catalog/product_9713_1_image-500x500.jpg",
+      "photo_page": "https://banapal.ru/grunt-dlya-vnutrennih-i-naruzhnyh-rabot-ceresit-ct-16-quartz-contact-belyj-10-l-792200/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "021eeb86-f386-11eb-80d0-a0369f091857",
+      "stock_row": 28,
+      "price_row": 22,
+      "name": "Грунт CT 17 PRO 5л Россия",
+      "description": "Грунт CT 17 PRO 5л Россия. Грунтовка Ceresit CT 17 глубокого проникновения для укрепления и обеспыливания впитывающих оснований перед последующими отделочными работами.",
+      "price": "630.00",
+      "stock": "10.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/primers",
+      "photo_url": "https://www.edkm.ru/image/cache/catalog/1001-28151-1200x800.jpg",
+      "photo_page": "https://www.edkm.ru/ceresit-ct-17-pro-cerezit-st-17-grunt-universalnyj-glubokogo-proniknoveniya-5-l/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "20881289-2938-11ed-80d4-a0369f091857",
+      "stock_row": 29,
+      "price_row": 23,
+      "name": "Грунтовка БЕТОНКОНТАКТ CT 19/3кг Ceresit Россия",
+      "description": "Грунтовка БЕТОНКОНТАКТ CT 19/3кг Ceresit Россия. Адгезионная грунтовка «Бетонконтакт» с кварцевым наполнителем для гладких бетонных оснований перед нанесением штукатурки или плиточного клея. Фасовка 3 кг.",
+      "price": "555.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "https://www.vseinstrumenti.ru/product/gruntovka-betonkontakt-ceresit-ct-19-3-rossiya-2473931-2392762/",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "4fbf879b-f386-11eb-80d0-a0369f091857",
+      "stock_row": 30,
+      "price_row": 24,
+      "name": "Грунтовка БЕТОНКОНТАКТ CT 19/5 Ceresit Россия",
+      "description": "Грунтовка БЕТОНКОНТАКТ CT 19/5 Ceresit Россия. Грунтовка Ceresit для подготовки основания перед нанесением отделочных материалов. Модель и фасовка указаны в названии.",
+      "price": "775.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Грунтовки"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/primers",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/otdelochnye-materialy/1011037/560x504/197801895.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/gruntovka-betonkontakt-ceresit-ct-19-5-kg-1-120-23681-1011037/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-31",
+      "stock_row": 31,
+      "price_row": null,
+      "name": "Датчик давления ПД100-ДИ0,4-171-0,5",
+      "description": "Датчик давления ПД100-ДИ0,4-171-0,5. Измерительный датчик. Точная модель указана в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Датчики"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "0a4c9ca4-739d-11f1-80e8-a0369f091857",
+      "stock_row": 32,
+      "price_row": 25,
+      "name": "Жидкое стекло 1,2 кг ДИАНА (10)",
+      "description": "Жидкое стекло 1,2 кг ДИАНА (10). Жидкое стекло для строительных и ремонтных работ. Единица продажи: шт.",
+      "price": "94.00",
+      "stock": "7.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Жидкое стекло"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "b855a6fc-3583-11ec-80d0-a0369f091857",
+      "stock_row": 33,
+      "price_row": 26,
+      "name": "Затирка для стыков (роса) Силикон. CS 25",
+      "description": "Затирка для стыков (роса) Силикон. CS 25. Силиконовая затирка-герметик для облицовочных швов. Единица продажи: шт.",
+      "price": "450.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Силиконовые затирки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "c89bfbfb-83e7-11f0-80e1-a0369f091857",
+      "stock_row": 34,
+      "price_row": 27,
+      "name": "Затирка для швов Ceresit CE 89/2,5кг Серый 807",
+      "description": "Затирка для швов Ceresit CE 89/2,5кг Серый 807. Двухкомпонентная эпоксидная затирка для облицовочных швов. Цвет: серый 807; фасовка 2,5 кг.",
+      "price": "4480.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Эпоксидные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "e759b5b0-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 35,
+      "price_row": 28,
+      "name": "Затирка для швов Ceresit CE33/2кг Багама беж 43",
+      "description": "Затирка для швов Ceresit CE33/2кг Багама беж 43. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "313.00",
+      "stock": "38.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://nsk-stroy.com/upload/iblock/3e8/y0ps1088g2864v90ohc06fz1dzdhysne.jpg",
+      "photo_page": "https://nsk-stroy.com/catalog/stroitelnye-materialy/sukhie-smesi/zatirki/tserezit-ce33-s-zatirka-43-bagamy-bezhevyy-do-6mm-2kg-12-432-up-pal/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "ab56b897-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 36,
+      "price_row": 29,
+      "name": "Затирка для швов Ceresit CE33/2кг Розовый 34",
+      "description": "Затирка для швов Ceresit CE33/2кг Розовый 34. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "302.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://stroydwor.ru/images/product/3569/3569_1667398781-4725735.webp",
+      "photo_page": "https://stroydwor.ru/zatirka-dlya-shvov-plitki/zatirka-cementnaya-ceresit-ce-33-34-rozovyj-2-kg",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "0684e391-f385-11eb-80d0-a0369f091857",
+      "stock_row": 37,
+      "price_row": 30,
+      "name": "Затирка для швов Ceresit CE33/2кг Сиена 47",
+      "description": "Затирка для швов Ceresit CE33/2кг Сиена 47. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "357.00",
+      "stock": "11.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "0ebc684f-f384-11eb-80d0-a0369f091857",
+      "stock_row": 38,
+      "price_row": 31,
+      "name": "Затирка для швов Ceresit CE33/2кг Антрацит 13",
+      "description": "Затирка для швов Ceresit CE33/2кг Антрацит 13. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "313.00",
+      "stock": "37.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://www.albia.ru/wa-data/public/shop/products/00/webp/01/49/4901/images/153591/153591.750x0.webp",
+      "photo_page": "https://www.albia.ru/sukhiye-stroitelnyye-smesi/zatirki/zatirka-cementnaya-ceresit-ce-33-Comfort-N13-antracit-2-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "f3ba7b5f-f37f-11eb-80d0-a0369f091857",
+      "stock_row": 39,
+      "price_row": 32,
+      "name": "Затирка для швов Ceresit CE33/2кг Белый 01",
+      "description": "Затирка для швов Ceresit CE33/2кг Белый 01. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "275.00",
+      "stock": "44.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://stroydwor.ru/images/product/3519/3519_1667396536-3168596.webp",
+      "photo_page": "https://stroydwor.ru/zatirka-dlya-shvov-plitki/zatirka-cementnaya-ceresit-ce-33-01-belaya-2-kg",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "e4d9ecda-f384-11eb-80d0-a0369f091857",
+      "stock_row": 40,
+      "price_row": 33,
+      "name": "Затирка для швов Ceresit CE33/2кг Графит 16",
+      "description": "Затирка для швов Ceresit CE33/2кг Графит 16. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "357.00",
+      "stock": "36.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://i.siteapi.org/7zgccHSp3DByH0y1G0bvDmhNHSw%3D/fit-in/400x/center/top/filters%3Afill%28transparent%29%3Aformat%28png%29%3Awatermark%28s.siteapi.org/d58c15bf510a364.ru/watermark/54bpbxchqtooccwg80swsk4kookko8%2C-1%2C-1%2C0%2C15%2Cnone%29/d58c15bf510a364.ru.s.siteapi.org/img/c0cx6t10sbkkwk80kw4044cos84w0s",
+      "photo_page": "https://1marysia.ru/products/40723278",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "7a85001d-f384-11eb-80d0-a0369f091857",
+      "stock_row": 41,
+      "price_row": 34,
+      "name": "Затирка для швов Ceresit CE33/2кг Какао 52",
+      "description": "Затирка для швов Ceresit CE33/2кг Какао 52. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "314.00",
+      "stock": "17.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://banapal.ru/image/cache/catalog/product_9782_0_image-500x500.jpg",
+      "photo_page": "https://banapal.ru/zatirka-dlya-uzkih-shvov-do-6-mm-ceresit-se-33-comfort-52-kakao-2-kg-2092533/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "dbb2db08-f383-11eb-80d0-a0369f091857",
+      "stock_row": 42,
+      "price_row": 35,
+      "name": "Затирка для швов Ceresit CE33/2кг Кирпичный 49",
+      "description": "Затирка для швов Ceresit CE33/2кг Кирпичный 49. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "357.00",
+      "stock": "13.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://cdn.dedeman.ro/media/catalog/product/5/0/5002560.jpg?canvas=%3A&fit=bounds&height=&optimize=low&width=",
+      "photo_page": "https://www.dedeman.ro/ro/chit-de-rosturi-gresie-si-faianta-ceresit-ce-33-caramiziu-clinker-interior-2-kg/p/5002560",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "937b7469-f383-11eb-80d0-a0369f091857",
+      "stock_row": 43,
+      "price_row": 36,
+      "name": "Затирка для швов Ceresit CE33/2кг Крокус 79",
+      "description": "Затирка для швов Ceresit CE33/2кг Крокус 79. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "265.00",
+      "stock": "14.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "b9d1206e-f383-11eb-80d0-a0369f091857",
+      "stock_row": 44,
+      "price_row": 37,
+      "name": "Затирка для швов Ceresit CE33/2кг Манхеттен 10",
+      "description": "Затирка для швов Ceresit CE33/2кг Манхеттен 10. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "312.00",
+      "stock": "18.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://cs.p-static.ru/image/53641191/original-600x600-fit.jpg",
+      "photo_page": "https://moscow.petrovich.ru/product/102839/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "c3360a8f-f384-11eb-80d0-a0369f091857",
+      "stock_row": 45,
+      "price_row": 38,
+      "name": "Затирка для швов Ceresit CE33/2кг Светло коричневый 55",
+      "description": "Затирка для швов Ceresit CE33/2кг Светло коричневый 55. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "357.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "2598a835-0647-11ec-80d0-a0369f091857",
+      "stock_row": 46,
+      "price_row": 39,
+      "name": "Затирка для швов Ceresit CE33/2кг Серебристо-серый 04",
+      "description": "Затирка для швов Ceresit CE33/2кг Серебристо-серый 04. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "312.00",
+      "stock": "48.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://vimos.ru/u/shop/238/orig/23812918_7826ab8add88147c6317bdb7e916c105d811ac0ecba95e3e86aa14305b1f414c.jpg",
+      "photo_page": "https://vimos.ru/product/zatirka-ceresit-se33-2-2-5mm-n04-serebr-seryy-2kg",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "ab971eb4-f381-11eb-80d0-a0369f091857",
+      "stock_row": 47,
+      "price_row": 40,
+      "name": "Затирка для швов Ceresit CE33/2кг Серый 07",
+      "description": "Затирка для швов Ceresit CE33/2кг Серый 07. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "275.00",
+      "stock": "47.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "https://stroydwor.ru/images/product/3563/3563_1667396989-5748394.webp",
+      "photo_page": "https://stroydwor.ru/zatirka-dlya-shvov-plitki/zatirka-cementnaya-ceresit-ce-33-07-seryj-2-kg",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "5f89e6f6-f384-11eb-80d0-a0369f091857",
+      "stock_row": 48,
+      "price_row": 41,
+      "name": "Затирка для швов Ceresit CE33/2кг Тёмно-коричневый 58",
+      "description": "Затирка для швов Ceresit CE33/2кг Тёмно-коричневый 58. Цементная затирка Ceresit CE 33 для узких межплиточных швов шириной до 6 мм. Цвет и фасовка указаны в названии; перед покупкой сверьте номер оттенка.",
+      "price": "465.00",
+      "stock": "2.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "49838e6a-c17f-11ec-80d1-a0369f091857",
+      "stock_row": 49,
+      "price_row": 42,
+      "name": "Затирка для швов Ceresit CE40/2кг Антрацит 13",
+      "description": "Затирка для швов Ceresit CE40/2кг Антрацит 13. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://www.materik-m.ru/upload/iblock/75e/75e52a8cce55005ea19448afd36a8634.jpg",
+      "photo_page": "https://www.materik-m.ru/shop/00-00015941/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "bea8e595-ac17-11ec-80d1-a0369f091857",
+      "stock_row": 50,
+      "price_row": 43,
+      "name": "Затирка для швов Ceresit CE40/2кг Багама беж 43",
+      "description": "Затирка для швов Ceresit CE40/2кг Багама беж 43. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "22.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cdn.lemanapro.ru/lmru/image/upload/v1727273971/lmcode/bmbd5asD_EqfEY7334M-iw/12778303_inf_03.webp",
+      "photo_page": "https://www.kabinka.kz/catalog-l/zatirki-tsementnye-dlya-plitki/zatirka-tsementnaya-tserezit-ce-40-vodoottalkivayushchaya-tsvet-bagama-bezh-2-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "9e14896d-0be1-11ed-80d3-a0369f091857",
+      "stock_row": 51,
+      "price_row": 44,
+      "name": "Затирка для швов Ceresit CE40/2кг Белый мрамор 03",
+      "description": "Затирка для швов Ceresit CE40/2кг Белый мрамор 03. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "28.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://znakooo.ru/upload/iblock/4cf/4cf89cf5d4e101f511bf09e6dd76871d.jpg",
+      "photo_page": "https://znakooo.ru/catalog/stroymaterialy/stroitelnye_smesi/zatirki/zatirka_belyy_mramor_03_se40/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "43cd60d1-15f1-11f0-80de-a0369f091857",
+      "stock_row": 52,
+      "price_row": 45,
+      "name": "Затирка для швов Ceresit CE40/2кг Графит 16",
+      "description": "Затирка для швов Ceresit CE40/2кг Графит 16. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "580.00",
+      "stock": "17.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://www.albia.ru/wa-data/public/shop/products/00/webp/37/49/4937/images/141456/141456.970.webp",
+      "photo_page": "https://www.albia.ru/sukhiye-stroitelnyye-smesi/zatirki/zatirka-cementnaya-ceresit-ce-40-aquastatic-N16-grafir-2-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "b2a5964b-0076-11ee-80d5-a0369f091857",
+      "stock_row": 53,
+      "price_row": 46,
+      "name": "Затирка для швов Ceresit CE40/2кг Жасмин 40",
+      "description": "Затирка для швов Ceresit CE40/2кг Жасмин 40. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "9.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://stroykaskad.ru/wa-data/public/shop/products/84/10/1084/images/1288/1288.970.jpg",
+      "photo_page": "https://stroykaskad.ru/zatirka-tsementnaya-cerezit-ce-40-aquastatic-40-zhasmin-2-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-54",
+      "stock_row": 54,
+      "price_row": null,
+      "name": "Затирка для швов Ceresit CE40/2кг Какао 52",
+      "description": "Затирка для швов Ceresit CE40/2кг Какао 52. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/1241054/1000x1000/179180753.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/zatirka-ceresit-aquastatic-se-40-kakao-52-vedro-2-kg-1-12-21203-1241054/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "e9ac3266-b02b-11f1-80e9-a0369f091857",
+      "stock_row": 55,
+      "price_row": 47,
+      "name": "Затирка для швов Ceresit CE40/2кг Карамель 46",
+      "description": "Затирка для швов Ceresit CE40/2кг Карамель 46. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cs.petrovich.ru/image/28456593/original.jpg",
+      "photo_page": "https://petrovich.ru/product/102872/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "8bb98736-ac18-11ec-80d1-a0369f091857",
+      "stock_row": 56,
+      "price_row": 48,
+      "name": "Затирка для швов Ceresit CE40/2кг Манхеттен 10",
+      "description": "Затирка для швов Ceresit CE40/2кг Манхеттен 10. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "480.00",
+      "stock": "31.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://stroykaskad.ru/wa-data/public/shop/products/00/webp/90/10/1090/images/1302/1302.440.webp",
+      "photo_page": "https://stroykaskad.ru/zatirka-tsementnaya-cerezit-ce-40-aquastatic-10-mankhetten-2-kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "737d4a9b-a72e-11ef-80de-a0369f091857",
+      "stock_row": 57,
+      "price_row": 49,
+      "name": "Затирка для швов Ceresit CE40/2кг оливковый 73",
+      "description": "Затирка для швов Ceresit CE40/2кг оливковый 73. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "625.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/14357123/560x504/167425247.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/zatirka-dlya-shvov-tserezit-ce-40-2-1-10-mm-olivkovyj-73-er-00001195-14357123/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "3de28cfc-b9c9-11ed-80d5-a0369f091857",
+      "stock_row": 58,
+      "price_row": 50,
+      "name": "Затирка для швов Ceresit CE40/2кг Серебристо-серый 04",
+      "description": "Затирка для швов Ceresit CE40/2кг Серебристо-серый 04. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "520.00",
+      "stock": "26.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/1242044/560x504/179180831.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/zatirka-ceresit-aquastatic-se-40-serebristo-seraya-04-vedro-2-kg-1-12-21202-1242044/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "5a1ef041-ac18-11ec-80d1-a0369f091857",
+      "stock_row": 59,
+      "price_row": 51,
+      "name": "Затирка для швов Ceresit CE40/2кг Серый 07",
+      "description": "Затирка для швов Ceresit CE40/2кг Серый 07. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "495.00",
+      "stock": "24.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://km-sc.ru/2320-thickbox_default/zatirka-ceresit-ce-40-seraya-07-2-kg.jpg",
+      "photo_page": "https://km-sc.ru/zatirki/355-zatirka-ceresit-ce-40-seraya-07-2-kg.html",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "a1193e90-f77c-11f0-80e2-a0369f091857",
+      "stock_row": 60,
+      "price_row": 52,
+      "name": "Затирка для швов Ceresit CE40/2кг Тёмно-коричневый 58",
+      "description": "Затирка для швов Ceresit CE40/2кг Тёмно-коричневый 58. Эластичная водоотталкивающая затирка Ceresit CE 40 для межплиточных швов шириной до 10 мм. Подходит для стен и полов, в том числе с подогревом. Цвет и фасовка указаны в названии.",
+      "price": "558.00",
+      "stock": "2.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Цементные затирки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/tiling/grouts-and-sealants/ce_40_aquastatic",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/1243080/1000x1000/179177699.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/zatirka-ceresit-58-aquastatic-se-40-temno-korichnevaya-2-kg-1-12-18534-1243080/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "5916bb8a-38b5-11ed-80d4-a0369f091857",
+      "stock_row": 61,
+      "price_row": 53,
+      "name": "ИЗОМИН ThermoWool Оптима -1200.600.50 ТУ23.99.19-006-58256885-2019",
+      "description": "ИЗОМИН ThermoWool Оптима -1200.600.50 ТУ23.99.19-006-58256885-2019. Минераловатный теплоизоляционный материал. Размеры и площадь упаковки указаны в названии. Единица продажи: шт.",
+      "price": "1280.00",
+      "stock": "106.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Минеральная вата"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "3c08ae3e-38b5-11ed-80d4-a0369f091857",
+      "stock_row": 62,
+      "price_row": 54,
+      "name": "ИЗОМИН ThermoWool Стандарт -1200.600.100 ТУ23.99.19-006-58256885-2019",
+      "description": "ИЗОМИН ThermoWool Стандарт -1200.600.100 ТУ23.99.19-006-58256885-2019. Минераловатный теплоизоляционный материал. Размеры и площадь упаковки указаны в названии. Единица продажи: упак.",
+      "price": "815.00",
+      "stock": "52.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Минеральная вата"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "1c978994-38b5-11ed-80d4-a0369f091857",
+      "stock_row": 63,
+      "price_row": 55,
+      "name": "ИЗОМИН ThermoWool Стандарт -1200.600.50 ТУ23.99.19-006-58256885-2019",
+      "description": "ИЗОМИН ThermoWool Стандарт -1200.600.50 ТУ23.99.19-006-58256885-2019. Минераловатный теплоизоляционный материал. Размеры и площадь упаковки указаны в названии. Единица продажи: упак.",
+      "price": "870.00",
+      "stock": "125.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Минеральная вата"
+      ],
+      "info_source": "",
+      "photo_url": "https://zv.market/upload/iblock/ad4/0ebgcho3u247fzjh33oabg8u7a1a3j4l/81.jpg",
+      "photo_page": "https://zv.market/catalog/stroitelnye-materialy/teploizolyatsiya/bazaltovyy-uteplitel/uteplitel-izomin-thermowool-standart-32-kg-m3-1200kh600kh50-mm-5-76-kv-m/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "cddee752-8716-11ef-80de-a0369f091857",
+      "stock_row": 64,
+      "price_row": 56,
+      "name": "Керамогранит неглазуров. МУТРОПОЛИС КАЛАКАТТА ГОЛД 60*120 (1,44 м2)",
+      "description": "Керамогранит неглазуров. МУТРОПОЛИС КАЛАКАТТА ГОЛД 60*120 (1,44 м2). Керамогранит для облицовки. Формат и площадь указаны в названии. Единица продажи: м².",
+      "price": "4008.00",
+      "stock": "17.250",
+      "unit": "м²",
+      "category": [
+        "Плитка и облицовка",
+        "Керамогранит"
+      ],
+      "info_source": "",
+      "photo_url": "https://otdelkino.ru/upload/iblock/1ae/oyhi8sxpmtaedx0jtf5z1goookrypx6j.webp",
+      "photo_page": "https://otdelkino.ru/kerama/product/keramogranit-italon-metropolis-610010002347-kalakatta-gold-60x120/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "d367221c-5376-11f1-80e5-a0369f091857",
+      "stock_row": 65,
+      "price_row": 57,
+      "name": "Клей Titan Wild винил 200 гр (м.пакет)",
+      "description": "Клей Titan Wild винил 200 гр (м.пакет). Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "125.00",
+      "stock": "26.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://divino-d.com/uploads/product/34400/34472/TWvin-200mp_1sht_slayd-1_oblojka_1200h1600_OZON.jpg",
+      "photo_page": "https://divino-d.com/titan-wild/kley-titan-wild-oboynyy-vinil-paketik-200-bi",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "9cc8d1e9-5376-11f1-80e5-a0369f091857",
+      "stock_row": 66,
+      "price_row": 58,
+      "name": "Клей Titan Wild универсал 200 гр (м.пакет)",
+      "description": "Клей Titan Wild универсал 200 гр (м.пакет). Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "120.00",
+      "stock": "52.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/5039136/1000x1000/64936860.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/universalnyj-obojnyj-klej-titan-wild-b-i-200-gr-twuni-200-5039136/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "15283417-537a-11f1-80e5-a0369f091857",
+      "stock_row": 67,
+      "price_row": 59,
+      "name": "Клей Titan Wild универсал 200 гр картон",
+      "description": "Клей Titan Wild универсал 200 гр картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "150.00",
+      "stock": "26.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnaya-himiya/5039136/1000x1000/64936860.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/universalnyj-obojnyj-klej-titan-wild-b-i-200-gr-twuni-200-5039136/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-68",
+      "stock_row": 68,
+      "price_row": null,
+      "name": "Клей Titan Wild флиз 200 гр (м.пакет)",
+      "description": "Клей Titan Wild флиз 200 гр (м.пакет). Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://divino-d.com/uploads/product/34400/34474/TWfliz-200mp_1sht_slayd-1_oblojka_1200h1600_OZON.jpg",
+      "photo_page": "https://divino-d.com/titan-wild/kley-titan-wild-oboynyy-flizelin-paketik-200-bi",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-69",
+      "stock_row": 69,
+      "price_row": null,
+      "name": "Клей Titan Wild флиз 250 гр картон",
+      "description": "Клей Titan Wild флиз 250 гр картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://divino-d.com/uploads/product/31900/31989/a0479ebcadbc11e7a22b1866da87aa23_a2015c084a1811e9a2881866da87aa23.png",
+      "photo_page": "https://divino-d.com/titan-wild/oboynyy-kley/titan-wild-oboynyy-fliz-250-b-i-250-gr",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-70",
+      "stock_row": 70,
+      "price_row": null,
+      "name": "Клей Titan Wild флиз 350 гр картон",
+      "description": "Клей Titan Wild флиз 350 гр картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://divino-d.com/uploads/product/36600/36695/TWF-350-Titan-Wild-oboynyy-fliz-350-bi_2.png",
+      "photo_page": "https://divino-d.com/titan-wild/oboynyy-kley/titan-wild-oboynyy-kleytitan-wild-oboynyy-flizelin-350-b-i-350-gr",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "7e605a7f-70b3-11e9-b6aa-704d7b2c531e",
+      "stock_row": 71,
+      "price_row": 60,
+      "name": "Клей д/плитки UNIS 2000 (25 кг)",
+      "description": "Клей д/плитки UNIS 2000 (25 кг). Сухой плиточный клей для облицовочных работ. Используйте для оснований и форматов плитки, указанных производителем на упаковке.",
+      "price": "460.00",
+      "stock": "54.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Плиточные клеи"
+      ],
+      "info_source": "",
+      "photo_url": "https://famarket.ru/UserFiles/Image/img1532_83531_big.png",
+      "photo_page": "https://famarket.ru/id/plitochnyy-kley-unis-2000-unis-25kg-1532.html",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "abe1ba46-9db9-11eb-80cf-a0369f091857",
+      "stock_row": 72,
+      "price_row": 61,
+      "name": "Клей д/плитки UNIS 2000 (5 кг)",
+      "description": "Клей д/плитки UNIS 2000 (5 кг). Сухой плиточный клей для облицовочных работ. Используйте для оснований и форматов плитки, указанных производителем на упаковке.",
+      "price": "280.00",
+      "stock": "46.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Плиточные клеи"
+      ],
+      "info_source": "",
+      "photo_url": "https://epkrt.ru/storage/import/from_1c/import_files/ca/cabf0009-2749-11e8-80be-0cc47ad9b29b_b27b9841-8f6e-11ea-80d7-ac1f6b480403.jpeg",
+      "photo_page": "https://epkrt.ru/product/yunis-2000-kley-plitochnyy-5-kg-144-chernyy",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "00e60d79-5374-11f1-80e5-a0369f091857",
+      "stock_row": 73,
+      "price_row": 62,
+      "name": "Клей для обоев ”Exclusive” платина PRO 250 г. картон",
+      "description": "Клей для обоев ”Exclusive” платина PRO 250 г. картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "325.00",
+      "stock": "24.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.poryadok.ru/upload/iblock/5ff/5ff1610f2eb1ccfc63cbc6102651a778.jpg",
+      "photo_page": "https://voronezh.poryadok.ru/catalog/klei_dlya_oboev/569249/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "69fa81f5-5376-11f1-80e5-a0369f091857",
+      "stock_row": 74,
+      "price_row": 63,
+      "name": "Клей для обоев ”Exclusive” платина PRO 500 г. картон",
+      "description": "Клей для обоев ”Exclusive” платина PRO 500 г. картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "650.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.poryadok.ru/upload/iblock/e71/e71918fe00cdf35013ffb781a3820c4c.JPG",
+      "photo_page": "https://poryadok.ru/catalog/klei_dlya_oboev/880687/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "5e6211f9-5373-11f1-80e5-a0369f091857",
+      "stock_row": 75,
+      "price_row": 64,
+      "name": "Клей для обоев ”Exclusive” флизелиновый PRO 250 г. картон",
+      "description": "Клей для обоев ”Exclusive” флизелиновый PRO 250 г. картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "315.00",
+      "stock": "67.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.poryadok.ru/upload/iblock/453/4532c34466fb8f76bb8736123f5acb45.jpg",
+      "photo_page": "https://poryadok.ru/catalog/klei_dlya_oboev/569226/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "cc4dde39-5373-11f1-80e5-a0369f091857",
+      "stock_row": 76,
+      "price_row": 65,
+      "name": "Клей для обоев ”Exclusive” флизелиновый PRO 500 г. картон",
+      "description": "Клей для обоев ”Exclusive” флизелиновый PRO 500 г. картон. Обойный клей. Тип обоев и масса упаковки указаны в названии. Единица продажи: шт.",
+      "price": "590.00",
+      "stock": "12.000",
+      "unit": "шт",
+      "category": [
+        "Клеи",
+        "Клей для обоев"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.poryadok.ru/upload/iblock/86e/86e42d52c16ab394dd3c9fbc9fd94881.JPG",
+      "photo_page": "https://poryadok.ru/catalog/klei_dlya_oboev/880686/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "59e9f294-f37f-11eb-80d0-a0369f091857",
+      "stock_row": 77,
+      "price_row": 66,
+      "name": "Клей для плитки CM14/25кг, Ceresit",
+      "description": "Клей для плитки CM14/25кг, Ceresit. Цементный клей Ceresit CM 14 для облицовки стен и полов керамической плиткой и керамогранитом. Фасовка 25 кг.",
+      "price": "840.00",
+      "stock": "70.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Плиточные клеи"
+      ],
+      "info_source": "https://kemerovo.kwadratura.ru/katalog/plitka/smesi/klej/cerezit-cm14-klej-dlja-plitki",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "6d8e5194-42f6-11f1-80e3-a0369f091857",
+      "stock_row": 78,
+      "price_row": 67,
+      "name": "Клей плиточный Профи (25 кг)",
+      "description": "Клей плиточный Профи (25 кг). Сухой плиточный клей для облицовочных работ. Используйте для оснований и форматов плитки, указанных производителем на упаковке.",
+      "price": "296.00",
+      "stock": "77.000",
+      "unit": "шт",
+      "category": [
+        "Плитка и облицовка",
+        "Плиточные клеи"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "0a84ad91-35b8-11e9-9cba-3052cb7d9fde",
+      "stock_row": 79,
+      "price_row": 68,
+      "name": "Краска фасадная (долговечная) латексная ELEMENT SE, 9 л (14,22кг)",
+      "description": "Краска фасадная (долговечная) латексная ELEMENT SE, 9 л (14,22кг). Латексная фасадная краска для наружной отделки. Единица продажи: шт.",
+      "price": "2750.00",
+      "stock": "37.000",
+      "unit": "шт",
+      "category": [
+        "Лакокрасочные материалы",
+        "Фасадные краски"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "76b2d874-adcc-11f1-80e9-a0369f091857",
+      "stock_row": 80,
+      "price_row": 69,
+      "name": "Мел 2 кг (15)",
+      "description": "Мел 2 кг (15). Минеральный материал для строительных и отделочных работ. Единица продажи: шт.",
+      "price": "55.00",
+      "stock": "30.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Гипс, глина и мел"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "9f5c7f4d-aa97-11f0-80e2-a0369f091857",
+      "stock_row": 81,
+      "price_row": 70,
+      "name": "Монтажный клей \"Моментальная схватываемость T-Rex\" 290 мл",
+      "description": "Монтажный клей \"Моментальная схватываемость T-Rex\" 290 мл. Монтажный клей для строительных и ремонтных работ. Единица продажи: шт.",
+      "price": "360.00",
+      "stock": "9.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Монтажные клеи"
+      ],
+      "info_source": "",
+      "photo_url": "https://soudal.ru/images/produkty/slider/134923_back.jpg",
+      "photo_page": "https://soudal.ru/trex/item/881%3At-rex-momentalnaja-schwatywaemost-montaznyj-klej",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-82",
+      "stock_row": 82,
+      "price_row": null,
+      "name": "Нал.пол Горизонт Универсальный Быстротвердеющий (20кг)",
+      "description": "Нал.пол Горизонт Универсальный Быстротвердеющий (20кг). Сухая смесь для устройства и выравнивания пола. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Наливные полы"
+      ],
+      "info_source": "",
+      "photo_url": "https://www.miraxstroy.ru/upload/iblock/705/705a66758af13cca2b64e76997a5d214.jpg",
+      "photo_page": "https://www.miraxstroy.ru/bystrotverdeyushchiy-nalivnoy-pol-yunis-gorizont-universalnyy-meshok-20kg/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "4c29bc63-78c4-11ee-80d6-a0369f091857",
+      "stock_row": 83,
+      "price_row": 71,
+      "name": "Очиститель монтажной пены PROFIL 400 мл. 152227",
+      "description": "Очиститель монтажной пены PROFIL 400 мл. 152227. Очиститель для монтажной пены. Единица продажи: шт.",
+      "price": "195.00",
+      "stock": "15.000",
+      "unit": "шт",
+      "category": [
+        "Строительная химия",
+        "Очистители"
+      ],
+      "info_source": "",
+      "photo_url": "https://zakrepi.ru/images/uploaded/catalog-gallery/ochistitel-montazhnoy-peny-profil-soudal-400-ml/23-10-11-11-14-1_large.jpg",
+      "photo_page": "https://zakrepi.ru/catalog/ochistitel-montazhnoy-peny-profil-soudal-400-ml",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-84",
+      "stock_row": 84,
+      "price_row": null,
+      "name": "Патрубок прямой силикон D42 L1100",
+      "description": "Патрубок прямой силикон D42 L1100. Силиконовый прямой патрубок. Диаметр и длина указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Силиконовые патрубки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-85",
+      "stock_row": 85,
+      "price_row": null,
+      "name": "Патрубок прямой силикон D45 L1100",
+      "description": "Патрубок прямой силикон D45 L1100. Силиконовый прямой патрубок. Диаметр и длина указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Силиконовые патрубки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "27ffeccd-9ad7-11f0-80e2-a0369f091857",
+      "stock_row": 86,
+      "price_row": 72,
+      "name": "Пескобетон М-300 (25 кг) Betonit ГОСТ",
+      "description": "Пескобетон М-300 (25 кг) Betonit ГОСТ. Сухая смесь на цементном вяжущем. Марка и фасовка указаны в названии. Единица продажи: шт.",
+      "price": "228.00",
+      "stock": "162.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Пескобетон и цементные смеси"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "2d1df9d6-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 87,
+      "price_row": 73,
+      "name": "Пигмент Ceresit A желтый 01, 3 л",
+      "description": "Пигмент Ceresit A желтый 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "33.00",
+      "stock": "3399.148",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "806c1c33-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 88,
+      "price_row": 74,
+      "name": "Пигмент Ceresit B желтый 02, 3 л",
+      "description": "Пигмент Ceresit B желтый 02, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "14.00",
+      "stock": "3374.464",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "98324f3d-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 89,
+      "price_row": 75,
+      "name": "Пигмент Ceresit C желтый 03, 3 л",
+      "description": "Пигмент Ceresit C желтый 03, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "8.00",
+      "stock": "5705.574",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "53c95ccd-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 90,
+      "price_row": 76,
+      "name": "Пигмент CERESIT D белый 01 3л NEW",
+      "description": "Пигмент CERESIT D белый 01 3л NEW. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "4.90",
+      "stock": "957.001",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "0135b067-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 91,
+      "price_row": 77,
+      "name": "Пигмент Ceresit E голубой 01, 3 л",
+      "description": "Пигмент Ceresit E голубой 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "8.30",
+      "stock": "3329.090",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "de53c20b-fb56-11eb-80d0-a0369f091857",
+      "stock_row": 92,
+      "price_row": 78,
+      "name": "Пигмент Ceresit F черный 02, 3 л",
+      "description": "Пигмент Ceresit F черный 02, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "7.00",
+      "stock": "10990.853",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "175783d4-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 93,
+      "price_row": 79,
+      "name": "Пигмент Ceresit G голубой 02, 3 л",
+      "description": "Пигмент Ceresit G голубой 02, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "38.00",
+      "stock": "4557.571",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "4a5f3a01-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 94,
+      "price_row": 80,
+      "name": "Пигмент Ceresit H красный 01, 3 л",
+      "description": "Пигмент Ceresit H красный 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "6.80",
+      "stock": "3548.737",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "365af68e-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 95,
+      "price_row": 81,
+      "name": "Пигмент Ceresit I красный 02, 3 л",
+      "description": "Пигмент Ceresit I красный 02, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "6.00",
+      "stock": "5431.360",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "aacc4a04-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 96,
+      "price_row": 82,
+      "name": "Пигмент Ceresit J желтый 04, 3 л",
+      "description": "Пигмент Ceresit J желтый 04, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "9.11",
+      "stock": "2996.575",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "c4ba5a97-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 97,
+      "price_row": 83,
+      "name": "Пигмент Ceresit K розовый 01, 3 л",
+      "description": "Пигмент Ceresit K розовый 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "12.60",
+      "stock": "1742.482",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "dfd20e51-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 98,
+      "price_row": 84,
+      "name": "Пигмент Ceresit L пурпурный 01, 3 л",
+      "description": "Пигмент Ceresit L пурпурный 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "33.00",
+      "stock": "4079.543",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "6abbe706-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 99,
+      "price_row": 85,
+      "name": "Пигмент Ceresit N желтый 05, 3 л",
+      "description": "Пигмент Ceresit N желтый 05, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "10.12",
+      "stock": "2769.375",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "03489d77-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 100,
+      "price_row": 86,
+      "name": "Пигмент Ceresit O зеленый 02, 3 л",
+      "description": "Пигмент Ceresit O зеленый 02, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "8.60",
+      "stock": "1503.611",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "f3d8eefc-fb57-11eb-80d0-a0369f091857",
+      "stock_row": 101,
+      "price_row": 87,
+      "name": "Пигмент Ceresit P зеленый 01, 3 л",
+      "description": "Пигмент Ceresit P зеленый 01, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "16.18",
+      "stock": "2031.725",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "7d33da56-fb58-11eb-80d0-a0369f091857",
+      "stock_row": 102,
+      "price_row": 88,
+      "name": "Пигмент Ceresit Q красный 03, 3 л",
+      "description": "Пигмент Ceresit Q красный 03, 3 л. Колеровочный пигмент Ceresit. Учет и цена в прайсе ведутся за 1 мл, а обозначение 3 л относится к емкости. Цвет и буквенный код указаны в названии.",
+      "price": "17.80",
+      "stock": "2113.050",
+      "unit": "мл",
+      "category": [
+        "Лакокрасочные материалы",
+        "Колеровочные пигменты"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "4de9c3e9-e6b3-11ee-80d8-a0369f091857",
+      "stock_row": 103,
+      "price_row": 89,
+      "name": "Пленка Спанизол B Эконом пароизоляция (70м2)",
+      "description": "Пленка Спанизол B Эконом пароизоляция (70м2). Изоляционная пленка в рулоне. Назначение и площадь указаны в названии. Единица продажи: шт.",
+      "price": "660.00",
+      "stock": "22.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Изоляционные пленки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "c604da4c-e6b3-11ee-80d8-a0369f091857",
+      "stock_row": 104,
+      "price_row": 90,
+      "name": "Пленка Спанизол D Эконом гидро-пароизоляция (70м2)",
+      "description": "Пленка Спанизол D Эконом гидро-пароизоляция (70м2). Двухслойная паро-гидроизоляционная плёнка повышенной прочности SpanIzol D Эконом для защиты конструкций от влаги и конденсата. Площадь рулона 70 м².",
+      "price": "1224.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Изоляционные пленки"
+      ],
+      "info_source": "https://stroy-ka.ru/goods/613736",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "a18b3f76-50d2-11ef-80de-a0369f091857",
+      "stock_row": 105,
+      "price_row": 91,
+      "name": "Пленка Спанизол С Эконом (паро-гидроизоляция) (35м2)",
+      "description": "Пленка Спанизол С Эконом (паро-гидроизоляция) (35м2). Изоляционная пленка в рулоне. Назначение и площадь указаны в названии. Единица продажи: шт.",
+      "price": "504.00",
+      "stock": "9.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Изоляционные пленки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "1dd865b2-e6b4-11ee-80d8-a0369f091857",
+      "stock_row": 106,
+      "price_row": 92,
+      "name": "Пленка техническая 10м п 150",
+      "description": "Пленка техническая 10м п 150. Изоляционная пленка в рулоне. Назначение и площадь указаны в названии. Единица продажи: шт.",
+      "price": "610.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Изоляционные пленки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "956b17ac-66ce-11f0-80e1-a0369f091857",
+      "stock_row": 107,
+      "price_row": 93,
+      "name": "Плиты пенополистирольные экструзионные ТЕХНОНИКОЛЬ CARBON ECO 1180х580х30 -L(0,266916 м3; 8,8972 м2)",
+      "description": "Плиты пенополистирольные экструзионные ТЕХНОНИКОЛЬ CARBON ECO 1180х580х30 -L(0,266916 м3; 8,8972 м2). Экструдированный пенополистирол ТЕХНОНИКОЛЬ CARBON ECO для теплоизоляции фундаментов, полов, крыш и фасадов. Размер плит и площадь упаковки указаны в названии.",
+      "price": "1985.00",
+      "stock": "136.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Экструдированный пенополистирол"
+      ],
+      "info_source": "https://nav.tn.ru/cloud/iblock/bac/Tekhlist-4.01_CARBON-ECO_by.pdf",
+      "photo_url": "https://alkiv.ua/upload/iblock/863/86367b5be20c54e3bb964370b40d01c7.jpg",
+      "photo_page": "https://alkiv.ua/ua/product/ekstrudirovannyy_penopolistirol_tekhnonikol_carbon_eco_1180kh580kh30mm/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "0c2b8527-66ce-11f0-80e1-a0369f091857",
+      "stock_row": 108,
+      "price_row": 94,
+      "name": "Плиты пенополистирольные экструзионные ТЕХНОНИКОЛЬ CARBON ECO 1180х580х50 -L(0,273760 м3; 5,4752 м2)",
+      "description": "Плиты пенополистирольные экструзионные ТЕХНОНИКОЛЬ CARBON ECO 1180х580х50 -L(0,273760 м3; 5,4752 м2). Экструдированный пенополистирол ТЕХНОНИКОЛЬ CARBON ECO для теплоизоляции фундаментов, полов, крыш и фасадов. Размер плит и площадь упаковки указаны в названии.",
+      "price": "2050.00",
+      "stock": "280.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Экструдированный пенополистирол"
+      ],
+      "info_source": "https://nav.tn.ru/cloud/iblock/bac/Tekhlist-4.01_CARBON-ECO_by.pdf",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/izolyatsionnye-materialy/6811927/1200x800/72658076.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/ekstrudirovannyj-penopolistirol-tehnonikol-xps-carbon-eco-1180x580x50-mm-8-plit-5-47-kv-m-tn418318-6811927/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "2a4cdc5c-e342-11e8-9cac-3052cb7d9fde",
+      "stock_row": 109,
+      "price_row": 95,
+      "name": "Подвес прямой 1,0",
+      "description": "Подвес прямой 1,0. Комплектующий элемент для каркасной системы. Единица продажи: шт.",
+      "price": "10.00",
+      "stock": "25946.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Подвесы"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "ac3680d5-739c-11f1-80e8-a0369f091857",
+      "stock_row": 110,
+      "price_row": 96,
+      "name": "ПОРТЛАНД 500 ,3кг /Диана/ (10)",
+      "description": "ПОРТЛАНД 500 ,3кг /Диана/ (10). Сухая смесь на цементном вяжущем. Марка и фасовка указаны в названии. Единица продажи: шт.",
+      "price": "88.00",
+      "stock": "115.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Пескобетон и цементные смеси"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "c0bd63a9-739c-11f1-80e8-a0369f091857",
+      "stock_row": 111,
+      "price_row": 97,
+      "name": "ПОРТЛАНД 500 ,5кг /Диана/ (5)",
+      "description": "ПОРТЛАНД 500 ,5кг /Диана/ (5). Сухая смесь на цементном вяжущем. Марка и фасовка указаны в названии. Единица продажи: шт.",
+      "price": "139.00",
+      "stock": "93.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Пескобетон и цементные смеси"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "86fc382c-3e70-11e9-9cbb-3052cb7d9fde",
+      "stock_row": 112,
+      "price_row": 98,
+      "name": "Профиль маячковый ПМ-10 мм 3м",
+      "description": "Профиль маячковый ПМ-10 мм 3м. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "47.00",
+      "stock": "7.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "https://images.satu.kz/212665605_w640_h640_mayak-profilnyj-m10.jpg",
+      "photo_page": "https://orgstroy.kz/p112365897-mayak-profilnyj-m10.html",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "2a4cdc5a-e342-11e8-9cac-3052cb7d9fde",
+      "stock_row": 113,
+      "price_row": 99,
+      "name": "Профиль ПН 28/27, 0,5 мм",
+      "description": "Профиль ПН 28/27, 0,5 мм. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "115.00",
+      "stock": "1200.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "https://kz-tnp.kz/upload/iblock/e73/e73672b041b5445f641e5f319d1ff24d.jpg",
+      "photo_page": "https://kz-tnp.kz/catalog/profil_i_komplektuyushchie_dlya_gkl/karmet/profil_ots_pod_gkl_27_28_0_5_24sht",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-114",
+      "stock_row": 114,
+      "price_row": null,
+      "name": "Профиль ПН 28/27, 3м",
+      "description": "Профиль ПН 28/27, 3м. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "406eaf2b-04ea-11e9-9cb1-3052cb7d9fde",
+      "stock_row": 115,
+      "price_row": 100,
+      "name": "Профиль ПН 50*40, 3м",
+      "description": "Профиль ПН 50*40, 3м. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "202.80",
+      "stock": "2.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "2a4cdc5b-e342-11e8-9cac-3052cb7d9fde",
+      "stock_row": 116,
+      "price_row": 101,
+      "name": "Профиль ПП 60/27, 3м",
+      "description": "Профиль ПП 60/27, 3м. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "145.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "17f9173f-e709-11ec-80d2-a0369f091857",
+      "stock_row": 117,
+      "price_row": 102,
+      "name": "Профиль стальной оцинкованный ПП 60/27, 3м",
+      "description": "Профиль стальной оцинкованный ПП 60/27, 3м. Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "150.00",
+      "stock": "1335.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "d00d0d77-4477-11e9-9cbc-3052cb7d9fde",
+      "stock_row": 118,
+      "price_row": 103,
+      "name": "Профиль углозащитный оцинк. ПУ 20*20 (перфорированный)",
+      "description": "Профиль углозащитный оцинк. ПУ 20*20 (перфорированный). Металлический профиль для монтажа каркасных конструкций. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "48.00",
+      "stock": "134.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Профили для гипсокартона"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "9fc068cd-50b7-11ef-80de-a0369f091857",
+      "stock_row": 119,
+      "price_row": 104,
+      "name": "Распылитель для воды Soudal 1л 799044",
+      "description": "Распылитель для воды Soudal 1л 799044. Помповый распылитель SOUDAL объёмом 1 л для увлажнения поверхности и монтажной пены. Распыление регулируется; артикул производителя 799044.",
+      "price": "300.00",
+      "stock": "2.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Распылители"
+      ],
+      "info_source": "https://soudal.ru/skaczat/itemlist/tag/new",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "37a1e693-29a7-11f0-80df-a0369f091857",
+      "stock_row": 120,
+      "price_row": 105,
+      "name": "Серпянка самоклеящаяся тип GOLD 50мм х 153м",
+      "description": "Серпянка самоклеящаяся тип GOLD 50мм х 153м. Самоклеящаяся армирующая лента для усиления швов. Ширина и длина указаны в названии. Единица продажи: шт.",
+      "price": "270.00",
+      "stock": "43.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Армирующие ленты и сетки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "e1baf13e-29a6-11f0-80df-a0369f091857",
+      "stock_row": 121,
+      "price_row": 106,
+      "name": "Серпянка самоклеящаяся тип GOLD 50мм х 45м",
+      "description": "Серпянка самоклеящаяся тип GOLD 50мм х 45м. Самоклеящаяся армирующая лента для усиления швов. Ширина и длина указаны в названии. Единица продажи: шт.",
+      "price": "98.00",
+      "stock": "31.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Армирующие ленты и сетки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "09c2874b-29a7-11f0-80df-a0369f091857",
+      "stock_row": 122,
+      "price_row": 107,
+      "name": "Серпянка самоклеящаяся тип GOLD 50мм х 90м",
+      "description": "Серпянка самоклеящаяся тип GOLD 50мм х 90м. Самоклеящаяся армирующая лента для усиления швов. Ширина и длина указаны в названии. Единица продажи: шт.",
+      "price": "166.00",
+      "stock": "8.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Армирующие ленты и сетки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "8c64718a-7fd4-11ef-80de-a0369f091857",
+      "stock_row": 123,
+      "price_row": 108,
+      "name": "Скайфлекс НПЭ-ПЛ 3 мм*1,2 м*25 м (30 м.кв.)",
+      "description": "Скайфлекс НПЭ-ПЛ 3 мм*1,2 м*25 м (30 м.кв.). Рулонная подложка. Толщина и площадь указаны в названии. Единица продажи: шт.",
+      "price": "850.00",
+      "stock": "35.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Подложки"
+      ],
+      "info_source": "",
+      "photo_url": "https://stmgroup.ru/files/images/cache/Goods/Good37019/419c324f42-1_x900.jpeg",
+      "photo_page": "https://stmgroup.ru/goods/podlozka-dla-teplogo-pola-3mm-rulon-30-kvm---312-25-skajfleks",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "a9c69283-7fd4-11ef-80de-a0369f091857",
+      "stock_row": 124,
+      "price_row": 109,
+      "name": "Скайфлекс НПЭ-ПЛ 4 мм*1,2 м*25 м (30 м.кв.)",
+      "description": "Скайфлекс НПЭ-ПЛ 4 мм*1,2 м*25 м (30 м.кв.). Рулонная подложка. Толщина и площадь указаны в названии. Единица продажи: шт.",
+      "price": "1040.00",
+      "stock": "3.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Подложки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "c4f164e5-7fd4-11ef-80de-a0369f091857",
+      "stock_row": 125,
+      "price_row": 110,
+      "name": "Скайфлекс НПЭ-ПЛ 5 мм*1,2 м*25 м (30 м.кв.)",
+      "description": "Скайфлекс НПЭ-ПЛ 5 мм*1,2 м*25 м (30 м.кв.). Рулонная подложка. Толщина и площадь указаны в названии. Единица продажи: шт.",
+      "price": "1140.00",
+      "stock": "16.000",
+      "unit": "шт",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Подложки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "dcb3e8f4-739c-11f1-80e8-a0369f091857",
+      "stock_row": 126,
+      "price_row": 111,
+      "name": "Смесь строительная на цементном вяжущем М-150 2кг (15)",
+      "description": "Смесь строительная на цементном вяжущем М-150 2кг (15). Сухая смесь на цементном вяжущем. Марка и фасовка указаны в названии. Единица продажи: шт.",
+      "price": "53.00",
+      "stock": "175.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Пескобетон и цементные смеси"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "f5e2d096-739c-11f1-80e8-a0369f091857",
+      "stock_row": 127,
+      "price_row": 112,
+      "name": "Смесь строительная на цементном вяжущем М-150, 3кг(10)",
+      "description": "Смесь строительная на цементном вяжущем М-150, 3кг(10). Сухая смесь на цементном вяжущем. Марка и фасовка указаны в названии. Единица продажи: шт.",
+      "price": "73.00",
+      "stock": "200.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Пескобетон и цементные смеси"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "8a6161d5-739c-11f1-80e8-a0369f091857",
+      "stock_row": 128,
+      "price_row": 113,
+      "name": "Смесь строительная штукатурная 3кг \"РотБест\" (10)",
+      "description": "Смесь строительная штукатурная 3кг \"РотБест\" (10). Штукатурная смесь для выравнивания поверхностей. Единица продажи: шт.",
+      "price": "99.00",
+      "stock": "175.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "643a6b76-739c-11f1-80e8-a0369f091857",
+      "stock_row": 129,
+      "price_row": 114,
+      "name": "Смесь строительная штукатурная 3кг \"ТеплоНорм\" (10)",
+      "description": "Смесь строительная штукатурная 3кг \"ТеплоНорм\" (10). Штукатурная смесь для выравнивания поверхностей. Единица продажи: шт.",
+      "price": "99.00",
+      "stock": "185.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "84369777-29a6-11f0-80df-a0369f091857",
+      "stock_row": 130,
+      "price_row": 115,
+      "name": "Стеклосетка фасадная ЭВЕРЕСТСТРОЙ PRO 160г/м2 ячейка 5х5мм 1 сорт 1м х 50м(±10%)",
+      "description": "Стеклосетка фасадная ЭВЕРЕСТСТРОЙ PRO 160г/м2 ячейка 5х5мм 1 сорт 1м х 50м(±10%). Стеклотканевая фасадная сетка для армирования штукатурного слоя. Единица продажи: шт.",
+      "price": "2600.00",
+      "stock": "6.000",
+      "unit": "шт",
+      "category": [
+        "Фасадные материалы",
+        "Фасадные сетки"
+      ],
+      "info_source": "",
+      "photo_url": "https://arsenal16.kz/image/cache/catalog/import_files/54/54940f15-cf54-11e6-802c-ac220bd74b50_2ea5b17c-3110-11ee-80e1-d8bbc11847c9-1000x1000.jpeg",
+      "photo_page": "https://arsenal16.kz/instrumenty-rasxodniki/stekloholst/steklosetka-fasadnaya-evereststroy-pro-160gm2-yacheyka-5h5mm-1-sort-1m-h-50m-10",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-131",
+      "stock_row": 131,
+      "price_row": null,
+      "name": "Термообразователь сопротивления ДТС014-50МюВ3.25/2",
+      "description": "Термообразователь сопротивления ДТС014-50МюВ3.25/2. Измерительный датчик. Точная модель указана в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Датчики"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-132",
+      "stock_row": 132,
+      "price_row": null,
+      "name": "Термообразователь сопротивления ДТС214-50МюВ3.60/1,5",
+      "description": "Термообразователь сопротивления ДТС214-50МюВ3.60/1,5. Измерительный датчик. Точная модель указана в названии. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "4.000",
+      "unit": "шт",
+      "category": [
+        "Инженерное оборудование",
+        "Датчики"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "551a6a82-1d52-11f1-80e2-a0369f091857",
+      "stock_row": 133,
+      "price_row": 116,
+      "name": "Утеплитель Минвата ИЗОЛАЙФ LIGHT пл25 1200х600х100мм (2,88м2/0,288м3/4 плит) 24 упак/под",
+      "description": "Утеплитель Минвата ИЗОЛАЙФ LIGHT пл25 1200х600х100мм (2,88м2/0,288м3/4 плит) 24 упак/под. Минераловатный теплоизоляционный материал. Размеры и площадь упаковки указаны в названии. Единица продажи: упак.",
+      "price": "720.00",
+      "stock": "67.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Минеральная вата"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "71d79614-1d52-11f1-80e2-a0369f091857",
+      "stock_row": 134,
+      "price_row": 117,
+      "name": "Утеплитель Минвата ИЗОЛАЙФ LIGHT пл251200х600х50мм (5,76м2/0,288м3/8 плит) 24 упак/под",
+      "description": "Утеплитель Минвата ИЗОЛАЙФ LIGHT пл251200х600х50мм (5,76м2/0,288м3/8 плит) 24 упак/под. Минераловатный теплоизоляционный материал. Размеры и площадь упаковки указаны в названии. Единица продажи: упак.",
+      "price": "740.00",
+      "stock": "167.000",
+      "unit": "упак",
+      "category": [
+        "Тепло- и пароизоляция",
+        "Минеральная вата"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "16af3e6a-29a8-11f0-80df-a0369f091857",
+      "stock_row": 135,
+      "price_row": 118,
+      "name": "Фасадный ПВХ 6мм 2,4м профиль прим. с сеткой с защ.манжетой",
+      "description": "Фасадный ПВХ 6мм 2,4м профиль прим. с сеткой с защ.манжетой. Профиль для фасадных работ. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "155.00",
+      "stock": "75.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Фасадные профили"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "58fbcc37-29a5-11f0-80df-a0369f091857",
+      "stock_row": 136,
+      "price_row": 119,
+      "name": "Фасадный угол ПВХ с сеткой KS ЭВЕРЕСТСТРОЙ KS 2,5мх10смх15см /50шт/уп",
+      "description": "Фасадный угол ПВХ с сеткой KS ЭВЕРЕСТСТРОЙ KS 2,5мх10смх15см /50шт/уп. Профиль для фасадных работ. Размеры указаны в названии. Единица продажи: шт.",
+      "price": "90.00",
+      "stock": "1.000",
+      "unit": "шт",
+      "category": [
+        "Профили и комплектующие",
+        "Фасадные профили"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "cd0548e1-b022-11f1-80e9-a0369f091857",
+      "stock_row": 137,
+      "price_row": 120,
+      "name": "Церезит СТ 74/25 кг Штукатурка силиконовая камешковая 1,5 мм База",
+      "description": "Церезит СТ 74/25 кг Штукатурка силиконовая камешковая 1,5 мм База. Силиконовая декоративная штукатурка Ceresit CT 74 с камешковой фактурой, зерно 1,5 мм. База под колеровку, фасовка 25 кг.",
+      "price": "4900.00",
+      "stock": "33.000",
+      "unit": "шт",
+      "category": [
+        "Фасадные материалы",
+        "Декоративные штукатурки"
+      ],
+      "info_source": "https://www.ceresit.ru/ru/products/etics/facade-plasters",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/otdelochnye-materialy/1587625/560x504/185071733.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/shtukaturka-silikonovaya-kameshkovaya-ct-74-baza-1-5-mm-25-kg-ceresit-135636-1587625/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "386cab16-8677-11f1-80e8-a0369f091857",
+      "stock_row": 138,
+      "price_row": 121,
+      "name": "Шпатлевка БЛИК гипсовая 5 кг",
+      "description": "Шпатлевка БЛИК гипсовая 5 кг. Шпатлевка для выравнивания поверхности перед финишной отделкой. Единица продажи: шт.",
+      "price": "340.00",
+      "stock": "9.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Шпатлевки"
+      ],
+      "info_source": "",
+      "photo_url": "https://cdn.vseinstrumenti.ru/images/goods/stroitelnye-materialy/stroitelnye-smesi/5144689/560x504/65312395.jpg",
+      "photo_page": "https://www.vseinstrumenti.ru/product/gipsovaya-shpatlevka-unis-blik-5-kg-4607005181558-5144689/otzyvy/",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "stock-2026-09-29-row-139",
+      "stock_row": 139,
+      "price_row": null,
+      "name": "Шпатлевка полимерная готовая Pasta Теплон 5 кг",
+      "description": "Шпатлевка полимерная готовая Pasta Теплон 5 кг. Шпатлевка для выравнивания поверхности перед финишной отделкой. Единица продажи: шт.",
+      "price": "0.00",
+      "stock": "0.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Шпатлевки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    },
+    {
+      "source_key": "289f8deb-38ed-11ea-b6cd-704d7b2c531e",
+      "stock_row": 140,
+      "price_row": 122,
+      "name": "Штукатурка \"ЮНИС Теплон\" белая, 5кг (уп.=4шт, поддон 120шт)",
+      "description": "Штукатурка \"ЮНИС Теплон\" белая, 5кг (уп.=4шт, поддон 120шт). Белая облегчённая гипсовая штукатурка UNIS Теплон с перлитом для выравнивания стен и потолков внутри помещений. Фасовка 5 кг.",
+      "price": "310.00",
+      "stock": "53.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "https://famarket.ru/id/teplon-belyy-unis-5-kg-45998.html",
+      "photo_url": "https://famarket.ru/UserFiles/Image/img45998_38258_big.jpg",
+      "photo_page": "https://famarket.ru/id/teplon-belyy-unis-5-kg-45998.html",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "3dfb70a0-7875-11e9-b6ac-704d7b2c531e",
+      "stock_row": 141,
+      "price_row": 123,
+      "name": "Штукатурка гипс. UNIS Теплон белый 30 кг",
+      "description": "Штукатурка гипс. UNIS Теплон белый 30 кг. Белая облегчённая гипсовая штукатурка UNIS Теплон с перлитом для выравнивания стен и потолков внутри помещений. Фасовка 30 кг.",
+      "price": "446.00",
+      "stock": "24.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "https://famarket.ru/id/shtukaturka-unis-teplon-belyy-30kg-45997.html",
+      "photo_url": "https://famarket.ru/UserFiles/Image/img45997_27436_big.jpg",
+      "photo_page": "https://famarket.ru/id/shtukaturka-unis-teplon-belyy-30kg-45997.html",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "bbc630ce-fb56-11eb-80d0-a0369f091857",
+      "stock_row": 142,
+      "price_row": 124,
+      "name": "Штукатурка камешковая CT 60/25 1,5мм база Россия",
+      "description": "Штукатурка камешковая CT 60/25 1,5мм база Россия. Акриловая декоративная штукатурка Ceresit CT 60 с камешковой фактурой, зерно 1,5 мм. Фасовка 25 кг.",
+      "price": "2680.00",
+      "stock": "219.000",
+      "unit": "шт",
+      "category": [
+        "Фасадные материалы",
+        "Декоративные штукатурки"
+      ],
+      "info_source": "https://ceresit.ru/ru/products/etics/facade-plasters/ct-60-ct-63-ct-64",
+      "photo_url": "https://i5.storeland.net/3/1346/213452758/afacdb/dekorativnaya-shtukaturka-kameshkovaya-ceresit-ct-60-25kg-belaya-akrilovaya-zerno-1-5mm-2-5mm-cerezit-st-60.jpg",
+      "photo_page": "https://stroirinok24.ru/goods/Dekorativnaya-Shtukaturka-Koroed-Ceresit-CT-175-25kg-Silikatno-Silikonovaya-5",
+      "image_kind": "photo"
+    },
+    {
+      "source_key": "0b3c2da1-2d06-11f1-80e2-a0369f091857",
+      "stock_row": 143,
+      "price_row": 125,
+      "name": "Штукатурка Силин Универсальная армированная 5 кг Юнис",
+      "description": "Штукатурка Силин Универсальная армированная 5 кг Юнис. Штукатурная смесь для выравнивания поверхностей. Единица продажи: шт.",
+      "price": "326.00",
+      "stock": "8.000",
+      "unit": "шт",
+      "category": [
+        "Сухие строительные смеси",
+        "Штукатурки"
+      ],
+      "info_source": "",
+      "photo_url": "",
+      "photo_page": "",
+      "image_kind": "illustration"
+    }
+  ]
+}

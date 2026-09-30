@@ -69,10 +69,7 @@ def build_order_pdf(order):
 
     created = timezone.localtime(order.created_at).strftime('%d.%m.%Y в %H:%M')
     contact = getattr(order, 'contact', None)
-    customer = ' '.join(part for part in (
-        contact.first_name if contact else '',
-        contact.last_name if contact else '',
-    ) if part) or '—'
+    customer = contact.name if contact and contact.name else '—'
 
     buffer = BytesIO()
     doc = SimpleDocTemplate(

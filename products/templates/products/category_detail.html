@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-{% load static %}
+{% load static l10n %}
 
 {% block title %}{{ category.meta_title|default:category.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block meta_description %}{{ category.meta_description|default:category.description|default:'Купить '|add:category.name|add:' в интернет-магазине СТРОЙМА. Широкий выбор, доступные цены, быстрая доставка.'|truncatechars:160 }}{% endblock %}
@@ -24,7 +24,7 @@
     "@type": "ItemList",
     "itemListElement": [
       {% for product in products %}
-      {"@type":"ListItem","position":{{ forloop.counter }},"item":{"@type":"Product","name":"{{ product.name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}"{% if product.image %},"image":"{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"{% endif %},"offers":{"@type":"Offer","price":"{{ product.price }}","priceCurrency":"RUB"}}}{% if not forloop.last %},{% endif %}
+      {"@type":"ListItem","position":{{ forloop.counter }},"item":{"@type":"Product","name":"{{ product.name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}"{% if product.image %},"image":"{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"{% endif %}{% if product.has_price %},"offers":{"@type":"Offer","price":"{{ product.price|unlocalize }}","priceCurrency":"RUB"}{% endif %}}}{% if not forloop.last %},{% endif %}
       {% endfor %}
     ]
   }

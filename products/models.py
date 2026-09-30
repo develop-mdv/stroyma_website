@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -8,6 +9,8 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 from django.core.cache import cache
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 from stroyma.validators import MaxFileSizeValidator, MAX_IMAGE_UPLOAD_BYTES
 
@@ -102,15 +105,19 @@ class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name='Название')
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField(verbose_name='Описание')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', help_text='0 — цена уточняется, заказ через корзину недоступен')
     image = models.ImageField(
-        upload_to='products/', verbose_name='Изображение',
+        upload_to='products/', verbose_name='Изображение', blank=True,
         validators=[
             FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp', 'gif']),
             MaxFileSizeValidator(MAX_IMAGE_UPLOAD_BYTES),
         ],
     )
-    stock = models.PositiveIntegerField(default=0, verbose_name='Остаток на складе')
+    stock = models.DecimalField(max_digits=12, decimal_places=3, default=0,
+                                validators=[MinValueValidator(Decimal('0'))], verbose_name='Остаток на складе')
+    unit = models.CharField(max_length=20, default='шт', verbose_name='Единица измерения')
+    source_key = models.CharField(max_length=64, unique=True, null=True, blank=True,
+                                  verbose_name='Ключ товара в исходной выгрузке')
     rating = models.PositiveIntegerField(default=5, verbose_name='Рейтинг')
     categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категории', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
@@ -170,6 +177,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def has_price(self):
+        return self.price is not None and self.price > 0
+
+    @property
+    def is_illustration(self):
+        """Whether the catalog image is a clearly labeled schematic illustration."""
+        return bool(self.image and Path(self.image.name).name.startswith('catalog-illustration-row-'))
+
+    @property
+    def max_order_quantity(self):
+        """The cart currently accepts whole units, including for ml and m² goods."""
+        return max(0, int(self.stock))
 
     def add_categories_with_parents(self, categories):
         """
@@ -329,8 +350,7 @@ class OrderContact(models.Model):
     и персональные данные клиента.
     """
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='contact', verbose_name='Заказ')
-    first_name = models.CharField(max_length=100, verbose_name='Имя')
-    last_name = models.CharField(max_length=100, verbose_name='Фамилия')
+    name = models.CharField(max_length=255, verbose_name='Имя или название организации')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(max_length=20, verbose_name='Телефон')
     address = models.CharField(max_length=255, verbose_name='Адрес доставки')

@@ -14,19 +14,20 @@
         <div class="relative w-full aspect-[4/5] overflow-hidden bg-white rounded-3xl">
             <a href="{% url 'product_detail' slug=product.slug %}" class="block absolute inset-0 z-0">
                 {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-[1500ms] ease-out group-hover:scale-110" loading="lazy">
+                <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[1500ms] ease-out group-hover:scale-110" loading="lazy">
                 {% else %}
                 <div class="w-full h-full flex items-center justify-center bg-gray-50">
                     <span class="text-xs uppercase tracking-widest text-gray-300">Нет фото</span>
                 </div>
                 {% endif %}
             </a>
+            {% if product.is_illustration %}<span class="absolute top-4 right-4 bg-white/95 text-gray-700 px-3 py-1.5 rounded-full z-10 pointer-events-none text-[0.6rem] uppercase tracking-widest font-bold">Иллюстрация</span>{% endif %}
 
             <!-- Оверлей при наведении -->
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 pointer-events-none"></div>
 
             <!-- Бейдж наличия -->
-            {% if product.stock == 0 %}
+            {% if not product.max_order_quantity %}
             <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full z-10 pointer-events-none">
                 <span class="text-[0.6rem] uppercase tracking-widest font-bold text-red-500">Под заказ</span>
             </div>
@@ -37,13 +38,13 @@
                 <button type="button" onclick="openQuickView({{ product.pk }}); return false;" aria-label="Быстрый просмотр: {{ product.name }}" class="flex-1 bg-white/85 backdrop-blur-md text-gray-900 border border-white/40 text-[0.65rem] font-bold uppercase tracking-widest py-3 rounded-2xl text-center hover:bg-white transition-colors shadow-lg min-h-[44px]">
                     Просмотр
                 </button>
-                <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="flex-1 ajax-cart-form">
+                {% if product.has_price and product.max_order_quantity %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="flex-1 ajax-cart-form">
                     {% csrf_token %}
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="w-full bg-deep-green/90 backdrop-blur-md text-white border border-transparent text-[0.65rem] font-bold uppercase tracking-widest py-3 rounded-2xl text-center hover:bg-deep-green transition-colors shadow-lg min-h-[44px]">
                         В корзину
                     </button>
-                </form>
+                </form>{% endif %}
             </div>
         </div>
 
@@ -54,7 +55,7 @@
             </a>
             
             <div class="mt-auto flex flex-col items-center gap-1">
-                <p class="text-2xl font-black font-display text-gray-900">{{ product.price|floatformat:"0" }} <span class="text-sm font-light text-gray-400">₽</span></p>
+                <p class="text-2xl font-black font-display text-gray-900">{% if product.has_price %}{{ product.price|floatformat:"-2" }} <span class="text-sm font-light text-gray-400">₽ / {{ product.unit }}{% if product.source_key %} · опт{% endif %}</span>{% else %}<span class="text-base">Цена уточняется</span>{% endif %}</p>
                 <div class="text-[0.6rem] text-yellow-500 flex tracking-widest opacity-60">
                     {% for i in '12345' %}
                         {% if forloop.counter <= product.rating %}

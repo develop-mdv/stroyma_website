@@ -126,7 +126,7 @@ def _home_cart_context(request):
 
 def _catalog_price_range(products, request):
     """Get available prices before applying the price filter itself."""
-    bounds = products.aggregate(low=Min('display_price'), high=Max('display_price'))
+    bounds = products.filter(price__gt=0).aggregate(low=Min('display_price'), high=Max('display_price'))
     minimum = int(bounds['low']) if bounds['low'] is not None else 0
     maximum = ceil(bounds['high']) if bounds['high'] is not None else 0
 
@@ -174,7 +174,9 @@ def _browser_page_context(request, scope=None, page_size=12):
     products, query, selected_categories = _browser_candidates(request, scope)
     products = products.annotate(display_price=Round('price'))
     minimum, maximum, selected_minimum, selected_maximum, available = _catalog_price_range(products, request)
-    products = products.filter(display_price__gte=selected_minimum, display_price__lte=selected_maximum)
+    if 'price_min' in request.GET or 'price_max' in request.GET:
+        products = products.filter(price__gt=0, display_price__gte=selected_minimum,
+                                   display_price__lte=selected_maximum)
 
     sort_by = request.GET.get('sort_by', 'name')
     if sort_by == 'price_asc':
@@ -265,7 +267,9 @@ def product_list(request):
 
     products = products.annotate(display_price=Round('price'))
     min_price, max_price, price_min, price_max, has_price_candidates = _catalog_price_range(products, request)
-    products = products.filter(display_price__gte=price_min, display_price__lte=price_max)
+    if 'price_min' in request.GET or 'price_max' in request.GET:
+        products = products.filter(price__gt=0, display_price__gte=price_min,
+                                   display_price__lte=price_max)
 
     sort_by = request.GET.get('sort_by', 'name')
     if sort_by == 'price_asc':
@@ -325,7 +329,8 @@ def search_ajax(request):
             ], 'products': [
                 {
                     'name': product.name,
-                    'price': f'{product.price:,.0f}'.replace(',', ' '),
+                    'price': f'{product.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',') if product.has_price else 'Цена уточняется',
+                    'unit': product.unit,
                     'image': product.image.url if product.image else '',
                     'url': product.get_absolute_url(),
                 }
@@ -368,7 +373,8 @@ def search_ajax(request):
         return JsonResponse({'products': [
             {
                 'name': product.name,
-                'price': f'{product.price:,.0f}'.replace(',', ' '),
+                'price': f'{product.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',') if product.has_price else 'Цена уточняется',
+                'unit': product.unit,
                 'image': product.image.url if product.image else '',
                 'url': product.get_absolute_url(),
             }
@@ -377,7 +383,9 @@ def search_ajax(request):
 
     products = products.annotate(display_price=Round('price'))
     min_price, max_price, price_min, price_max, has_price_candidates = _catalog_price_range(products, request)
-    products = products.filter(display_price__gte=price_min, display_price__lte=price_max)
+    if 'price_min' in request.GET or 'price_max' in request.GET:
+        products = products.filter(price__gt=0, display_price__gte=price_min,
+                                   display_price__lte=price_max)
 
     if sort_by == 'price_asc':
         products = products.order_by('price')
@@ -450,16 +458,31 @@ def add_to_cart(request, pk):
 
     with transaction.atomic():
         product = Product.objects.select_for_update().get(pk=pk)
+        if not product.has_price:
+            message = 'Цена товара уточняется. Добавление в корзину пока недоступно.'
+            if is_ajax:
+                return JsonResponse({'success': False, 'message': message}, status=400)
+            messages.error(request, message)
+            return redirect(product.get_absolute_url())
         if request.user.is_authenticated:
             cart = get_or_create_cart(request)
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-            desired_quantity = quantity if created else cart_item.quantity + quantity
+            cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+            desired_quantity = quantity + (cart_item.quantity if cart_item else 0)
         else:
             session_cart = request.session.get('cart', {}) or {}
             key = str(product.pk)
             desired_quantity = int(session_cart.get(key, 0) or 0) + quantity
 
+        if product.stock < desired_quantity:
+            message = 'Недостаточно товара на складе.'
+            if is_ajax:
+                return JsonResponse({'success': False, 'message': message}, status=400)
+            messages.error(request, message)
+            return redirect(product.get_absolute_url())
+
         if request.user.is_authenticated:
+            if cart_item is None:
+                cart_item = CartItem(cart=cart, product=product)
             cart_item.quantity = desired_quantity
             cart_item.save()
         else:
@@ -498,6 +521,9 @@ def update_cart(request, pk):
         })
     with transaction.atomic():
         product = Product.objects.select_for_update().get(pk=pk)
+        if not product.has_price or product.stock < quantity:
+            return JsonResponse({'success': False, 'message': 'Товар недоступен в указанном количестве.',
+                                 'current_quantity': 1}, status=400)
         if request.user.is_authenticated:
             cart = get_or_create_cart(request)
             cart_item, _ = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -629,6 +655,10 @@ class InsufficientStock(Exception):
     pass
 
 
+class PriceUnavailable(Exception):
+    pass
+
+
 @ratelimit(key='ip', rate='90/h', method='POST', block=True)
 @ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def checkout(request):
@@ -696,8 +726,7 @@ def checkout(request):
     if request.method == 'POST':
         form = OrderForm(request.POST, user=request.user)
         if form.is_valid():
-            user_name = form.cleaned_data['first_name']
-            user_lastname = form.cleaned_data['last_name']
+            customer_name = form.cleaned_data['name']
             user_email = form.cleaned_data['email']
             user_phone = form.cleaned_data['phone']
             delivery_address = form.cleaned_data['address']
@@ -716,8 +745,7 @@ def checkout(request):
                     )
                     OrderContact.objects.create(
                         order=order,
-                        first_name=user_name,
-                        last_name=user_lastname,
+                        name=customer_name,
                         email=user_email,
                         phone=user_phone,
                         address=delivery_address,
@@ -725,6 +753,8 @@ def checkout(request):
                     )
                     for product_id, qty in sorted(lines, key=lambda t: t[0]):
                         product = Product.objects.select_for_update().get(pk=product_id)
+                        if not product.has_price:
+                            raise PriceUnavailable(product.name)
                         if product.stock < qty:
                             raise InsufficientStock(product.name)
                         OrderItem.objects.create(order=order, product=product, quantity=qty)
@@ -738,6 +768,9 @@ def checkout(request):
                 return redirect('view_cart')
             except InsufficientStock as exc:
                 messages.error(request, f'Недостаточно товара «{exc}» на складе. Измените количество в корзине.')
+                return redirect('view_cart')
+            except PriceUnavailable as exc:
+                messages.error(request, f'Цена товара «{exc}» уточняется. Удалите его из корзины.')
                 return redirect('view_cart')
             except DatabaseError:
                 logger.exception('Не удалось сохранить заказ')

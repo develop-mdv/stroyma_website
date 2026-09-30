@@ -2,28 +2,29 @@
     <!-- Изображение -->
     <div class="relative bg-gray-50 w-full aspect-[4/3] md:aspect-auto md:h-full shrink-0">
         {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}"
-             class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+        <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"
+             class="absolute inset-0 w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %}" loading="lazy">
         {% else %}
         <div class="absolute inset-0 flex items-center justify-center">
             <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Нет фото</span>
         </div>
         {% endif %}
+        {% if product.is_illustration %}<span class="absolute bottom-4 left-4 bg-white/95 text-gray-700 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">Иллюстрация</span>{% endif %}
     </div>
 
     <!-- Информация о товаре -->
     <div class="flex flex-col p-5 sm:p-6 md:p-8 lg:p-10 xl:p-12 overflow-y-auto w-full h-full min-h-0">
         <div class="flex-grow">
             <!-- Рейтинг -->
-            <div class="text-yellow-500 text-sm mb-3 md:mb-4">
+            {% if product.rating %}<div class="text-yellow-500 text-sm mb-3 md:mb-4">
                 {% for i in '12345' %}
-                    {% if forloop.counter <= product.rating|default:5 %}
+                    {% if forloop.counter <= product.rating %}
                         ★
                     {% else %}
                         <span class="text-gray-200">★</span>
                     {% endif %}
                 {% endfor %}
-            </div>
+            </div>{% endif %}
 
             <!-- Заголовок -->
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 leading-[1.1] mb-4 md:mb-6 tracking-tight uppercase break-words">
@@ -39,21 +40,21 @@
 
             <!-- Цена -->
             <div class="mb-6 md:mb-8">
-                <span class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Окончательная цена</span>
-                <p class="font-black font-display text-gray-900 leading-none tracking-tighter" style="font-size:clamp(2rem,7vw,3rem)">{{ product.price|floatformat:"0" }} <span class="text-xl sm:text-2xl font-light text-gray-400">₽</span></p>
+                <span class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">{% if product.source_key %}Цена по прайсу (опт){% else %}Стоимость{% endif %}</span>
+                <p class="font-black font-display text-gray-900 leading-none tracking-tighter" style="font-size:clamp(2rem,7vw,3rem)">{% if product.has_price %}{{ product.price|floatformat:"-2" }} <span class="text-xl sm:text-2xl font-light text-gray-400">₽ / {{ product.unit }}</span>{% else %}<span class="text-xl">Цена уточняется</span>{% endif %}</p>
             </div>
         </div>
 
         <!-- Форма добавления в корзину -->
-        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
+        {% if product.has_price and product.max_order_quantity %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
             {% csrf_token %}
             <div class="flex items-center justify-between border-2 border-gray-900 rounded-2xl p-2 mb-4">
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-2 sm:ml-4">Кол-во</span>
                 <div class="flex items-center">
                     <button type="button" aria-label="Уменьшить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value) - 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">−</button>
-                    <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}" value="1"
+                    <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{{ product.max_order_quantity }}" value="1"
                            class="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-gray-900 p-0">
-                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({% if product.stock > 0 %}{{ product.stock }}{% else %}999{% endif %}, parseInt(input.value) + 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">+</button>
+                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({{ product.max_order_quantity }}, parseInt(input.value) + 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">+</button>
                 </div>
             </div>
 
@@ -65,6 +66,6 @@
                     <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
-        </form>
+        </form>{% endif %}
     </div>
 </div>

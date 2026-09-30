@@ -45,7 +45,7 @@
             <div>
                 <span class="block text-[0.65rem] uppercase tracking-widest text-gray-400 font-semibold mb-4">Покупатель</span>
                 {% if order.contact %}
-                <p class="text-lg font-bold text-gray-900 mb-1">{{ order.contact.first_name }} {{ order.contact.last_name }}</p>
+                <p class="text-lg font-bold text-gray-900 mb-1">{{ order.contact.name }}</p>
                 <div class="text-sm text-gray-500 font-light space-y-1">
                     <p>{{ order.contact.email|default:"—" }}</p>
                     <p>{{ order.contact.phone|default:"—" }}</p>
