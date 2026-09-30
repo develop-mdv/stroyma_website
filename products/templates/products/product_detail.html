@@ -46,15 +46,6 @@
     "availability": "{% if product.stock %}https://schema.org/InStock{% else %}https://schema.org/BackOrder{% endif %}",
     "itemCondition": "https://schema.org/NewCondition"
   }{% endif %}
-  {% if product.rating %}
-  ,"aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "{{ product.rating }}",
-    "bestRating": "5",
-    "worstRating": "1",
-    "ratingCount": "1"
-  }
-  {% endif %}
 }
 </script>
 
@@ -100,11 +91,6 @@
                         </div>
                     {% endif %}
                     
-                    <!-- Бейдж Рейтинга Абсолютный сверху -->
-                    {% if product.rating %}<div class="absolute top-4 md:top-8 left-4 md:left-8 bg-white/80 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 shadow-lg">
-                        <span class="text-yellow-500 text-base md:text-lg">★</span>
-                        <span class="font-bold text-gray-900 text-xs md:text-sm">{{ product.rating }}.0</span>
-                    </div>{% endif %}
                 </div>
             </div>
 

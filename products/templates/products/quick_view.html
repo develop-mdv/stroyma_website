@@ -1,71 +1,51 @@
-<div class="grid grid-cols-1 md:grid-cols-2 h-full w-full grid-rows-[auto_1fr] md:grid-rows-1 overflow-hidden">
-    <!-- Изображение -->
-    <div class="relative bg-gray-50 w-full aspect-[4/3] md:aspect-auto md:h-full shrink-0">
+<div class="quick-view-layout">
+    <div class="quick-view-image">
         {% if product.image %}
         <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"
-             class="absolute inset-0 w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %}" loading="lazy">
+             class="{% if product.is_illustration %}quick-view-image-contain{% endif %}" loading="lazy">
         {% else %}
-        <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Нет фото</span>
-        </div>
+        <span class="quick-view-no-image">Нет фото</span>
         {% endif %}
-        {% if product.is_illustration %}<span class="absolute bottom-4 left-4 bg-white/95 text-gray-700 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">Иллюстрация</span>{% endif %}
+        {% if product.is_illustration %}<span class="quick-view-illustration">Иллюстрация</span>{% endif %}
     </div>
 
-    <!-- Информация о товаре -->
-    <div class="flex flex-col p-5 sm:p-6 md:p-8 lg:p-10 xl:p-12 overflow-y-auto w-full h-full min-h-0">
-        <div class="flex-grow">
-            <!-- Рейтинг -->
-            {% if product.rating %}<div class="text-yellow-500 text-sm mb-3 md:mb-4">
-                {% for i in '12345' %}
-                    {% if forloop.counter <= product.rating %}
-                        ★
-                    {% else %}
-                        <span class="text-gray-200">★</span>
-                    {% endif %}
-                {% endfor %}
-            </div>{% endif %}
+    <div class="quick-view-info">
+        <div class="quick-view-summary">
+            <h2 class="quick-view-title" title="{{ product.name }}">{{ product.name }}</h2>
 
-            <!-- Заголовок -->
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black font-display text-gray-900 leading-[1.1] mb-4 md:mb-6 tracking-tight uppercase break-words">
-                {{ product.name }}
-            </h2>
+            {% if product.description %}
+            <p class="quick-view-description">{{ product.description|striptags }}</p>
+            <a class="quick-view-read-more" href="{% url 'product_detail' slug=product.slug %}">Читать далее</a>
+            {% endif %}
 
-            <!-- Описание -->
-            <p class="text-sm font-light text-gray-500 leading-relaxed mb-6 md:mb-8">
-                {{ product.description|truncatewords:25 }}
-            </p>
-
-            <hr class="border-t border-gray-100 mb-6 md:mb-8">
-
-            <!-- Цена -->
-            <div class="mb-6 md:mb-8">
-                <span class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Стоимость</span>
-                <p class="font-black font-display text-gray-900 leading-none tracking-tighter" style="font-size:clamp(2rem,7vw,3rem)">{% if product.has_price %}{{ product.price|floatformat:"-2" }} <span class="text-xl sm:text-2xl font-light text-gray-400">₽ / {{ product.unit }}</span>{% else %}<span class="text-xl">Цена уточняется</span>{% endif %}</p>
+            <div class="quick-view-price">
+                <span class="quick-view-price-label">Стоимость</span>
+                {% if product.has_price %}
+                <p>{{ product.price|floatformat:"-2" }} <span>₽ / {{ product.unit }}</span></p>
+                {% else %}
+                <p class="quick-view-price-unavailable">Цена уточняется</p>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Форма добавления в корзину -->
-        {% if product.has_price %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="mt-auto ajax-cart-form">
+        {% if product.has_price %}
+        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="quick-view-form ajax-cart-form">
             {% csrf_token %}
-            <div class="flex items-center justify-between border-2 border-gray-900 rounded-2xl p-2 mb-4">
-                <span class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-2 sm:ml-4">Кол-во</span>
-                <div class="flex items-center">
-                    <button type="button" aria-label="Уменьшить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value) - 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">−</button>
-                    <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{{ product.max_order_quantity }}" value="1"
-                           class="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-gray-900 p-0">
-                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({{ product.max_order_quantity }}, parseInt(input.value) + 1);" class="w-11 h-11 flex items-center justify-center text-gray-900 text-xl hover:bg-gray-100 rounded-xl transition-colors">+</button>
+            <div class="quick-view-quantity">
+                <label for="qty-{{ product.pk }}">Кол-во</label>
+                <div>
+                    <button type="button" aria-label="Уменьшить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.max(1, parseInt(input.value || 1) - 1);">−</button>
+                    <input type="number" name="quantity" id="qty-{{ product.pk }}" min="1" max="{{ product.max_order_quantity }}" value="1">
+                    <button type="button" aria-label="Увеличить" onclick="const input = document.getElementById('qty-{{ product.pk }}'); input.value = Math.min({{ product.max_order_quantity }}, parseInt(input.value || 1) + 1);">+</button>
                 </div>
             </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 md:mt-6">
-                <button type="submit" class="flex-grow bg-gray-900 text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-deep-green text-center hover:text-white transition-colors duration-300 min-h-[48px]">
-                    В корзину
-                </button>
-                <a href="{% url 'product_detail' slug=product.slug %}" class="w-full sm:w-14 h-14 flex items-center justify-center flex-shrink-0 bg-gray-50 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-2xl transition-colors" title="Открыть карточку товара" aria-label="Открыть карточку товара">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+            <div class="quick-view-actions">
+                <button type="submit" class="quick-view-add">В корзину</button>
+                <a href="{% url 'product_detail' slug=product.slug %}" class="quick-view-open" title="Открыть карточку товара" aria-label="Открыть карточку товара"><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-        </form>{% endif %}
+        </form>
+        {% else %}
+        <a class="quick-view-full-link" href="{% url 'product_detail' slug=product.slug %}">Открыть карточку товара <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        {% endif %}
     </div>
 </div>

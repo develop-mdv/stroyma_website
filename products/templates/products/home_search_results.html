@@ -13,6 +13,10 @@
         <div class="home-product-info">
             <a class="home-product-name" href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a>
             {% if product.is_illustration %}<small class="text-gray-500">Иллюстрация товара</small>{% endif %}
+            {% if product.description %}
+            <p class="home-product-description">{{ product.description|striptags }}</p>
+            <a class="home-product-more" href="{% url 'product_detail' slug=product.slug %}">Развернуть</a>
+            {% endif %}
             <p class="home-product-availability">
                 {% if product.stock %}<span class="home-stock-dot"></span>В наличии{% else %}<span class="home-stock-dot home-stock-dot-muted"></span>Под заказ{% endif %}
             </p>

@@ -48,6 +48,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}?v=6">
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=9">
+    <link rel="stylesheet" href="{% static 'css/quick-view.css' %}?v=2">
 </head>
 <body class="relative font-sans text-gray-800 antialiased bg-[#fcfcfc] transition-colors duration-300">
     <!-- Микроразметка Schema.org - Организация -->
@@ -212,8 +213,8 @@
 
     <!-- Модальное окно для быстрого просмотра -->
     <div id="quick-view-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xl flex items-center justify-center z-50 transition-all duration-500">
-        <div id="modal-content" class="bg-white/90 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] p-0 max-w-[60rem] w-full max-h-[92dvh] md:max-h-[600px] xl:max-h-[650px] h-auto md:h-[600px] xl:h-[650px] overflow-hidden relative shadow-2xl mx-4 border border-white/20">
-            <button onclick="closeQuickView()" class="absolute top-4 right-4 md:top-6 md:right-6 z-10 text-gray-400 hover:text-gray-900 p-3 rounded-full hover:bg-white/50 transition-colors backdrop-blur-md" aria-label="Закрыть модальное окно">
+        <div id="modal-content" class="quick-view-dialog relative bg-white shadow-2xl overflow-hidden">
+            <button onclick="closeQuickView()" class="quick-view-close absolute z-10 text-gray-400 hover:text-gray-900 rounded-full hover:bg-white/75 transition-colors" aria-label="Закрыть модальное окно">
                 <i class="fas fa-times text-xl md:text-2xl"></i>
             </button>
             <div id="quick-view-content" class="w-full h-full">

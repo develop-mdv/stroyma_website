@@ -73,6 +73,10 @@
 .catalog-product-card .product-actions:has(form) { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .catalog-product-card .product-actions > button, .catalog-product-card .product-actions > form { min-width: 0; width: 100%; }
 .catalog-product-card .product-actions button { width: 100%; overflow-wrap: anywhere; line-height: 1.25; padding-left: 3px; padding-right: 3px; }
+.catalog-product-name { display: -webkit-box; overflow: hidden; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.catalog-product-description { display: -webkit-box; overflow: hidden; width: 100%; color: #758179; font-size: .78rem; line-height: 1.45; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.catalog-product-more { margin: 4px 0 14px; color: #2d5d4c; font-size: .75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.catalog-product-more:hover { color: #1a3628; }
 #products-pagination[hidden] { display: none; }
 
 @media (max-width: 1100px) {

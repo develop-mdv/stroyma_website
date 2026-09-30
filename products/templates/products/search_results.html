@@ -50,21 +50,16 @@
 
         <!-- Содержимое карточки -->
         <div class="pt-5 pb-2 px-1 flex-grow flex flex-col items-center text-center">
-            <a href="{% url 'product_detail' slug=product.slug %}" class="mb-2 block">
-                <h5 class="text-lg font-bold font-display text-gray-900 leading-tight group-hover:text-deep-green transition-colors">{{ product.name }}</h5>
+            <a href="{% url 'product_detail' slug=product.slug %}" class="mb-2 block w-full">
+                <h5 class="catalog-product-name text-lg font-bold font-display text-gray-900 leading-tight group-hover:text-deep-green transition-colors">{{ product.name }}</h5>
             </a>
+            {% if product.description %}
+            <p class="catalog-product-description">{{ product.description|striptags }}</p>
+            <a class="catalog-product-more" href="{% url 'product_detail' slug=product.slug %}">Развернуть</a>
+            {% endif %}
             
             <div class="mt-auto flex flex-col items-center gap-1">
                 <p class="text-2xl font-black font-display text-gray-900">{% if product.has_price %}{{ product.price|floatformat:"-2" }} <span class="text-sm font-light text-gray-400">₽ / {{ product.unit }}</span>{% else %}<span class="text-base">Цена уточняется</span>{% endif %}</p>
-                <div class="text-[0.6rem] text-yellow-500 flex tracking-widest opacity-60">
-                    {% for i in '12345' %}
-                        {% if forloop.counter <= product.rating %}
-                            ★
-                        {% else %}
-                            <span class="text-gray-300">★</span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
             </div>
         </div>
     </div>
