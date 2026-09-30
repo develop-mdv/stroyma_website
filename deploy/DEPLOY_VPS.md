@@ -165,7 +165,7 @@ sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web py
 Очистку истёкших сессий выполняйте примерно раз в неделю, например отдельной строкой в root cron (`sudo crontab -e`):
 
 ```cron
-0 4 * * 0 cd /opt/stroyma/stroyma_website && /usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T web python manage.py clear_sessions >> /var/log/stroyma-sessions.log 2>&1
+0 4 * * 0 cd /opt/stroyma/stroyma_website && /usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T web python manage.py clearsessions >> /var/log/stroyma-sessions.log 2>&1
 ```
 
 `cleanup_media` и `optimize_media` не требуются для запуска. Сначала запускать их без `--apply` для просмотра результата; автоматический запуск с `--apply` не настраивайте.
