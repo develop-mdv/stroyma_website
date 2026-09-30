@@ -512,6 +512,7 @@
     let savedCartCollapsed = false;
     try { savedCartCollapsed = window.localStorage.getItem('stroyma-home-cart-collapsed') === '1'; } catch (_) { /* storage is optional */ }
     setCartCollapsed(window.matchMedia('(max-width: 1100px)').matches || savedCartCollapsed, false);
+    cartPanel.classList.add('is-ready');
     cartToggle.addEventListener('click', () => setCartCollapsed(!cartPanel.classList.contains('is-collapsed')));
     document.addEventListener('cart:updated', async () => {
         try {

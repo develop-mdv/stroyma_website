@@ -1,10 +1,11 @@
+{% load responsive_images %}
 <div id="home-result-list" class="home-result-list">
     {% for product in products %}
     <article class="home-product-card">
         <div class="home-product-visual">
             <a class="home-product-image" href="{% url 'product_detail' slug=product.slug %}" aria-label="Открыть {{ product.name }}">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"{% if product.is_illustration %} style="object-fit:contain"{% endif %} loading="lazy">
+                    <img src="{{ product.image|image_url:400 }}" srcset="{{ product.image|image_srcset }}" sizes="100px" decoding="async" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"{% if product.is_illustration %} style="object-fit:contain"{% endif %} loading="lazy">
                 {% else %}
                     <i class="fa-regular fa-image" aria-hidden="true"></i>
                 {% endif %}
@@ -14,7 +15,7 @@
             <a class="home-product-name" href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a>
             {% if product.is_illustration %}<small class="text-gray-500">Иллюстрация товара</small>{% endif %}
             {% if product.description %}
-            <p class="home-product-description">{{ product.description|striptags }}</p>
+            <p class="home-product-description">{{ product.description|striptags|truncatechars:220 }}</p>
             <a class="home-product-more" href="{% url 'product_detail' slug=product.slug %}">Развернуть</a>
             {% endif %}
             <p class="home-product-availability">

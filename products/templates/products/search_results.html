@@ -1,3 +1,4 @@
+{% load responsive_images %}
 <style>
 /* На тач-устройствах всегда показываем actions на карточках (нет hover) */
 @media (hover: none) and (pointer: coarse) {
@@ -14,7 +15,7 @@
         <div class="relative w-full aspect-[4/5] overflow-hidden bg-white rounded-3xl">
             <a href="{% url 'product_detail' slug=product.slug %}" class="block absolute inset-0 z-0">
                 {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[1500ms] ease-out group-hover:scale-110" loading="lazy">
+                <img src="{{ product.image|image_url:400 }}" srcset="{{ product.image|image_srcset }}" sizes="(min-width: 1024px) 25vw, 90vw" decoding="async" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[1500ms] ease-out group-hover:scale-110" loading="lazy">
                 {% else %}
                 <div class="w-full h-full flex items-center justify-center bg-gray-50">
                     <span class="text-xs uppercase tracking-widest text-gray-300">Нет фото</span>
@@ -54,7 +55,7 @@
                 <h5 class="catalog-product-name text-lg font-bold font-display text-gray-900 leading-tight group-hover:text-deep-green transition-colors">{{ product.name }}</h5>
             </a>
             {% if product.description %}
-            <p class="catalog-product-description">{{ product.description|striptags }}</p>
+            <p class="catalog-product-description">{{ product.description|striptags|truncatechars:220 }}</p>
             <a class="catalog-product-more" href="{% url 'product_detail' slug=product.slug %}">Развернуть</a>
             {% endif %}
             

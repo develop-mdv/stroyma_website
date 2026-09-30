@@ -10,8 +10,9 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.db import DatabaseError, transaction
-from django.db.models import Q, Max, Min
-from django.db.models.functions import Round
+from django.db.models import Q, Max, Min, Count, OuterRef, Subquery, IntegerField
+from django.db.models.functions import Round, Coalesce
+from mptt.utils import get_cached_trees
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -21,6 +22,7 @@ from django.views.generic import DetailView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
 from .forms import ColorSelectionRequestForm, ContactForm, OrderForm, SearchForm
+from .images import image_url
 from stroyma.legal import CONSENTS, record_acceptance
 from .models import (
     Cart,
@@ -174,6 +176,23 @@ def _browser_candidates(request, scope=None):
     return products.distinct(), query, selected_categories
 
 
+def _category_cards(categories):
+    """Counts and fallback photos for the whole page in one SQL query."""
+    descendants = Product.published.filter(
+        categories__tree_id=OuterRef('tree_id'),
+        categories__lft__gte=OuterRef('lft'),
+        categories__lft__lte=OuterRef('rght'),
+    )
+    totals = descendants.order_by().values('categories__tree_id').annotate(
+        total=Count('pk', distinct=True)
+    ).values('total')[:1]
+    photos = descendants.exclude(image='').filter(image__isnull=False).order_by('pk').values('image')[:1]
+    return categories.annotate(
+        _total_products_count=Coalesce(Subquery(totals, output_field=IntegerField()), 0),
+        _display_image_name=Subquery(photos),
+    )
+
+
 def _browser_page_context(request, scope=None, page_size=12):
     products, query, selected_categories = _browser_candidates(request, scope)
     products = products.annotate(display_price=Round('price'))
@@ -211,10 +230,18 @@ def _browser_page_context(request, scope=None, page_size=12):
          'current': number == page.number}
         for number in paginator.get_elided_page_range(page.number, on_each_side=1, on_ends=1)
     ]
-    categories_tree = Category.objects.filter(parent=scope).order_by('tree_id', 'lft')
-    visible_categories = Category.objects.filter(name__icontains=query) if query else categories_tree
+    # MPTT caches children on each node, including leaves, so recursive filters
+    # do not issue one SQL query for each expanded branch.
+    tree_nodes = list(Category.objects.order_by('tree_id', 'lft'))
+    roots = get_cached_trees(tree_nodes)
+    nodes_by_id = {node.pk: node for node in tree_nodes}
+    categories_tree = list(nodes_by_id[scope.pk].get_children()) if scope is not None else roots
+    visible_categories = Category.objects.filter(name__icontains=query) if query else Category.objects.filter(parent=scope)
     if scope is not None and query:
         visible_categories = visible_categories.filter(pk__in=scope.get_descendants().values('pk'))
+    visible_categories = list(_category_cards(visible_categories).order_by('tree_id', 'lft'))
+    for node in visible_categories:
+        node._cached_children = nodes_by_id[node.pk]._cached_children
     return {
         'products': page,
         'search_query': query,
@@ -226,7 +253,7 @@ def _browser_page_context(request, scope=None, page_size=12):
         'selected_price_max': selected_maximum,
         'has_price_candidates': available,
         'categories_tree': categories_tree,
-        'visible_categories': visible_categories.order_by('tree_id', 'lft'),
+        'visible_categories': visible_categories,
         'category': scope,
         'scope_category_id': scope.pk if scope is not None else '',
         'browser_path': page_path,
@@ -241,7 +268,7 @@ def product_list(request):
     products = Product.published.all()
 
     # Получаем корневые категории и их потомков
-    root_categories = Category.objects.filter(parent=None)
+    root_categories = get_cached_trees(Category.objects.order_by('tree_id', 'lft'))
     categories_tree = []
     for category in root_categories:
         categories_tree.append({
@@ -258,13 +285,7 @@ def product_list(request):
     selected_categories = request.GET.getlist('category')
     if selected_categories:
         # Получаем только выбранные категории
-        categories_to_filter = []
-        for category_id in selected_categories:
-            try:
-                category = Category.objects.get(id=category_id)
-                categories_to_filter.append(category)
-            except Category.DoesNotExist:
-                continue
+        categories_to_filter = Category.objects.filter(pk__in=_safe_category_ids(selected_categories))
         
         # Создаем Q-объект для каждой категории
         category_filters = Q()
@@ -340,7 +361,7 @@ def search_ajax(request):
                     'name': product.name,
                     'price': f'{product.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',') if product.has_price else 'Цена уточняется',
                     'unit': product.unit,
-                    'image': product.image.url if product.image else '',
+                    'image': image_url(product.image, 160),
                     'url': product.get_absolute_url(),
                 }
                 for product in candidates.order_by('name')[:6]
@@ -391,7 +412,7 @@ def search_ajax(request):
                 'name': product.name,
                 'price': f'{product.price:,.2f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',') if product.has_price else 'Цена уточняется',
                 'unit': product.unit,
-                'image': product.image.url if product.image else '',
+                'image': image_url(product.image, 160),
                 'url': product.get_absolute_url(),
             }
             for product in products
@@ -938,7 +959,7 @@ class CategoryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category = self.get_object()
+        category = self.object
         
         context.update({
             'meta_title': f'{category.name} - Каталог товаров',

@@ -1,11 +1,14 @@
 {% extends 'products/base.html' %}
 {% load static %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=11">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}?v=12">{% endblock %}
 {% block content %}
 
 <div class="home-page" id="home-page" data-search-url="{% url 'search_ajax' %}" data-cart-url="{% url 'cart_preview' %}" data-price-min="{{ min_price }}" data-price-max="{{ max_price }}" data-price-available="{{ has_price_candidates|yesno:'true,false' }}" data-initial-page="{{ page_obj.number }}" data-has-next="{{ page_obj.has_next|yesno:'true,false' }}">
     <section class="home-hero" aria-labelledby="home-hero-title">
-        <img class="home-hero-photo" src="{% static 'images/home_materials_hero.webp' %}" alt="Стопка светлых строительных плит" fetchpriority="high">
+        <picture>
+            <source media="(max-width: 900px)" srcset="{% static 'images/home_materials_hero-640.webp' %}">
+            <img class="home-hero-photo" src="{% static 'images/home_materials_hero-1280.webp' %}" srcset="{% static 'images/home_materials_hero-1280.webp' %} 1280w, {% static 'images/home_materials_hero.webp' %} 1672w" sizes="70vw" width="1672" height="941" decoding="async" alt="Стопка светлых строительных плит" fetchpriority="high">
+        </picture>
         <div class="home-hero-content">
             <span class="home-eyebrow">Каталог СТРОЙМА · Курск</span>
             <h1 id="home-hero-title">Строй<span>МА</span>териалы<br>для дела.</h1>
@@ -191,5 +194,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/home.js' %}?v=13"></script>
+<script src="{% static 'js/home.js' %}?v=14"></script>
 {% endblock %}

@@ -3,7 +3,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./static/css/tailwind.input.css -o ./static/css/tailwind.css --minify",
     "build:vendor": "node ./tools/copy_frontend_vendor.mjs",
-    "build": "npm run build:css && npm run build:vendor"
+    "build:icons": "python ./tools/build_public_icons.py",
+    "build": "npm run build:css && npm run build:vendor && npm run build:icons"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "5.3.0",

@@ -187,6 +187,7 @@
 .home-cart-empty span { display: block; margin-top: 7px; color: #768279; font-size: .78rem; line-height: 1.5; }
 
 @media (max-width: 1100px) {
+    .home-cart-panel:not(.is-ready) { visibility: hidden; }
     .home-layout, .home-layout.cart-collapsed { grid-template-columns: minmax(210px,250px) minmax(0,1fr); }
     .home-cart-panel { position: fixed; top: auto; right: 18px; bottom: 82px; z-index: 45; width: min(340px, calc(100vw - 36px)); max-height: calc(100dvh - 110px); box-shadow: 0 16px 50px rgba(26,54,40,.2); }
     .home-cart-panel.is-collapsed { width: 64px; border-color: #c9d8c8; }

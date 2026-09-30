@@ -5,7 +5,7 @@
 {% block meta_description %}Подберите фактуру и цвет фасада, мозаику цоколя и освещение на интерактивной 3D-модели дома.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/color_selection.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/color_selection.css' %}?v=6">
 {% endblock %}
 
 {% block content %}
@@ -18,10 +18,16 @@
     </header>
 
     <div class="color-configurator-shell">
+        <div class="color-configurator-start" id="configuratorStart">
+            <h2>Выберите отделку на модели дома</h2>
+            <p>Поверните дом, сравните цвета и фактуры, сохраните свой вариант.</p>
+            <button type="button" id="startConfigurator">Открыть 3D-модель</button>
+            <noscript><p>Для 3D-модели включите JavaScript. Консультацию можно запросить через форму ниже.</p></noscript>
+        </div>
         <iframe id="facadeConfigurator"
-                src="{% static 'color_configurator/index.html' %}?{{ widget_query }}"
+                data-src="{% static 'color_configurator/index.html' %}?{{ widget_query }}"
                 title="Конфигуратор фасада: 3D-модель дома, фактуры и цвета"
-                loading="eager" allow="clipboard-write"></iframe>
+                hidden allow="clipboard-write"></iframe>
     </div>
 
     <section class="color-request" id="colorRequest" aria-labelledby="colorRequestTitle">
@@ -80,5 +86,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/color_selection.js' %}?v=5"></script>
+<script src="{% static 'js/color_selection.js' %}?v=6"></script>
 {% endblock %}

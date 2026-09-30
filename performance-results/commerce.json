@@ -1,0 +1,474 @@
+{
+  "date": "2026-09-30T14:51:18.042Z",
+  "base": "http://127.0.0.1:8001",
+  "cache": "cold; service worker blocked",
+  "results": [
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/product/shtukaturka-silin-universalnaia-armirovannaia-5-kg-iunis-143/",
+      "status": 200,
+      "lcp": 2584,
+      "cls": 0,
+      "longTasks": [
+        84
+      ],
+      "interactions": [],
+      "lcpElement": "absolute inset-0 w-full h-full object-contain transition-transform duration-[2000ms] group-hover:scale-105",
+      "ttfb": 194.39999999850988,
+      "domContentLoaded": 2576,
+      "load": 2636.599999997765,
+      "fcp": 2348,
+      "requests": 25,
+      "bytes": 286627,
+      "domNodes": 246,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-ext-wght-normal.woff2",
+          "bytes": 85368,
+          "duration": 758
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 751
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 592
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 318
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 408
+        },
+        {
+          "url": "/media/products/.thumbnails/49544d22a30f58cdbd21d789-800.webp",
+          "bytes": 13970,
+          "duration": 557
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 335
+        },
+        {
+          "url": "/static/images/logo-ma-small.webp",
+          "bytes": 7664,
+          "duration": 603
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 88,
+      "longTaskCount": 2,
+      "blockingTime": 39,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/category/gidroizoliatsiia/",
+      "status": 200,
+      "lcp": 3136,
+      "cls": 0,
+      "longTasks": [
+        93
+      ],
+      "interactions": [],
+      "lcpElement": "absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105",
+      "ttfb": 183.29999999701977,
+      "domContentLoaded": 2959,
+      "load": 3112.89999999851,
+      "fcp": 2236,
+      "requests": 27,
+      "bytes": 348482,
+      "domNodes": 415,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/media/products/.thumbnails/0523ef20f7222a4ac7a2c257-800.webp",
+          "bytes": 98318,
+          "duration": 824
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 661
+        },
+        {
+          "url": "/media/products/.thumbnails/1557f49a3b2d4f438e8f7ae2-800.webp",
+          "bytes": 33462,
+          "duration": 527
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 576
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 311
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 406
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-ext-wght-normal.woff2",
+          "bytes": 15108,
+          "duration": 259
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 332
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 96,
+      "longTaskCount": 2,
+      "blockingTime": 57,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/services/kolirovka/",
+      "status": 200,
+      "lcp": 2336,
+      "cls": 0,
+      "longTasks": [],
+      "interactions": [],
+      "lcpElement": "",
+      "ttfb": 211.60000000149012,
+      "domContentLoaded": 2935,
+      "load": 3403.10000000149,
+      "fcp": 2336,
+      "requests": 26,
+      "bytes": 465616,
+      "domNodes": 280,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/media/service_photos/.thumbnails/cc4e58dd1dc44cc24699aef7-800.webp",
+          "bytes": 104390,
+          "duration": 1145
+        },
+        {
+          "url": "/media/service_photos/.thumbnails/bbbe682b40caa6e9d9014acb-800.webp",
+          "bytes": 88834,
+          "duration": 1053
+        },
+        {
+          "url": "/media/services/.thumbnails/a3b86974eb9e3ae8a3f080ba-800.webp",
+          "bytes": 84272,
+          "duration": 1569
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 887
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 726
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 441
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 410
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 334
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 64,
+      "longTaskCount": 1,
+      "blockingTime": 0,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/cart/",
+      "status": 200,
+      "lcp": 2004,
+      "cls": 0,
+      "longTasks": [
+        114
+      ],
+      "interactions": [],
+      "lcpElement": "text-gray-500 mb-8 max-w-sm text-lg",
+      "ttfb": 14.5,
+      "domContentLoaded": 2360.89999999851,
+      "load": 2375.800000000745,
+      "fcp": 2004,
+      "requests": 21,
+      "bytes": 183820,
+      "domNodes": 204,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 655
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 514
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 299
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 406
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 335
+        },
+        {
+          "url": "/static/images/logo-ma-small.webp",
+          "bytes": 7664,
+          "duration": 489
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/public-fa-solid-900-e45b0e3384c2.woff2",
+          "bytes": 6440,
+          "duration": 288
+        },
+        {
+          "url": "/static/css/base.css",
+          "bytes": 5788,
+          "duration": 274
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 88,
+      "longTaskCount": 2,
+      "blockingTime": 69,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/checkout/",
+      "status": 200,
+      "lcp": 1756,
+      "cls": 0,
+      "longTasks": [
+        84
+      ],
+      "interactions": [],
+      "lcpElement": "text-gray-500 mb-8 max-w-sm text-lg",
+      "ttfb": 15.900000002235174,
+      "domContentLoaded": 2175.60000000149,
+      "load": 2203.199999999255,
+      "fcp": 1756,
+      "requests": 21,
+      "bytes": 183820,
+      "domNodes": 204,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 680
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 572
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 415
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 404
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 332
+        },
+        {
+          "url": "/static/images/logo-ma-small.webp",
+          "bytes": 7664,
+          "duration": 472
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/public-fa-solid-900-e45b0e3384c2.woff2",
+          "bytes": 6440,
+          "duration": 313
+        },
+        {
+          "url": "/static/css/base.css",
+          "bytes": 5788,
+          "duration": 275
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 80,
+      "longTaskCount": 2,
+      "blockingTime": 38,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/accounts/login/",
+      "status": 200,
+      "lcp": 2468,
+      "cls": 0,
+      "longTasks": [
+        97
+      ],
+      "interactions": [],
+      "lcpElement": "text-sm text-gray-300 font-light leading-relaxed",
+      "ttfb": 13.100000001490116,
+      "domContentLoaded": 2296.800000000745,
+      "load": 2367.800000000745,
+      "fcp": 1884,
+      "requests": 21,
+      "bytes": 183908,
+      "domNodes": 225,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 696
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 602
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 459
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 428
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 340
+        },
+        {
+          "url": "/static/images/logo-ma-small.webp",
+          "bytes": 7664,
+          "duration": 495
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/public-fa-solid-900-e45b0e3384c2.woff2",
+          "bytes": 6440,
+          "duration": 314
+        },
+        {
+          "url": "/static/css/base.css",
+          "bytes": 5788,
+          "duration": 287
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 72,
+      "longTaskCount": 1,
+      "blockingTime": 47,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/accounts/register/",
+      "status": 200,
+      "lcp": 2832,
+      "cls": 0,
+      "longTasks": [
+        113
+      ],
+      "interactions": [],
+      "lcpElement": "text-sm text-gray-300 font-light leading-relaxed",
+      "ttfb": 25.599999997764826,
+      "domContentLoaded": 2623.599999997765,
+      "load": 2717.300000000745,
+      "fcp": 2080,
+      "requests": 21,
+      "bytes": 185414,
+      "domNodes": 253,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 623
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 556
+        },
+        {
+          "url": "/static/images/concrete_texture-small.webp",
+          "bytes": 20056,
+          "duration": 269
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2",
+          "bytes": 19048,
+          "duration": 425
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 10348,
+          "duration": 336
+        },
+        {
+          "url": "/static/images/logo-ma-small.webp",
+          "bytes": 7664,
+          "duration": 510
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/public-fa-solid-900-e45b0e3384c2.woff2",
+          "bytes": 6440,
+          "duration": 284
+        },
+        {
+          "url": "/static/css/base.css",
+          "bytes": 5788,
+          "duration": 293
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 80,
+      "longTaskCount": 2,
+      "blockingTime": 68,
+      "errors": []
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 .git
 .gitignore
 .venv
+node_modules/
+.npm-cache/
+.perf-tools/
+performance-results/
 venv
 .idea
 __pycache__

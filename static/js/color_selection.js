@@ -10,6 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!frame || !form) return;
 
+    const startButton = document.getElementById('startConfigurator');
+    const startPanel = document.getElementById('configuratorStart');
+    const start = () => {
+        if (frame.getAttribute('src')) return;
+        frame.src = frame.dataset.src;
+        frame.hidden = false;
+        if (startPanel) startPanel.hidden = true;
+        frame.focus({ preventScroll: true });
+    };
+    startButton?.addEventListener('click', start);
+    // Restore a shared selection or a submitted form immediately.
+    if (new URLSearchParams(location.search).size || facade?.value) start();
+
     const requestWidgetState = () => {
         if (revealStandaloneRequest) {
             frame.contentWindow?.postMessage({ type: 'facade-configurator:get-state' }, window.location.origin);

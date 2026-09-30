@@ -1,7 +1,8 @@
+{% load responsive_images %}
 <div class="quick-view-layout">
     <div class="quick-view-image">
         {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"
+        <img src="{{ product.image|image_url:800 }}" srcset="{{ product.image|image_srcset }}" sizes="(min-width: 700px) 480px, 90vw" decoding="async" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}"
              class="{% if product.is_illustration %}quick-view-image-contain{% endif %}" loading="lazy">
         {% else %}
         <span class="quick-view-no-image">Нет фото</span>

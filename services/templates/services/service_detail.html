@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load responsive_images %}
 {% load static %}
 
 {% block title %}{{ service.meta_title|default:service.title|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
@@ -8,7 +9,7 @@
 {% block og_title %}{{ service.meta_title|default:service.title|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block og_description %}{{ service.meta_description|default:service.short_description|truncatechars:160 }}{% endblock %}
 {% block og_type %}article{% endblock %}
-{% block og_image %}{% if service.image %}{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endif %}{% endblock %}
+{% block og_image %}{% if service.image %}{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma-small.webp' %}{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/gallery.css' %}?v=1">
@@ -146,7 +147,7 @@
                         {% for photo in service.photos.all %}
                             <a href="{{ photo.image.url }}" data-fancybox="gallery" data-caption="{{ photo.title|default:service.title }}" class="flex-none w-[85%] md:w-[60%] lg:w-[45%] rounded-[2.5rem] overflow-hidden relative group snap-start shadow-xl shadow-gray-200/50 hover:shadow-2xl transition-all duration-500">
                                 <div class="w-full aspect-video bg-gray-100 overflow-hidden">
-                                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1500ms]">
+                                    <img src="{{ photo.image|image_url:800 }}" srcset="{{ photo.image|image_srcset }}" sizes="(min-width: 1024px) 40vw, 90vw" decoding="async" alt="{{ photo.title }}" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1500ms]">
                                 </div>
                                 {% if photo.title %}
                                 <div class="absolute bottom-0 left-0 right-0 p-8 lg:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
@@ -179,7 +180,7 @@
                 <div class="xl:sticky xl:top-28 flex flex-col gap-6">
                     {% if service.image %}
                         <div class="aspect-video xl:aspect-square 2xl:aspect-[4/3] rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl shadow-gray-200/50 group block">
-                            <img src="{{ service.image.url }}" alt="Иллюстрация: {{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
+                            <img src="{{ service.image|image_url:800 }}" srcset="{{ service.image|image_srcset }}" sizes="(min-width: 1024px) 40vw, 90vw" decoding="async" alt="Иллюстрация: {{ service.title }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105">
                         </div>
                         <p class="text-xs text-gray-500">Иллюстрация услуги</p>
                     {% endif %}

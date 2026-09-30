@@ -2,9 +2,10 @@
     if (!('serviceWorker' in navigator)) return;
 
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {
-            // Browsing stays available when registration is unavailable.
-        });
+        const register = () => navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+        // Leave bandwidth and the main thread to the first page render.
+        if ('requestIdleCallback' in window) requestIdleCallback(register, { timeout: 5000 });
+        else setTimeout(register, 2000);
     });
 
     let installPrompt = null;

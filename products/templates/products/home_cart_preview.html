@@ -1,9 +1,10 @@
+{% load responsive_images %}
 {% if cart_preview_items %}
     <div class="home-cart-items">
         {% for item in cart_preview_items %}
         <div class="home-cart-item">
             <a href="{% url 'product_detail' slug=item.product.slug %}" class="home-cart-item-image" aria-label="Открыть {{ item.product.name }}">
-                {% if item.product.image %}<img src="{{ item.product.image.url }}" alt="" loading="lazy">{% else %}<i class="fa-regular fa-image" aria-hidden="true"></i>{% endif %}
+                {% if item.product.image %}<img src="{{ item.product.image|image_url:160 }}" srcset="{{ item.product.image|image_srcset }}" sizes="52px" decoding="async" alt="" loading="lazy">{% else %}<i class="fa-regular fa-image" aria-hidden="true"></i>{% endif %}
             </a>
             <div class="home-cart-item-info">
                 <a href="{% url 'product_detail' slug=item.product.slug %}">{{ item.product.name }}</a>

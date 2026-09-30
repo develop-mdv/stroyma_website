@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load responsive_images %}
 
 {% block content %}
 <div class="bg-gray-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
@@ -26,7 +27,7 @@
                     <div class="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 rounded-2xl p-3 flex items-center justify-center">
                         {% if item.product.image %}
                         <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full block">
-                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain mix-blend-multiply hover:scale-105 transition-transform duration-300" loading="lazy">
+                            <img src="{{ item.product.image|image_url:160 }}" srcset="{{ item.product.image|image_srcset }}" sizes="(min-width: 640px) 128px, 112px" decoding="async" alt="{{ item.product.name }}" class="w-full h-full object-contain mix-blend-multiply hover:scale-105 transition-transform duration-300" loading="lazy">
                         </a>
                         {% else %}
                         <a href="{% url 'product_detail' slug=item.product.slug %}" class="w-full h-full flex items-center justify-center text-gray-400">

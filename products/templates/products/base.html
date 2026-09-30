@@ -25,27 +25,28 @@
     <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства. Доставка и самовывоз по согласованию.' }}{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma-small.webp' %}{% endblock %}">
     <meta property="og:site_name" content="СТРОЙМА">
     
     <!-- Twitter карточка -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}{{ meta_title|default:'СТРОЙМА - Строительные материалы' }}{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'Широкий выбор строительных материалов для ремонта и строительства.' }}{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma-small.webp' %}{% endblock %}">
 
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}?v=1">
 
-    <link rel="stylesheet" href="{% static 'vendor/fonts/inter/wght.css' %}?v=1">
+    <link rel="preload" href="{% static 'vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{% static 'vendor/fonts/inter/wght.css' %}?v=2">
     <link rel="stylesheet" href="{% static 'vendor/fonts/outfit/wght.css' %}?v=1">
     
     <!-- Font Awesome для иконок -->
-    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/public.min.css' %}?v=1">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/logo-ma.png' %}?v=2">
-    <link rel="shortcut icon" href="{% static 'images/logo-ma.png' %}?v=2">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
     <!-- Подключение кастомных стилей -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=7">
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=9">
     <link rel="stylesheet" href="{% static 'css/quick-view.css' %}?v=2">
@@ -58,7 +59,7 @@
         "@type": "Organization",
         "name": "СТРОЙМА",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma-small.webp' %}",
         "description": "Компания СТРОЙМА - ваш надежный партнер в сфере строительных материалов.",
         "address": {
             "@type": "PostalAddress",
@@ -101,7 +102,7 @@
                 <!-- Колонка 1: Бренд -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center gap-3 mb-6">
-                        <img src="{% static 'images/logo-ma.png' %}?v=2" alt="СТРОЙМА" class="h-10 w-auto brightness-0 invert opacity-80">
+                        <img src="{% static 'images/logo-ma-small.webp' %}" alt="СТРОЙМА" class="h-10 w-auto brightness-0 invert opacity-80">
                         <span class="text-xl font-bold font-display">СТРОЙМА</span>
                     </div>
                     <p class="text-gray-400 text-sm font-light leading-relaxed mb-6 max-w-xs">
@@ -245,7 +246,7 @@
 
     <!-- JavaScript (размещенный в конце для быстрой загрузки страницы) -->
     <script src="{% static 'js/base.js' %}?v=4"></script>
-    <script src="{% static 'js/pwa.js' %}?v=3" defer></script>
+    <script src="{% static 'js/pwa.js' %}?v=4" defer></script>
     <script src="{% static 'js/phone-input.js' %}?v=6" defer></script>
     
     <script>

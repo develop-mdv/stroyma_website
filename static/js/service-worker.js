@@ -1,25 +1,23 @@
-const VERSION = 'stroyma-pwa-v13';
+const VERSION = 'stroyma-pwa-v14';
 const SHELL_CACHE = `${VERSION}-shell`;
 const PUBLIC_CACHE = `${VERSION}-public`;
 const MEDIA_CACHE = `${VERSION}-media`;
 const OFFLINE_URL = '/static/pwa/offline.html';
 const SHELL_URLS = [
     OFFLINE_URL, '/static/pwa/icon-192.png', '/static/pwa/icon-512.png',
-    '/static/css/tailwind.css?v=1', '/static/css/base.css?v=5', '/static/css/mobile.css?v=9',
-    '/static/css/home.css?v=9', '/static/css/catalog.css?v=3',
-    '/static/vendor/fonts/inter/wght.css?v=1', '/static/vendor/fonts/outfit/wght.css?v=1',
-    '/static/vendor/fonts/inter/files/inter-cyrillic-wght-normal.woff2',
-    '/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2',
-    '/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2',
-    '/static/vendor/fontawesome/css/all.min.css?v=1',
-    '/static/vendor/fontawesome/webfonts/fa-solid-900.woff2',
-    '/static/vendor/fontawesome/webfonts/fa-regular-400.woff2',
-    '/static/vendor/fontawesome/webfonts/fa-brands-400.woff2',
-    '/static/js/base.js?v=4', '/static/js/pwa.js?v=3', '/static/js/phone-input.js?v=6',
-    '/static/js/home.js?v=12', '/static/js/catalog.js?v=5',
-    '/static/images/concrete_texture.jpg', '/static/images/home_materials_hero.webp',
-    '/static/images/logo-ma.png?v=2'
 ];
+
+async function storeResponse(cacheName, request, response, limit) {
+    if (!response.ok || response.type !== 'basic' || response.headers.get('cache-control')?.includes('no-store')) return;
+    try {
+        const cache = await caches.open(cacheName);
+        await cache.put(request, response);
+        const keys = await cache.keys();
+        const removable = keys.filter(key => cacheName !== SHELL_CACHE ||
+            !SHELL_URLS.some(url => new URL(url, self.location.origin).href === key.url));
+        await Promise.all(removable.slice(0, Math.max(0, keys.length - limit)).map(key => cache.delete(key)));
+    } catch (_) { /* Storage quotas must not interrupt browsing. */ }
+}
 
 // Only informational pages are kept for reading offline. Orders, account,
 // cart, forms and search responses must always come from the server.
@@ -54,15 +52,15 @@ self.addEventListener('fetch', event => {
                 if (canCache && response.ok && response.type === 'basic' &&
                     response.headers.get('content-type')?.includes('text/html') &&
                     !response.headers.get('cache-control')?.includes('no-store')) {
-                    try {
-                        const html = await response.clone().text();
+                    const savedResponse = response.clone();
+                    event.waitUntil((async () => {
+                        const html = await savedResponse.clone().text();
                         const isPublic = html.includes('<meta name="pwa-cache" content="public">') &&
                             !html.includes('name="csrfmiddlewaretoken"');
                         if (isPublic) {
-                            const cache = await caches.open(PUBLIC_CACHE);
-                            await cache.put(request, response.clone());
+                            await storeResponse(PUBLIC_CACHE, request, savedResponse, 30);
                         }
-                    } catch (_) { /* Keep the network response when storage is unavailable. */ }
+                    })().catch(() => {}));
                 }
                 return response;
             } catch (_) {
@@ -78,14 +76,16 @@ self.addEventListener('fetch', event => {
 
     if (url.pathname.startsWith('/static/') && !url.pathname.startsWith('/static/admin/')) {
         event.respondWith((async () => {
+            // Versioned code and new optimized assets have stable URLs. Reuse
+            // them immediately; HTML and unversioned code still check the server.
+            const versioned = url.searchParams.has('v') || /\.(?:woff2|png|webp|jpe?g|svg)$/.test(url.pathname);
+            if (versioned) {
+                const saved = await caches.match(request, { cacheName: SHELL_CACHE });
+                if (saved) return saved;
+            }
             try {
                 const response = await fetch(request);
-                if (response.ok && response.type === 'basic') {
-                    try {
-                        const cache = await caches.open(SHELL_CACHE);
-                        await cache.put(request, response.clone());
-                    } catch (_) { /* Keep the network response when storage is unavailable. */ }
-                }
+                event.waitUntil(storeResponse(SHELL_CACHE, request, response.clone(), 120));
                 return response;
             } catch (_) {
                 return (await caches.match(request)) || Response.error();
@@ -96,16 +96,13 @@ self.addEventListener('fetch', event => {
 
     if (/^\/media\/(?:products|category_images|services|service_photos)\//.test(url.pathname) && request.destination === 'image') {
         event.respondWith((async () => {
+            if (url.pathname.includes('/.thumbnails/')) {
+                const saved = await caches.match(request, { cacheName: MEDIA_CACHE });
+                if (saved) return saved;
+            }
             try {
                 const response = await fetch(request);
-                if (response.ok && response.type === 'basic') {
-                    try {
-                        const cache = await caches.open(MEDIA_CACHE);
-                        await cache.put(request, response.clone());
-                        const keys = await cache.keys();
-                        if (keys.length > 60) await cache.delete(keys[0]);
-                    } catch (_) { /* Keep the network image when storage is unavailable. */ }
-                }
+                event.waitUntil(storeResponse(MEDIA_CACHE, request, response.clone(), 60));
                 return response;
             } catch (_) {
                 return (await caches.match(request)) || Response.error();

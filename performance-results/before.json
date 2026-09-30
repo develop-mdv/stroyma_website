@@ -1,0 +1,818 @@
+{
+  "date": "2026-09-30T14:06:37.762Z",
+  "base": "http://127.0.0.1:8000",
+  "cache": "cold; service worker blocked",
+  "results": [
+    {
+      "profile": "desktop",
+      "route": "/",
+      "status": 200,
+      "lcp": 1104,
+      "cls": 0.004029208311230067,
+      "longTasks": [
+        101
+      ],
+      "interactions": [],
+      "lcpElement": "home-hero-photo",
+      "ttfb": 216.70000000298023,
+      "domContentLoaded": 739.2000000029802,
+      "load": 838.7000000029802,
+      "fcp": 1104,
+      "requests": 33,
+      "bytes": 3740138,
+      "domNodes": 817,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 54
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 22
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 53
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 15
+        },
+        {
+          "url": "/static/images/home_materials_hero.webp",
+          "bytes": 162702,
+          "duration": 22
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 12
+        },
+        {
+          "url": "/media/products/catalog-2026-row-13.webp",
+          "bytes": 143560,
+          "duration": 67
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 12
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 1,
+      "blockingTime": 51,
+      "errors": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/catalog/",
+      "status": 200,
+      "lcp": 648,
+      "cls": 0.0019392557277600952,
+      "longTasks": [
+        94
+      ],
+      "interactions": [],
+      "lcpElement": "absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105",
+      "ttfb": 223,
+      "domContentLoaded": 442,
+      "load": 574.1000000014901,
+      "fcp": 480,
+      "requests": 37,
+      "bytes": 5422796,
+      "domNodes": 969,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/media/category_images/d1a6c1a6-df31-4415-9b0d-ad096af4dc95.png",
+          "bytes": 1310089,
+          "duration": 51
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 41
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 14
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 18
+        },
+        {
+          "url": "/media/category_images/%D0%B4%D0%BE%D1%81%D0%BA%D0%B0.jpg",
+          "bytes": 587132,
+          "duration": 63
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 11
+        },
+        {
+          "url": "/media/products/catalog-2026-row-65.webp",
+          "bytes": 128658,
+          "duration": 18
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 1,
+      "blockingTime": 44,
+      "errors": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/services/",
+      "status": 200,
+      "lcp": 268,
+      "cls": 0.023288663318356696,
+      "longTasks": [],
+      "interactions": [],
+      "lcpElement": "absolute hidden lg:block text-[30rem] xl:text-[35rem] font-black text-gray-50 -z-10 leading-none select-none right-0 translate-x-12 top-1/2 -translate-y-1/2 transition-transform duration-1000 group-hover:scale-105",
+      "ttfb": 82,
+      "domContentLoaded": 210.10000000149012,
+      "load": 264.1000000014901,
+      "fcp": 268,
+      "requests": 23,
+      "bytes": 5575864,
+      "domNodes": 254,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/media/services/raspil_premium.png",
+          "bytes": 933170,
+          "duration": 29
+        },
+        {
+          "url": "/media/services/dostavka_premium.png",
+          "bytes": 905140,
+          "duration": 26
+        },
+        {
+          "url": "/media/services/kolirovka_premium.png",
+          "bytes": 819040,
+          "duration": 27
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 32
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 14
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 10
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 17
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 12
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 0,
+      "blockingTime": 0,
+      "errors": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/about/",
+      "status": 200,
+      "lcp": 344,
+      "cls": 0.0002452591507523148,
+      "longTasks": [
+        81
+      ],
+      "interactions": [],
+      "lcpElement": "text-sm text-gray-300 font-light leading-relaxed",
+      "ttfb": 6.800000000745058,
+      "domContentLoaded": 278.1000000014901,
+      "load": 280.69999999925494,
+      "fcp": 276,
+      "requests": 22,
+      "bytes": 2928308,
+      "domNodes": 299,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 35
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 16
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 13
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 9
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 8
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 15
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 7
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 1,
+      "blockingTime": 31,
+      "errors": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/contact/",
+      "status": 200,
+      "lcp": 352,
+      "cls": 0.0023061387803819445,
+      "longTasks": [
+        105
+      ],
+      "interactions": [],
+      "lcpElement": "font-black text-gray-900 leading-[0.85] tracking-tighter mb-6 font-display uppercase animate-fade-in-up w-full text-center break-words",
+      "ttfb": 11.199999999254942,
+      "domContentLoaded": 67.60000000149012,
+      "load": 233,
+      "fcp": 352,
+      "requests": 20,
+      "bytes": 2920135,
+      "domNodes": 280,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 35
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 16
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 13
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 11
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 10
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 15
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 6
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 1,
+      "blockingTime": 55,
+      "errors": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/color-selection/",
+      "status": 200,
+      "lcp": 236,
+      "cls": 0.0014787055121527777,
+      "longTasks": [
+        84,
+        1045,
+        1208,
+        246,
+        1472
+      ],
+      "interactions": [],
+      "lcpElement": "",
+      "ttfb": 10.699999999254942,
+      "domContentLoaded": 84.29999999701977,
+      "load": 1329.7999999970198,
+      "fcp": 236,
+      "requests": 22,
+      "bytes": 2340618,
+      "domNodes": 236,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 39
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 16
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 9
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 10
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 18
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 6
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 8
+        }
+      ],
+      "interactionMax": 0,
+      "longTaskCount": 8,
+      "blockingTime": 5673,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/",
+      "status": 200,
+      "lcp": 5464,
+      "cls": 0.00014337443177204188,
+      "longTasks": [
+        52,
+        619,
+        138
+      ],
+      "interactions": [],
+      "lcpElement": "home-hero-photo",
+      "ttfb": 127.39999999850988,
+      "domContentLoaded": 6547.199999999255,
+      "load": 12471.199999999255,
+      "fcp": 4716,
+      "requests": 28,
+      "bytes": 2437440,
+      "domNodes": 817,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 12120
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 9155
+        },
+        {
+          "url": "/static/images/home_materials_hero.webp",
+          "bytes": 162702,
+          "duration": 4256
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 4482
+        },
+        {
+          "url": "/media/products/catalog-2026-row-13.webp",
+          "bytes": 143560,
+          "duration": 6113
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 4788
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 2439
+        },
+        {
+          "url": "/media/products/catalog-2026-row-12.webp",
+          "bytes": 94802,
+          "duration": 4027
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 120,
+      "longTaskCount": 5,
+      "blockingTime": 826,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/catalog/",
+      "status": 200,
+      "lcp": 6624,
+      "cls": 0.00011883976965062294,
+      "longTasks": [
+        105,
+        286,
+        91
+      ],
+      "interactions": [],
+      "lcpElement": "absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105",
+      "ttfb": 240.80000000074506,
+      "domContentLoaded": 6386.699999999255,
+      "load": 13117.10000000149,
+      "fcp": 4612,
+      "requests": 27,
+      "bytes": 2547511,
+      "domNodes": 969,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 11777
+        },
+        {
+          "url": "/media/category_images/%D0%B4%D0%BE%D1%81%D0%BA%D0%B0.jpg",
+          "bytes": 587132,
+          "duration": 8524
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8823
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 4440
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 4150
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 2230
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 1521
+        },
+        {
+          "url": "/media/products/catalog-2026-row-11.webp",
+          "bytes": 53878,
+          "duration": 1985
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 88,
+      "longTaskCount": 5,
+      "blockingTime": 533,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/services/",
+      "status": 200,
+      "lcp": 21908,
+      "cls": 0.00017912895038296533,
+      "longTasks": [
+        70
+      ],
+      "interactions": [],
+      "lcpElement": "absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110",
+      "ttfb": 91.80000000074506,
+      "domContentLoaded": 3754.5,
+      "load": 22216.5,
+      "fcp": 3256,
+      "requests": 22,
+      "bytes": 4362356,
+      "domNodes": 254,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/media/services/raspil_premium.png",
+          "bytes": 933170,
+          "duration": 18647
+        },
+        {
+          "url": "/media/services/dostavka_premium.png",
+          "bytes": 905140,
+          "duration": 18970
+        },
+        {
+          "url": "/media/services/kolirovka_premium.png",
+          "bytes": 819040,
+          "duration": 17588
+        },
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 14183
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 11747
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 4535
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 4230
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 1678
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 72,
+      "longTaskCount": 3,
+      "blockingTime": 187,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/about/",
+      "status": 200,
+      "lcp": 4640,
+      "cls": 0,
+      "longTasks": [
+        89,
+        571,
+        110
+      ],
+      "interactions": [],
+      "lcpElement": "about-hero__lead",
+      "ttfb": 9.5,
+      "domContentLoaded": 5190.599999997765,
+      "load": 8949.699999999255,
+      "fcp": 3860,
+      "requests": 21,
+      "bytes": 1714800,
+      "domNodes": 299,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 8614
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 6574
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 3606
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 3431
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 1731
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 1273
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 1583
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 1778
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 96,
+      "longTaskCount": 5,
+      "blockingTime": 789,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/contact/",
+      "status": 200,
+      "lcp": 3700,
+      "cls": 0.00334419080321646,
+      "longTasks": [
+        518
+      ],
+      "interactions": [],
+      "lcpElement": "text-base md:text-lg text-gray-500 leading-relaxed font-light animate-fade-in-up",
+      "ttfb": 11.800000000745058,
+      "domContentLoaded": 4360.89999999851,
+      "load": 8908.39999999851,
+      "fcp": 3700,
+      "requests": 19,
+      "bytes": 1706627,
+      "domNodes": 280,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 8530
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 6563
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 3618
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 3441
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 1693
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 1252
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 1574
+        },
+        {
+          "url": "/static/vendor/fonts/outfit/files/outfit-latin-wght-normal.woff2",
+          "bytes": 32592,
+          "duration": 1762
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 88,
+      "longTaskCount": 3,
+      "blockingTime": 621,
+      "errors": []
+    },
+    {
+      "profile": "mobile-6x-1.6Mbps-150ms",
+      "route": "/color-selection/",
+      "status": 200,
+      "lcp": 4616,
+      "cls": 0,
+      "longTasks": [
+        128,
+        86,
+        17009,
+        1828,
+        3099,
+        129
+      ],
+      "interactions": [],
+      "lcpElement": "",
+      "ttfb": 10.5,
+      "domContentLoaded": 5275.900000002235,
+      "load": 30621,
+      "fcp": 4616,
+      "requests": 22,
+      "bytes": 1746488,
+      "domNodes": 236,
+      "overflow": false,
+      "largestResources": [
+        {
+          "url": "/static/images/logo-ma.png",
+          "bytes": 619378,
+          "duration": 13113
+        },
+        {
+          "url": "/static/images/concrete_texture.jpg",
+          "bytes": 446096,
+          "duration": 8895
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-solid-900.woff2",
+          "bytes": 150424,
+          "duration": 4388
+        },
+        {
+          "url": "/static/vendor/fontawesome/webfonts/fa-brands-400.woff2",
+          "bytes": 108320,
+          "duration": 4547
+        },
+        {
+          "url": "/static/vendor/fontawesome/css/all.min.css",
+          "bytes": 102325,
+          "duration": 2631
+        },
+        {
+          "url": "/static/css/tailwind.css",
+          "bytes": 57060,
+          "duration": 1609
+        },
+        {
+          "url": "/static/vendor/fonts/inter/files/inter-latin-wght-normal.woff2",
+          "bytes": 48556,
+          "duration": 2298
+        },
+        {
+          "url": "/static/color_configurator/index.html",
+          "bytes": 42227,
+          "duration": 1501
+        }
+      ],
+      "menuOpened": true,
+      "interactionMax": 96,
+      "longTaskCount": 9,
+      "blockingTime": 23778,
+      "errors": []
+    }
+  ]
+}

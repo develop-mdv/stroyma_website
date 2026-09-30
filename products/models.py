@@ -88,6 +88,11 @@ class Category(MPTTModel):
         """Category photo, or the first photographed product in its subtree."""
         if self.image:
             return self.image
+        if hasattr(self, '_display_image_name'):
+            # Annotated by the catalog view; avoid a query for every card.
+            if not self._display_image_name:
+                return None
+            return self.image.field.attr_class(self, self.image.field, self._display_image_name)
         product = (Product.published.filter(categories__in=self.get_descendants(include_self=True))
                    .exclude(image='').filter(image__isnull=False).order_by('pk').first())
         return product.image if product else None
@@ -97,6 +102,8 @@ class Category(MPTTModel):
         Возвращает общее количество товаров в данной категории 
         и во всех ее дочерних подкатегориях.
         """
+        if hasattr(self, '_total_products_count'):
+            return self._total_products_count
         from django.db.models import Q
         return Product.published.filter(
             Q(categories=self) | Q(categories__in=self.get_descendants())

@@ -69,16 +69,16 @@ const LOW_END = COARSE || (navigator.deviceMemory > 0 && navigator.deviceMemory 
   || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 2);
 // Первый кадр — 512 px: фактура читается, а генерация вчетверо короче 1024.
 // Полный размер доезжает после показа дома (см. upgradeMaps).
-const TEX_START = 512;
-const TEX_FULL = LOW_END ? 512 : 1024;
+const TEX_START = LOW_END ? 256 : 512;
+const TEX_FULL = LOW_END ? 256 : 1024;
 let texSize = TEX_START;
-const SKY_SIZE = LOW_END ? 512 : 1024;
+const SKY_SIZE = LOW_END ? 256 : 1024;
 
 const canvas = $('#view');
-// Сохранение буфера нужно для кнопки PNG на разных браузерах. Нагрузка в простое
-// снижена ниже: кадр рисуется только после изменения сцены или камеры.
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: !LOW_END, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, LOW_END ? 1.25 : 1.75));
+// PNG export explicitly renders before copying the canvas. Retaining the GPU
+// buffer between frames would waste memory and reduce mobile performance.
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !LOW_END, preserveDrawingBuffer: false, powerPreference: LOW_END ? 'low-power' : 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, LOW_END ? 1 : 1.75));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
@@ -166,8 +166,8 @@ let planting = null, scenery = null, sceneryPending = false;
 function buildScenery() {
   if (planting || sceneryPending) return;
   sceneryPending = true;
-  import('./landscape.js?v=45').then(({ buildLandscape }) => {
-    const l = buildLandscape();
+  import('./landscape.js?v=46').then(({ buildLandscape }) => {
+    const l = buildLandscape({ lowEnd: LOW_END });
     planting = l.planting; scenery = l.scenery;
     scene.add(planting, scenery);
     applyLandscape();
@@ -418,7 +418,7 @@ function scrollActiveIntoView(wrap) {
 // Превью-плитки дорогие (canvas + toDataURL). Раньше вся панель пересобиралась на КАЖДЫЙ
 // клик — 48 мозаик + 5 фактур рисовались заново и подвешивали вкладку. Теперь каждое
 // превью считается ОДИН раз и кэшируется; один размер для ленты и для пикера — CSS масштабирует.
-const THUMB = 160;
+const THUMB = LOW_END ? 80 : 160;
 const thumbCache = new Map();
 function facadeThumbC(def) {
   const k = 'f:' + def.id;
@@ -439,7 +439,9 @@ const lazyIO = 'IntersectionObserver' in window
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         lazyIO.unobserve(e.target);
-        if (e.target.__drawThumb) e.target.__drawThumb();
+        // Each preview gets its own task so swiping and clicking can run
+        // between procedural canvas jobs.
+        if (e.target.__drawThumb) setTimeout(() => e.target.__drawThumb(), 0);
       }
     }, { rootMargin: '150px' })
   : null;

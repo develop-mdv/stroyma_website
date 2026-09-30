@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load responsive_images %}
 {% block extra_css %}
 <style>
     .service-list-title { font-size: clamp(1.25rem, 4vw, 2.25rem); overflow-wrap: normal; word-break: normal; }
@@ -35,7 +36,7 @@
             <div class="w-full lg:w-1/2 shrink-0 relative z-10 transition-transform duration-700 group-hover:-translate-y-3">
                 <a href="{% url 'service_detail' service.slug %}" class="block relative aspect-[4/3] md:aspect-video lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl shadow-gray-200/50 focus:outline-none focus:ring-4 focus:ring-deep-green/50">
                     {% if service.image %}
-                        <img src="{{ service.image.url }}" alt="{{ service.title }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" loading="lazy">
+                        <img src="{{ service.image|image_url:800 }}" srcset="{{ service.image|image_srcset }}" sizes="(min-width: 1024px) 40vw, 90vw" decoding="async" alt="{{ service.title }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"{% if forloop.first %} fetchpriority="high"{% endif %}>
                     {% else %}
                         <div class="absolute inset-0 bg-gray-100 flex items-center justify-center">
                             <span class="text-sm font-bold uppercase tracking-[0.2em] text-gray-400">НЕТ ФОТО</span>

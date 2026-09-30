@@ -9,6 +9,7 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import models
+from products.images import variant_names
 
 
 class Command(BaseCommand):
@@ -68,4 +69,8 @@ class Command(BaseCommand):
                     for val in qs.values_list(fname, flat=True):
                         if val:
                             referenced.add(str(val).replace('\\', '/'))
+                            # Current derived copies belong to the original, even
+                            # though each copy does not have its own database row.
+                            instance = model(**{fname: val})
+                            referenced.update(variant_names(getattr(instance, fname)).values())
         return referenced

@@ -1,0 +1,353 @@
+AXES: BEGIN version 7.0.0, blocking by combination of username and ip_address
+Creating test database for alias 'default'...
+
+Not Found: /admin/
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:08.349771+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+Forbidden (Permission denied): /management-stroyma-7x4/auth/group/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\options.py", line 2021, in changelist_view
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/auth/group/
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:10.173994+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:11.839346+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:12.755766+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.Not Found: /product/hidden-product/
+Not Found: /quick-view/2/
+Not Found: /add/2/
+D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\sitemaps\__init__.py:73: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'services.models.Service'> QuerySet.
+  return paginator.Paginator(self._items(), self.limit)
+.Bad Request: /add/4/
+.....Bad Request: /add/15/
+......�� ������� ��������� �����
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\products\views.py", line 802, in checkout
+    record_acceptance(request, 'sale', order=order, subject=user_email,
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1198, in _execute_mock_call
+    raise effect
+django.db.utils.DatabaseError: evidence unavailable
+Service Unavailable: /checkout/
+.Not Found: /consent/unknown/
+..Bad Request: /accounts/register/
+AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:14.382138+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "/accounts/register/"}.
+....AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:15.834334+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:16.752106+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:17.648975+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.....AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:20.995694+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+Method Not Allowed (GET): /accounts/logout/
+Method Not Allowed: /accounts/logout/
+Method Not Allowed (GET): /accounts/resend-confirmation/
+Method Not Allowed: /accounts/resend-confirmation/
+.Method Not Allowed (GET): /cart/remove/30/
+Method Not Allowed: /cart/remove/30/
+Forbidden (CSRF cookie not set.): /cart/remove/30/
+Forbidden: /cart/remove/30/
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:26.323743+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:26.355861+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.Too Many Requests: /contact/
+.Too Many Requests: /search-ajax/
+Not Found: /this-security-check-missing/
+Not Found: /this-security-check-missing/
+..AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:36.505791+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+Not Found: /accounts/order/12/
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:38.924495+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.Too Many Requests: /accounts/password-reset/
+.....AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:57.197192+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+Forbidden: /accounts/register/
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:09:59.732337+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:10:02.309686+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+.AXES: Cleaned up 0 expired access attempts from database that were older than 2026-09-30 14:10:04.754810+00:00
+AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "<unknown>", path_info: "<unknown>"}.
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/export-csv/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\products\admin.py", line 446, in restricted
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/export-csv/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/export-pdf/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\products\admin.py", line 446, in restricted
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/export-pdf/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/sales-report/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\products\admin.py", line 446, in restricted
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/sales-report/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/sales-chart-data/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\products\admin.py", line 446, in restricted
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/sales-chart-data/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/popular-products/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\products\admin.py", line 446, in restricted
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/popular-products/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/export/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\import_export\admin.py", line 816, in export_action
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/export/
+Forbidden (Permission denied): /management-stroyma-7x4/products/order/import/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\import_export\admin.py", line 510, in import_action
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/order/import/
+Forbidden (Permission denied): /management-stroyma-7x4/products/product/export/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\import_export\admin.py", line 816, in export_action
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/product/export/
+Forbidden (Permission denied): /management-stroyma-7x4/products/product/import/
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ProgHub\stroyma\stroyma_website\.venv\Lib\site-packages\import_export\admin.py", line 510, in import_action
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Forbidden: /management-stroyma-7x4/products/product/import/
+....���������� ����������� � ������ #23
+.....�� ������� ��������� �����
+Traceback (most recent call last):
+  File "D:\ProgHub\stroyma\stroyma_website\products\views.py", line 801, in checkout
+    OrderNotification.objects.create(order=order)
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dima_\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1198, in _execute_mock_call
+    raise effect
+django.db.utils.DatabaseError: write failed
+Service Unavailable: /checkout/
+.���������� ����������� � ������ #27
+......
+----------------------------------------------------------------------
+Ran 63 tests in 66.760s
+
+OK
+Destroying test database for alias 'default'...
+
+Found 63 test(s).
+System check identified no issues (0 silenced).

@@ -132,7 +132,7 @@ function broadleafGeo(rand, birch) {
   return { trunk, foliage: mergeGeometries(blobs), h };
 }
 
-function buildTrees(mats, rand) {
+function buildTrees(mats, rand, lowEnd = false) {
   const g = new THREE.Group();
   g.name = 'Trees';
 
@@ -145,7 +145,7 @@ function buildTrees(mats, rand) {
 
   // расстановка: кольцо вокруг участка, гуще позади дома
   const spots = [];
-  const TOTAL = 190;
+  const TOTAL = lowEnd ? 70 : 190;
   let guard = 0;
   while (spots.length < TOTAL && guard++ < 9000) {
     const a = rand() * Math.PI * 2;
@@ -242,7 +242,7 @@ function bladeTexture(size = 256) {
   return t;
 }
 
-function buildGrass(rand) {
+function buildGrass(rand, lowEnd = false) {
   const g = new THREE.Group();
   g.name = 'Grass';
   const tex = bladeTexture();
@@ -253,7 +253,7 @@ function buildGrass(rand) {
 
   const spots = [];
   let guard = 0;
-  while (spots.length < 5400 && guard++ < 80000) {
+  while (spots.length < (lowEnd ? 1200 : 5400) && guard++ < 80000) {
     const a = rand() * Math.PI * 2;
     const r = 4 + Math.pow(rand(), 0.55) * 42;
     const x = Math.cos(a) * r, z = Math.sin(a) * r;
@@ -482,20 +482,20 @@ function buildFence(mats, rand) {
 
 /* ---------- сборка ---------- */
 
-export function buildLandscape() {
+export function buildLandscape({ lowEnd = false } = {}) {
   const mats = createMaterials();
   const rand = rng(0x2f7a41);
 
   // «Газон» — то, что читается как благоустройство участка
   const planting = new THREE.Group();
   planting.name = 'Planting';
-  planting.add(buildGrass(rand), buildShrubs(mats, rand));
+  planting.add(buildGrass(rand, lowEnd), buildShrubs(mats, rand));
 
   // «Полный» — сценарий участка: лес, зона костра, гамак, забор
   const scenery = new THREE.Group();
   scenery.name = 'Scenery';
   scenery.add(
-    buildTrees(mats, rand),
+    buildTrees(mats, rand, lowEnd),
     buildPath(mats, rand),
     buildFirePit(mats, rand),
     buildHammock(mats),

@@ -1,0 +1,140 @@
+[
+  {
+    "route": "/",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 197.1,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 48.1,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 51.1,
+        "sql_ms": 16.0
+      }
+    ]
+  },
+  {
+    "route": "/catalog/",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 123.4,
+        "sql_ms": 31.0
+      },
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 101.9,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 103.0,
+        "sql_ms": 0.0
+      }
+    ]
+  },
+  {
+    "route": "/services/",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 1,
+        "render_ms": 21.1,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 1,
+        "render_ms": 9.3,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 1,
+        "render_ms": 15.3,
+        "sql_ms": 16.0
+      }
+    ]
+  },
+  {
+    "route": "/search-ajax/?view=grid",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 81.7,
+        "sql_ms": 31.0
+      },
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 88.4,
+        "sql_ms": 15.0
+      },
+      {
+        "status": 200,
+        "queries": 5,
+        "render_ms": 90.0,
+        "sql_ms": 31.0
+      }
+    ]
+  },
+  {
+    "route": "/category/gidroizoliatsiia/",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 6,
+        "render_ms": 58.5,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 6,
+        "render_ms": 54.7,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 6,
+        "render_ms": 51.9,
+        "sql_ms": 0.0
+      }
+    ]
+  },
+  {
+    "route": "/product/shtukaturka-silin-universalnaia-armirovannaia-5-kg-iunis-143/",
+    "samples": [
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 21.7,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 15.7,
+        "sql_ms": 0.0
+      },
+      {
+        "status": 200,
+        "queries": 4,
+        "render_ms": 13.5,
+        "sql_ms": 0.0
+      }
+    ]
+  }
+]

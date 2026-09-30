@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "Public informational page cached for offline use",
+    "PWA does not download unopened page resources",
+    "Repeated visit reuses versioned CSS from service-worker cache",
+    "Cart/account/checkout HTML excluded from offline caches",
+    "Previously visited informational page works offline",
+    "Private page shows offline notice instead of a saved cart",
+    "Home page fits mobile viewport",
+    "Product list uses prebuilt thumbnails",
+    "Mobile menu still opens",
+    "Mobile cart is initialized before being shown",
+    "Mobile cart preview can still be expanded",
+    "Catalog fits mobile viewport",
+    "3D code loads only when the visitor opens the model",
+    "Touch devices use smaller textures and GPU buffers",
+    "3D renderer remains idle when scene and camera are unchanged",
+    "3D PNG export works without retaining the drawing buffer",
+    "No browser JavaScript exceptions (0)",
+    "No missing page resources (0)"
+  ],
+  "configuration": {
+    "boot": 558,
+    "pixelRatio": 1,
+    "textureWidth": 256,
+    "frames": 27
+  }
+}

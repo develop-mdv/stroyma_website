@@ -1,6 +1,21 @@
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 from .models import Product, Category
+from .images import build_variants
+import logging
+
+
+@receiver(post_save)
+def build_public_image_variants(sender, instance, raw=False, **kwargs):
+    if raw or sender._meta.label not in {
+        'products.Product', 'products.Category', 'products.ProductImage',
+        'services.Service', 'services.ServicePhoto',
+    }:
+        return
+    try:
+        build_variants(instance.image)
+    except (OSError, ValueError):
+        logging.getLogger(__name__).warning('Could not build image variants for %s #%s', sender._meta.label, instance.pk)
 
 
 @receiver(m2m_changed, sender=Product.categories.through)

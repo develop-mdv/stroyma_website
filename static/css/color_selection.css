@@ -5,6 +5,12 @@
 .color-selection-intro > p:last-child { color: #526058; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.65; margin: 0; }
 .color-configurator-shell { overflow: hidden; border-radius: 18px; background: #0b0e13; box-shadow: 0 18px 50px rgba(20, 30, 25, .16); }
 .color-configurator-shell iframe { display: block; width: 100%; height: min(860px, 86vh); min-height: 600px; border: 0; background: #0b0e13; }
+.color-configurator-shell [hidden] { display: none !important; }
+.color-configurator-start { display: grid; justify-items: center; align-content: center; gap: 18px; min-height: 350px; padding: 36px 24px; background: #edf3eb; color: #193c2c; text-align: center; }
+.color-configurator-start h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 700; line-height: 1.2; }
+.color-configurator-start p { max-width: 480px; color: #526058; line-height: 1.6; }
+.color-configurator-start button { min-height: 48px; padding: 14px 24px; border-radius: 12px; background: #193c2c; color: white; font-weight: 700; }
+.color-configurator-start button:focus-visible { outline: 3px solid #4b685b; outline-offset: 4px; }
 .color-request { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 80px); margin-top: 48px; padding: clamp(24px, 4vw, 52px); scroll-margin-top: 88px; border: 1px solid #e6eae7; border-radius: 20px; background: #fff; box-shadow: 0 10px 32px rgba(30, 48, 37, .06); }
 .color-request h2 { color: #17241d; font-size: clamp(26px, 3vw, 38px); font-weight: 700; line-height: 1.2; margin: 0 0 18px; }
 .color-request__copy > p:not(.color-selection-eyebrow) { color: #58655c; font-size: 16px; line-height: 1.65; }

@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load responsive_images %}
 {% load static l10n %}
 
 {% block title %}{{ product.meta_title|default:product.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
@@ -9,7 +10,7 @@
 {% block og_title %}{{ product.meta_title|default:product.name|cut:" | СтройМа"|cut:" | СТРОЙМА" }} | СТРОЙМА{% endblock %}
 {% block og_description %}{{ product.meta_description|default:product.description|truncatechars:160 }}{% endblock %}
 {% block og_type %}product{% endblock %}
-{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma.png' %}?v=2{% endif %}{% endblock %}
+{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-ma-small.webp' %}{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/gallery.css' %}?v=1">
@@ -83,7 +84,7 @@
             <div class="w-full lg:w-1/2 flex flex-col justify-center">
                 <div class="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-white rounded-[1.5rem] md:rounded-[3rem] lg:rounded-[4rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-deep-green/10">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="absolute inset-0 w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[2000ms] group-hover:scale-105">
+                        <img fetchpriority="high" src="{{ product.image|image_url:800 }}" srcset="{{ product.image|image_srcset }}" sizes="(min-width: 1024px) 40vw, 90vw" decoding="async" alt="{% if product.is_illustration %}Иллюстрация: {% endif %}{{ product.name }}" class="absolute inset-0 w-full h-full {% if product.is_illustration %}object-contain{% else %}object-cover{% endif %} transition-transform duration-[2000ms] group-hover:scale-105">
                     {% else %}
                         <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100">
                             <span class="text-gray-400 font-display font-medium text-2xl tracking-widest uppercase">НЕТ ФОТО</span>
@@ -175,7 +176,7 @@
                 {% for image in product.images.all %}
                     <div class="f-carousel__slide w-full md:w-1/2 lg:w-1/3 p-2">
                         <a href="{{ image.image.url }}" data-fancybox="gallery" class="block relative w-full aspect-square overflow-hidden group rounded-2xl">
-                            <img src="{{ image.image.url }}" alt="{{ image.title|default:product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1000ms] group-hover:scale-110" />
+                            <img loading="lazy" src="{{ image.image|image_url:800 }}" srcset="{{ image.image|image_srcset }}" sizes="(min-width: 1024px) 40vw, 90vw" decoding="async" alt="{{ image.title|default:product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1000ms] group-hover:scale-110" />
                             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
                         </a>
                     </div>

@@ -1,0 +1,2 @@
+# Development only; generated fonts are checked into static/.
+fonttools[woff]==4.66.1
