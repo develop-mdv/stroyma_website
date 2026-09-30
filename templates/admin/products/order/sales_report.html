@@ -3,12 +3,11 @@
 
 {% block extrahead %}
 {{ block.super }}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
     const SALES_CHART_DATA_URL = "{% url 'admin:sales_chart_data' %}";
     const POPULAR_PRODUCTS_URL = "{% url 'admin:popular_products' %}";
 </script>
-<script src="{% static 'js/admin_charts.js' %}"></script>
+<script src="{% static 'js/admin_charts.js' %}?v=2" defer></script>
 {% endblock %}
 
 {% block extrastyle %}
@@ -175,29 +174,29 @@
         <h1>{% trans "Отчет по продажам" %}</h1>
     </div>
 
-    <div class="period-filters">
+    <div class="period-filters" data-initial-days="{{ days }}">
         <span>{% trans "Период:" %}</span>
-        <button class="period-btn active" data-days="30">{% trans "30 дней" %}</button>
-        <button class="period-btn" data-days="90">{% trans "3 месяца" %}</button>
-        <button class="period-btn" data-days="180">{% trans "6 месяцев" %}</button>
-        <button class="period-btn" data-days="365">{% trans "1 год" %}</button>
+        <button type="button" class="period-btn {% if days == 30 %}active{% endif %}" data-days="30">{% trans "30 дней" %}</button>
+        <button type="button" class="period-btn {% if days == 90 %}active{% endif %}" data-days="90">{% trans "3 месяца" %}</button>
+        <button type="button" class="period-btn {% if days == 180 %}active{% endif %}" data-days="180">{% trans "6 месяцев" %}</button>
+        <button type="button" class="period-btn {% if days == 365 %}active{% endif %}" data-days="365">{% trans "1 год" %}</button>
     </div>
 
     <div class="dashboard">
         <div class="rpt-card">
             <h3 class="icon-orders">{% trans "Заказы" %}</h3>
             <div class="metric">{{ total_orders }}</div>
-            <div class="rpt-description">{% trans "за последние 30 дней" %}</div>
+            <div class="rpt-description">за последние {{ days }} дней</div>
         </div>
         <div class="rpt-card">
             <h3 class="icon-sales">{% trans "Продажи" %}</h3>
             <div class="metric">{{ total_sales|floatformat:0 }} ₽</div>
-            <div class="rpt-description">{% trans "за последние 30 дней" %}</div>
+            <div class="rpt-description">за последние {{ days }} дней</div>
         </div>
         <div class="rpt-card">
             <h3 class="icon-avg">{% trans "Средний чек" %}</h3>
             <div class="metric">{{ avg_order_value|floatformat:0 }} ₽</div>
-            <div class="rpt-description">{% trans "за последние 30 дней" %}</div>
+            <div class="rpt-description">за последние {{ days }} дней</div>
         </div>
     </div>
 
@@ -205,7 +204,7 @@
         <div class="rpt-card full-width">
             <h3 class="icon-chart">{% trans "Динамика продаж" %}</h3>
             <div class="chart-container">
-                <canvas id="salesChart"></canvas>
+                <div id="salesChart" class="sm-sales-chart" aria-live="polite"></div>
             </div>
         </div>
     </div>
@@ -214,13 +213,13 @@
         <div class="rpt-card medium-width">
             <h3 class="icon-products">{% trans "Популярные товары" %}</h3>
             <div class="chart-container">
-                <canvas id="productsChart"></canvas>
+                <div id="productsChart" class="sm-bar-chart" aria-live="polite"></div>
             </div>
         </div>
         <div class="rpt-card">
             <h3 class="icon-status">{% trans "Заказы по статусам" %}</h3>
             <div class="chart-container">
-                <canvas id="statusChart"></canvas>
+                <div id="statusChart" class="sm-bar-chart" aria-live="polite"></div>
             </div>
             {% for status, count in status_data %}
             <div class="status-data" data-status="{{ status }}" data-count="{{ count }}" style="display: none;"></div>

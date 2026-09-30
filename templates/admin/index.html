@@ -323,7 +323,28 @@
         <i class="fas fa-box-open"></i> Все товары
     </a>
     {% endif %}
+    {% if perms.auth.view_user or perms.auth.change_user %}
+    <a href="{% url 'admin:auth_user_changelist' %}" class="quick-action-btn">
+        <i class="fas fa-users"></i> Пользователи
+    </a>
+    {% endif %}
+    {% if user.is_superuser %}
+    <a href="{% url 'admin:auth_group_changelist' %}" class="quick-action-btn">
+        <i class="fas fa-user-shield"></i> Роли и права
+    </a>
+    {% endif %}
 </div>
+
+{% if user.is_superuser %}
+<div class="sm-management-guide">
+    <div class="sm-management-guide__icon"><i class="fas fa-user-cog"></i></div>
+    <div>
+        <strong>Управление доступом сотрудников</strong>
+        <p>Создайте роль с нужными правами, затем откройте пользователя, включите «Статус персонала» и назначьте ему эту роль. Права администратора менеджеру не нужны.</p>
+    </div>
+    <a href="{% url 'admin:auth_group_add' %}" class="sm-management-guide__link">Создать роль</a>
+</div>
+{% endif %}
 
 {% if can_view_orders %}
 <div class="dashboard-grid">
@@ -417,6 +438,8 @@
     </div>
 </div>
 {% else %}
-<div class="panel-card"><div class="panel-body dashboard-empty">Откройте доступный раздел через меню.</div></div>
+<div class="panel-card"><div class="panel-body dashboard-empty">
+    {% if can_view_products %}Откройте каталог через кнопку «Все товары» выше, чтобы найти и изменить товар.{% else %}Откройте доступный раздел через меню.{% endif %}
+</div></div>
 {% endif %}
 {% endblock %}

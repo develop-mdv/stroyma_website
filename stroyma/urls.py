@@ -41,7 +41,7 @@ urlpatterns = [
     path('services/', include('services.urls')),
 
     # SEO URLs
-    path('sitemap.xml', cache_page(60 * 60 * 6)(sitemap), {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', cache_page(60 * 60 * 6)(views.robots_txt), name='robots_txt'),
 ]
 

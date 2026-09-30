@@ -64,7 +64,7 @@ def robots_txt(request):
             {
                 'disallow_all': True,
                 'sitemap_url': '',
-                'admin_path': '/admin/',
+                'admin_path': '/' + settings.ADMIN_URL,
             },
             content_type='text/plain; charset=utf-8',
         )
@@ -72,7 +72,7 @@ def robots_txt(request):
     site_url = (getattr(settings, 'SITE_URL', '') or '').strip().rstrip('/')
     sitemap_url = urljoin(site_url + '/', 'sitemap.xml') if site_url else ''
 
-    admin_url = (getattr(settings, 'ADMIN_URL', 'admin/') or 'admin/').strip()
+    admin_url = (getattr(settings, 'ADMIN_URL', 'management-stroyma-7x4/') or 'management-stroyma-7x4/').strip()
     admin_url = admin_url.lstrip('/')
     if not admin_url.endswith('/'):
         admin_url += '/'

@@ -8,7 +8,6 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
 from django.urls import reverse
 from django.utils.timezone import now
-from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 
@@ -89,7 +88,7 @@ class Category(MPTTModel):
         """Category photo, or the first photographed product in its subtree."""
         if self.image:
             return self.image
-        product = (Product.objects.filter(categories__in=self.get_descendants(include_self=True))
+        product = (Product.published.filter(categories__in=self.get_descendants(include_self=True))
                    .exclude(image='').filter(image__isnull=False).order_by('pk').first())
         return product.image if product else None
 
@@ -99,12 +98,17 @@ class Category(MPTTModel):
         и во всех ее дочерних подкатегориях.
         """
         from django.db.models import Q
-        return Product.objects.filter(
+        return Product.published.filter(
             Q(categories=self) | Q(categories__in=self.get_descendants())
         ).distinct().count()
 
     def __str__(self):
         return self.name
+
+class PublishedProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_published=True)
+
 
 class Product(models.Model):
     """
@@ -112,6 +116,12 @@ class Product(models.Model):
     включая SEO-параметры и связи с категориями.
     """
     name = models.CharField(max_length=255, verbose_name='Название')
+    is_published = models.BooleanField(
+        default=True, db_index=True, verbose_name='Показывать на сайте',
+        help_text='Снимите галочку, чтобы скрыть товар из каталога, поиска и заказов без удаления.',
+    )
+    objects = models.Manager()
+    published = PublishedProductManager()
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name='URL-имя')
     description = models.TextField(verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', help_text='0 — цена уточняется, заказ через корзину недоступен')
@@ -230,8 +240,8 @@ class Product(models.Model):
     @classmethod
     def get_popular_products(cls, count=5):
         """
-        Получение популярных товаров с использованием кеширования для 
-        оптимизации производительности. Популярность определяется по 
+        Получение только опубликованных популярных товаров.
+        Популярность определяется по
         количеству заказов и рейтингу.
         
         Args:
@@ -240,19 +250,11 @@ class Product(models.Model):
         Returns:
             QuerySet с популярными товарами
         """
-        cache_key = f'popular_products_{count}'
-        popular_products = cache.get(cache_key)
-        
-        if popular_products is None:
-            # Если нет в кеше, получаем из базы и кешируем на 1 час
-            from django.db.models import Count
-            popular_products = cls.objects.annotate(
-                order_count=Count('orderitem')
-            ).order_by('-order_count', '-rating')[:count]
-            
-            cache.set(cache_key, popular_products, 60*60)  # 1 час
-            
-        return popular_products
+        from django.db.models import Count
+
+        return cls.published.annotate(
+            order_count=Count('orderitem')
+        ).order_by('-order_count', '-rating')[:count]
 
 ORDER_STATUS_CHOICES = (
     ('new', 'Новый'),

@@ -5,11 +5,24 @@
 {{ block.super }}
 <!-- Подключаем скрипт для DateRangeFilter -->
 <script src="{% static 'js/admin_datepicker.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var search = document.getElementById('searchbar');
+  if (search) {
+    search.placeholder = 'Название, описание или ключ товара';
+    search.setAttribute('aria-label', 'Поиск товара');
+  }
+});
+</script>
 {% endblock %}
 
 {% block object-tools-items %}
+  {% include "admin/import_export/change_list_import_item.html" %}
+  {% include "admin/import_export/change_list_export_item.html" %}
   {{ block.super }}
-  <li>
-    <a href="{% url 'admin:sales_report' %}" class="grp-state-focus">{% trans "Отчет по продажам" %}</a>
-  </li>
-{% endblock %} 
+{% endblock %}
+
+{% block content %}
+<div class="sm-list-help">Чтобы временно убрать товар с сайта, откройте его и снимите флажок «Показывать на сайте». Для нескольких товаров отметьте строки и выберите действие «Скрыть выбранные товары с сайта».</div>
+{{ block.super }}
+{% endblock %}

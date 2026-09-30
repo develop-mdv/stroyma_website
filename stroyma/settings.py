@@ -21,9 +21,9 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # URL админки (без ведущего слеша, со слешем в конце), например "admin/" или "secret-path/"
-ADMIN_URL = config('ADMIN_URL', default='admin/').strip()
+ADMIN_URL = config('ADMIN_URL', default='management-stroyma-7x4/').strip()
 if not ADMIN_URL:
-    ADMIN_URL = 'admin/'
+    ADMIN_URL = 'management-stroyma-7x4/'
 if not ADMIN_URL.endswith('/'):
     ADMIN_URL = ADMIN_URL + '/'
 
@@ -248,13 +248,13 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True,
     "related_modal_active": True,
 
-    "hide_apps": ["auth"],
+    "hide_apps": [],
     "hide_models": [
         "products.BaseTexture",
         "products.FacadeColor",
     ],
 
-    "order_with_respect_to": ["products", "services", "accounts"],
+    "order_with_respect_to": ["products", "services", "auth", "accounts"],
 
     "custom_links": {
         "products": [
@@ -269,7 +269,6 @@ JAZZMIN_SETTINGS = {
 
     "topmenu_links": [
         {"name": "Главная сайта", "url": "/", "new_window": True},
-        {"name": "Отчёт", "url": "admin:sales_report"},
     ],
 
     "icons": {
@@ -290,8 +289,9 @@ JAZZMIN_SETTINGS = {
 
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {
+        "products.product": "single",
         "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
+        "auth.group": "single",
     },
 
     "language_chooser": False,

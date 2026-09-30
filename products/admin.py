@@ -1,6 +1,6 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
-from .models import Product, Category, Order, OrderItem, OrderNotification, Cart, CartItem, FacadeColor, BaseTexture, ProductImage
+from .models import Product, Category, Order, OrderItem, OrderNotification, Cart, CartItem, FacadeColor, BaseTexture, ProductImage, ORDER_STATUS_CHOICES
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.utils.html import format_html
@@ -59,7 +59,7 @@ class ProductImageInline(admin.TabularInline):
     """
     model = ProductImage
     extra = 1
-    fields = ('image', 'title', 'order')
+    fields = ('image', 'image_preview', 'title', 'order')
     readonly_fields = ('image_preview',)
 
     def image_preview(self, obj):
@@ -147,22 +147,38 @@ class ProductAdminForm(forms.ModelForm):
 @admin.register(Product)
 class ProductAdmin(RestrictedImportExportModelAdmin):
     resource_classes = [ProductResource]
-    list_display = ('image_preview', 'name', 'formatted_price', 'stock_status', 'rating', 'created_at')
-    list_filter = (CategoryFilter, 'rating', 'created_at')
+    list_display = ('image_preview', 'name', 'publication_status', 'formatted_price', 'stock_status')
+    list_filter = ('is_published', CategoryFilter, 'created_at')
     search_fields = ('name', 'description', 'source_key')
     filter_horizontal = ('categories',)
     inlines = [ProductImageInline]
     list_display_links = ('image_preview', 'name')
     list_per_page = 25
+    search_help_text = 'Поиск по названию, описанию или ключу товара.'
+    import_export_change_list_template = 'admin/products/product/change_list.html'
+    save_on_top = True
+    actions = ['publish_products', 'hide_products']
     readonly_fields = ('created_at', 'updated_at', 'image_preview', 'product_popularity')
     fieldsets = (
-        ('Основная информация', {
-            'fields': ('name', 'slug', 'source_key', 'description', 'price', 'stock', 'unit', 'rating', 'categories', 'product_popularity'),
-            'description': 'Заполните основные данные о товаре. Поле URL-имя заполнится автоматически.'
+        ('Товар на сайте', {
+            'fields': ('is_published', 'name', 'description'),
+            'description': 'Снимите галочку, чтобы скрыть товар от покупателей, сохранив его и историю заказов.'
         }),
-        ('Изображение', {
+        ('Цена и остаток', {
+            'fields': ('price', 'stock', 'unit'),
+            'description': 'Цена 0 означает «уточняется». Остаток не ограничивает оформление заказа.'
+        }),
+        ('Категории', {
+            'fields': ('categories',),
+            'description': 'Выберите одну или несколько категорий. Родительские категории добавятся автоматически.'
+        }),
+        ('Главное фото', {
             'fields': ('image', 'image_preview'),
             'description': 'Загрузите главное изображение товара. Дополнительные фото можно добавить ниже.'
+        }),
+        ('Дополнительные настройки', {
+            'fields': ('slug', 'source_key', 'rating', 'product_popularity'),
+            'classes': ('collapse',),
         }),
         ('SEO настройки', {
             'fields': ('meta_title', 'meta_description', 'keywords'),
@@ -176,6 +192,22 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
     )
 
     form = ProductAdminForm
+
+    @admin.display(description='На сайте', ordering='is_published')
+    def publication_status(self, obj):
+        label = 'Опубликован' if obj.is_published else 'Скрыт'
+        css_class = 'sm-publication-live' if obj.is_published else 'sm-publication-hidden'
+        return format_html('<span class="sm-publication {}">{}</span>', css_class, label)
+
+    @admin.action(description='Показать выбранные товары на сайте', permissions=['change'])
+    def publish_products(self, request, queryset):
+        count = queryset.update(is_published=True)
+        self.message_user(request, f'Опубликовано товаров: {count}.')
+
+    @admin.action(description='Скрыть выбранные товары с сайта', permissions=['change'])
+    def hide_products(self, request, queryset):
+        count = queryset.update(is_published=False)
+        self.message_user(request, f'Скрыто товаров: {count}.')
 
     def image_preview(self, obj):
         if obj.image:
@@ -202,9 +234,10 @@ class ProductAdmin(RestrictedImportExportModelAdmin):
             return format_html('<span class="admin-stock-critical">Не указан</span>')
         if obj.stock == 0:
             return format_html('<span class="admin-stock-critical">Под заказ</span>')
-        elif obj.stock <= 5:
-            return format_html('<span class="admin-stock-low">{} {}</span>', obj.stock.normalize(), obj.unit)
-        return format_html('<span class="admin-stock-ok">{} {}</span>', obj.stock.normalize(), obj.unit)
+        amount = f'{obj.stock:,.3f}'.rstrip('0').rstrip('.').replace(',', ' ').replace('.', ',')
+        if obj.stock <= 5:
+            return format_html('<span class="admin-stock-low">{} {}</span>', amount, obj.unit)
+        return format_html('<span class="admin-stock-ok">{} {}</span>', amount, obj.unit)
     stock_status.short_description = 'Остаток'
     stock_status.admin_order_field = 'stock'
     
@@ -353,7 +386,9 @@ class OrderAdmin(RestrictedImportExportModelAdmin):
             'processing': ('Обработка', 'admin-badge-processing'),
             'shipped': ('Доставка', 'admin-badge-shipped'),
             'completed': ('Завершён', 'admin-badge-completed'),
-            'canceled': ('Отменён', 'admin-badge-canceled'),
+            'new': ('Новый', 'admin-badge-pending'),
+            'delivered': ('Доставлен', 'admin-badge-completed'),
+            'cancelled': ('Отменён', 'admin-badge-canceled'),
         }
         label, css_class = status_map.get(obj.status, (obj.status, ''))
         return format_html('<span class="admin-badge {}">{}</span>', css_class, label)
@@ -484,7 +519,7 @@ class OrderAdmin(RestrictedImportExportModelAdmin):
         )
         
         # Кеширование результатов отчета, исключая objects которые нельзя сериализовать
-        cache_key = f'sales_report_{days}'
+        cache_key = f'sales_report_v2_{days}'
         cached_data = cache.get(cache_key)
         
         if cached_data:
@@ -501,26 +536,14 @@ class OrderAdmin(RestrictedImportExportModelAdmin):
             
             # Количество заказов по статусам
             status_counts = Order.objects.filter(created_at__gte=period_start).values('status').annotate(count=Count('id'))
-            status_data = {
-                'pending': 0,
-                'processing': 0,
-                'shipped': 0,
-                'completed': 0,
-                'canceled': 0,
-            }
-            status_display = {
-                'pending': 'В ожидании',
-                'processing': 'Обработка',
-                'shipped': 'Доставляется',
-                'completed': 'Завершен',
-                'canceled': 'Отменен',
-            }
+            status_data = {key: 0 for key, _label in ORDER_STATUS_CHOICES}
+            status_display = dict(ORDER_STATUS_CHOICES)
             
             for item in status_counts:
                 status_data[item['status']] = item['count']
             
             # Преобразуем статусы в более читаемый формат для отображения
-            status_display_data = [(status_display[k], v) for k, v in status_data.items()]
+            status_display_data = [(status_display.get(k, k), v) for k, v in status_data.items()]
             
             # Заказы по дням недели
             weekday_orders = Order.objects.filter(created_at__gte=period_start).annotate(

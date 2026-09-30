@@ -4,4 +4,24 @@
 {% block extrahead %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'admin/js/slugify.js' %}"></script>
-{% endblock %} 
+{% endblock %}
+
+{% block content %}
+<div class="sm-editor-intro">
+  <div>
+    <h2>{% if original %}Редактирование товара{% else %}Новый товар{% endif %}</h2>
+    <p>Каталог{% if original %} / {{ original.name }}{% else %} / Добавление{% endif %}</p>
+  </div>
+  {% if original %}
+  <div class="sm-editor-actions">
+    {% if original.is_published %}
+      <a href="{{ original.get_absolute_url }}" target="_blank" rel="noopener" class="sm-view-link">Посмотреть на сайте ↗</a>
+    {% endif %}
+    <span class="sm-publication {% if original.is_published %}sm-publication-live{% else %}sm-publication-hidden{% endif %}">
+      {% if original.is_published %}Опубликован{% else %}Скрыт с сайта{% endif %}
+    </span>
+  </div>
+  {% endif %}
+</div>
+{{ block.super }}
+{% endblock %}

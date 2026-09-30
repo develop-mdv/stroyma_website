@@ -41,10 +41,12 @@ def cart_total_quantity(request):
         cart = Cart.objects.filter(user=request.user).first()
         if not cart:
             return 0
-        return sum(item.quantity for item in cart.items.all())
+        return sum(item.quantity for item in cart.items.filter(product__is_published=True))
     session_cart = request.session.get('cart', {}) or {}
     try:
-        return sum(int(q) for q in session_cart.values())
+        valid_ids = [pk for pk in session_cart if str(pk).isdecimal()]
+        published_ids = set(Product.published.filter(pk__in=valid_ids).values_list('pk', flat=True))
+        return sum(int(q) for pk, q in session_cart.items() if str(pk).isdecimal() and int(pk) in published_ids)
     except (TypeError, ValueError):
         return 0
 
@@ -71,9 +73,10 @@ def get_or_create_cart(request):
     if not request.user.is_authenticated:
         return None
     cart, _created = Cart.objects.get_or_create(user=request.user)
+    CartItem.objects.filter(cart=cart, product__is_published=False).delete()
     session_cart = request.session.get('cart', {}) or {}
     for product_id, quantity in list(session_cart.items()):
-        product = Product.objects.filter(pk=product_id).first()
+        product = Product.published.filter(pk=product_id).first()
         if not product:
             continue
         try:
@@ -94,7 +97,7 @@ def _home_cart_context(request):
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         entries = (
-            CartItem.objects.filter(cart=cart).select_related('product')
+            CartItem.objects.filter(cart=cart, product__is_published=True).select_related('product')
             if cart else []
         )
         rows = [
@@ -111,7 +114,7 @@ def _home_cart_context(request):
                     quantities[int(product_id)] = quantity
             except (TypeError, ValueError):
                 continue
-        products = Product.objects.filter(pk__in=quantities).in_bulk()
+        products = Product.published.filter(pk__in=quantities).in_bulk()
         rows = [
             {'product': products[product_id], 'quantity': quantity,
              'total_price': products[product_id].price * quantity}
@@ -148,7 +151,7 @@ def _safe_category_ids(values):
 
 def _browser_candidates(request, scope=None):
     """Products matching search and categories, before the price facet."""
-    products = Product.objects.all()
+    products = Product.published.all()
     if scope is not None:
         products = products.filter(categories__in=scope.get_descendants(include_self=True))
 
@@ -234,7 +237,7 @@ def _browser_page_context(request, scope=None, page_size=12):
 
 def product_list(request):
     form = SearchForm(request.GET)
-    products = Product.objects.all()
+    products = Product.published.all()
 
     # Получаем корневые категории и их потомков
     root_categories = Category.objects.filter(parent=None)
@@ -365,7 +368,7 @@ def search_ajax(request):
     
     selected_categories = _safe_category_ids(request.GET.getlist('category'))
 
-    products = Product.objects.all()
+    products = Product.published.all()
 
     if query:
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
@@ -429,7 +432,7 @@ def search_ajax(request):
     })
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+    product = get_object_or_404(Product.published, slug=slug)
     # Передаем метаданные в контекст
     context = {
         'product': product,
@@ -441,11 +444,11 @@ def product_detail(request, slug):
 
 def product_detail_legacy(request, pk):
     """Обработчик для поддержки старых URL с использованием pk"""
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product.published, pk=pk)
     return redirect(product.get_absolute_url(), permanent=True)
 
 def quick_view(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product.published, pk=pk)
     return render(request, 'products/quick_view.html', {'product': product})
 
 @ratelimit(key='ip', rate='300/h', method='POST', block=True)
@@ -456,7 +459,7 @@ def add_to_cart(request, pk):
         or 'application/json' in request.headers.get('Accept', '')
     )
     if request.method != 'POST':
-        product = get_object_or_404(Product, pk=pk)
+        product = get_object_or_404(Product.published, pk=pk)
         if is_ajax:
             return JsonResponse({'success': False, 'message': 'Метод не разрешён.'}, status=405)
         return redirect(product.get_absolute_url())
@@ -469,7 +472,7 @@ def add_to_cart(request, pk):
         quantity = 1
 
     with transaction.atomic():
-        product = Product.objects.select_for_update().get(pk=pk)
+        product = get_object_or_404(Product.published.select_for_update(), pk=pk)
         if not product.has_price:
             message = 'Цена товара уточняется. Добавление в корзину пока недоступно.'
             if is_ajax:
@@ -532,7 +535,7 @@ def update_cart(request, pk):
             'current_quantity': 1
         })
     with transaction.atomic():
-        product = Product.objects.select_for_update().get(pk=pk)
+        product = get_object_or_404(Product.published.select_for_update(), pk=pk)
         if not product.has_price or quantity > product.max_order_quantity:
             return JsonResponse({'success': False, 'message': 'Товар недоступен в указанном количестве.',
                                  'current_quantity': 1}, status=400)
@@ -552,7 +555,7 @@ def update_cart(request, pk):
             request.session.modified = True
             total_price = 0
             for spid, qty in sc.items():
-                p = Product.objects.filter(pk=spid).first()
+                p = Product.published.filter(pk=spid).first()
                 if p:
                     total_price += p.price * int(qty)
     item_total_price = product.price * quantity
@@ -575,7 +578,7 @@ def view_cart(request):
         sc = request.session.get('cart', {}) or {}
         cleaned = {}
         for product_id, quantity in sc.items():
-            product = Product.objects.filter(pk=product_id).first()
+            product = Product.published.filter(pk=product_id).first()
             if not product:
                 continue
             try:
@@ -624,7 +627,7 @@ def merge_session_cart_to_user_cart(request):
         return
     cart, _ = Cart.objects.get_or_create(user=request.user)
     for product_id, quantity in list(session_cart.items()):
-        product = Product.objects.filter(pk=product_id).first()
+        product = Product.published.filter(pk=product_id).first()
         if not product:
             continue
         try:
@@ -645,7 +648,7 @@ def _build_checkout_lines_for_post(request):
         if not cart:
             return None
         rows = list(
-            CartItem.objects.filter(cart=cart).values_list('product_id', 'quantity')
+            CartItem.objects.filter(cart=cart, product__is_published=True).values_list('product_id', 'quantity')
         )
         return rows if rows else None
     sc = request.session.get('cart', {}) or {}
@@ -658,7 +661,7 @@ def _build_checkout_lines_for_post(request):
             continue
         if q < 1:
             continue
-        if Product.objects.filter(pk=pid).exists():
+        if Product.published.filter(pk=pid).exists():
             out.append((pid, q))
     return out if out else None
 
@@ -677,7 +680,7 @@ def checkout(request):
     if request.user.is_authenticated:
         cart = get_or_create_cart(request)
         items_qs = (
-            CartItem.objects.filter(cart=cart).select_related('product')
+            CartItem.objects.filter(cart=cart, product__is_published=True).select_related('product')
             if cart
             else CartItem.objects.none()
         )
@@ -711,7 +714,7 @@ def checkout(request):
             cart_items = []
             total_price = 0
             for product_id, quantity in sc.items():
-                product = Product.objects.filter(pk=product_id).first()
+                product = Product.published.filter(pk=product_id).first()
                 if not product:
                     continue
                 try:
@@ -764,7 +767,7 @@ def checkout(request):
                         comment=comment,
                     )
                     for product_id, qty in sorted(lines, key=lambda t: t[0]):
-                        product = Product.objects.select_for_update().get(pk=product_id)
+                        product = Product.published.select_for_update().get(pk=product_id)
                         if not product.has_price:
                             raise PriceUnavailable(product.name)
                         if qty < 1 or qty > product.max_order_quantity:

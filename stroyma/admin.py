@@ -12,6 +12,7 @@ class StroymaDashboardMixin:
 
         extra_context = extra_context or {}
         extra_context['can_view_orders'] = request.user.has_perms(('products.view_order',)) or request.user.has_perms(('products.change_order',))
+        extra_context['can_view_products'] = request.user.has_perm('products.view_product') or request.user.has_perm('products.change_product')
         if not extra_context['can_view_orders']:
             return super().index(request, extra_context=extra_context)
         now = timezone.now()
@@ -33,7 +34,7 @@ class StroymaDashboardMixin:
             status__in=["pending", "processing", "shipped"]
         ).count()
 
-        low_stock = Product.objects.filter(stock__lte=5).order_by("stock")[:10]
+        low_stock = Product.published.filter(stock__lte=5).order_by("stock")[:10]
         total_products = Product.objects.count()
         total_users_with_orders = (
             Order.objects.values("user").distinct().count()
@@ -62,7 +63,7 @@ class StroymaDashboardMixin:
             "kpi_status_processing": status_counts.get("processing", 0),
             "kpi_status_shipped": status_counts.get("shipped", 0),
             "kpi_status_completed": status_counts.get("completed", 0),
-            "kpi_status_canceled": status_counts.get("canceled", 0),
+            "kpi_status_cancelled": status_counts.get("cancelled", 0),
         })
 
         return super().index(request, extra_context=extra_context)
