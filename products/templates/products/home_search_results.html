@@ -19,7 +19,7 @@
             <button type="button" class="home-quick-view" onclick="openQuickView({{ product.pk }})" aria-label="Быстрый просмотр: {{ product.name }}"><i class="fa-regular fa-eye" aria-hidden="true"></i> Быстрый просмотр</button>
         </div>
         <div class="home-product-buy">
-            <div class="home-product-price">{% if product.has_price %}{{ product.price|floatformat:-2 }} <span>₽ / {{ product.unit }}{% if product.source_key %} · опт{% endif %}</span>{% else %}Цена уточняется{% endif %}</div>
+            <div class="home-product-price">{% if product.has_price %}{{ product.price|floatformat:-2 }} <span>₽ / {{ product.unit }}</span>{% else %}Цена уточняется{% endif %}</div>
             {% if product.has_price %}<form method="post" action="{% url 'add_to_cart' pk=product.pk %}" class="ajax-cart-form home-buy-form">
                 {% csrf_token %}
                 <div class="home-quantity" aria-label="Количество">
